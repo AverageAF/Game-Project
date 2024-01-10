@@ -2,6 +2,9 @@
 #pragma warning(push, 3)
 #include <stdio.h>
 #include <windows.h>
+
+#include <psapi.h>
+
 #include <emmintrin.h>
 #pragma warning(pop)
 
@@ -49,7 +52,7 @@ int WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, PSTR CommandLine, in
 
     NtQueryTimerResolution(&gGamePerformanceData.MinimumTimerResolution, &gGamePerformanceData.MaximumTimerResolution, &gGamePerformanceData.CurrentTimerResolution);
 
-        
+    GetSystemInfo(&gGamePerformanceData.SystemInfo);
         
     if (GameIsAlreadyRunning() == TRUE)
     {
@@ -101,14 +104,14 @@ int WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, PSTR CommandLine, in
             gGamePerformanceData.TotalFramesRendered++;               //increment count every frame
             ElapsedMicrosecondsPerFrameAccumulatorRaw += ElapsedMicroseconds;
 
-            while (ElapsedMicroseconds <= GOAL_MICROSECONDS_PER_FRAME)      //loop when overshooting framerate
+            while (ElapsedMicroseconds < GOAL_MICROSECONDS_PER_FRAME)      //loop when overshooting framerate
             {
                 ElapsedMicroseconds = FrameEnd - FrameStart;  //recalculate
                 ElapsedMicroseconds *= 1000000;
                 ElapsedMicroseconds /= gGamePerformanceData.PerfFrequency;
                 QueryPerformanceCounter((LARGE_INTEGER*)&FrameEnd);
 
-                if (ElapsedMicroseconds <= ((int64_t)GOAL_MICROSECONDS_PER_FRAME - (gGamePerformanceData.CurrentTimerResolution * 0.1f)))
+                if (ElapsedMicroseconds < ((int64_t)GOAL_MICROSECONDS_PER_FRAME - (gGamePerformanceData.CurrentTimerResolution * 0.1f)))
                 {
                     Sleep(1);       //can be between 1ms and one system tick (~15.625ms)
                 }
@@ -117,10 +120,25 @@ int WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, PSTR CommandLine, in
 
         if ((gGamePerformanceData.TotalFramesRendered % CALCULATE_AVG_FPS_EVERY_X_FRAMES) == 0)
         {
+            GetSystemTimeAsFileTime((FILETIME*) &gGamePerformanceData.CurrentSystemTime);
+            GetProcessTimes(GetCurrentProcess(), &gGamePerformanceData.ProcessCreationTime, &gGamePerformanceData.ProcessExitTime, (FILETIME*)&gGamePerformanceData.CurrentKernelCPUTime, (FILETIME*)&gGamePerformanceData.CurrentUserCPUTime);
+
+            gGamePerformanceData.CPUPercent = (gGamePerformanceData.CurrentKernelCPUTime - gGamePerformanceData.PreviousKernelCPUTime) + (gGamePerformanceData.CurrentUserCPUTime - gGamePerformanceData.PreviousUserCPUTime);
+            gGamePerformanceData.CPUPercent /= (gGamePerformanceData.CurrentSystemTime - gGamePerformanceData.PreviousSystemTime);
+            gGamePerformanceData.CPUPercent /= gGamePerformanceData.SystemInfo.dwNumberOfProcessors; //kept returning 0 processors and then dividing by 0
+            gGamePerformanceData.CPUPercent *= 100;
+
+            GetProcessHandleCount(GetCurrentProcess(), &gGamePerformanceData.HandleCount);
+            K32GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&gGamePerformanceData.MemInfo, sizeof(gGamePerformanceData.MemInfo));
+
             gGamePerformanceData.RawFPSAverage = 1.0f / ((ElapsedMicrosecondsPerFrameAccumulatorRaw / CALCULATE_AVG_FPS_EVERY_X_FRAMES) * 0.000001f);
             gGamePerformanceData.CookedFPSAverage = 1.0f / ((ElapsedMicrosecondsPerFrameAccumulatorCooked / CALCULATE_AVG_FPS_EVERY_X_FRAMES) * 0.000001f);
             ElapsedMicrosecondsPerFrameAccumulatorRaw = 0; 
             ElapsedMicrosecondsPerFrameAccumulatorCooked = 0;
+
+            gGamePerformanceData.PreviousKernelCPUTime = gGamePerformanceData.CurrentKernelCPUTime;
+            gGamePerformanceData.PreviousUserCPUTime = gGamePerformanceData.CurrentUserCPUTime;
+            gGamePerformanceData.PreviousSystemTime = gGamePerformanceData.CurrentSystemTime;
         }
     }
 
@@ -316,9 +334,12 @@ void RenderFrameGraphics(void)
         SelectObject(DeviceContext, (HFONT)GetStockObject(ANSI_FIXED_FONT));
         char DebugTextBuffer[64] = { 0 };
 
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Raw: %.01f", gGamePerformanceData.RawFPSAverage);
+
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "CPU: %.03f%%", gGamePerformanceData.CPUPercent);         //display cpu first for readability reasons during flickering
+        TextOutA(DeviceContext, 0, 91, DebugTextBuffer, (int)strlen(DebugTextBuffer));
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Raw: %.01f ", gGamePerformanceData.RawFPSAverage);
         TextOutA(DeviceContext, 0, 0, DebugTextBuffer, (int)strlen(DebugTextBuffer));
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Cook: %.01f", gGamePerformanceData.CookedFPSAverage);
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Cook : %.01f ", gGamePerformanceData.CookedFPSAverage);
         TextOutA(DeviceContext, 0, 13, DebugTextBuffer, (int)strlen(DebugTextBuffer));
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Min Timer: %.03f", gGamePerformanceData.MinimumTimerResolution / 10000.0f);
         TextOutA(DeviceContext, 0, 26, DebugTextBuffer, (int)strlen(DebugTextBuffer));
@@ -326,6 +347,12 @@ void RenderFrameGraphics(void)
         TextOutA(DeviceContext, 0, 39, DebugTextBuffer, (int)strlen(DebugTextBuffer));
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Current T:  %.03f", gGamePerformanceData.CurrentTimerResolution / 10000.0f);
         TextOutA(DeviceContext, 0, 52, DebugTextBuffer, (int)strlen(DebugTextBuffer));
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Handles  :  %lu ", gGamePerformanceData.HandleCount);
+        TextOutA(DeviceContext, 0, 65, DebugTextBuffer, (int)strlen(DebugTextBuffer));
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Memory: %llu KB ", (gGamePerformanceData.MemInfo.PrivateUsage / 1024));
+        TextOutA(DeviceContext, 0, 78, DebugTextBuffer, (int)strlen(DebugTextBuffer));
+        //sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "CPU: %.03f%%", gGamePerformanceData.CPUPercent);         
+        //TextOutA(DeviceContext, 0, 91, DebugTextBuffer, (int)strlen(DebugTextBuffer));
     }
 
     ReleaseDC(gGameWindow, DeviceContext);

@@ -43,9 +43,22 @@ typedef struct GAME_PERFORMANCE_DATA
 	int MonitorHeight;
 
 	BOOL DisplayDebugInfo;
-	LONG MinimumTimerResolution;
-	LONG MaximumTimerResolution;
-	LONG CurrentTimerResolution;
+	LONG MinimumTimerResolution;		//if warning C4057 make ULONG instead
+	LONG MaximumTimerResolution;		//c4057
+	LONG CurrentTimerResolution;		//C4057
+
+	DWORD HandleCount;
+	PROCESS_MEMORY_COUNTERS_EX MemInfo;
+	SYSTEM_INFO SystemInfo;
+	int64_t CurrentSystemTime;
+	int64_t PreviousSystemTime;
+	FILETIME ProcessCreationTime;
+	FILETIME ProcessExitTime;
+	int64_t CurrentUserCPUTime;
+	int64_t CurrentKernelCPUTime;
+	int64_t PreviousUserCPUTime;
+	int64_t PreviousKernelCPUTime;
+	double CPUPercent;
 
 } GAME_PERFORMANCE_DATA;
 
