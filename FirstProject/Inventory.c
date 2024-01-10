@@ -268,113 +268,10 @@ void DrawInventoryScreen(void)
         LocalFrameCounter = 0;
         BrightnessAdjustment = -255;
         gInputEnabled = FALSE;
-        uint16_t count = 0;
-        for (uint16_t i = 0; i < NUM_EQUIP_ITEMS; i++)
-        {
-            if (gEquipableItems[i].Count > 0)
-            {
-                gEquipableItems[i].HasItem = TRUE;
-            }
-            else
-            {
-                gEquipableItems[i].HasItem = FALSE;
-            }
-            if (gEquipableItems[i].HasItem == TRUE)
-            {
-                gEquipHasItemSort[count] = i;
-                count++;
-            }
-            if (i == NUM_EQUIP_ITEMS - 1)
-            {
-                gEquipItemCount = count;
-                for (uint8_t j = 0; j < NUM_EQUIP_ITEMS - count; j++)
-                {
-                    gEquipHasItemSort[count + j] = 0xFFFF;
-                }
-
-            }
-        }
-
-        count = 0;
-        for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
-        {
-            if (gUseableItems[i].Count > 0)
-            {
-                gUseableItems[i].HasItem = TRUE;
-            }
-            else
-            {
-                gUseableItems[i].HasItem = FALSE;
-            }
-            if (gUseableItems[i].HasItem == TRUE)
-            {
-                gUseableHasItemSort[count] = i;
-                count++;
-            }
-            if (i == NUM_USABLE_ITEMS - 1)
-            {
-                gUseableItemCount = count;
-                for (uint8_t j = 0; j < NUM_USABLE_ITEMS - count; j++)
-                {
-                    gUseableHasItemSort[count + j] = 0xFFFF;
-                }
-
-            }
-        }
-
-        count = 0;
-        for (uint16_t i = 0; i < NUM_VALUABLE_ITEMS; i++)
-        {
-            if (gValuableItems[i].Count > 0)
-            {
-                gValuableItems[i].HasItem = TRUE;
-            }
-            else
-            {
-                gValuableItems[i].HasItem = FALSE;
-            }
-            if (gValuableItems[i].HasItem == TRUE)
-            {
-                gValuableHasItemSort[count] = i;
-                count++;
-            }
-            if (i == NUM_VALUABLE_ITEMS - 1)
-            {
-                gValuableItemCount = count;
-                for (uint8_t j = 0; j < NUM_VALUABLE_ITEMS - count; j++)
-                {
-                    gValuableHasItemSort[count + j] = 0xFFFF;
-                }
-
-            }
-        }
-
-        count = 0;
-        for (uint16_t i = 0; i < NUM_ADVENTURE_ITEMS; i++)
-        {
-            if (gAdventureItems[i].Count > 0)
-            {
-                gAdventureItems[i].HasItem = TRUE;
-            }
-            else
-            {
-                gAdventureItems[i].HasItem = FALSE;
-            }
-            if (gAdventureItems[i].HasItem == TRUE)
-            {
-                gAdventureHasItemSort[count] = i;
-                count++;
-            }
-            if (i == NUM_ADVENTURE_ITEMS - 1)
-            {
-                gAdventureItemCount = count;
-                for (uint8_t j = 0; j < NUM_ADVENTURE_ITEMS - count; j++)
-                {
-                    gAdventureHasItemSort[count + j] = 0xFFFF;
-                }
-
-            }
-        }
+        ReSortAdventureitems();
+        ReSortValuableitems();
+        ReSortUsableitems();
+        ReSortEquipableitems();
     }
 
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
@@ -1607,34 +1504,7 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                         gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
                         gHasSelectedInvSlot = FALSE;
 
-                        uint16_t count = 0;
-                        for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
-                        {
-                            if (gUseableItems[i].Count > 0)
-                            {
-                                gUseableItems[i].HasItem = TRUE;
-                            }
-                            else
-                            {
-                                gUseableItems[i].HasItem = FALSE;
-                            }
-                            if (gUseableItems[i].HasItem == TRUE)
-                            {
-                                gUseableHasItemSort[count] = i;
-                                count++;
-                            }
-                            if (i == NUM_USABLE_ITEMS - 1)
-                            {
-                                gUseableItemCount = count;
-                                for (uint8_t j = 0; j < NUM_USABLE_ITEMS - count; j++)
-                                {
-                                    gUseableHasItemSort[count + j] = 0xFFFF;
-                                }
-
-                            }
-                        }
-
-
+                        ReSortUsableitems();
                     }
 
                     break;

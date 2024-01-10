@@ -22,6 +22,13 @@ int32_t gUseableSlotOffset;                                           //shuffle 
 uint16_t gUseableHasItemSort[NUM_USABLE_ITEMS];						// simple sorting algorithm that sorts the gUseableItems.Index's that have a non zero count first but keeps the order of Index, if an Index is zero it returns 0xFFFF for that value (example; 0, 2, 3, 5, 8, 13, 21, 23, 45 (last non-zero index), 65535, 65535, 65535, 65535, ...)
 uint16_t gUseableItemCount;                                           //total number of non-zero index's in the usable pocket (number of unique resore items owned by the player)
 
+uint16_t gEquipHasItemSort[NUM_EQUIP_ITEMS]; 
+uint16_t gEquipItemCount;
+uint16_t gValuableHasItemSort[NUM_VALUABLE_ITEMS];
+uint16_t gValuableItemCount;
+uint16_t gAdventureHasItemSort[NUM_ADVENTURE_ITEMS];
+uint16_t gAdventureItemCount;
+
 void DrawInventoryScreen(void);
 
 void PPI_InventoryScreen(void);

@@ -1192,6 +1192,7 @@ uint8_t GiveMonsterToPlayer(struct Monster* monster)
 
     if (i > MAX_PARTY_SIZE)         //TODO:FINISH
     {
+        ASSERT(FALSE, "MonsterDrive system not added yet! player added too many party members!")
         //return(SendMonsterToPC(monster));
     }
 

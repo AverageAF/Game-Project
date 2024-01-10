@@ -401,12 +401,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_5] =
     {
-        .ValueCurrency = 1,
+        .ValueCurrency = 100,
         .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 5,
-        .Name = "USABLEITEM 5",
+        .Count = 5,
+        .Description = "Simple capture device for wild monsters",
+        .Effect = ITEM_USE_EFFECT_CAPTURE,
+        .Name = "Capture Device A",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -414,12 +414,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_6] =
     {
-        .ValueCurrency = 1,
+        .ValueCurrency = 1000,
         .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 6,
-        .Name = "USABLEITEM 6",
+        .Count = 2,
+        .Description = "Greater capture device",
+        .Effect = ITEM_USE_EFFECT_CAPTURE,
+        .Name = "Capture Device B",
         .Sprite = 0,
         .Favorite = FALSE,
     },

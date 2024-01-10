@@ -787,3 +787,11 @@ void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t perc
 BOOL BlitBattleStateTextBox_Text(enum BATTLESTATE battlestate_wait, uint8_t battleTextLineCount, uint64_t frameCounter);
 
 void BlitBattleStateTextBox_Wait(uint8_t battleTextLineCount);
+
+void ReSortUsableitems(void);
+
+void ReSortEquipableitems(void);
+
+void ReSortValuableitems(void);
+
+void ReSortAdventureitems(void);

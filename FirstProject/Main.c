@@ -23,6 +23,7 @@
 #include "LoadGameSave.h"
 #include "SimpleConstants.h"
 #include "Inventory.h"
+#include "InventoryItems.h"
 #include "MonsterData.h"
 #include "MonsterStatsScreen.h"
 
@@ -2975,4 +2976,125 @@ void BlitBattleStateTextBox_Wait(uint8_t battleTextLineCount)
     gFinishedBattleTextAnimation = TRUE;
 
 }
+
+void ReSortUsableitems(void)
+{
+    uint8_t ItemCount = 0;
+    for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
+    {
+        if (gUseableItems[i].Count > 0)
+        {
+            gUseableItems[i].HasItem = TRUE;
+        }
+        else
+        {
+            gUseableItems[i].HasItem = FALSE;
+        }
+        if (gUseableItems[i].HasItem == TRUE)
+        {
+            gUseableHasItemSort[ItemCount] = i;
+            ItemCount++;
+        }
+        if (i == NUM_USABLE_ITEMS - 1)
+        {
+            gUseableItemCount = ItemCount;
+            for (uint8_t j = 0; j < NUM_USABLE_ITEMS - ItemCount; j++)
+            {
+                gUseableHasItemSort[ItemCount + j] = 0xFFFF;
+            }
+
+        }
+    }
+}
+
+void ReSortEquipableitems(void)
+{
+    uint8_t ItemCount = 0;
+    for (uint16_t i = 0; i < NUM_EQUIP_ITEMS; i++)
+    {
+        if (gEquipableItems[i].Count > 0)
+        {
+            gEquipableItems[i].HasItem = TRUE;
+        }
+        else
+        {
+            gEquipableItems[i].HasItem = FALSE;
+        }
+        if (gEquipableItems[i].HasItem == TRUE)
+        {
+            gEquipHasItemSort[ItemCount] = i;
+            ItemCount++;
+        }
+        if (i == NUM_EQUIP_ITEMS - 1)
+        {
+            gEquipItemCount = ItemCount;
+            for (uint8_t j = 0; j < NUM_EQUIP_ITEMS - ItemCount; j++)
+            {
+                gEquipHasItemSort[ItemCount + j] = 0xFFFF;
+            }
+
+        }
+    }
+}
+
+void ReSortValuableitems(void)
+{
+    uint8_t ItemCount = 0;
+    for (uint16_t i = 0; i < NUM_VALUABLE_ITEMS; i++)
+    {
+        if (gValuableItems[i].Count > 0)
+        {
+            gValuableItems[i].HasItem = TRUE;
+        }
+        else
+        {
+            gValuableItems[i].HasItem = FALSE;
+        }
+        if (gValuableItems[i].HasItem == TRUE)
+        {
+            gValuableHasItemSort[ItemCount] = i;
+            ItemCount++;
+        }
+        if (i == NUM_VALUABLE_ITEMS - 1)
+        {
+            gValuableItemCount = ItemCount;
+            for (uint8_t j = 0; j < NUM_VALUABLE_ITEMS - ItemCount; j++)
+            {
+                gValuableHasItemSort[ItemCount + j] = 0xFFFF;
+            }
+
+        }
+    }
+}
+
+void ReSortAdventureitems(void)
+{
+    uint8_t ItemCount = 0;
+    for (uint16_t i = 0; i < NUM_ADVENTURE_ITEMS; i++)
+    {
+        if (gAdventureItems[i].Count > 0)
+        {
+            gAdventureItems[i].HasItem = TRUE;
+        }
+        else
+        {
+            gAdventureItems[i].HasItem = FALSE;
+        }
+        if (gAdventureItems[i].HasItem == TRUE)
+        {
+            gAdventureHasItemSort[ItemCount] = i;
+            ItemCount++;
+        }
+        if (i == NUM_ADVENTURE_ITEMS - 1)
+        {
+            gAdventureItemCount = ItemCount;
+            for (uint8_t j = 0; j < NUM_ADVENTURE_ITEMS - ItemCount; j++)
+            {
+                gAdventureHasItemSort[ItemCount + j] = 0xFFFF;
+            }
+
+        }
+    }
+}
+
 

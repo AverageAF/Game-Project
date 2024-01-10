@@ -8,10 +8,15 @@
 #include "InventoryItems.h"
 #include "Inventory.h"
 
+///////// capture monster variables
 
+BOOL gCaptureMonsterSuccess = FALSE;
+BOOL gCaptureCalculationFinished = FALSE;
+uint8_t gCaptureNumDotsWait = 1;
 
 ///////// item variables
 
+uint8_t gCaptureDeviceHelp = 0;
 uint8_t gUsableItemSelectedPartyMember = 0;
 uint8_t gUseableItemEffect_SelectedItem = ITEM_USE_EFFECT_NULL;
 
@@ -153,34 +158,7 @@ void DrawBattleScreen(void)
         CalculatedExpReward = 0;
         gMenu_BattleScreen.SelectedItem = 0;
 
-        ////TODO: make this a cunction that can be called/////////////////
-        uint8_t ItemCount = 0;
-        for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
-        {
-            if (gUseableItems[i].Count > 0)
-            {
-                gUseableItems[i].HasItem = TRUE;
-            }
-            else
-            {
-                gUseableItems[i].HasItem = FALSE;
-            }
-            if (gUseableItems[i].HasItem == TRUE)
-            {
-                gUseableHasItemSort[ItemCount] = i;
-                ItemCount++;
-            }
-            if (i == NUM_USABLE_ITEMS - 1)
-            {
-                gUseableItemCount = ItemCount;
-                for (uint8_t j = 0; j < NUM_USABLE_ITEMS - ItemCount; j++)
-                {
-                    gUseableHasItemSort[ItemCount + j] = 0xFFFF;
-                }
-
-            }
-        }
-        /////////////////////////////////////////////////////////////////
+        ReSortUsableitems();
 
         gMI_MoveScreen_MoveSlot0.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0]];
         gMI_MoveScreen_MoveSlot1.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1]];
@@ -227,6 +205,18 @@ void DrawBattleScreen(void)
             sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "What will %s do?", &gPlayerParty[0].DriveMonster.nickname);
             BattleTextLineCount++;
         }
+
+        for (uint8_t Counter = 0; Counter < NUM_MONSTERS; Counter++)
+        {
+            if (gPlayerParty[0].DriveMonster.Index == Counter)
+            {
+                gPlayerMonsterSprite = &gBattleSpriteBack[Counter];
+            }
+            if (gOpponentParty[0].DriveMonster.Index == Counter)
+            {
+                gOpponentMonsterSprite = &gBattleSpriteFront[Counter];
+            }
+        }
     }
 
     //////TODO: Add battle intro and battle music/////////////
@@ -237,17 +227,6 @@ void DrawBattleScreen(void)
     //    PlayGameMusic(&MusicBattle01, TRUE, FALSE);*/       ////queue full loop behind intro
     //}
 
-    for (uint8_t Counter = 0; Counter < NUM_MONSTERS; Counter++)
-    {
-        if (gPlayerParty[0].DriveMonster.Index == Counter)
-        {
-            gPlayerMonsterSprite = &gBattleSpriteBack[Counter];
-        }
-        if (gOpponentParty[0].DriveMonster.Index == Counter)
-        {
-            gOpponentMonsterSprite = &gBattleSpriteFront[Counter];
-        }
-    }
 
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
@@ -605,6 +584,219 @@ void DrawBattleScreen(void)
             BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             //TODO: maybe move healing calculation to right here??
+
+            break;
+        }
+        case BATTLESTATE_CATCH_TEXT:
+        {
+            IsPlayerMovingFirst = TRUE;
+
+            ReSortUsableitems();
+
+            if (gCaptureCalculationFinished == FALSE)
+            {
+                gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count--;         //remove one of selected item from inventory
+
+                uint8_t CatchDifficulty = 0;
+                DWORD Random = 0;
+                uint8_t Random8 = 0;
+
+                if (gCaptureDeviceHelp == 255)
+                {
+                    CatchDifficulty = 0;
+                }
+                else if (gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate > gCaptureDeviceHelp)
+                {
+                    CatchDifficulty = gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate - gCaptureDeviceHelp;
+                }
+                else if (gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate <= gCaptureDeviceHelp)
+                {
+                    CatchDifficulty = 16;
+                }
+
+                rand_s((unsigned int*)&Random);
+                Random8 = (uint8_t*)Random;
+
+                if (Random8 == 0)
+                {
+                    Random8++;
+                }
+
+                if (Random8 > CatchDifficulty)      //success
+                {
+                    gCaptureNumDotsWait = 0;
+                }
+                else if (Random8 > (CatchDifficulty * 2) / 3)
+                {
+                    gCaptureNumDotsWait = 3;
+                }
+                else if (Random8 > (CatchDifficulty * 1) / 3 && Random8 <= (CatchDifficulty * 2) / 3)
+                {
+                    gCaptureNumDotsWait = 2;
+                }
+                else
+                {
+                    gCaptureNumDotsWait = 1;
+                }
+
+                gCaptureCalculationFinished = TRUE;
+            }
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+            if (Opponent == NULL)           ////NULL if wild encounter, since opponent is the charactersprite index
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayer.Name, gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Name);
+                BattleTextLineCount++;
+                switch (gCaptureNumDotsWait)
+                {
+                    case 0:         //successful capture
+                    {
+                        sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "%s was caught!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                        BattleTextLineCount++;
+                        break;
+                    }
+                    case 1:
+                    {
+                        sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "%s broke free!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                        BattleTextLineCount++;
+                        break;
+                    }
+                    case 2:
+                    {
+                        sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[3]), "%s broke free after a while!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                        BattleTextLineCount++;
+                        break;
+                    }
+                    case 3:
+                    {
+                        sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), ".....");
+                        BattleTextLineCount++;
+                        sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[3]), "%s broke free, so close!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                        BattleTextLineCount++;
+                        break;
+                    }
+                }
+
+                TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_CATCH_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+                if (TextHasFinished == TRUE)
+                {
+                    goto WaitCatch;
+                }
+            }
+            else
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayer.Name, gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Name);
+                BattleTextLineCount++;
+                sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s blocked the device!", &gCharacterSprite[Opponent].Name);
+                BattleTextLineCount++;
+                sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "You can't capture their monster!");
+                BattleTextLineCount++;
+
+                gCaptureNumDotsWait = 1;
+
+                TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_CATCH_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+                if (TextHasFinished == TRUE)
+                {
+                    goto WaitCatch;
+                }
+            }
+
+
+            break;
+        }
+        case BATTLESTATE_CATCH_WAIT:
+        {
+
+
+        WaitCatch:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
+            gCaptureCalculationFinished = FALSE;
+
+            break;
+        }
+        case BATTLESTATE_CATCHSUCCESS_TEXT:
+        {
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            CalculatedExpReward = (gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].expYield * gOpponentParty[gCurrentOpponentPartyMember].Level) / 4;
+
+            BattleTextLineCount = 0;
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s caught %s!", &gPlayer.Name, gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s was added to the party!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "%s gained %d Exp!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, CalculatedExpReward);
+            BattleTextLineCount++;
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_CATCHSUCCESS_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitCatchSuccess;
+            }
+
+            break;
+        }
+        case BATTLESTATE_CATCHSUCCESS_WAIT:
+        {
+
+        WaitCatchSuccess:
+
+            if (CalculatedExpReward != 0)
+            {
+
+                GiveMonsterToPlayer(&gOpponentParty[gCurrentPartyMember]);
+
+                BOOL DidMonsterLevelUp = 0;
+
+                gPlayerParty[gCurrentPartyMember].DriveMonster.Experience = gPlayerParty[gCurrentPartyMember].DriveMonster.Experience + CalculatedExpReward;
+                CalculatedExpReward = 0;
+
+                DidMonsterLevelUp = TryIncrementMonsterLevel(&gPlayerParty[gCurrentPartyMember]);
+
+                if (DidMonsterLevelUp == TRUE)
+                {
+                    CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
+
+                    MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);
+                }
+            }
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -1119,6 +1311,43 @@ void PPI_BattleScreen(void)
             }
             break;
         }
+        case BATTLESTATE_CATCH_TEXT:
+        {
+            break;
+        }
+        case BATTLESTATE_CATCH_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                if (gCaptureNumDotsWait > 0)
+                {
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_CATCHSUCCESS_TEXT;
+                }
+                gFinishedBattleTextAnimation = FALSE;
+            }
+            break;
+        }
+        case BATTLESTATE_CATCHSUCCESS_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_CATCHSUCCESS_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_CATCHSUCCESS_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gFinishedBattleTextAnimation = FALSE;
+                MenuItem_BattleScreen_EscapeButton();
+            }
+            break;
+        }
         case BATTLESTATE_SECONDMOVE_TEXT:
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
@@ -1471,7 +1700,7 @@ void PPI_BattleScreen(void)
 
             if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
             {
-                if (gMenu_UseableScreen.SelectedItem < gUseableItemCount - 1)
+                if (gMenu_UseableScreen.SelectedItem < _countof(gMI_UseableScreen_Items) - 2)
                 {
                     gMenu_UseableScreen.SelectedItem++;
                     PlayGameSound(&gSoundMenuNavigate);
@@ -1754,37 +1983,10 @@ void MenuItem_SwitchScreen_PartySelected(void)
 
                     gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count--;
 
-                    //gCurrentPockets = POCKETSTATE_USABLE;
-                    //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
                     gCurrentBattleState = BATTLESTATE_USEITEM_TEXT;
                     gPreviousBattleState = BATTLESTATE_CHOOSE_MONSTER;
 
-                    uint16_t count = 0;
-                    for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
-                    {
-                        if (gUseableItems[i].Count > 0)
-                        {
-                            gUseableItems[i].HasItem = TRUE;
-                        }
-                        else
-                        {
-                            gUseableItems[i].HasItem = FALSE;
-                        }
-                        if (gUseableItems[i].HasItem == TRUE)
-                        {
-                            gUseableHasItemSort[count] = i;
-                            count++;
-                        }
-                        if (i == NUM_USABLE_ITEMS - 1)
-                        {
-                            gUseableItemCount = count;
-                            for (uint8_t j = 0; j < NUM_USABLE_ITEMS - count; j++)
-                            {
-                                gUseableHasItemSort[count + j] = 0xFFFF;
-                            }
-
-                        }
-                    }
+                    ReSortUsableitems();
                 }
                 break;
             }
@@ -1886,8 +2088,17 @@ void MenuItem_UseableScreen_SlotSelected(void)
     }
     else if (gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Effect == ITEM_USE_EFFECT_CAPTURE && gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count > 0)
     {
-        //TODO: make capture / additional party members
-        //capture opposing monster and copy to party
+        gPreviousBattleState = gCurrentBattleState;
+        gCurrentBattleState = BATTLESTATE_CATCH_TEXT;
+        
+        if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_6)
+        {
+            gCaptureDeviceHelp = 50;
+        }
+        else
+        {
+            gCaptureDeviceHelp = 0;
+        }
     }
 
 }
