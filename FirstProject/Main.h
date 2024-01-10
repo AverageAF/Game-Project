@@ -9,6 +9,8 @@
 	#define ASSERT(Expression, Message) ((void),0);
 #endif
 
+
+
 #define GAME_NAME "A_Game"
 #define GAME_VERSION "0.9a"
 #define ASSET_FILE "C:\\Users\\Frankenstein\\source\\repos\\FirstProject\\x64\\Debug\\Assets.dat"		////a fullyqualified directory, TODO: change somehow to a relative directory
@@ -80,19 +82,19 @@
 #define FACING_LEFT_0 3
 #define FACING_LEFT_1 4
 #define FACING_LEFT_2 5
-#define FACING_RIGHT_0 6
-#define FACING_RIGHT_1 7
-#define FACING_RIGHT_2 8
-#define FACING_UP_0 9
-#define FACING_UP_1 10
-#define FACING_UP_2 11
+#define FACING_UP_0 6
+#define FACING_UP_1 7
+#define FACING_UP_2 8
+#define FACING_RIGHT_0 9
+#define FACING_RIGHT_1 10
+#define FACING_RIGHT_2 11
 
 typedef enum DIRECTION
 {
 	DOWN = 0,
 	LEFT = 3,
-	RIGHT = 6,
-	UP = 9
+	UP = 6,
+	RIGHT = 9
 
 } DIRECTION;
 
@@ -153,10 +155,9 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 {
 	MOVEMENT_STILL,
 	MOVEMENT_SPIN,
-	MOVEMENT_FACEDOWN,
-	MOVEMENT_FACELEFT,
-	MOVEMENT_FACERIGHT,
-	MOVEMENT_FACEUP,
+	MOVEMENT_LOOK_AROUND,
+	MOVEMENT_WANDER,
+	MOVEMENT_WALK_UP_DOWN
 
 } MOVEMENTTYPE;
 
@@ -303,12 +304,15 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs"
 	POINT ScreenPos;
 	DIRECTION Direction;
 	uint8_t SpriteIndex;
-	GAMEBITMAP SpriteS[12];
+	GAMEBITMAP Sprite[12];
 	MOVEMENTTYPE Movement;
 	BOOL Visible;
 	BOOL Exists;
 	BOOL Loaded;
 	UPOINT ResetWorldPos;
+	POINT ResetScreenPos;
+	DIRECTION ResetDirection;
+	UPOINT MovementRange;
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
 
@@ -419,6 +423,8 @@ void ProcessPlayerInput(void);
 //DWORD Load32BppBitmapFromFile(_In_ char* FileName, _Inout_ GAMEBITMAP* GameBitmap);
 
 DWORD Load32BppBitmapFromMem(_In_ void* Buffer, _Inout_ GAMEBITMAP* GameBitmap);
+
+DWORD InitializeSprites(void);
 
 DWORD InitializePlayer(void);
 

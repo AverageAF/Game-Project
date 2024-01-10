@@ -233,6 +233,13 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 
+    if (InitializeSprites() != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] Failed to initialize NPC sprites!", __FUNCTION__);
+        MessageBoxA(NULL, "Failed to Initialize NPC sprites!", "Error!", MB_ICONERROR | MB_OK);
+        goto Exit;
+    }
+
     if (InitializePlayer() != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] Failed to initialize player sprite!", __FUNCTION__);
@@ -558,6 +565,47 @@ InputDisabled:
 
 }
 
+DWORD InitializeSprites(void)
+{
+    /////////////////////////////////////////temporary init of character sprites/////////////////////
+
+    gCharacterSprite[0].ScreenPos.x = 64;
+    gCharacterSprite[0].ScreenPos.y = 192;
+    gCharacterSprite[0].WorldPos.x = 64;
+    gCharacterSprite[0].WorldPos.y = 192;
+    gCharacterSprite[0].ResetScreenPos.x = 64;
+    gCharacterSprite[0].ResetScreenPos.y = 192;
+    gCharacterSprite[0].ResetWorldPos.x = 64;
+    gCharacterSprite[0].ResetWorldPos.y = 192;
+    gCharacterSprite[0].Direction = UP;
+    gCharacterSprite[0].ResetDirection = UP;
+    gCharacterSprite[0].Movement = MOVEMENT_WALK_UP_DOWN;
+    gCharacterSprite[0].MovementRange.y = 5;
+    gCharacterSprite[0].Visible = TRUE;
+    gCharacterSprite[0].Exists = TRUE;
+    gCharacterSprite[0].Loaded = TRUE;
+    gCharacterSprite[0].Dialogue[0] = "Hello!";
+
+    ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
+
+    gCharacterSprite[1].ScreenPos.x = 16;
+    gCharacterSprite[1].ScreenPos.y = 16;
+    gCharacterSprite[1].WorldPos.x = 3872;
+    gCharacterSprite[1].WorldPos.y = 16;
+    gCharacterSprite[1].ResetScreenPos.x = 16;
+    gCharacterSprite[1].ResetScreenPos.y = 16;
+    gCharacterSprite[1].ResetWorldPos.x = 3872;
+    gCharacterSprite[1].ResetWorldPos.y = 16;
+    gCharacterSprite[1].Direction = DOWN;
+    gCharacterSprite[1].ResetDirection = DOWN;
+    gCharacterSprite[1].Movement = MOVEMENT_SPIN;
+    gCharacterSprite[1].Visible = FALSE;
+    gCharacterSprite[1].Exists = TRUE;
+    gCharacterSprite[1].Loaded = FALSE;
+    gCharacterSprite[1].Dialogue[0] = "Wow!\nThis place is dark!";
+
+    return (0);
+}
 
 DWORD InitializePlayer(void)
 {
@@ -576,30 +624,6 @@ DWORD InitializePlayer(void)
     gPlayer.Name[2] = 'p';
     gPlayer.Name[3] = 'l';
     gPlayer.Name[4] = 'e';
-
-    /////////////////////////////////////////temporary init of character sprites///////////////////// TODO REMOVE THIS
-    gCharacterSprite[0].ScreenPos.x = 64;
-    gCharacterSprite[0].ScreenPos.y = 128;
-    gCharacterSprite[0].WorldPos.x = 64;
-    gCharacterSprite[0].WorldPos.y = 128;
-    gCharacterSprite[0].Direction = DOWN;
-    gCharacterSprite[0].Movement = MOVEMENT_SPIN;
-    gCharacterSprite[0].Visible = TRUE;
-    gCharacterSprite[0].Exists = TRUE;
-    gCharacterSprite[0].Loaded = TRUE;
-    gCharacterSprite[0].Dialogue[0] = "Hello!\nHow are you today? I'm enjoying\nmyself standing by the lake!";
-
-
-    gCharacterSprite[1].ScreenPos.x = 16;
-    gCharacterSprite[1].ScreenPos.y = 16;
-    gCharacterSprite[1].WorldPos.x = 3872;
-    gCharacterSprite[1].WorldPos.y = 16;
-    gCharacterSprite[1].Direction = DOWN;
-    gCharacterSprite[1].Movement = MOVEMENT_SPIN;
-    gCharacterSprite[1].Visible = FALSE;
-    gCharacterSprite[1].Exists = TRUE;
-    gCharacterSprite[1].Loaded = FALSE;
-    gCharacterSprite[1].Dialogue[0] = "Wow this place is dark!\nI hope the way out is close!";
 
 
     return(0);
@@ -2150,22 +2174,6 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight0.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight1.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight2.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
     if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingUp0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_0])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingUp0.bmpx failed!", __FUNCTION__);
@@ -2181,55 +2189,72 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingUp2.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight0.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_1])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight1.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_2])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight2.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
     ////////////////////////////////////////////////non player sprites//////////////////////////////////////////////////////////
 
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[0])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_DOWN_0])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[3])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_LEFT_0])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[6])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[9])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_UP_0])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_RIGHT_0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[0])) != ERROR_SUCCESS)
+
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_DOWN_0])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[3])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_LEFT_0])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[6])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_UP_0])) != ERROR_SUCCESS)
     {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[9])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_RIGHT_0])) != ERROR_SUCCESS)
     {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
@@ -2476,8 +2501,8 @@ void EnterDialogue(void)
 //TODO create flags to allow for multiple dialogue boxes back to back; also allow for the dialogue box to go away on a timer without player input (FLAG_BRIEF)
 
 
-//Only input req is text, each row can fit 32 characters before going outside box
-//use character "\n" with no spaces behind it to jump to the next row (spaces after will indent)
+//MAX characters per row = 32, MAX rows = 7, only input needed is text
+//use character "\n" with no spaces behind for next row (spaces after will indent)
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
 {
     char InString[224] = { 0 };
@@ -2486,11 +2511,7 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
     char Separator[] = "\n";
 
     DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
-    if (strlen(Dialogue) <= 32)            ///if string fits on first row leave it alone and blit it
-    {
-        BlitStringToBuffer(Dialogue, &g6x7Font, &COLOR_NES_GRAY, 100, 174);
-    }
-    else if (strlen(Dialogue) <= 32 * 7 && strlen(Dialogue) > 32)
+    if (strlen(Dialogue) <= 32 * 7 && strlen(Dialogue) > 0)
     {
         strcpy_s(InString, 224, Dialogue);        ////need to define max msg length bc sizeof() and strlen() both result in errors
 

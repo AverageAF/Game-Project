@@ -37,19 +37,30 @@ void DrawOverworldScreen(void)
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
 
-    /////////////////seems to work for one sprite TODO test with multiple sprites
-    TriggerNPCMovement(LocalFrameCounter, MOVEMENT_SPIN);
+    if (gGamePaused == FALSE)
+    {
+        TriggerNPCMovement(LocalFrameCounter, MOVEMENT_SPIN);
+    }
+
+
 
     for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
     {
         if (gCharacterSprite[Index].Visible == TRUE)
         {
-            Blit32BppBitmapToBuffer(&gCharacterSprite[Index].SpriteS[gCharacterSprite[Index].SpriteIndex + gCharacterSprite[Index].Direction], gCharacterSprite[Index].ScreenPos.x, gCharacterSprite[Index].ScreenPos.y, BrightnessAdjustment);
+            Blit32BppBitmapToBuffer(&gCharacterSprite[Index].Sprite[gCharacterSprite[Index].SpriteIndex + gCharacterSprite[Index].Direction], gCharacterSprite[Index].ScreenPos.x, gCharacterSprite[Index].ScreenPos.y, BrightnessAdjustment);
+        }
+        else if ((gCharacterSprite[Index].Visible == FALSE) && !(((gCharacterSprite[Index].ResetScreenPos.x >= -64) && (gCharacterSprite[Index].ResetScreenPos.x < GAME_RES_WIDTH + 48)) && ((gCharacterSprite[Index].ResetScreenPos.y >= -64) && (gCharacterSprite[Index].ResetScreenPos.y < GAME_RES_HEIGHT + 48))))        ///////reset any sprite off screen
+        {
+            gCharacterSprite[Index].ScreenPos = gCharacterSprite[Index].ResetScreenPos;
+            gCharacterSprite[Index].WorldPos = gCharacterSprite[Index].ResetWorldPos;
+            gCharacterSprite[Index].Direction = gCharacterSprite[Index].ResetDirection;
         }
     }
 
 
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
+
 
     if (gDialogueControls == TRUE)
     {
@@ -132,7 +143,6 @@ void PPI_Overworld(void)
             gPreviousGameState = gCurrentGameState;
             gCurrentGameState = GAMESTATE_TITLESCREEN;
             PlayGameSound(&gSoundMenuChoose);
-
             PauseGameMusic();
         }
 
@@ -140,41 +150,50 @@ void PPI_Overworld(void)
 
         //ASSERT(gCamera.y <= gCurrentArea.bottom - GAME_RES_HEIGHT, "Camera went out of bounds!");
 
-
-        /////////////////////////////////////////////TODO Interacting with a sprite pauses the game, removes player movement and enables dialogue controls,
-        /////////////////////////////////////////////     faces the interacted sprite towards the player, and finnally opens a dialogue box and waits for player input.
         if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
         {
             for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
             {
                 if (gCharacterSprite[Index].Visible == TRUE)
                 {
-                    switch (gPlayer.Direction)          ////////decending directional ordering (up = 9, right = 6, left = 3, down = 0)
+                    switch (gPlayer.Direction)          ////////decending directional ordering (right = 9, up = 6, left = 3, down = 0) and then break to make sure switch doesnt select two options
                     {
-                        case (UP):
-                        {
-                            if (gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y - 16)
-                            {
-                                gCharacterSprite[Index].InteractedWith = TRUE;
-                                gCharacterSprite[Index].Direction = DOWN;
-                                EnterDialogue();
-                            }
-                            break;
-                        }
                         case (RIGHT):
                         {
-                            if (gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x + 16)
+                            if ((gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x + 16) && (gCharacterSprite[Index].WorldPos.y >= gPlayer.WorldPos.y - 4) && (gCharacterSprite[Index].WorldPos.y <= gPlayer.WorldPos.y + 4))
                             {
+                                gCharacterSprite[Index].WorldPos.x = gPlayer.WorldPos.x + 16;
+                                gCharacterSprite[Index].WorldPos.y = gPlayer.WorldPos.y;
+                                gCharacterSprite[Index].ScreenPos.x = gPlayer.ScreenPos.x + 16;
+                                gCharacterSprite[Index].ScreenPos.y = gPlayer.ScreenPos.y;
                                 gCharacterSprite[Index].InteractedWith = TRUE;
                                 gCharacterSprite[Index].Direction = LEFT;
                                 EnterDialogue();
                             }
                             break;
                         }
+                        case (UP):
+                        {
+                            if ((gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y - 16) && (gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x - 4) && (gCharacterSprite[Index].WorldPos.x <= gPlayer.WorldPos.x + 4))
+                            {
+                                gCharacterSprite[Index].WorldPos.y = gPlayer.WorldPos.y - 16;
+                                gCharacterSprite[Index].WorldPos.x = gPlayer.WorldPos.x;
+                                gCharacterSprite[Index].ScreenPos.y = gPlayer.ScreenPos.y - 16;
+                                gCharacterSprite[Index].ScreenPos.x = gPlayer.ScreenPos.x;
+                                gCharacterSprite[Index].InteractedWith = TRUE;
+                                gCharacterSprite[Index].Direction = DOWN;
+                                EnterDialogue();
+                            }
+                            break;
+                        }
                         case (LEFT):
                         {
-                            if (gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x - 16)
+                            if ((gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x - 16) && (gCharacterSprite[Index].WorldPos.y >= gPlayer.WorldPos.y - 4) && (gCharacterSprite[Index].WorldPos.y <= gPlayer.WorldPos.y + 4))
                             {
+                                gCharacterSprite[Index].WorldPos.x = gPlayer.WorldPos.x - 16;
+                                gCharacterSprite[Index].WorldPos.y = gPlayer.WorldPos.y;
+                                gCharacterSprite[Index].ScreenPos.x = gPlayer.ScreenPos.x - 16;
+                                gCharacterSprite[Index].ScreenPos.y = gPlayer.ScreenPos.y;
                                 gCharacterSprite[Index].InteractedWith = TRUE;
                                 gCharacterSprite[Index].Direction = RIGHT;
                                 EnterDialogue();
@@ -183,8 +202,12 @@ void PPI_Overworld(void)
                         }
                         case (DOWN):
                         {
-                            if (gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y + 16)
+                            if ((gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y + 16) && (gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x - 4) && (gCharacterSprite[Index].WorldPos.x <= gPlayer.WorldPos.x + 4))
                             {
+                                gCharacterSprite[Index].WorldPos.y = gPlayer.WorldPos.y + 16;
+                                gCharacterSprite[Index].WorldPos.x = gPlayer.WorldPos.x;
+                                gCharacterSprite[Index].ScreenPos.y = gPlayer.ScreenPos.y + 16;
+                                gCharacterSprite[Index].ScreenPos.x = gPlayer.ScreenPos.x;
                                 gCharacterSprite[Index].InteractedWith = TRUE;
                                 gCharacterSprite[Index].Direction = UP;
                                 EnterDialogue();
@@ -206,6 +229,7 @@ void PPI_Overworld(void)
             BOOL NoSpriteCollision = FALSE;
             if (gGameInput.SDownKeyPressed)
             {
+                gPlayer.Direction = DOWN;
                 for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
                 {
                     if (((gPlayer.WorldPos.y / 16) + 1 > gOverWorld01.TileMap.Height - 1))      ////not perfect but prevents crashing when walking to bottom of world
@@ -224,7 +248,8 @@ void PPI_Overworld(void)
                 {
                     if (gCharacterSprite[Index].Visible == TRUE)
                     {
-                        if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPos.x) && (gPlayer.WorldPos.y + 16 == gCharacterSprite[Index].WorldPos.y))
+                            //////this big line of code means: if any pixel of 16x16 sprite is in the way of moving
+                        if ((!((gCharacterSprite[Index].WorldPos.y > gPlayer.WorldPos.y + 16) || (gCharacterSprite[Index].WorldPos.y < gPlayer.WorldPos.y))) && (!((gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x + 16) || (gCharacterSprite[Index].WorldPos.x + 16 <= gPlayer.WorldPos.x))))
                         {
                             NoSpriteCollision = FALSE;
                             break;
@@ -249,10 +274,10 @@ void PPI_Overworld(void)
                         gPlayer.StepsTaken++;
                     }
                 }
-                gPlayer.Direction = DOWN;
             }
             else if (gGameInput.ALeftKeyPressed)
             {
+                gPlayer.Direction = LEFT;
                 for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
                 {
                     if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) - 1] == gPassableTiles[Counter])
@@ -266,7 +291,8 @@ void PPI_Overworld(void)
                 {
                     if (gCharacterSprite[Index].Visible == TRUE)
                     {
-                        if ((gPlayer.WorldPos.x - 16 == gCharacterSprite[Index].WorldPos.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPos.y))
+                        //////this big line of code means: if any pixel of 16x16 sprite is in the way of moving
+                        if ((!((gCharacterSprite[Index].WorldPos.x > gPlayer.WorldPos.x) || (gCharacterSprite[Index].WorldPos.x + 16 < gPlayer.WorldPos.x))) && (!((gCharacterSprite[Index].WorldPos.y >= gPlayer.WorldPos.y + 16) || (gCharacterSprite[Index].WorldPos.y + 16 <= gPlayer.WorldPos.y))))
                         {
                             NoSpriteCollision = FALSE;
                             break;
@@ -291,10 +317,10 @@ void PPI_Overworld(void)
                         gPlayer.StepsTaken++;
                     }
                 }
-                gPlayer.Direction = LEFT;
             }
             else if (gGameInput.DRightKeyPressed)
             {
+                gPlayer.Direction = RIGHT;
                 for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
                 {
                     if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) + 1] == gPassableTiles[Counter])
@@ -306,9 +332,10 @@ void PPI_Overworld(void)
                 }
                 for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
                 {
+                    //////this big line of code means: if any pixel of 16x16 sprite is in the way of moving
                     if (gCharacterSprite[Index].Visible == TRUE)
                     {
-                        if ((gPlayer.WorldPos.x + 16 == gCharacterSprite[Index].WorldPos.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPos.y))
+                        if ((!((gCharacterSprite[Index].WorldPos.x > gPlayer.WorldPos.x + 16) || (gCharacterSprite[Index].WorldPos.x < gPlayer.WorldPos.x))) && (!((gCharacterSprite[Index].WorldPos.y >= gPlayer.WorldPos.y + 16) || (gCharacterSprite[Index].WorldPos.y + 16 <= gPlayer.WorldPos.y))))
                         {
                             NoSpriteCollision = FALSE;
                             break;
@@ -333,10 +360,10 @@ void PPI_Overworld(void)
                         gPlayer.StepsTaken++;
                     }
                 }
-                gPlayer.Direction = RIGHT;
             }
             else if (gGameInput.WUpKeyPressed)
             {
+                gPlayer.Direction = UP;
                 if (gPlayer.ScreenPos.y > 0)
                 {
                     for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
@@ -352,7 +379,8 @@ void PPI_Overworld(void)
                     {
                         if (gCharacterSprite[Index].Visible == TRUE)
                         {
-                            if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPos.x) && (gPlayer.WorldPos.y - 16 == gCharacterSprite[Index].WorldPos.y))
+                                    //////this big line of code means: if any pixel of 16x16 sprite is in the way of moving
+                            if ((!((gCharacterSprite[Index].WorldPos.y > gPlayer.WorldPos.y) || (gCharacterSprite[Index].WorldPos.y + 16 < gPlayer.WorldPos.y))) && (!((gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x + 16) || (gCharacterSprite[Index].WorldPos.x + 16 <= gPlayer.WorldPos.x))))
                             {
                                 NoSpriteCollision = FALSE;
                                 break;
@@ -378,7 +406,6 @@ void PPI_Overworld(void)
                         }
                     }
                 }
-                gPlayer.Direction = UP;
             }
         }
         else
@@ -407,6 +434,7 @@ void PPI_Overworld(void)
                                     }
                                 }
                                 gCharacterSprite[Index].ScreenPos.y--;
+                                gCharacterSprite[Index].ResetScreenPos.y--;
 
                                 if (gCharacterSprite[Index].Visible == FALSE)
                                 {
@@ -449,6 +477,7 @@ void PPI_Overworld(void)
                                     }
                                 }
                                 gCharacterSprite[Index].ScreenPos.x++;
+                                gCharacterSprite[Index].ResetScreenPos.x++;
 
                                 if (gCharacterSprite[Index].Visible == FALSE)
                                 {
@@ -490,6 +519,7 @@ void PPI_Overworld(void)
                                     }
                                 }
                                 gCharacterSprite[Index].ScreenPos.x--;
+                                gCharacterSprite[Index].ResetScreenPos.x--;
 
                                 if (gCharacterSprite[Index].Visible == FALSE)
                                 {
@@ -531,6 +561,7 @@ void PPI_Overworld(void)
                                     }
                                 }
                                 gCharacterSprite[Index].ScreenPos.y++;
+                                gCharacterSprite[Index].ResetScreenPos.y++;
 
                                 if (gCharacterSprite[Index].Visible == FALSE)
                                 {
@@ -683,40 +714,106 @@ void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE
 
 void TriggerNPCMovement(_In_ uint64_t Counter, _In_ MOVEMENTTYPE MovementFlag)
 {
-    if (gGamePaused == FALSE)
+    for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
     {
-        for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
+        if (gCharacterSprite[Index].Loaded == TRUE)
         {
-            if (Counter % 30 == 0)
+            switch (gCharacterSprite[Index].Movement)
             {
-                if (gCharacterSprite[Index].Visible == TRUE)
+                case (MOVEMENT_SPIN):
                 {
-                    switch (gCharacterSprite[Index].Movement)
+                    if ((Counter % 30 == 0) && (gCharacterSprite[Index].Visible == TRUE))
                     {
-                        case (MOVEMENT_SPIN):
+                        if (gCharacterSprite[Index].Direction >= 9)
                         {
-                            if (gCharacterSprite[Index].Direction >= 9)
+                            gCharacterSprite[Index].Direction = 0;
+                        }
+                        else
+                        {
+                            gCharacterSprite[Index].Direction += 3;
+                        }
+                    }
+                    break;
+                }
+                case (MOVEMENT_STILL):
+                {
+                    break;
+                }
+                case (MOVEMENT_LOOK_AROUND):
+                {
+                    if ((Counter % 90 == 0) && (gCharacterSprite[Index].Visible == TRUE))
+                    {
+                        DWORD Random = 0;
+
+                        rand_s((unsigned int*)&Random);
+
+                        Random = (Random % 4) * 3;
+
+                        gCharacterSprite[Index].Direction = Random;
+                    }
+                    break;
+                }
+                case (MOVEMENT_WALK_UP_DOWN):
+                {
+                    /*if (Counter % 2 == 0)*/
+                    {
+                        if (gCharacterSprite[Index].Direction == UP)
+                        {
+                            if ((!((gCharacterSprite[Index].WorldPos.y > gPlayer.WorldPos.y + 16) || (gCharacterSprite[Index].WorldPos.y < gPlayer.WorldPos.y))) && (!((gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x + 16) || (gCharacterSprite[Index].WorldPos.x + 16 <= gPlayer.WorldPos.x))))
                             {
-                                gCharacterSprite[Index].Direction = 0;
+                                gCharacterSprite[Index].Direction = DOWN;
                             }
                             else
                             {
-                                gCharacterSprite[Index].Direction += 3;
+                                gCharacterSprite[Index].ScreenPos.y--;
+                                gCharacterSprite[Index].WorldPos.y--;
                             }
-                            break;
                         }
-                        default:
+                        else if (gCharacterSprite[Index].Direction == DOWN)
                         {
-                            ASSERT(FALSE, "INGAMESPRITE has an unknown movement type!")
+                            if ((!((gCharacterSprite[Index].WorldPos.y > gPlayer.WorldPos.y) || (gCharacterSprite[Index].WorldPos.y + 16 < gPlayer.WorldPos.y))) && (!((gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x + 16) || (gCharacterSprite[Index].WorldPos.x + 16 <= gPlayer.WorldPos.x))))
+                            {
+                                gCharacterSprite[Index].Direction = UP;
+                            }
+                            else
+                            {
+                                gCharacterSprite[Index].ScreenPos.y++;
+                                gCharacterSprite[Index].WorldPos.y++;
+                            }
+                        }
+
+                        if (gCharacterSprite[Index].ScreenPos.y == gCharacterSprite[Index].ResetScreenPos.y)
+                        {
+                            gCharacterSprite[Index].Direction = UP;
+                        }
+                        else if (gCharacterSprite[Index].ScreenPos.y == gCharacterSprite[Index].ResetScreenPos.y - (gCharacterSprite[Index].MovementRange.y * 16))
+                        {
+                            gCharacterSprite[Index].Direction = DOWN;
+                        }
+
+                        if (!(((gCharacterSprite[Index].ScreenPos.y >= 0) && (gCharacterSprite[Index].ScreenPos.y < GAME_RES_HEIGHT - 16)) && ((gCharacterSprite[Index].ScreenPos.x >= 0) && (gCharacterSprite[Index].ScreenPos.x < GAME_RES_WIDTH - 16))))
+                        {
+                            gCharacterSprite[Index].Visible = FALSE;
+                        }
+                        else
+                        {
+                            gCharacterSprite[Index].Visible = TRUE;
                         }
                     }
+                    break;
+                }
+                default:
+                {
+                    ASSERT(FALSE, "INGAMESPRITE has an unknown movement type!")
                 }
             }
         }
     }
 }
 
-void ResetNPCs(void)
-{
-
-}
+//void ResetNPC(_In_ INGAMESPRITE CharacterSprite)
+//{
+//    CharacterSprite.WorldPos = CharacterSprite.ResetWorldPos;
+//    CharacterSprite.ScreenPos = CharacterSprite.ResetScreenPos;
+//    CharacterSprite.Direction = CharacterSprite.ResetDirection;
+//}

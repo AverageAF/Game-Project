@@ -46,4 +46,4 @@ void TeleportHandler(void);
 
 void TriggerNPCMovement(_In_ uint64_t Counter, _In_ MOVEMENTTYPE MovementFlag);
 
-void ResetNPCs(void);
+void ResetNPC(_In_ INGAMESPRITE CharacterSprite);
