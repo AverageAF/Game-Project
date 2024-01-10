@@ -586,16 +586,16 @@ DWORD InitializeSprites(void)
 {
     /////////////////////////////////////////temporary init of character sprites/////////////////////
 
-    gCharacterSprite[0].ScreenPos.x = 256;
-    gCharacterSprite[0].ScreenPos.y = 144;
+    //gCharacterSprite[0].ScreenPos.x = 256;
+    //gCharacterSprite[0].ScreenPos.y = 144;
     gCharacterSprite[0].WorldPos.x = 352;
     gCharacterSprite[0].WorldPos.y = 4544;
-    gCharacterSprite[0].ResetScreenPos.x = 256;
-    gCharacterSprite[0].ResetScreenPos.y = 144;
+    //gCharacterSprite[0].ResetScreenPos.x = 256;
+    //gCharacterSprite[0].ResetScreenPos.y = 144;
     gCharacterSprite[0].ResetWorldPos.x = 352;
     gCharacterSprite[0].ResetWorldPos.x = 4544;
-    gCharacterSprite[0].ResetOriginScreenPos.x = 256;
-    gCharacterSprite[0].ResetOriginScreenPos.y = 144;
+    //gCharacterSprite[0].ResetOriginScreenPos.x = 256;
+    //gCharacterSprite[0].ResetOriginScreenPos.y = 144;
     gCharacterSprite[0].ResetOriginWorldPos.x = 352;
     gCharacterSprite[0].ResetOriginWorldPos.y = 4544;
     gCharacterSprite[0].Direction = LEFT;
@@ -617,16 +617,16 @@ DWORD InitializeSprites(void)
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
 
-    gCharacterSprite[1].ScreenPos.x = 16;
-    gCharacterSprite[1].ScreenPos.y = 16;
+    //gCharacterSprite[1].ScreenPos.x = 16;
+    //gCharacterSprite[1].ScreenPos.y = 16;
     gCharacterSprite[1].WorldPos.x = 3872;
     gCharacterSprite[1].WorldPos.y = 16;
-    gCharacterSprite[1].ResetScreenPos.x = 16;
-    gCharacterSprite[1].ResetScreenPos.y = 16;
+    //gCharacterSprite[1].ResetScreenPos.x = 16;
+    //gCharacterSprite[1].ResetScreenPos.y = 16;
     gCharacterSprite[1].ResetWorldPos.x = 3872;
     gCharacterSprite[1].ResetWorldPos.y = 16;
-    gCharacterSprite[1].ResetOriginScreenPos.x = 16;
-    gCharacterSprite[1].ResetOriginScreenPos.y = 16;
+    //gCharacterSprite[1].ResetOriginScreenPos.x = 16;
+    //gCharacterSprite[1].ResetOriginScreenPos.y = 16;
     gCharacterSprite[1].ResetOriginWorldPos.x = 3872;
     gCharacterSprite[1].ResetOriginWorldPos.y = 16;
     gCharacterSprite[1].Direction = DOWN;
@@ -647,16 +647,16 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    gCharacterSprite[2].ScreenPos.x = 608;
-    gCharacterSprite[2].ScreenPos.y = 16;
+    //gCharacterSprite[2].ScreenPos.x = 608;
+    //gCharacterSprite[2].ScreenPos.y = 16;
     gCharacterSprite[2].WorldPos.x = 1136;
     gCharacterSprite[2].WorldPos.y = 4496;
-    gCharacterSprite[2].ResetScreenPos.x = 608;
-    gCharacterSprite[2].ResetScreenPos.y = 16;
+    //gCharacterSprite[2].ResetScreenPos.x = 608;
+    //gCharacterSprite[2].ResetScreenPos.y = 16;
     gCharacterSprite[2].ResetWorldPos.x = 1136;
     gCharacterSprite[2].ResetWorldPos.y = 4496;
-    gCharacterSprite[2].ResetOriginScreenPos.x = 608;
-    gCharacterSprite[2].ResetOriginScreenPos.y = 16;
+    //gCharacterSprite[2].ResetOriginScreenPos.x = 608;
+    //gCharacterSprite[2].ResetOriginScreenPos.y = 16;
     gCharacterSprite[2].ResetOriginWorldPos.x = 1136;
     gCharacterSprite[2].ResetOriginWorldPos.y = 4496;
     gCharacterSprite[2].Direction = DOWN;
@@ -682,16 +682,16 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    gCharacterSprite[3].ScreenPos.x = 256 + 32;
-    gCharacterSprite[3].ScreenPos.y = 144 + 32;
+    //gCharacterSprite[3].ScreenPos.x = 256 + 32;
+    //gCharacterSprite[3].ScreenPos.y = 144 + 32;
     gCharacterSprite[3].WorldPos.x = 352 + 32;
     gCharacterSprite[3].WorldPos.y = 4544 + 32;
-    gCharacterSprite[3].ResetScreenPos.x = 256 + 32;
-    gCharacterSprite[3].ResetScreenPos.y = 144 + 32;
+    //gCharacterSprite[3].ResetScreenPos.x = 256 + 32;
+    //gCharacterSprite[3].ResetScreenPos.y = 144 + 32;
     gCharacterSprite[3].ResetWorldPos.x = 352 + 32;
     gCharacterSprite[3].ResetWorldPos.x = 4544 + 32;
-    gCharacterSprite[3].ResetOriginScreenPos.x = 256 + 32;
-    gCharacterSprite[3].ResetOriginScreenPos.y = 144 + 32;
+    //gCharacterSprite[3].ResetOriginScreenPos.x = 256 + 32;
+    //gCharacterSprite[3].ResetOriginScreenPos.y = 144 + 32;
     gCharacterSprite[3].ResetOriginWorldPos.x = 352 + 32;
     gCharacterSprite[3].ResetOriginWorldPos.y = 4544 + 32;
     gCharacterSprite[3].Direction = DOWN;
@@ -713,16 +713,16 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    gCharacterSprite[4].ScreenPos.x = 192;
-    gCharacterSprite[4].ScreenPos.y = 192;
+    //gCharacterSprite[4].ScreenPos.x = 192;
+    //gCharacterSprite[4].ScreenPos.y = 192;
     gCharacterSprite[4].WorldPos.x = 192;
     gCharacterSprite[4].WorldPos.y = 192;
-    gCharacterSprite[4].ResetScreenPos.x = 192;
-    gCharacterSprite[4].ResetScreenPos.y = 192;
+    //gCharacterSprite[4].ResetScreenPos.x = 192;
+    //gCharacterSprite[4].ResetScreenPos.y = 192;
     gCharacterSprite[4].ResetWorldPos.x = 192;
     gCharacterSprite[4].ResetWorldPos.x = 192;
-    gCharacterSprite[4].ResetOriginScreenPos.x = 192;
-    gCharacterSprite[4].ResetOriginScreenPos.y = 192;
+    //gCharacterSprite[4].ResetOriginScreenPos.x = 192;
+    //gCharacterSprite[4].ResetOriginScreenPos.y = 192;
     gCharacterSprite[4].ResetOriginWorldPos.x = 192;
     gCharacterSprite[4].ResetOriginWorldPos.y = 192;
     gCharacterSprite[4].Direction = DOWN;
@@ -743,6 +743,66 @@ DWORD InitializeSprites(void)
     gStoreType[4] = 4;
 
     sprintf_s(gCharacterSprite[4].Name, sizeof(gCharacterSprite[4].Name), "Items");
+
+    //////////////////////////////////////////////////////////////
+
+    //gCharacterSprite[5].ScreenPos.x = 256 + 64;
+    //gCharacterSprite[5].ScreenPos.y = 144 + 64;
+    gCharacterSprite[5].WorldPos.x = 352 + 64;
+    gCharacterSprite[5].WorldPos.y = 4544 + 64;
+    //gCharacterSprite[5].ResetScreenPos.x = 256 + 64;
+    //gCharacterSprite[5].ResetScreenPos.y = 144 + 64;
+    gCharacterSprite[5].ResetWorldPos.x = 352 + 64;
+    gCharacterSprite[5].ResetWorldPos.x = 4544 + 64;
+    //gCharacterSprite[5].ResetOriginScreenPos.x = 256 + 64;
+    //gCharacterSprite[5].ResetOriginScreenPos.y = 144 + 64;
+    gCharacterSprite[5].ResetOriginWorldPos.x = 352 + 64;
+    gCharacterSprite[5].ResetOriginWorldPos.y = 4544 + 64;
+    gCharacterSprite[5].Direction = DOWN;
+    gCharacterSprite[5].ResetDirection = DOWN;
+    gCharacterSprite[5].Event = EVENT_FLAG_USEITEM_NOSPRITE;
+    gCharacterSprite[5].Movement = MOVEMENT_SPARKLE;
+    gCharacterSprite[5].Visible = FALSE;
+    gCharacterSprite[5].Exists = TRUE;
+    gCharacterSprite[5].Loaded = FALSE;
+    gCharacterSprite[5].GameAreaIndex = 2;
+    gCharacterSprite[5].Dialogue[DIALOGUE_FLAG_0] = "You found a hidden item!";
+    gCharacterSprite[5].Dialogue[DIALOGUE_FLAG_1] = "You put it away \ninto your backpack.";
+    gCharacterSprite[5].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[5].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
+    gCharacterSprite[5].DialogueLoopReturn = DIALOGUE_FLAG_0;
+    gCharacterSprite[5].EventItemsIndex[0] = INV_USABLE_ITEM_0;
+    gCharacterSprite[5].EventItemsCount[0] = 5;
+
+    //////////////////////////////////////////////////////////////
+
+    //gCharacterSprite[6].ScreenPos.x = 0;
+    //gCharacterSprite[6].ScreenPos.y = 0;
+    gCharacterSprite[6].WorldPos.x = 608;
+    gCharacterSprite[6].WorldPos.y = 4464;
+    //gCharacterSprite[6].ResetScreenPos.x = 0;
+    //gCharacterSprite[6].ResetScreenPos.y = 0;
+    gCharacterSprite[6].ResetWorldPos.x = 608;
+    gCharacterSprite[6].ResetWorldPos.x = 4464;
+    //gCharacterSprite[6].ResetOriginScreenPos.x = 0;
+    //gCharacterSprite[6].ResetOriginScreenPos.y = 0;
+    gCharacterSprite[6].ResetOriginWorldPos.x = 608;
+    gCharacterSprite[6].ResetOriginWorldPos.y = 4464;
+    gCharacterSprite[6].Direction = DOWN;
+    gCharacterSprite[6].ResetDirection = DOWN;
+    gCharacterSprite[6].Event = EVENT_FLAG_USEITEM_NOSPRITE;
+    gCharacterSprite[6].Movement = MOVEMENT_ITEMPICKUP;
+    gCharacterSprite[6].Visible = FALSE;
+    gCharacterSprite[6].Exists = TRUE;
+    gCharacterSprite[6].Loaded = FALSE;
+    gCharacterSprite[6].GameAreaIndex = 3;
+    gCharacterSprite[6].Dialogue[DIALOGUE_FLAG_0] = "You found an item!";
+    gCharacterSprite[6].Dialogue[DIALOGUE_FLAG_1] = "You put it away \ninto your backpack.";
+    gCharacterSprite[6].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[6].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
+    gCharacterSprite[6].DialogueLoopReturn = DIALOGUE_FLAG_0;
+    gCharacterSprite[6].EventItemsIndex[0] = INV_USABLE_ITEM_0;
+    gCharacterSprite[6].EventItemsCount[0] = 5;
 
     //////////////////////////////////////////////////////////////
 
@@ -2401,6 +2461,44 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "ManFacingUp0.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_0] },
         {   "ManFacingUp1.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_1] },
         {   "ManFacingUp2.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_LEFT_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_LEFT_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_LEFT_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_RIGHT_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_RIGHT_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_RIGHT_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_UP_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_UP_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_UP_2] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_DOWN_0] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_DOWN_1] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_DOWN_2] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_LEFT_0] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_LEFT_1] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_LEFT_2] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_RIGHT_0] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_RIGHT_1] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_RIGHT_2] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_0] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_1] },
+        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_2] },
+        {   "SmallBag.bmpx", &gLootPickup },
+        {   "EmptySprite.bmpx", &gEmptySprite },
+        {   "Sparkle01(3).bmpx", &gSparkle01[3]},
+        {   "Sparkle01(2).bmpx", &gSparkle01[2]},
+        {   "Sparkle01(1).bmpx", &gSparkle01[1]},
+        {   "Sparkle01(0).bmpx", &gSparkle01[0]},
+        {   "Sparkle02(3).bmpx", &gSparkle02[3]},
+        {   "Sparkle02(2).bmpx", &gSparkle02[2]},
+        {   "Sparkle02(1).bmpx", &gSparkle02[1]},
+        {   "Sparkle02(0).bmpx", &gSparkle02[0]},
+        {   "Sparkle03(3).bmpx", &gSparkle03[3]},
+        {   "Sparkle03(2).bmpx", &gSparkle03[2]},
+        {   "Sparkle03(1).bmpx", &gSparkle03[1]},
+        {   "Sparkle03(0).bmpx", &gSparkle03[0]},
         {   "BattleBackgroundGrass01.bmpx", &gBattleScreen_Grass01 },
         {   "BattleBackgroundStoneBricks01.bmpx", &gBattleScreen_StoneBricks01 },
         {   "Wolf64Back01.bmpx", &gBattleSpriteBack[MONSTER_WOLF] },
@@ -2559,12 +2657,27 @@ void InitializeGlobals(void)
                                     .Music = &gMusicOverWorld01,
                                     .Index = 4 };
 
+    gForest01Area = (GAMEAREA){ .Name = "Forest01",
+                                    .Area = (RECT){.left = 528, .top = 3808, .right = 1328, .bottom = 4288 },
+                                    .Music = &gMusicOverWorld01,
+                                    .Index = 5 };
+
+    gRoute02Area = (GAMEAREA){ .Name = "Route02",
+                                    .Area = (RECT){.left = 80, .top = 3648, .right = 592, .bottom = 4400 },
+                                    .Music = &gMusicOverWorld01,
+                                    .Index = 6 };
+
+    gBattleTown02Area = (GAMEAREA){ .Name = "BattleTown02",
+                                    .Area = (RECT){.left = 80, .top = 3152, .right = 1040, .bottom = 3696 },
+                                    .Music = &gMusicOverWorld01,
+                                    .Index = 7 };
+
     //"inside" locations i.e. caves, houses, etc
 
     gDungeon01Area = (GAMEAREA){ .Name = "Dungeon 01",
                                  .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
                                  .Music = &gMusicDungeon01,
-                                 .Index = 5 };   
+                                 .Index = 8 };   
 
     gCurrentArea = gHome01Area;
 
@@ -2573,43 +2686,81 @@ void InitializeGlobals(void)
     gGameAreas[2] = gStartingTownArea;
     gGameAreas[3] = gRoute01Area;
     gGameAreas[4] = gBattleTown01Area;
-    gGameAreas[5] = gDungeon01Area;
+    gGameAreas[5] = gForest01Area;
+    gGameAreas[6] = gRoute02Area;
+    gGameAreas[7] = gBattleTown02Area;
+    gGameAreas[8] = gDungeon01Area;
+
+    ASSERT(_countof(gGameAreas) == NUM_GAME_AREAS, "Array gGameAreas is the wrong size!");
  
     gNullEncounterArea = (ENCOUNTERAREA){ 0 };
 
-    gOverworld01EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld01Enc",
-                                                .Area = (RECT){.left = 560, .top = 4624, .right = 576, .bottom = 4656 },
-                                                .EncounterRate = 100,
+    gOverworld01EncounterArea = (ENCOUNTERAREA){ .Name = "Route1General",
+                                                .Area = (RECT){.left = 560, .top = 4400, .right = 1328, .bottom = 4688 },
+                                                .EncounterRate = 200,
                                                 .MaxLevel = 6,
                                                 .MinLevel = 4,
                                                 .MonsterIndexChanceSlots = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-    gOverworld02EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld02Enc",
-                                                .Area = (RECT){.left = 384, .top = 80, .right = 528, .bottom = 448 },
-                                                .EncounterRate = 200,
-                                                .MaxLevel = 8,
-                                                .MinLevel = 6,
-                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0 } };
+    gOverworld02EncounterArea = (ENCOUNTERAREA){ .Name = "Route1Special",
+                                                .Area = (RECT){.left = 1152, .top = 4336, .right = 1280, .bottom = 4400 },
+                                                .EncounterRate = 100,
+                                                .MaxLevel = 10,
+                                                .MinLevel = 7,
+                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-    gOverworld03EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld03Enc",
-                                                .Area = (RECT){.left = 112, .top = 464, .right = 480, .bottom = 608 },
+    gOverworld03EncounterArea = (ENCOUNTERAREA){ .Name = "Forest1HardPath",
+                                                .Area = (RECT){.left = 592, .top = 3840, .right = 752, .bottom = 4224 },
                                                 .EncounterRate = 200,
+                                                .MaxLevel = 13,
+                                                .MinLevel = 11,
+                                                .MonsterIndexChanceSlots = { 1, 1, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0 } };
+
+    gOverworld04EncounterArea = (ENCOUNTERAREA){ .Name = "Forest1General",
+                                                .Area = (RECT){.left = 752, .top = 3872, .right = 1296, .bottom = 4224 },
+                                                .EncounterRate = 200,
+                                                .MaxLevel = 11,
+                                                .MinLevel = 8,
+                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0 } };
+
+    gOverworld05EncounterArea = (ENCOUNTERAREA){ .Name = "Forest1Special",
+                                                .Area = (RECT){.left = 816, .top = 3840, .right = 1182, .bottom = 3872 },
+                                                .EncounterRate = 100,
+                                                .MaxLevel = 9,
+                                                .MinLevel = 7,
+                                                .MonsterIndexChanceSlots = { 2, 3, 4, 5, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+
+    gOverworld06EncounterArea = (ENCOUNTERAREA){ .Name = "Route2General",
+                                                .Area = (RECT){.left = 240, .top = 3728, .right = 528, .bottom = 4288 },
+                                                .EncounterRate = 200,
+                                                .MaxLevel = 12,
+                                                .MinLevel = 9,
+                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0 } };
+
+    gOverworld07EncounterArea = (ENCOUNTERAREA){ .Name = "Route2Special",
+                                                .Area = (RECT){.left = 144, .top = 3968, .right = 192, .bottom = 4304 },
+                                                .EncounterRate = 100,
                                                 .MaxLevel = 10,
                                                 .MinLevel = 8,
-                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0 } };
+                                                .MonsterIndexChanceSlots = { 6, 6, 7, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-    gDungeon01EncounterArea = (ENCOUNTERAREA){ .Name = "Dungeon01Enc",
-                                                .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
-                                                .EncounterRate = 300,
+    gOverworld08EncounterArea = (ENCOUNTERAREA){ .Name = "Route3General",
+                                                .Area = (RECT){.left = 1040, .top = 3168, .right = 1568, .bottom = 3456 },
+                                                .EncounterRate = 250,
                                                 .MaxLevel = 15,
-                                                .MinLevel = 12,
-                                                .MonsterIndexChanceSlots = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0 } };
+                                                .MinLevel = 13,
+                                                .MonsterIndexChanceSlots = { 1, 2, 2, 3, 3, 4, 4, 5, 6, 9, 0, 0, 0, 0, 0 } };
+
 
     gEncounterAreas[0] = gNullEncounterArea;
     gEncounterAreas[1] = gOverworld01EncounterArea;
     gEncounterAreas[2] = gOverworld02EncounterArea;
     gEncounterAreas[3] = gOverworld03EncounterArea;
-    gEncounterAreas[4] = gDungeon01EncounterArea;
+    gEncounterAreas[4] = gOverworld04EncounterArea;
+    gEncounterAreas[5] = gOverworld05EncounterArea;
+    gEncounterAreas[6] = gOverworld06EncounterArea;
+    gEncounterAreas[7] = gOverworld07EncounterArea;
+    gEncounterAreas[8] = gOverworld08EncounterArea;
 
 
     gGameIsRunning = TRUE;
@@ -2619,71 +2770,135 @@ void InitializeGlobals(void)
     ////used for transfering gCamera, changing GameArea and screen position
     //from starting town to route1
     gTransitionAreas[2][1] = (TransitionArea){.TilesArea = (RECT) {.left = 560, .top = 4624, .right = 576, .bottom = 4656 + 16},
-                                            .ScreenPosAdd = (POINT) {.x = -320, .y = 0 },  //src 352, (144, 160, 176)      dest  0, (144, 160, 176)
                                             .CameraPosAdd = (POINT) {.x = 320, .y = 0 },
                                             .TransAreaDestIndex = 3
     };
 
     //from route1 to starting town
     gTransitionAreas[3][1] = (TransitionArea){.TilesArea = (RECT) {.left = 544, .top = 4624, .right = 560, .bottom = 4656 + 16 },
-                                            .ScreenPosAdd = (POINT) {.x = 320, .y = 0 },  
                                             .CameraPosAdd = (POINT) {.x = -320, .y = 0 },
                                             .TransAreaDestIndex = 2
     };
 
     //from route1 to first battle town
     gTransitionAreas[3][2] = (TransitionArea){ .TilesArea = (RECT) {.left = 1360, .top = 4448, .right = 1376, .bottom = 4464 + 16 },
-                                            .ScreenPosAdd = (POINT) {.x = -320, .y = 0 },  
                                             .CameraPosAdd = (POINT) {.x = 320, .y = 0 },    
                                             .TransAreaDestIndex = 4
     };
 
+    //from first battle town to route1
+    gTransitionAreas[4][1] = (TransitionArea){ .TilesArea = (RECT) {.left = 1344, .top = 4448, .right = 1360, .bottom = 4464 + 16 },
+                                            .CameraPosAdd = (POINT) {.x = -320, .y = 0 },
+                                            .TransAreaDestIndex = 3
+    };
+
+    //from route2 to second battle town
+    gTransitionAreas[6][1] = (TransitionArea){ .TilesArea = (RECT) {.left = 336, .top = 3664, .right = 432, .bottom = 3680 },
+                                            .CameraPosAdd = (POINT) {.x = 0, .y = -192 },   //3456 dest     //3648 src
+                                            .TransAreaDestIndex = 7
+    };
+    
+    //from second battle town to route4
+    gTransitionAreas[7][3] = (TransitionArea){ .TilesArea = (RECT) {.left = 0, .top = 0, .right = 0, .bottom = 0 },
+                                            .CameraPosAdd = (POINT) {.x = 0, .y = 0 },
+                                            .TransAreaDestIndex = 9
+    };
+
+    //from second battle town to route3 (cave)
+    gTransitionAreas[7][2] = (TransitionArea){ .TilesArea = (RECT) {.left = 0, .top = 0, .right = 0, .bottom = 0 },
+                                            .CameraPosAdd = (POINT) {.x = 0, .y = 0 },
+                                            .TransAreaDestIndex = 8
+    };
+
+    //from second battle town to route2
+    gTransitionAreas[7][1] = (TransitionArea){ .TilesArea = (RECT) {.left = 336, .top = 3664, .right = 432, .bottom = 3680 },
+                                            .CameraPosAdd = (POINT) {.x = 0, .y = 192 },
+                                            .TransAreaDestIndex = 6
+    };
+
+
+    gTransitionsPerMap[0] = 0;
+    gTransitionsPerMap[1] = 0;
     gTransitionsPerMap[2] = 1;
     gTransitionsPerMap[3] = 2;
+    gTransitionsPerMap[4] = 1;
+    gTransitionsPerMap[5] = 0;
+    gTransitionsPerMap[6] = 1;
+    gTransitionsPerMap[7] = 3;
 
 
-    //// from ??? to dungeon
-    gTeleport001 = (PORTCOORDS){ .AreaDest = gDungeon01Area,
-                                    .CameraPosAdd = (POINT)  {.x = 3584, .y = -272 },   //3856, 0 dest
-                                    .ScreenPosAdd = (POINT)  {.x = -48,    .y = -16 },         //144, 96 dest
-                                    .WorldPosAdd = (POINT)  {.x = 3536, .y = -288 },
-                                    .WorldPos = (UPOINT) {.x = 464,  .y = 384 },
-                                    /*.SpritesToLoad[0] = FALSE, .SpritesToLoad[1] = TRUE,
-                                    .SpritesToUnload[0] = TRUE, .SpritesToUnload[1] = FALSE*/ };          ////load/unload sprites when teleporting
+
+    ////from forest1 to route1
+    gTeleport001 = (PORTCOORDS){ .AreaDest = gRoute01Area,
+                                    .CameraPosAdd = (POINT)  {.x = 240, .y = 240 },    //512, 4048 src        //752, 4288 dest
+                                    .WorldPosAdd = (POINT)  {.x = 320, .y = 160 },        //944, 4400 dest
+                                    .WorldPos = (UPOINT) {.x = 624,  .y = 4240 },
+    };
 
 
-    ////from dungeon to ???
-    gTeleport002 = (PORTCOORDS){ .AreaDest = gOverworldArea,
-                                    .CameraPosAdd = (POINT)  {.x = -3584, .y = 272 },    //208, 240 dest
-                                    .ScreenPosAdd = (POINT)  {.x = 48,     .y = 16 },         //192, 112 dest (player centered)
-                                    .WorldPosAdd = (POINT)  {.x = -3536, .y = 288 },
-                                    .WorldPos = (UPOINT) {.x = 4000,  .y = 96 },
-                                    /*.SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE,
-                                    .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = TRUE*/ };          ////load/unload sprites when teleporting
+    ////from route1 to forest1
+    gTeleport002 = (PORTCOORDS){ .AreaDest = gForest01Area,
+                                    .CameraPosAdd = (POINT)  {.x = -240, .y = -240 },    //512, 4048 dest        //752, 4288 src
+                                    .WorldPosAdd = (POINT)  {.x = -320, .y = -160 },        //624, 4240 dest
+                                    .WorldPos = (UPOINT) {.x = 944,  .y = 4400 },
+    };
+
 
     ////from starttown to home
     gTeleport003 = (PORTCOORDS){ .AreaDest = gHome01Area,
                                     .CameraPosAdd = (POINT)  {.x = 3760, .y = -4144 },    //3856, 256 dest
-                                    .ScreenPosAdd = (POINT)  {.x = 32,     .y = 80 },         //192, 176 dest
                                     .WorldPosAdd = (POINT)  {.x = 3792, .y = -4064 },       //4048, 432
                                     .WorldPos = (UPOINT) {.x = 256,  .y = 4496 },     
-                                    /*.SpritesToLoad[0] = FALSE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = FALSE, .SpritesToLoad[3] = FALSE, .SpritesToLoad[4] = FALSE,
-                                    .SpritesToUnload[0] = TRUE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = TRUE, .SpritesToUnload[3] = TRUE, .SpritesToUnload[4] = TRUE*/ };          ////load/unload sprites when teleporting
+    };
 
 
     ////from home to starttown
     gTeleport004 = (PORTCOORDS){ .AreaDest = gStartingTownArea,
                                     .CameraPosAdd = (POINT)  {.x = -3760, .y = 4144 },    //96, 4400 dest
-                                    .ScreenPosAdd = (POINT)  {.x = -32,     .y = -80 },         //160, 96 dest
                                     .WorldPosAdd = (POINT)  {.x = -3792, .y = 4064 },       //256, 4496
                                     .WorldPos = (UPOINT) {.x = 4048,  .y = 432 },
-                                    /*.SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = FALSE, .SpritesToLoad[3] = FALSE, .SpritesToLoad[4] = FALSE,
-                                    .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = FALSE, .SpritesToUnload[3] = FALSE, .SpritesToUnload[4] = FALSE*/ };          ////load/unload sprites when teleporting
+    };
+
+
+    ////from forest1 to first battle town
+    gTeleport005 = (PORTCOORDS){ .AreaDest = gBattleTown01Area,
+                                    .CameraPosAdd = (POINT)  {.x = 672, .y = 208 },    //1616, 4256 dest        //944, 4048 src
+                                    .WorldPosAdd = (POINT)  {.x = 576, .y = 80 },        //1808, 4320 dest
+                                    .WorldPos = (UPOINT) {.x = 1232,  .y = 4240 },
+    };
+
+
+    ////from first battle town to forest1
+    gTeleport006 = (PORTCOORDS){ .AreaDest = gForest01Area,
+                                    .CameraPosAdd = (POINT)  {.x = -672, .y = -208 },    //944, 4048 dest        //1616, 4256 src
+                                    .WorldPosAdd = (POINT)  {.x = -576, .y = -80 },        //1232, 4240 dest
+                                    .WorldPos = (UPOINT) {.x = 1808,  .y = 4320 },
+    };
+
+
+    ////from forest1 to route2
+    gTeleport007 = (PORTCOORDS){ .AreaDest = gRoute02Area,
+                                    .CameraPosAdd = (POINT)  {.x = -384, .y = 352 },    //176, 4160 dest        //560, 3808 src
+                                    .WorldPosAdd = (POINT)  {.x = -384, .y = 464 },        //368, 4304 dest
+                                    .WorldPos = (UPOINT) {.x = 752,  .y = 3840 },
+    };
+
+
+    ////from forest1 to route2
+    gTeleport008 = (PORTCOORDS){ .AreaDest = gForest01Area,
+                                    .CameraPosAdd = (POINT)  {.x = 384, .y = -352 },    //176, 4160 dest        //560, 3808 src
+                                    .WorldPosAdd = (POINT)  {.x = 384, .y = -464 },        //752, 3840 dest
+                                    .WorldPos = (UPOINT) {.x = 368,  .y = 4304 },
+    };
 
     gPortCoords[0] = gTeleport001;
     gPortCoords[1] = gTeleport002;
     gPortCoords[2] = gTeleport003;
     gPortCoords[3] = gTeleport004;
+    gPortCoords[4] = gTeleport005;
+    gPortCoords[5] = gTeleport006;
+    gPortCoords[6] = gTeleport007;
+    gPortCoords[7] = gTeleport008;
 
 }
 

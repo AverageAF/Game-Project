@@ -130,7 +130,8 @@ void MenuItem_SaveGameSave_Slot1(void)
     cJSON_AddNumberToObject(json, "CameraPosX", gCamera.x);
     cJSON_AddNumberToObject(json, "CameraPosY", gCamera.y);
     cJSON_AddNumberToObject(json, "CurrentAreaIndex", gCurrentArea.Index);
-    cJSON_AddNumberToObject(json, "PartyCount", gPlayerPartyCount);
+    cJSON_AddNumberToObject(json, "PartyCount", gPlayerPartyCount); 
+
 
     char* monsterinfo = malloc(16);
     for (uint8_t Monster = 0; Monster < gPlayerPartyCount; Monster++)
@@ -209,10 +210,6 @@ void MenuItem_SaveGameSave_Slot1(void)
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].WorldPos.x);
             snprintf(SpriteInfo, 16, "WorldPosY%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].WorldPos.y);
-            snprintf(SpriteInfo, 16, "RScreenPosX%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetScreenPos.x);
-            snprintf(SpriteInfo, 16, "RScreenPosY%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetScreenPos.y);
             snprintf(SpriteInfo, 16, "RWorldPosX%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetWorldPos.x);
             snprintf(SpriteInfo, 16, "RWorldPosY%d", sprite);

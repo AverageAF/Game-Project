@@ -14,6 +14,11 @@
 
 //////////////////////////////ITEMS////////////////////////////////////
 
+#define ITEMTYPE_EQUIP 0
+#define ITEMTYPE_USE 1
+#define ITEMTYPE_VALUE 2
+#define ITEMTYPE_ADVENTURE 3
+
 #define INV_EQUIP_ITEM_0 0
 #define INV_EQUIP_ITEM_1 1
 #define INV_EQUIP_ITEM_2 2

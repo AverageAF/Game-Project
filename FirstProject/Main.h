@@ -325,11 +325,21 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 	EVENT_FLAG_BATLLE,
 	EVENT_FLAG_HEAL,
 	EVENT_FLAG_CUTSCENE,
-	EVENT_FLAG_ITEM_ONCE,
-	EVENT_FLAG_ITEM_REPEAT,
+	EVENT_FLAG_EQUIPITEM_ONCE,
+	EVENT_FLAG_USEITEM_ONCE,
+	EVENT_FLAG_VALUEITEM_ONCE,
+	EVENT_FLAG_ADVENTUREITEM_ONCE,
+	EVENT_FLAG_EQUIPITEM_REPEAT,
+	EVENT_FLAG_USEITEM_REPEAT,
+	EVENT_FLAG_VALUEITEM_REPEAT,
+	EVENT_FLAG_ADVENTUREITEM_REPEAT,
 	EVENT_FLAG_MONSTER,
 	EVENT_FLAG_MOVEMENT,
 	EVENT_FLAG_STORE,
+	EVENT_FLAG_EQUIPITEM_NOSPRITE,
+	EVENT_FLAG_USEITEM_NOSPRITE,
+	EVENT_FLAG_VALUEITEM_NOSPRITE,
+	EVENT_FLAG_ADVENTUREITEM_NOSPRITE,
 } EVENT_FLAGS;
 
 typedef enum WINDOW_FLAGS
@@ -366,7 +376,9 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 	MOVEMENT_LOOK_AROUND,
 	MOVEMENT_WANDER,
 	MOVEMENT_WALK_UP_DOWN,
-	MOVEMENT_WALK_LEFT_RIGHT
+	MOVEMENT_WALK_LEFT_RIGHT,
+	MOVEMENT_SPARKLE,
+	MOVEMENT_ITEMPICKUP,
 
 } MOVEMENTTYPE;
 
@@ -760,10 +772,10 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	BOOL Loaded;
 	uint16_t GameAreaIndex;
 	UPOINT ResetWorldPos;
-	POINT ResetScreenPos;
+	//POINT ResetScreenPos;
 	DIRECTION ResetDirection;
 	UPOINT ResetOriginWorldPos;
-	POINT ResetOriginScreenPos;
+	//POINT ResetOriginScreenPos;
 	DIRECTION ResetOriginDirection;
 	uint8_t ResetSightRange;
 	uint8_t SightRange;
@@ -772,7 +784,7 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	uint8_t DialogueFlag;
 	uint8_t DialoguesBeforeLoop;
 	uint8_t DialogueLoopReturn;
-	//uint8_t DialogueLoopType;				//possibly not needed?
+	uint8_t AnimationFrame;
 	BOOL InteractedWith;
 	uint8_t Event;
 	uint16_t EventItemsIndex[MAX_ITEMS_GIVE];
@@ -871,6 +883,14 @@ BOOL gFinishedDialogueTextAnimation;		//allows for dialogue text animation to re
 BOOL gFinishedBattleTextAnimation;			//same as above but for battles
 
 INGAMESPRITE gCharacterSprite[NUM_CHAR_SPRITES];
+
+GAMEBITMAP gLootPickup;
+
+GAMEBITMAP gSparkle01[4];
+GAMEBITMAP gSparkle02[4];
+GAMEBITMAP gSparkle03[4];
+
+GAMEBITMAP gEmptySprite;
 
 PLAYER gPlayer;
 UPOINT gCamera;

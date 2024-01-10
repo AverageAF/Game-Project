@@ -33,6 +33,23 @@ MyMiniz.exe Assets.dat + .\Assets\ManFacingRight2.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp1.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp2.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\SmallBag.bmpx >> CopyAssets.log
+
+REM	-sparkle sprites-
+
+MyMiniz.exe Assets.dat + .\Assets\Sparkle01(0).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle01(1).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle01(2).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle01(3).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle02(0).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle02(1).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle02(2).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle02(3).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle03(0).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle03(1).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle03(2).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Sparkle03(3).bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\EmptySprite.bmpx >> CopyAssets.log
 
 REM 	-monster sprites-
 

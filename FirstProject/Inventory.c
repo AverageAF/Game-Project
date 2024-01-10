@@ -5,6 +5,7 @@
 #include "InventoryItems.h"
 #include "MonsterStatsScreen.h"
 #include "MonsterData.h"
+#include "OverWorld.h"
 
 
 //// SELECTEDSLOT MENU VARIABLES ////
@@ -2169,6 +2170,27 @@ void MenuItem_Inventory_SelectedItem_Trash(void)
             {
                 gPlayer.SprintingShoes = !gPlayer.SprintingShoes;
                 gHasSelectedInvSlot = FALSE;
+                break;
+            }
+            case INV_ADVENTURE_ITEM_4:
+            {
+                gCurrentGameState = GAMESTATE_OVERWORLD;
+                gCurrentArea = gStartingTownArea;
+
+                LoadUnloadSpritesVIAGameArea();
+
+                gPlayer.HasMovedSincePort = FALSE;
+                gPlayer.WorldPos.x = gTeleport003.WorldPos.x;
+                gPlayer.WorldPos.y = gTeleport003.WorldPos.y;
+                gCamera.x = 96;
+                gCamera.y = 4400;
+                gPlayer.Direction = DOWN;
+
+                gPlayer.ScreenPos.x = gPlayer.WorldPos.x - gCamera.x;
+                gPlayer.ScreenPos.y = gPlayer.WorldPos.y - gCamera.y;
+
+                gHasSelectedInvSlot = FALSE;
+
                 break;
             }
             case INV_ADVENTURE_ITEM_0:

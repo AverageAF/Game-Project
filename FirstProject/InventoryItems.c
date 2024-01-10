@@ -1084,7 +1084,7 @@ InventoryItem gAdventureItems[NUM_ADVENTURE_ITEMS] = {
 
     [INV_ADVENTURE_ITEM_5] =
     {
-        .ValueCurrency = 1,
+        .ValueCurrency = 0,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "This glorious pendant displays \nyour victories against the \nElemental Challengers",

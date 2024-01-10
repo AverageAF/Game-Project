@@ -11,7 +11,7 @@ typedef struct PORTCOORDS
 	POINT WorldPosAdd;
 
 	////add this many screen coords to current screen position
-	POINT ScreenPosAdd;
+	//POINT ScreenPosAdd;
 
 	////add this many world coords to current camera position
 	POINT CameraPosAdd;
@@ -36,7 +36,7 @@ typedef struct TransitionArea
 	RECT TilesArea;
 
 	//add this many screen coords to current screen position
-	POINT ScreenPosAdd;
+	//POINT ScreenPosAdd;
 
 	//add this many world coords to the current camera postition
 	POINT CameraPosAdd;
@@ -51,14 +51,20 @@ TransitionArea gTransitionAreas[NUM_TRANS_AREAS][MAX_TRANS_PERMAP];	//5 is possi
 
 BOOL gHasPlayerTransitioned;
 
+#define UNIQUE_TELEPADS_COUNT 8
+
 PORTCOORDS gPortCoords[UNIQUE_TELEPADS_COUNT];
 
 PORTCOORDS gTeleport001;
 PORTCOORDS gTeleport002;
 PORTCOORDS gTeleport003;
 PORTCOORDS gTeleport004;
+PORTCOORDS gTeleport005;
+PORTCOORDS gTeleport006;
+PORTCOORDS gTeleport007;
+PORTCOORDS gTeleport008;
 
-#define NUM_GAME_AREAS 6
+#define NUM_GAME_AREAS 9
 
 GAMEAREA gCurrentArea;
 
@@ -73,19 +79,33 @@ GAMEAREA gRoute01Area;
 
 GAMEAREA gBattleTown01Area;
 
+GAMEAREA gForest01Area;
+
+GAMEAREA gRoute02Area;
+
+GAMEAREA gBattleTown02Area;
+
 GAMEAREA gGameAreas[NUM_GAME_AREAS];
 
 GAMEAREA gDungeon01Area;
 
-#define NUM_ENCOUNTER_AREAS 5
-
-ENCOUNTERAREA gDungeon01EncounterArea;
+#define NUM_ENCOUNTER_AREAS 9
 
 ENCOUNTERAREA gOverworld01EncounterArea;
 
 ENCOUNTERAREA gOverworld02EncounterArea;
 
 ENCOUNTERAREA gOverworld03EncounterArea;
+
+ENCOUNTERAREA gOverworld04EncounterArea;
+
+ENCOUNTERAREA gOverworld05EncounterArea;
+
+ENCOUNTERAREA gOverworld06EncounterArea;
+
+ENCOUNTERAREA gOverworld07EncounterArea;
+
+ENCOUNTERAREA gOverworld08EncounterArea;
 
 ENCOUNTERAREA gNullEncounterArea;
 
@@ -108,7 +128,13 @@ void HealPlayerParty(void);
 
 void TeleportPlayerBlackOut(void);
 
-void GivePlayerItem(uint16_t itemIndex, uint16_t amount);
+void GivePlayerEquipItem(uint16_t itemIndex, uint16_t amount);
+
+void GivePlayerUseItem(uint16_t itemIndex, uint16_t amount);
+
+void GivePlayerValueItem(uint16_t itemIndex, uint16_t amount);
+
+void GivePlayerAdventureItem(uint16_t itemIndex, uint16_t amount);
 
 void ModifyCharVisibility(void);
 
@@ -118,3 +144,9 @@ uint8_t PPI_BuySellBackBox(void);
 void MapTransition(void);
 
 void LoadUnloadSpritesVIAGameArea(void);
+
+INGAMESPRITE CharSpriteSparkleAnim(INGAMESPRITE _Inout_ charactersprite, uint16_t _In_ counter, GAMEBITMAP _In_ sparkletype[]);
+
+INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
+
+INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);

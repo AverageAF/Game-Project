@@ -21,7 +21,7 @@ BOOL gStatsChangedFromOpponentMove = FALSE;
 
 ///////// escape variables
 
-uint8_t EscapeTriesThisBattle = 0;
+uint8_t gEscapeTriesThisBattle = 0;
 
 ///////// capture monster variables
 
@@ -1781,7 +1781,7 @@ void PPI_BattleScreen(void)
             {
                 gPreviousGameState = gCurrentGameState;
                 gCurrentGameState = GAMESTATE_OVERWORLD;
-                EscapeTriesThisBattle = 0;
+                gEscapeTriesThisBattle = 0;
                 gInputEnabled = FALSE;
                 StopGameMusic();
                 gFinishedBattleTextAnimation = FALSE;
@@ -2563,18 +2563,22 @@ void MenuItem_BattleScreen_EscapeButton(void)
 {
     if ((gCurrentGameState == GAMESTATE_BATTLE_MONSTER) && (gCurrentBattleState == BATTLESTATE_RUN_FIGHT))
     {
-        uint8_t EscapeChance = 0;
+        uint16_t EscapeChance = 0;
 
-        EscapeTriesThisBattle++;
-        EscapeChance = ((((gPlayerParty[gCurrentPartyMember].Speed * 128) / gOpponentParty[gCurrentOpponentPartyMember].Speed) + 30 * EscapeTriesThisBattle) % 256);
+        EscapeChance = ((gPlayerParty[gCurrentPartyMember].Speed * 1.0f / gOpponentParty[gCurrentOpponentPartyMember].Speed * 1.0f) * 400) + (50 * gEscapeTriesThisBattle);        //if player.speed = opp.speed then chance is about 40%
+
+        EscapeChance = min(EscapeChance, 990);      //max of 99% chance to escape
+
+        gEscapeTriesThisBattle++;    //Increases every attempt by aprox 5%
 
         DWORD Random = 0;
         rand_s((unsigned int*)&Random);
-        Random %= 256;
+        Random %= 1000;
 
-        if (EscapeChance > Random)
+        if (Random > (1000 - EscapeChance))
         {
             gCurrentBattleState = BATTLESTATE_ESCAPESUCCESS_TEXT;
+            gEscapeTriesThisBattle = 0;
         }
         else
         {
@@ -2590,7 +2594,7 @@ void MenuItem_BattleScreen_EscapeButton(void)
         }
         gPreviousGameState = gCurrentGameState;
         gCurrentGameState = GAMESTATE_OVERWORLD;
-        EscapeTriesThisBattle = 0;
+        gEscapeTriesThisBattle = 0;
         gInputEnabled = FALSE;
         StopGameMusic();
     }
