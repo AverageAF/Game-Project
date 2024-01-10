@@ -15,31 +15,20 @@ typedef struct PORTCOORDS
 	UPOINT CameraPos;
 
 	////which area is the player in after teleporting
-	RECT AreaDest;
+	GAMEAREA AreaDest;
 
 } PORTCOORDS;
-
-typedef struct GAMEAREA
-{
-	char* Name;
-
-	RECT Area;
-
-	GAMESOUND Music;
-
-
-} GAMEAREA;
 
 PORTCOORDS gPortCoords[2];
 
 PORTCOORDS gTeleport001;
 PORTCOORDS gTeleport002;
 
-RECT gCurrentArea;
+GAMEAREA gCurrentArea;
 
-RECT gOverworldArea;
+GAMEAREA gOverworldArea;
 
-RECT gDungeon01Area;
+GAMEAREA gDungeon01Area;
 
 void DrawOverworldScreen(void);
 

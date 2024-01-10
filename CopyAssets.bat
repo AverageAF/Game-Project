@@ -25,6 +25,7 @@ MyMiniz.exe Assets.dat + .\Assets\Maps\Overworld01.bmpx >> CopyAssets.log
 REM -music-
 
 MyMiniz.exe Assets.dat + .\Assets\NewAdventures.ogg >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\MysteriousDeep.ogg >> CopyAssets.log
 
 REM -sound-
 

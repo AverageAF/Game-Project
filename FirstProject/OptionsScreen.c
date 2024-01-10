@@ -42,43 +42,43 @@ void DrawOptionsScreen(void)
 
     if (LocalFrameCounter <= 5)
     {
-        TextColor.Red = 64;
-        TextColor.Blue = 64;
-        TextColor.Green = 64;
+        TextColor.Colors.Red = 64;
+        TextColor.Colors.Blue = 64;
+        TextColor.Colors.Green = 64;
 
-        Gray.Red = 20;
-        Gray.Blue = 20;
-        Gray.Green = 20;
+        Gray.Colors.Red = 20;
+        Gray.Colors.Blue = 20;
+        Gray.Colors.Green = 20;
     }
     if (LocalFrameCounter == 10)
     {
-        TextColor.Red = 128;
-        TextColor.Blue = 128;
-        TextColor.Green = 128;
+        TextColor.Colors.Red = 128;
+        TextColor.Colors.Blue = 128;
+        TextColor.Colors.Green = 128;
 
-        Gray.Red = 40;
-        Gray.Blue = 40;
-        Gray.Green = 40;
+        Gray.Colors.Red = 40;
+        Gray.Colors.Blue = 40;
+        Gray.Colors.Green = 40;
     }
     if (LocalFrameCounter == 15)
     {
-        TextColor.Red = 192;
-        TextColor.Blue = 192;
-        TextColor.Green = 192;
+        TextColor.Colors.Red = 192;
+        TextColor.Colors.Blue = 192;
+        TextColor.Colors.Green = 192;
 
-        Gray.Red = 60;
-        Gray.Blue = 60;
-        Gray.Green = 60;
+        Gray.Colors.Red = 60;
+        Gray.Colors.Blue = 60;
+        Gray.Colors.Green = 60;
     }
     if (LocalFrameCounter == 20)
     {
-        TextColor.Red = 255;
-        TextColor.Blue = 255;
-        TextColor.Green = 255;
+        TextColor.Colors.Red = 255;
+        TextColor.Colors.Blue = 255;
+        TextColor.Colors.Green = 255;
 
-        Gray.Red = 80;
-        Gray.Blue = 80;
-        Gray.Green = 80;
+        Gray.Colors.Red = 80;
+        Gray.Colors.Blue = 80;
+        Gray.Colors.Green = 80;
 
         gInputEnabled = TRUE;
     }

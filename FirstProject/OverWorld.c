@@ -24,46 +24,50 @@ void DrawOverworldScreen(void)
 
     if (LocalFrameCounter == 5)
     {
-        TextColor.Red = 64;
-        TextColor.Blue = 64;
-        TextColor.Green = 64;
+        TextColor.Colors.Red = 64;
+        TextColor.Colors.Blue = 64;
+        TextColor.Colors.Green = 64;
         BrightnessAdjustment = -128;
 
     }
     if (LocalFrameCounter == 10)
     {
-        TextColor.Red = 128;
-        TextColor.Blue = 128;
-        TextColor.Green = 128;
+        TextColor.Colors.Red = 128;
+        TextColor.Colors.Blue = 128;
+        TextColor.Colors.Green = 128;
         BrightnessAdjustment = -64;
     }
     if (LocalFrameCounter == 15)
     {
-        TextColor.Red = 192;
-        TextColor.Blue = 192;
-        TextColor.Green = 192;
+        TextColor.Colors.Red = 192;
+        TextColor.Colors.Blue = 192;
+        TextColor.Colors.Green = 192;
         BrightnessAdjustment = -32;
     }
     if (LocalFrameCounter == 20)
     {
-        TextColor.Red = 255;
-        TextColor.Blue = 255;
-        TextColor.Green = 255;
+        TextColor.Colors.Red = 255;
+        TextColor.Colors.Blue = 255;
+        TextColor.Colors.Green = 255;
         BrightnessAdjustment = 0;
         gInputEnabled = TRUE;
     }
 
-    if (LocalFrameCounter == 60)
+    if (LocalFrameCounter == 30)
     {
         if (MusicIsPlaying() == FALSE)
         {
-            PlayGameMusic(&gMusicOverWorld01);
+            //PlayGameMusic(&gMusicOverWorld01);
+            PlayGameMusic(gCurrentArea.Music, TRUE, TRUE);
         }
     }
+
 
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
+                                            //BB    GG    RR    AA
+    //DrawWindow(32, 32, 32, 32, (PIXEL32) { 0x00, 0x00, 0x00, 0xFF }, WINDOW_FLAG_BORDERED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_VERT_CENTERED);
 
     if (gGamePerformanceData.DisplayDebugInfo)
     {
@@ -114,6 +118,8 @@ void PPI_Overworld(void)
         gPreviousGameState = gCurrentGameState;
         gCurrentGameState = GAMESTATE_TITLESCREEN;
         PlayGameSound(&gSoundMenuChoose);
+
+        PauseGameMusic();
     }
 
     //ASSERT(gCamera.x <= gCurrentArea.right - GAME_RES_WIDTH, "Camera went out of bounds!");
@@ -251,7 +257,7 @@ void PPI_Overworld(void)
             }
             else
             {
-                if (gCamera.y < gCurrentArea.bottom - GAME_RES_HEIGHT)
+                if (gCamera.y < gCurrentArea.Area.bottom - GAME_RES_HEIGHT)
                 {
                     gCamera.y++;
                 }
@@ -271,7 +277,7 @@ void PPI_Overworld(void)
             }
             else
             {
-                if (gCamera.x > gCurrentArea.left)
+                if (gCamera.x > gCurrentArea.Area.left)
                 {
                     gCamera.x--;
                 }
@@ -290,7 +296,7 @@ void PPI_Overworld(void)
             }
             else        
             {
-                if (gCamera.x < gCurrentArea.right - GAME_RES_WIDTH)
+                if (gCamera.x < gCurrentArea.Area.right - GAME_RES_WIDTH)
                 {
                     gCamera.x++;
                 }
@@ -309,7 +315,7 @@ void PPI_Overworld(void)
             }
             else
             {
-                if (gCamera.y > gCurrentArea.top)
+                if (gCamera.y > gCurrentArea.Area.top)
                 {
                     gCamera.y--;
                 }
@@ -361,11 +367,11 @@ void PPI_Overworld(void)
 
                     rand_s((unsigned int*)&Random);
 
-                    Random = Random % 100;
+                    Random = Random % 1000;
 
-                    if (Random > 90)
+                    if (Random > (1000 - gPlayer.RandomEncounterPercent))
                     {
-                        RandomMonsterEncounter();
+                        RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
                     }
                 }
 
@@ -388,6 +394,7 @@ void TeleportHandler(void)
     {
         if (gPlayer.WorldPos.x == gPortCoords[Counter].WorldPos.x && gPlayer.WorldPos.y == gPortCoords[Counter].WorldPos.y)
         {
+            StopGameMusic();
             PortalFound = TRUE;
             gPlayer.HasMovedSincePort = FALSE;
             gFade = TRUE;
@@ -408,8 +415,3 @@ void TeleportHandler(void)
 }
 
 
-void RandomMonsterEncounter(void)
-{
-    gPreviousGameState = gCurrentGameState;
-    gCurrentGameState = GAMESTATE_BATTLE;
-}

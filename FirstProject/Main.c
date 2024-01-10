@@ -84,9 +84,7 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
     int64_t PreviousKernelCPUTime = 0;
 
     HANDLE ProcessHandle = GetCurrentProcess();
-    HMODULE NtDllModuleHandle = NULL;
 
-    InitializeGlobals();
 
     //this crit section is used to sync access to log file with LogMessageA when used by multiple threads
 #pragma warning(suppress: 6031)
@@ -96,11 +94,19 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
     if (LoadRegistryParameters() != ERROR_SUCCESS)
     {
+        LogMessageA(LL_ERROR, "[%s] Load Registry Parameters Failed!", __FUNCTION__);
         goto Exit;
     }
 
     LogMessageA(LL_INFO, "[%s] Starting %s version %s", __FUNCTION__, GAME_NAME, GAME_VERSION);
+    
+    if (LoadGameCode(GAME_CODE_MODULE) != ERROR_SUCCESS)
+    {
+        MessageBoxA(NULL, "Couldn't load "GAME_CODE_MODULE" Make sure it is in the game directory!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        goto Exit;
+    }
 
+    InitializeGlobals();
 
     if (GameIsAlreadyRunning() == TRUE)
     {
@@ -109,14 +115,7 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         goto Exit;
     }
 
-    if ((NtDllModuleHandle = GetModuleHandleA("ntdll.dll")) == NULL)
-    {
-        LogMessageA(LL_ERROR, "[%s] Couldn't load ntdll.dll! Error 0x%08lx!", __FUNCTION__, GetLastError());
-        MessageBoxA(NULL, "Couldn't load ntdll.dll!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-        goto Exit;
-    }
-
-    if ((NtQueryTimerResolution = (_NtQueryTimerResolution)GetProcAddress(NtDllModuleHandle, "NtQueryTimerResolution")) == NULL)
+    if ((NtQueryTimerResolution = (_NtQueryTimerResolution)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryTimerResolution")) == NULL)
     {
         LogMessageA(LL_ERROR, "[%s] Couldn't find function NtQueryTimerResolution in ntdll.dll! GetProcAddress Failed! Error 0x%08lx!", __FUNCTION__, GetLastError());
         MessageBoxA(NULL, "Couldn't find function NtQueryTimerResolution in ntdll.dll!", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -230,7 +229,9 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         goto Exit;
     }
 
-    while (gGameIsRunning == TRUE) //basic message loop
+    /////////////////main game loop////////////////////////////////
+
+    while (gGameIsRunning == TRUE)
     {
         QueryPerformanceCounter((LARGE_INTEGER*)&FrameStart);
 
@@ -269,7 +270,7 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
             gGamePerformanceData.CPUPercent = (double)(CurrentKernelCPUTime - PreviousKernelCPUTime) + (CurrentUserCPUTime - PreviousUserCPUTime);
             gGamePerformanceData.CPUPercent /= (gGamePerformanceData.CurrentSystemTime - gGamePerformanceData.PreviousSystemTime);
-            gGamePerformanceData.CPUPercent /= gGamePerformanceData.SystemInfo.dwNumberOfProcessors; //kept returning 0 processors and then dividing by 0
+            gGamePerformanceData.CPUPercent /= gGamePerformanceData.SystemInfo.dwNumberOfProcessors; 
             gGamePerformanceData.CPUPercent *= 100;
 
             GetProcessHandleCount(ProcessHandle, &gGamePerformanceData.HandleCount);
@@ -277,6 +278,19 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
             gGamePerformanceData.RawFPSAverage = 1.0f / ((ElapsedMicrosecondsPerFrameAccumulatorRaw / CALCULATE_AVG_FPS_EVERY_X_FRAMES) * 0.000001f);
             gGamePerformanceData.CookedFPSAverage = 1.0f / ((ElapsedMicrosecondsPerFrameAccumulatorCooked / CALCULATE_AVG_FPS_EVERY_X_FRAMES) * 0.000001f);
+
+#ifdef _DEBUG
+        
+            if (GetFileAttributesA(GAME_CODE_MODULE_TMP) != INVALID_FILE_ATTRIBUTES)
+            {
+                if (LoadGameCode(GAME_CODE_MODULE) != ERROR_SUCCESS)
+                {
+                    LogMessageA(LL_WARNING, "[%s] Couldn't load "GAME_CODE_MODULE" Make sure it is in the game directory!", __FUNCTION__);
+                    goto Exit;
+                }
+            }
+#endif
+
             ElapsedMicrosecondsPerFrameAccumulatorRaw = 0; 
             ElapsedMicrosecondsPerFrameAccumulatorCooked = 0;
 
@@ -323,6 +337,61 @@ LRESULT CALLBACK MainWindowProc(
         {   Result = DefWindowProcA(WindowHandle, Message, WParam, LParam);
         }
     }
+    return (Result);
+}
+
+BOOL LoadGameCode(_In_ char* ModuleFileName)
+{
+    DWORD Result = ERROR_SUCCESS;
+    HANDLE GameCodeFileHandle = INVALID_HANDLE_VALUE;
+
+    if (gGameCodeModule)
+    {
+        FreeLibrary(gGameCodeModule);
+
+        gGameCodeModule = NULL;
+    }
+
+    if (GetFileAttributesA(GAME_CODE_MODULE_TMP) != INVALID_FILE_ATTRIBUTES)
+    {
+        if (DeleteFileA(GAME_CODE_MODULE) == 0)
+        {
+            LogMessageA(LL_WARNING, "[%s] Failed to delete file "GAME_CODE_MODULE"! Error 0x%08lx!", __FUNCTION__, GetLastError());
+        }
+        else
+        {
+            LogMessageA(LL_INFO, "[%s] Successfully deleted file "GAME_CODE_MODULE".", __FUNCTION__);
+        }
+
+        if (MoveFileA(GAME_CODE_MODULE_TMP, GAME_CODE_MODULE) == 0)
+        {
+            LogMessageA(LL_WARNING, "[%s] Failed to replace file "GAME_CODE_MODULE" with "GAME_CODE_MODULE_TMP" ! Error 0x%08lx!", __FUNCTION__, GetLastError());
+        }
+        else
+        {
+            LogMessageA(LL_INFO, "[%s] Successfully replaced file "GAME_CODE_MODULE" with "GAME_CODE_MODULE_TMP".", __FUNCTION__);
+        }
+    }
+
+    gGameCodeModule = LoadLibraryA(ModuleFileName);
+
+    if (gGameCodeModule == NULL)
+    {
+        goto Exit;
+    }
+
+    if ((RandomMonsterEncounter = (_RandomMonsterEncounter)GetProcAddress(gGameCodeModule, "RandomMonsterEncounter")) == NULL)
+    {
+        Result = GetLastError();
+        goto Exit;
+    }
+
+Exit:
+    if (Result != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] Function failed! Error 0x%08lx!", __FUNCTION__, Result);
+    }
+
     return (Result);
 }
 
@@ -465,6 +534,7 @@ void ProcessPlayerInput(void)
     {
         return;
     }
+
 
     gGameInput.EscapeKeyPressed = GetAsyncKeyState(VK_ESCAPE);
     gGameInput.DebugKeyPressed = GetAsyncKeyState(VK_F1);                                   //F1 default debug key
@@ -654,6 +724,7 @@ DWORD InitializePlayer(void)
     gCamera.y = 0;      //0                                                         //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
+    gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
 
     return(0);
 }
@@ -694,9 +765,9 @@ void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXE
 
                 memcpy_s(&FontSheetPixel, sizeof(PIXEL32), (PIXEL32*)FontSheet->Memory + FontSheetOffset, sizeof(PIXEL32));
 
-                FontSheetPixel.Red = Color->Red;
-                FontSheetPixel.Green = Color->Green;
-                FontSheetPixel.Blue = Color->Blue;
+                FontSheetPixel.Colors.Red = Color->Colors.Red;
+                FontSheetPixel.Colors.Green = Color->Colors.Green;
+                FontSheetPixel.Colors.Blue = Color->Colors.Blue;
 
                 memcpy_s((PIXEL32*)StringBitmap.Memory + StringBitmapOffset, sizeof(PIXEL32*), &FontSheetPixel, sizeof(PIXEL32));
             }
@@ -889,11 +960,11 @@ void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ i
 
             memcpy_s(&BitmapPixel, sizeof(PIXEL32), (PIXEL32*)GameBitmap->Memory + BitmapOffset, sizeof(PIXEL32));     //copy contents of bitmap pixel
 
-            if (BitmapPixel.Alpha > 0)      ////not alpha blending, only drawing non 0 alpha pixels
+            if (BitmapPixel.Colors.Alpha > 0)      ////not alpha blending, only drawing non 0 alpha pixels
             {
-                BitmapPixel.Red = min(255, max((BitmapPixel.Red + BrightnessAdjustment), 0));
-                BitmapPixel.Green = min(255, max((BitmapPixel.Green + BrightnessAdjustment), 0));
-                BitmapPixel.Blue = min(255, max((BitmapPixel.Blue + BrightnessAdjustment), 0));
+                BitmapPixel.Colors.Red = min(255, max((BitmapPixel.Colors.Red + BrightnessAdjustment), 0));
+                BitmapPixel.Colors.Green = min(255, max((BitmapPixel.Colors.Green + BrightnessAdjustment), 0));
+                BitmapPixel.Colors.Blue = min(255, max((BitmapPixel.Colors.Blue + BrightnessAdjustment), 0));
 
                 memcpy_s((PIXEL32*)gBackBuffer.Memory + MemoryOffset, sizeof(PIXEL32), &BitmapPixel, sizeof(PIXEL32));     //place contents of bitmap pixel onto backbuffer
             }
@@ -2236,6 +2307,7 @@ void PlayGameSound(_In_ GAMESOUND* GameSound)
 void PauseGameMusic(void)
 {
     gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
+    gMusicPaused = TRUE;
 }
 
 void StopGameMusic(void)
@@ -2243,19 +2315,40 @@ void StopGameMusic(void)
     gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
 
     gXAudioMusicSourceVoice->lpVtbl->FlushSourceBuffers(gXAudioMusicSourceVoice);
+
+    gMusicPaused = FALSE;
 }
 
-void PlayGameMusic(_In_ GAMESOUND* GameSound)
+void PlayGameMusic(_In_ GAMESOUND* GameSound, _In_ BOOL Looping, _In_ BOOL Immediate)
 {
-    gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
+    if (gMusicPaused == FALSE)
+    {
+        if (Immediate)
+        {
+            gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
 
-    gXAudioMusicSourceVoice->lpVtbl->FlushSourceBuffers(gXAudioMusicSourceVoice);
+            gXAudioMusicSourceVoice->lpVtbl->FlushSourceBuffers(gXAudioMusicSourceVoice);
+        }
 
-    GameSound->Buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+        if (Looping == TRUE)
+        {
+            GameSound->Buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+        }
+        else
+        {
+            GameSound->Buffer.LoopCount = 0;
+        }
 
-    gXAudioMusicSourceVoice->lpVtbl->SubmitSourceBuffer(gXAudioMusicSourceVoice, &GameSound->Buffer, NULL);
+        gXAudioMusicSourceVoice->lpVtbl->SubmitSourceBuffer(gXAudioMusicSourceVoice, &GameSound->Buffer, NULL);
 
-    gXAudioMusicSourceVoice->lpVtbl->Start(gXAudioMusicSourceVoice, 0, XAUDIO2_COMMIT_NOW);
+        gXAudioMusicSourceVoice->lpVtbl->Start(gXAudioMusicSourceVoice, 0, XAUDIO2_COMMIT_NOW);
+
+    }
+    else
+    {
+        gXAudioMusicSourceVoice->lpVtbl->Start(gXAudioMusicSourceVoice, 0, XAUDIO2_COMMIT_NOW);
+    }
+    gMusicPaused = FALSE;
 }
 
 
@@ -2639,7 +2732,7 @@ BOOL MusicIsPlaying(void)
 
     gXAudioMusicSourceVoice->lpVtbl->GetState(gXAudioMusicSourceVoice, &State, 0);
 
-    if (State.BuffersQueued > 0)
+    if ((State.BuffersQueued > 0) && (gMusicPaused == FALSE))
     {
         return(TRUE);
     }
@@ -2810,6 +2903,12 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "MysteriousDeep.ogg", RESOURCE_TYPE_OGG, &gMusicDungeon01)) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive MysteriousDeep.ogg failed!", __FUNCTION__);
+        goto Exit;
+    }
+
     ////////////////////////////////////////////////////////// loading sprites
 
     if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingDown0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
@@ -2891,9 +2990,15 @@ void InitializeGlobals(void)
     gPassableTiles[1] = TILE_STONE_BRICKS_01;
     gPassableTiles[2] = TILE_TELEPORT01;
 
-    gOverworldArea = (RECT){ .left = 0, .top = 0, .right = 3840, .bottom = 2400 };
+    gOverworldArea = (GAMEAREA){ .Name = "Overworld01",
+                                 .Area = (RECT){.left = 0, .top = 0, .right = 3840, .bottom = 2400 },
+                                 .Music = &gMusicOverWorld01 };      
 
-    gDungeon01Area = (RECT){ .left = 3856, .top = 0, .right = 4240, .bottom = 240 };
+
+
+    gDungeon01Area = (GAMEAREA){ .Name = "Dungeon 01",
+                                 .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
+                                 .Music = &gMusicDungeon01 };     
 
     gCurrentArea = gOverworldArea;
 
@@ -2917,4 +3022,82 @@ void InitializeGlobals(void)
 
     gPortCoords[1] = gTeleport002;
 
+}
+
+
+
+void DrawWindow(_In_ int16_t x, _In_ int16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_ PIXEL32 BackgroundColor, _In_ DWORD Flags)
+{
+
+    if (Flags & WINDOW_FLAG_HORIZ_CENTERED)
+    {
+        x = (GAME_RES_WIDTH / 2) - (Width / 2);
+    }
+
+    if (Flags & WINDOW_FLAG_VERT_CENTERED)
+    {
+        y = (GAME_RES_HEIGHT / 2) - (Height / 2);
+    }
+
+    ASSERT(Width % sizeof(PIXEL32) == 0, "Window must be a multiple of 4!");
+
+    ASSERT((x + Width <= GAME_RES_WIDTH) && (y + Height <= GAME_RES_HEIGHT), "Window is off the screen!");
+
+    int32_t StartingScreenPixel = ((GAME_RES_HEIGHT * GAME_RES_WIDTH) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
+
+    for (int Row = 0; Row < Height; Row++)
+    {
+        int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+
+        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffset, BackgroundColor.Bytes, Width); 
+    }
+
+    if (Flags & WINDOW_FLAG_SHADOWED)
+    {
+        //make sure shadow isnt outside screen, shift one pixle each direction
+        if (x > 0)
+        {
+            x -= 1;
+        }
+        if (y > 0)
+        {
+            y -= 1;
+        }
+
+
+        int MemoryOffSet = StartingScreenPixel;
+
+        MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Height) + 1;
+
+        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFF6C6C6C, Width);
+
+        for (int Row = 1; Row < Height; Row++)  ////draw one shadow pixel on the right side for each row of a window; Row = 1 because we skip top pixel for 3d effect
+        {
+            MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Row) + Width;
+
+            __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFF6C6C6C, 1);
+        }
+    }
+
+    if (Flags & WINDOW_FLAG_BORDERED)
+    {
+        int MemoryOffSet = StartingScreenPixel;
+
+        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, Width);
+
+        MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * (Height - 1));
+
+        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, Width);
+
+        for (int Row = 0; Row < Height; Row++)  ////draw one pixel on each side of the window for each row
+        {
+            MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+
+            __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, 1);
+
+            MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Row) + Width - 1;
+
+            __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, 1);
+        }
+    }
 }

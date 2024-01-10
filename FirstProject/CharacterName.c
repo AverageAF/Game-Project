@@ -161,31 +161,31 @@ void DrawCharacterNaming(void)
 
     if (LocalFrameCounter <= 8)
     {
-        TextColor.Red = 64;
-        TextColor.Blue = 64;
-        TextColor.Green = 64;
+        TextColor.Colors.Red = 64;
+        TextColor.Colors.Blue = 64;
+        TextColor.Colors.Green = 64;
         BrightnessAdjustment = -192;
 
     }
     if (LocalFrameCounter == 16)
     {
-        TextColor.Red = 128;
-        TextColor.Blue = 128;
-        TextColor.Green = 128;
+        TextColor.Colors.Red = 128;
+        TextColor.Colors.Blue = 128;
+        TextColor.Colors.Green = 128;
         BrightnessAdjustment = -128;
     }
     if (LocalFrameCounter == 24)
     {
-        TextColor.Red = 192;
-        TextColor.Blue = 192;
-        TextColor.Green = 192;
+        TextColor.Colors.Red = 192;
+        TextColor.Colors.Blue = 192;
+        TextColor.Colors.Green = 192;
         BrightnessAdjustment = -64;
     }
     if (LocalFrameCounter == 32)
     {
-        TextColor.Red = 255;
-        TextColor.Blue = 255;
-        TextColor.Green = 255;
+        TextColor.Colors.Red = 255;
+        TextColor.Colors.Blue = 255;
+        TextColor.Colors.Green = 255;
         BrightnessAdjustment = 0;
 
         gInputEnabled = TRUE;

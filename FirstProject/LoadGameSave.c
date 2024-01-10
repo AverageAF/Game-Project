@@ -36,39 +36,40 @@ void DrawLoadGameSave(void)
         gMenu_LoadGameSave.SelectedItem = 1;
     }
 
-    memset(gBackBuffer.Memory, 0, GAME_DRAWING_AREA_MEMORY_SIZE);
+    __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
+    //memset(gBackBuffer.Memory, 0, GAME_DRAWING_AREA_MEMORY_SIZE);
 
     if (LocalFrameCounter <= 4)
     {
-        White.Red = 64;
-        White.Blue = 64;
-        White.Green = 64;
+        White.Colors.Red = 64;
+        White.Colors.Blue = 64;
+        White.Colors.Green = 64;
 
-        Red.Red = 64;
+        Red.Colors.Red = 64;
     }
     if (LocalFrameCounter == 8)
     {
-        White.Red = 128;
-        White.Blue = 128;
-        White.Green = 128;
+        White.Colors.Red = 128;
+        White.Colors.Blue = 128;
+        White.Colors.Green = 128;
 
-        Red.Red = 128;
+        Red.Colors.Red = 128;
     }
     if (LocalFrameCounter == 12)
     {
-        White.Red = 192;
-        White.Blue = 192;
-        White.Green = 192;
+        White.Colors.Red = 192;
+        White.Colors.Blue = 192;
+        White.Colors.Green = 192;
 
-        Red.Red = 192;
+        Red.Colors.Red = 192;
     }
     if (LocalFrameCounter == 16)
     {
-        White.Red = 255;
-        White.Blue = 255;
-        White.Green = 255;
+        White.Colors.Red = 255;
+        White.Colors.Blue = 255;
+        White.Colors.Green = 255;
 
-        Red.Red = 255;
+        Red.Colors.Red = 255;
 
         gInputEnabled = TRUE;
     }

@@ -45,24 +45,24 @@ void DrawOpeningSplashScreen(void)
     {
         if (LocalFrameCounter == 60)
         {
-            TextColor.Red = 255;
-            TextColor.Blue = 255;
-            TextColor.Green = 255;
+            TextColor.Colors.Red = 255;
+            TextColor.Colors.Blue = 255;
+            TextColor.Colors.Green = 255;
             PlayGameSound(&gSoundSplashScreen);
         }
 
         if ((LocalFrameCounter >= 120 && LocalFrameCounter < 150) && (LocalFrameCounter % 10 == 0))
         {
-            TextColor.Red -= 63;
-            TextColor.Blue -= 63;
-            TextColor.Green -= 63;
+            TextColor.Colors.Red -= 63;
+            TextColor.Colors.Blue -= 63;
+            TextColor.Colors.Green -= 63;
         }
 
         if (LocalFrameCounter == 150)
         {
-            TextColor.Red = 0;
-            TextColor.Blue = 0;
-            TextColor.Green = 0;
+            TextColor.Colors.Red = 0;
+            TextColor.Colors.Blue = 0;
+            TextColor.Colors.Green = 0;
         }
 
         if (LocalFrameCounter > 160)

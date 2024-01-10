@@ -12,6 +12,9 @@
 #define GAME_NAME "A_Game"
 #define GAME_VERSION "0.9a"
 #define ASSET_FILE "C:\\Users\\Frankenstein\\source\\repos\\FirstProject\\x64\\Debug\\Assets.dat"		////a fullyqualified directory, TODO: change somehow to a relative directory
+#define LOG_FILE_NAME GAME_NAME ".log"
+#define GAME_CODE_MODULE "FirstProjectDLL.dll"
+#define GAME_CODE_MODULE_TMP "FirstProjectDLL.tmp"
 
 #define GAME_RES_WIDTH 384		//maybe 400
 #define GAME_RES_HEIGHT 240
@@ -98,7 +101,6 @@ typedef enum LOGLEVEL
 
 } LOGLEVEL;
 
-#define LOG_FILE_NAME GAME_NAME ".log"
 
 typedef enum GAMESTATE
 {
@@ -122,6 +124,16 @@ typedef enum RESOURCE_TYPE
 	RESOURCE_TYPE_BMPX
 
 } RESOURCE_TYPE;
+
+typedef enum WINDOW_FLAGS
+{
+	WINDOW_FLAG_BORDERED = 1,
+	WINDOW_FLAG_HORIZ_CENTERED = 2,
+	WINDOW_FLAG_VERT_CENTERED = 4,
+	WINDOW_FLAG_SHADOWED = 8,
+
+} WINDOW_FLAGS;
+
 
 typedef struct UPOINT		//used for character screen position
 {
@@ -152,10 +164,6 @@ typedef struct GAMEINPUT
 
 } GAMEINPUT;
 
-typedef LONG(NTAPI* _NtQueryTimerResolution) (OUT PULONG MinimumResolution, OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
-
-_NtQueryTimerResolution NtQueryTimerResolution;
-
 typedef struct GAMEBITMAP
 {
 	BITMAPINFO BitmapInfo;
@@ -170,12 +178,37 @@ typedef struct GAMESOUND
 
 } GAMESOUND;
 
-typedef struct PIXEL32
+typedef struct GAMEAREA
 {
+	char* Name;
+
+	RECT Area;
+
+	GAMESOUND* Music;
+
+} GAMEAREA;
+
+//typedef struct PIXEL32
+//{
+//	uint8_t Blue;
+//	uint8_t Green;
+//	uint8_t Red;
+//	uint8_t Alpha;
+//
+//} PIXEL32;
+
+typedef union PIXEL32 
+{
+	struct Colors {
+
 	uint8_t Blue;
 	uint8_t Green;
 	uint8_t Red;
 	uint8_t Alpha;
+
+	} Colors;
+
+	DWORD Bytes;
 
 } PIXEL32;
 
@@ -236,6 +269,9 @@ typedef struct PLAYER
 	uint8_t CurrentSuit;
 	uint8_t SpriteIndex;
 
+	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
+	uint16_t RandomEncounterPercent;
+
 } PLAYER;
 
 typedef struct REGISTRYPARAMS
@@ -280,6 +316,10 @@ typedef struct MENU
 } MENU;
 
 
+HMODULE gGameCodeModule;
+
+FILETIME gGameCodeLastWriteTime;
+
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
@@ -312,6 +352,8 @@ GAMEINPUT gGameInput;
 uint8_t gSFXVolume;
 uint8_t gMusicVolume;
 
+BOOL gMusicPaused;
+
 HANDLE gAssetLoadingThreadHandle;
 
 HANDLE gEssentialAssetsLoadedEvent;     ////event gets signaled after essential assets have been loaded (mostly req for splash screen)
@@ -319,10 +361,27 @@ HANDLE gEssentialAssetsLoadedEvent;     ////event gets signaled after essential 
 GAMESOUND gSoundMenuNavigate;
 GAMESOUND gSoundMenuChoose;
 GAMESOUND gSoundSplashScreen;
-GAMESOUND gMusicOverWorld01;
 
+GAMESOUND gMusicOverWorld01;
+GAMESOUND gMusicDungeon01;
+
+////imports from ntdll /////
+
+typedef LONG(NTAPI* _NtQueryTimerResolution) (OUT PULONG MinimumResolution, OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
+
+_NtQueryTimerResolution NtQueryTimerResolution;
+
+////imports gamecode from dll////
+
+typedef int(_cdecl* _RandomMonsterEncounter) (_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
+
+_RandomMonsterEncounter RandomMonsterEncounter;
+
+/////////////Function declarations//////////////////
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);
+
+BOOL LoadGameCode(_In_ char* ModuleFileName);
 
 DWORD CreateMainGameWindow(void);
 
@@ -360,12 +419,12 @@ DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound);
 
 
 void PlayGameSound(_In_ GAMESOUND* GameSound);
-void PlayGameMusic(_In_ GAMESOUND* GameSound);
-
-BOOL MusicIsPlaying(void);
+void PlayGameMusic(_In_ GAMESOUND* GameSound, _In_ BOOL Looping, _In_ BOOL Immediate);
 
 void PauseGameMusic(void);
 void StopGameMusic(void);
+
+BOOL MusicIsPlaying(void);
 
 DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource);
 
@@ -383,6 +442,5 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
 
 void InitializeGlobals(void);
 
-
-void RandomMonsterEncounter(void);
+void DrawWindow(_In_ int16_t x, _In_ int16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_ PIXEL32 BackgroundColor, _In_ DWORD Flags);
 
