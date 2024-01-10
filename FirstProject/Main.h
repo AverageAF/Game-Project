@@ -550,6 +550,7 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
 	uint8_t Event;
+	struct Monster MonsterParty[MAX_PARTY_SIZE];
 
 } INGAMESPRITE;
 

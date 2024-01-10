@@ -46,6 +46,8 @@ uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove);
 
 void CopyMonsterToPlayerParty(uint8_t partyIndex, struct Monster source);
 
+void CopyMonsterToOpponentParty(uint8_t partyIndex, struct Monster source);
+
 void DriveMonsterToMonster(const struct DriveMonster* source, struct Monster* destination);
 
 uint32_t GetMonsterData(struct Monster* monster, int32_t field, uint8_t* data);
@@ -61,6 +63,12 @@ uint8_t GetMonsterGender(struct Monster* monster);
 uint8_t GetDriveMonsterGender(struct DriveMonster* driveMonster);
 
 uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterSeed);
+
+struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t level, uint16_t item);
+
+struct Monster GenerateRandMonsterForWildEncounter(uint8_t level, uint16_t item);
+
+struct Monster GenerateMonsterForCharacterSpriteBattle(uint8_t index, uint8_t level, uint16_t item);
 
 uint8_t GiveMonsterToPlayer(struct Monster* monster);
 

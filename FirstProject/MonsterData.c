@@ -715,6 +715,11 @@ void CopyMonsterToPlayerParty(uint8_t partyIndex, struct Monster source)
     gPlayerParty[partyIndex] = source;
 }
 
+void CopyMonsterToOpponentParty(uint8_t partyIndex, struct Monster source)
+{
+    gOpponentParty[partyIndex] = source;
+}
+
 void DriveMonsterToMonster(const struct DriveMonster* source, struct Monster* destination)
 {
     uint32_t value = 0;
@@ -1119,6 +1124,56 @@ uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterS
     }
 }
 
+////TEMPORARY WILL BE BASED ON MAP LATER
+struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t level, uint16_t item)
+{
+    uint8_t heldItem[2];
+    struct Monster monster;
+    //uint16_t targetIndex;
+
+    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    heldItem[0] = item;
+    heldItem[1] = item >> 8;
+    SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
+
+    return(monster);
+}
+
+////TEMPORARY WILL BE BASED ON MAP LATER
+struct Monster GenerateRandMonsterForWildEncounter(uint8_t level, uint16_t item)
+{
+    uint8_t heldItem[2];
+    struct Monster monster;
+    //uint16_t targetIndex;
+
+    DWORD Random;
+    uint8_t randIndex;
+    rand_s((unsigned int*)&Random);
+    Random = Random % (NUM_MONSTERS - 1);
+    randIndex = (uint8_t*)Random;
+
+    CreateMonster(&monster, randIndex, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    heldItem[0] = item;
+    heldItem[1] = item >> 8;
+    SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
+
+    return(monster);
+}
+
+struct Monster GenerateMonsterForCharacterSpriteBattle(uint8_t index, uint8_t level, uint16_t item)
+{
+    uint8_t heldItem[2];
+    struct Monster monster;
+    //uint16_t targetIndex;         //TODO: monsters with multiple forms/states
+
+    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    heldItem[0] = item;
+    heldItem[1] = item >> 8;
+    SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
+
+    return(monster);
+}
+
 uint8_t GiveMonsterToPlayer(struct Monster* monster)
 {
     int32_t i;
@@ -1139,7 +1194,6 @@ uint8_t GiveMonsterToPlayer(struct Monster* monster)
         //return(SendMonsterToPC(monster));
     }
 
-    //CopyMonster(&gPlayerParty[i], monster);
     CopyMonsterToPlayerParty(i, *monster);
     gPlayerPartyCount = i + 1;
     return(0);

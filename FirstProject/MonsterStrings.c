@@ -1,6 +1,7 @@
 
 #include "main.h"
 
+//[Index][MAX_MONSTER_NAME_LENGTH + 1]
 const uint8_t gMonsterNames[NUM_MONSTERS][MAX_MONSTER_NAME_LENGTH + 1] = 
 {
 	[MONSTER_NULL] = "???????",

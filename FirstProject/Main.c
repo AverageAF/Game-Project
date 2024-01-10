@@ -618,7 +618,7 @@ DWORD InitializeSprites(void)
 
     sprintf_s(gCharacterSprite[2].Name, sizeof(gCharacterSprite[2].Name), "Jerry");
 
-    gOpponentParty[0].DriveMonster.Index = MONSTER_WOLF;
+    gCharacterSprite[2].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(1, 5, 0);
 
     //////////////////////////////////////////////////////////////
 

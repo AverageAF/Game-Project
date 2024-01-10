@@ -3,6 +3,8 @@
 
 #include "BattleScreen.h"
 
+#include "MonsterData.h"
+
 
 ///////// load starting monster
 
@@ -104,10 +106,19 @@ void DrawBattleScreen(void)
         BattleTextLine1CharactersToShow = 0;
         if (Opponent == NULL)
         {
-            sprintf_s(gBattleTextLine1, sizeof(gBattleTextLine1), "%s encountered a wild NULL!", gPlayer.Name);
+            //CopyMonsterToOpponentParty(0, GenerateScriptedMonsterForWildEncounter(3, 5, 0));
+            CopyMonsterToOpponentParty(0, GenerateRandMonsterForWildEncounter(5, 0));
+            sprintf_s(gBattleTextLine1, sizeof(gBattleTextLine1), "%s encountered a wild %s!", gPlayer.Name, gMonsterNames[gOpponentParty[0].DriveMonster.Index]);
         }
         else
         {
+            for (uint8_t i = 0; i < MAX_PARTY_SIZE; i++)
+            {
+                if (&gCharacterSprite[Opponent].MonsterParty[i].DriveMonster.Index != MONSTER_NULL)
+                {
+                    CopyMonsterToOpponentParty(i, gCharacterSprite[Opponent].MonsterParty[i]);
+                }
+            }
             sprintf_s(gBattleTextLine1, sizeof(gBattleTextLine1), "%s was challenged by %s", gPlayer.Name, gCharacterSprite[Opponent].Name);
         }
     }
@@ -127,13 +138,9 @@ void DrawBattleScreen(void)
         {
             PlayerMonsterSprite = &gBattleSpriteBack[Counter];
         }
-
-        //if (Opponent != NULL)         //temp removed so game doesnt assert on wild encounters
+        if (gOpponentParty[0].DriveMonster.Index == Counter)
         {
-            if (gOpponentParty[0].DriveMonster.Index == Counter)
-            {
-                OpponentMonsterSprite = &gBattleSpriteFront[Counter];
-            }
+            OpponentMonsterSprite = &gBattleSpriteFront[Counter];
         }
     }
 
@@ -145,7 +152,7 @@ void DrawBattleScreen(void)
 
     switch (gCurrentBattleState)
     {
-        case BATTLESTATE_OPENING_TEXT:          //TODO: impliment longer strings with token finder
+        case BATTLESTATE_OPENING_TEXT:          //TODO: steal code from dialoguewindow for longer multi row text messages
         {
             if (gRegistryParams.TextSpeed == 4)
             {
@@ -250,7 +257,7 @@ void DrawBattleScreen(void)
     }
     else
     {
-        ASSERT(FALSE, "Battle monster is NULL!");
+        ASSERT(FALSE, "Player battle monster is NULL!");
     }
 
     if (OpponentMonsterSprite != 0)
@@ -259,7 +266,7 @@ void DrawBattleScreen(void)
     }
     else
     {
-        ASSERT(FALSE, "Battle monster is NULL!");
+        ASSERT(FALSE, "Opponent battle monster is NULL!");
     }
 
     LocalFrameCounter++;
