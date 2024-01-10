@@ -1396,50 +1396,6 @@ void DrawMoveButtons(void)
     BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_MoveScreen_Items[gMenu_MoveScreen.SelectedItem]->x - 6, gMI_MoveScreen_Items[gMenu_MoveScreen.SelectedItem]->y);
 }
 
-void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar)
-{
-    DrawWindow(x - 3, y - 10, 100 + 16, 2 + 13, &COLOR_BLACK, &COLOR_DARK_WHITE, NULL, WINDOW_FLAG_ROUNDED | WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
-
-    int32_t StartingScreenPixel = ((GAME_RES_WIDTH * GAME_RES_HEIGHT) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
-
-    for (int Row = 0; Row < 2; Row++)
-    {
-
-        for (int Pixel = 0; Pixel < 100; Pixel++)
-        {
-            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
-            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_GREEN, sizeof(PIXEL32));
-        }
-
-        for (int Pixel = 0; Pixel < 100 - percentHp100; Pixel++)
-        {
-            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
-            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_GREEN, sizeof(PIXEL32));
-        }
-    }
-    if (showExpBar)
-    {
-        for (int Pixel = 0; Pixel < 100; Pixel++)
-        {
-            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
-            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_BLUE, sizeof(PIXEL32));
-        }
-
-        for (int Pixel = 0; Pixel < 100 - percentExp100; Pixel++)
-        {
-            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
-            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_NEON_BLUE, sizeof(PIXEL32));
-        }
-    }
-
-    uint16_t LevelSize = snprintf(NULL, 0, "%d", monsterLevel);
-    char* LevelString = malloc(LevelSize + 6);
-    snprintf(LevelString, LevelSize + 6, "Lvl: %d", monsterLevel);
-    BlitStringToBuffer(LevelString, &g6x7Font, &COLOR_DARK_RED, x - 1, y - 8);
-
-    BlitStringToBuffer(monsterNickname, &g6x7Font, &COLOR_DARK_RED, x + 11 + 30, y - 8);
-}
-
 //////// initial choice menu
 
 void MenuItem_BattleScreen_FightButton(void)
@@ -1830,7 +1786,7 @@ uint16_t CalcPotentialDamageToPlayerMonster(uint8_t oppLevel, uint16_t oppMonAtk
 
     if (Random16 % 16 == 0)     //TODO:BATTLE_TEXT_FLAG for crits, element effectiveness, ect..
     {
-        PotentialDmg =+  (PotentialDmg * 1.5);
+        PotentialDmg += (PotentialDmg * 1.5);
     }
     return (PotentialDmg);
 }

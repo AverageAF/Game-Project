@@ -47,7 +47,6 @@ void DrawBattleButtons(void);
 
 void DrawMoveButtons(void);
 
-void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar);
 
 ////////////MENU//BUTTONS//////////////
 

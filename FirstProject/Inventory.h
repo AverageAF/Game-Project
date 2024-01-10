@@ -6,7 +6,7 @@ typedef enum INV_POCKETS
 	POCKETSTATE_RESTORE,
 	POCKETSTATE_VALUABLE,
 	POCKETSTATE_ADVENTURE,
-	POCKETSTATE_FAVORITE
+	POCKETSTATE_MONSTER,
 
 } INV_POCKETS;
 
@@ -22,36 +22,17 @@ void DrawRestorePocket(void);
 
 void DrawValuablePocket(void);
 
-void MenuItem_Inventory_Equipable_Slot0(void);
+void DrawAdvemturePocket(void);
 
-void MenuItem_Inventory_Equipable_Slot1(void);
+void DrawMonsterParty(void);
 
-void MenuItem_Inventory_Equipable_Slot2(void);
 
-void MenuItem_Inventory_Equipable_Slot3(void);
+void MenuItem_Inventory_Equipable_Slot_Action(void);
 
-void MenuItem_Inventory_Equipable_Slot4(void);
+void MenuItem_Inventory_Restore_Slot_Action(void);
 
-void MenuItem_Inventory_Equipable_Slot5(void);
+void MenuItem_Inventory_Valuable_Slot_Action(void);
 
-void MenuItem_Inventory_Equipable_Slot6(void);
+void MenuItem_Inventory_Adventure_Slot_Action(void);
 
-void MenuItem_Inventory_Equipable_Slot7(void);
-
-void MenuItem_Inventory_Equipable_Slot8(void);
-
-void MenuItem_Inventory_Equipable_Slot9(void);
-
-void MenuItem_Inventory_Equipable_Slot10(void);
-
-void MenuItem_Inventory_Equipable_Slot11(void);
-
-void MenuItem_Inventory_Equipable_Slot12(void);
-
-void MenuItem_Inventory_Equipable_Slot13(void);
-
-void MenuItem_Inventory_Equipable_Slot14(void);
-
-void MenuItem_Inventory_Equipable_Slot15(void);
-
-void MenuItem_Inventory_Equipable_Slot16(void);
+void MenuItem_Inventory_Monster_Slot_Action(void);

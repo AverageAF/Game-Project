@@ -4,6 +4,9 @@
 
 #include "MonsterData.h"
 
+#include "Inventory.h"
+#include "InventoryItems.h"
+
 BOOL gFade = FALSE;
 
 void DrawOverworldScreen(void)
@@ -713,7 +716,13 @@ void PPI_Overworld(void)
                             }
                             case EVENT_FLAG_MONSTER:
                             {
-                                ScriptGiveMonster(MONSTER_WOLF, 5, 0);
+                                if (gCharacterSprite[Index].EventMonsterIndex == 0 || gCharacterSprite[Index].EventMonsterLevel == 0)           //give player first index at level 1 if sprite is set up incorrectly
+                                {
+                                    gCharacterSprite[Index].EventMonsterIndex = 1;
+                                    gCharacterSprite[Index].EventMonsterLevel = 1;
+                                    LogMessageA(LL_WARNING, "[%s] gCharacterSprite[%d] tried to give a monster to player with either 0 index or 0 level!", __FUNCTION__, Index);
+                                }
+                                ScriptGiveMonster(gCharacterSprite[Index].EventMonsterIndex, gCharacterSprite[Index].EventMonsterLevel, gCharacterSprite[Index].EventMonsterItem);
                                 gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
                                 gCharacterSprite[Index].InteractedWith = FALSE;
                                 break;
@@ -721,6 +730,16 @@ void PPI_Overworld(void)
                             case EVENT_FLAG_HEAL:
                             {
                                 HealPlayerParty();
+                                gCharacterSprite[Index].InteractedWith = FALSE;
+                                break;
+                            }
+                            case EVENT_FLAG_ITEM_ONCE:
+                            {
+                                for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+                                {
+                                    GivePlayerItem(gCharacterSprite[Index].EventItemsIndex[i], gCharacterSprite[Index].EventItemsCount[i]);
+                                }
+                                gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
                                 gCharacterSprite[Index].InteractedWith = FALSE;
                                 break;
                             }
@@ -1011,4 +1030,13 @@ void TeleportPlayerBlackOut(void)
     gPlayer.Direction = DOWN;
 
     HealPlayerParty();
+}
+
+void GivePlayerItem(uint16_t itemIndex, uint16_t amount)
+{
+    gEquipableItems[itemIndex].Count += amount;
+    if (gEquipableItems[itemIndex].Count > 0)
+    {
+        gEquipableItems[itemIndex].HasItem = TRUE;
+    }
 }

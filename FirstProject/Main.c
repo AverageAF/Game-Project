@@ -573,6 +573,8 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].Direction = LEFT;
     gCharacterSprite[0].ResetDirection = LEFT;
     gCharacterSprite[0].Event = EVENT_FLAG_MONSTER;
+    gCharacterSprite[0].EventMonsterIndex = MONSTER_WOLF;
+    gCharacterSprite[0].EventMonsterLevel = 7;
     gCharacterSprite[0].Movement = MOVEMENT_WALK_LEFT_RIGHT;
     gCharacterSprite[0].MovementRange.y = 5;
     gCharacterSprite[0].MovementRange.x = 5;
@@ -602,6 +604,23 @@ DWORD InitializeSprites(void)
     gCharacterSprite[1].Exists = TRUE;
     gCharacterSprite[1].Loaded = FALSE;
     gCharacterSprite[1].Dialogue[0] = "Wow!\nThis place is dark!";
+
+
+    gCharacterSprite[1].Event = EVENT_FLAG_MONSTER;
+    gCharacterSprite[1].EventMonsterIndex = MONSTER_WOLF;
+    gCharacterSprite[1].EventMonsterLevel = 5;
+
+    /*gCharacterSprite[1].Event = EVENT_FLAG_ITEM_ONCE;
+
+    gCharacterSprite[1].EventItemsIndex[1] = 1;
+    gCharacterSprite[1].EventItemsIndex[2] = 2;
+    gCharacterSprite[1].EventItemsIndex[3] = 4;
+    gCharacterSprite[1].EventItemsIndex[4] = 8;
+
+    gCharacterSprite[1].EventItemsCount[1] = 8;
+    gCharacterSprite[1].EventItemsCount[2] = 4;
+    gCharacterSprite[1].EventItemsCount[3] = 2;
+    gCharacterSprite[1].EventItemsCount[4] = 1;*/
 
     //////////////////////////////////////////////////////////////
 
@@ -2631,6 +2650,9 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
             BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 276, 224);
             gFinishedDialogueTextAnimation = TRUE;
             gDialogueControls = TRUE;
+            DialogueCharactersWritten = 0;
+            DialogueCharactersToShow = 0;
+            DialogueRowsToShow = 0;
 
         }
 
@@ -2716,3 +2738,47 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
     }
 }
 
+
+void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar)
+{
+    DrawWindow(x - 3, y - 10, 100 + 16, 2 + 13, &COLOR_BLACK, &COLOR_DARK_WHITE, NULL, WINDOW_FLAG_ROUNDED | WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    int32_t StartingScreenPixel = ((GAME_RES_WIDTH * GAME_RES_HEIGHT) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
+
+    for (int Row = 0; Row < 2; Row++)
+    {
+
+        for (int Pixel = 0; Pixel < 100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_GREEN, sizeof(PIXEL32));
+        }
+
+        for (int Pixel = 0; Pixel < 100 - percentHp100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_GREEN, sizeof(PIXEL32));
+        }
+    }
+    if (showExpBar)
+    {
+        for (int Pixel = 0; Pixel < 100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_BLUE, sizeof(PIXEL32));
+        }
+
+        for (int Pixel = 0; Pixel < 100 - percentExp100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_NEON_BLUE, sizeof(PIXEL32));
+        }
+    }
+
+    uint16_t LevelSize = snprintf(NULL, 0, "%d", monsterLevel);
+    char* LevelString = malloc(LevelSize + 6);
+    snprintf(LevelString, LevelSize + 6, "Lvl: %d", monsterLevel);
+    BlitStringToBuffer(LevelString, &g6x7Font, &COLOR_DARK_RED, x - 1, y - 8);
+
+    BlitStringToBuffer(monsterNickname, &g6x7Font, &COLOR_DARK_RED, x + 11 + 37, y - 8);
+}

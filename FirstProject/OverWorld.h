@@ -56,3 +56,5 @@ void HealPlayerParty(void);
 
 void TeleportPlayerBlackOut(void);
 
+void GivePlayerItem(uint16_t itemIndex, uint16_t amount);
+

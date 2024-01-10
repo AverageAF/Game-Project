@@ -78,6 +78,9 @@
 #define COLOR_LIGHT_GREEN (PIXEL32){ .Bytes = 0xFF00b800 }
 #define COLOR_DARK_GREEN (PIXEL32){ .Bytes = 0xFF005800 }
 #define COLOR_NEON_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
+#define COLOR_PINK (PIXEL32){ .Bytes = 0xFFf85898 }
+#define COLOR_GOLD (PIXEL32){ .Bytes = 0xFFFFD700 }
+#define COLOR_PURPLE (PIXEL32){ .Bytes = 0xFF940084 }
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
@@ -100,6 +103,7 @@
 #define MAX_STAT_CHANGES 6
 #define MAX_DIALOGUE_ROWS 7
 #define MAX_BATTLECHAR_PER_ROW 40
+#define MAX_ITEMS_GIVE 16
 
 
 
@@ -164,7 +168,8 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 	EVENT_FLAG_BATLLE,
 	EVENT_FLAG_HEAL,
 	EVENT_FLAG_CUTSCENE,
-	EVENT_FLAG_ITEM,
+	EVENT_FLAG_ITEM_ONCE,
+	EVENT_FLAG_ITEM_REPEAT,
 	EVENT_FLAG_MONSTER,
 	EVENT_FLAG_MOVEMENT,
 } EVENT_FLAGS;
@@ -526,6 +531,8 @@ struct BattleMove
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
 typedef struct PLAYER
 {
 	char Name[MAX_NAME_LENGTH + 1];
@@ -571,6 +578,11 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
 	uint8_t Event;
+	uint16_t EventItemsIndex[MAX_ITEMS_GIVE];
+	uint16_t EventItemsCount[MAX_ITEMS_GIVE];
+	uint8_t EventMonsterIndex;
+	uint8_t EventMonsterLevel;
+	uint16_t EventMonsterItem;
 	struct Monster MonsterParty[MAX_PARTY_SIZE];
 	uint8_t BattleAiFlag;
 
@@ -632,7 +644,7 @@ GAMEBITMAP g6x7Font;
 GAMEBITMAP gBattleScreen_Grass01;
 GAMEBITMAP gBattleScreen_StoneBricks01;
 
-uint8_t gPlayerPartyCount;
+uint8_t gPlayerPartyCount;				//number of monsters in player party from 0 to 6
 uint8_t gOpponentPartyCount;
 
 struct Monster gPlayerParty[MAX_PARTY_SIZE];
@@ -764,5 +776,7 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
 void EnterDialogue(void);
 
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags);
+
+void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar);
 
 
