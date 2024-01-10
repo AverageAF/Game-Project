@@ -37,9 +37,10 @@ void DrawOptionsScreen(void)
         LocalFrameCounter = 0;
 
         gMenu_OptionsScreen.SelectedItem = 0;
+        gInputEnabled = FALSE;
     }
 
-    if (LocalFrameCounter <= 8)
+    if (LocalFrameCounter <= 5)
     {
         TextColor.Red = 64;
         TextColor.Blue = 64;
@@ -49,7 +50,7 @@ void DrawOptionsScreen(void)
         Gray.Blue = 20;
         Gray.Green = 20;
     }
-    if (LocalFrameCounter == 16)
+    if (LocalFrameCounter == 10)
     {
         TextColor.Red = 128;
         TextColor.Blue = 128;
@@ -59,7 +60,7 @@ void DrawOptionsScreen(void)
         Gray.Blue = 40;
         Gray.Green = 40;
     }
-    if (LocalFrameCounter == 24)
+    if (LocalFrameCounter == 15)
     {
         TextColor.Red = 192;
         TextColor.Blue = 192;
@@ -69,7 +70,7 @@ void DrawOptionsScreen(void)
         Gray.Blue = 60;
         Gray.Green = 60;
     }
-    if (LocalFrameCounter == 32)
+    if (LocalFrameCounter == 20)
     {
         TextColor.Red = 255;
         TextColor.Blue = 255;
@@ -78,6 +79,8 @@ void DrawOptionsScreen(void)
         Gray.Red = 80;
         Gray.Blue = 80;
         Gray.Green = 80;
+
+        gInputEnabled = TRUE;
     }
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));

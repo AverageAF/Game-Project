@@ -19,6 +19,17 @@ typedef struct PORTCOORDS
 
 } PORTCOORDS;
 
+typedef struct GAMEAREA
+{
+	char* Name;
+
+	RECT Area;
+
+	GAMESOUND Music;
+
+
+} GAMEAREA;
+
 PORTCOORDS gPortCoords[2];
 
 PORTCOORDS gTeleport001;

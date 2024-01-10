@@ -1,5 +1,8 @@
 #pragma once
 
+//for rand_s()
+#define _CRT_RAND_S 
+
 #ifdef _DEBUG
 	#define ASSERT(Expression, Message) if (!(Expression)) { *(int*)0 = 0; }
 #else
@@ -105,7 +108,9 @@ typedef enum GAMESTATE
 	GAMESTATE_BATTLE,
 	GAMESTATE_OPTIONS,
 	GAMESTATE_EXITYESNO,
-	GAMESTATE_CHARACTERNAME
+	GAMESTATE_CHARACTERNAME,
+	GAMESTATE_LOADGAMESAVE,
+	GAMESTATE_DELETESAVEYESNO
 
 } GAMESTATE;
 
@@ -293,6 +298,8 @@ BOOL gGameIsRunning;                //when set to FALSE ends the game, controls 
 
 GAME_PERFORMANCE_DATA gGamePerformanceData;
 
+BOOL gInputEnabled;
+
 PLAYER gPlayer;
 UPOINT gCamera;
 
@@ -329,9 +336,9 @@ DWORD Load32BppBitmapFromMem(_In_ void* Buffer, _Inout_ GAMEBITMAP* GameBitmap);
 
 DWORD InitializePlayer(void);
 
-void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ int16_t y);
+void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ int16_t y, _In_ int16_t BrightnessAdjustment);
 
-void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap);
+void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t BrightnessAdjustment);
 
 void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXEL32* Color, _In_ uint16_t x, _In_ uint16_t y);
 
@@ -355,18 +362,12 @@ DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound);
 void PlayGameSound(_In_ GAMESOUND* GameSound);
 void PlayGameMusic(_In_ GAMESOUND* GameSound);
 
+BOOL MusicIsPlaying(void);
+
+void PauseGameMusic(void);
+void StopGameMusic(void);
+
 DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource);
-
-// This is defined at the beginning of Main.c.
-#ifdef AVX
-void ClearScreen(_In_ __m256i* Color);
-#elif defined SSE2
-void ClearScreen(_In_ __m128i* Color);
-#else
-void ClearScreen(_In_ PIXEL32* Color);
-#endif
-
-void DrawBattleScreen(void);
 
 
 DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
@@ -381,4 +382,7 @@ DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESO
 DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
 
 void InitializeGlobals(void);
+
+
+void RandomMonsterEncounter(void);
 

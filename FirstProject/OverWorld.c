@@ -2,6 +2,7 @@
 
 #include "OverWorld.h"
 
+BOOL gFade = FALSE;
 
 void DrawOverworldScreen(void)
 {
@@ -11,19 +12,58 @@ void DrawOverworldScreen(void)
 
     static PIXEL32 TextColor = { 0xFF, 0xFF, 0xFF, 0xFF };
 
-    if (gGamePerformanceData.TotalFramesRendered > (LastFrameSeen + 1))
+    static int16_t BrightnessAdjustment = -255;
+
+    if ((gFade == TRUE) || (gGamePerformanceData.TotalFramesRendered > (LastFrameSeen + 1)))
     {
+        gFade = FALSE;
         LocalFrameCounter = 0;
+        BrightnessAdjustment = -255;
+        gInputEnabled = FALSE;
+    }
+
+    if (LocalFrameCounter == 5)
+    {
+        TextColor.Red = 64;
+        TextColor.Blue = 64;
+        TextColor.Green = 64;
+        BrightnessAdjustment = -128;
+
+    }
+    if (LocalFrameCounter == 10)
+    {
+        TextColor.Red = 128;
+        TextColor.Blue = 128;
+        TextColor.Green = 128;
+        BrightnessAdjustment = -64;
+    }
+    if (LocalFrameCounter == 15)
+    {
+        TextColor.Red = 192;
+        TextColor.Blue = 192;
+        TextColor.Green = 192;
+        BrightnessAdjustment = -32;
+    }
+    if (LocalFrameCounter == 20)
+    {
+        TextColor.Red = 255;
+        TextColor.Blue = 255;
+        TextColor.Green = 255;
+        BrightnessAdjustment = 0;
+        gInputEnabled = TRUE;
     }
 
     if (LocalFrameCounter == 60)
     {
-        PlayGameMusic(&gMusicOverWorld01);
+        if (MusicIsPlaying() == FALSE)
+        {
+            PlayGameMusic(&gMusicOverWorld01);
+        }
     }
 
-    BlitBackgroundToBuffer(&gOverWorld01.GameBitmap);
+    BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
-    Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
+    Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
 
     if (gGamePerformanceData.DisplayDebugInfo)
     {
@@ -65,10 +105,6 @@ void DrawOverworldScreen(void)
 
     LastFrameSeen = gGamePerformanceData.TotalFramesRendered;
 }
-void DrawBattleScreen(void)
-{
-
-}
 
 
 void PPI_Overworld(void)
@@ -76,7 +112,7 @@ void PPI_Overworld(void)
     if (gGameInput.EscapeKeyPressed && gGameInput.EscapeKeyAlreadyPressed)
     {
         gPreviousGameState = gCurrentGameState;
-        gCurrentGameState = GAMESTATE_EXITYESNO;
+        gCurrentGameState = GAMESTATE_TITLESCREEN;
         PlayGameSound(&gSoundMenuChoose);
     }
 
@@ -319,6 +355,19 @@ void PPI_Overworld(void)
                         TeleportHandler();
                     }
                 }
+                else
+                {
+                    DWORD Random = 0;
+
+                    rand_s((unsigned int*)&Random);
+
+                    Random = Random % 100;
+
+                    if (Random > 90)
+                    {
+                        RandomMonsterEncounter();
+                    }
+                }
 
                 break;
             }
@@ -340,6 +389,8 @@ void TeleportHandler(void)
         if (gPlayer.WorldPos.x == gPortCoords[Counter].WorldPos.x && gPlayer.WorldPos.y == gPortCoords[Counter].WorldPos.y)
         {
             PortalFound = TRUE;
+            gPlayer.HasMovedSincePort = FALSE;
+            gFade = TRUE;
             gPlayer.WorldPos.x = gPortCoords[Counter].WorldDest.x;
             gPlayer.WorldPos.y = gPortCoords[Counter].WorldDest.y;
             gPlayer.ScreenPos.x = gPortCoords[Counter].ScreenPos.x;
@@ -347,7 +398,6 @@ void TeleportHandler(void)
             gCamera.x = gPortCoords[Counter].CameraPos.x;
             gCamera.y = gPortCoords[Counter].CameraPos.y;
             gCurrentArea = gPortCoords[Counter].AreaDest;
-            gPlayer.HasMovedSincePort = FALSE;
             break;
         }
     }
@@ -355,4 +405,11 @@ void TeleportHandler(void)
     {
         ASSERT(FALSE, "Player is standing on a portal with no portal handler!")
     }
+}
+
+
+void RandomMonsterEncounter(void)
+{
+    gPreviousGameState = gCurrentGameState;
+    gCurrentGameState = GAMESTATE_BATTLE;
 }

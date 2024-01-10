@@ -18,6 +18,8 @@
 #include "TitleScreen.h"
 #include "OverWorld.h"
 #include "miniz.h"
+#include "BattleScreen.h"
+#include "LoadGameSave.h"
 
 
 #pragma comment(lib, "Winmm.lib")
@@ -459,7 +461,7 @@ BOOL GameIsAlreadyRunning(void)
 
 void ProcessPlayerInput(void)
 {
-    if (gWindowHasFocus == FALSE)
+    if ((gInputEnabled == FALSE) || (gWindowHasFocus == FALSE))
     {
         return;
     }
@@ -508,6 +510,20 @@ void ProcessPlayerInput(void)
         case GAMESTATE_OVERWORLD:
         {
             PPI_Overworld();
+            break;
+        }
+        case GAMESTATE_BATTLE:
+        {
+            PPI_BattleScreen();
+            break; 
+        }
+        case GAMESTATE_LOADGAMESAVE:
+        {
+            PPI_LoadGameSave();
+            break;
+        }
+        case GAMESTATE_DELETESAVEYESNO:
+        {
             break;
         }
         default:
@@ -689,7 +705,7 @@ void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXE
 
     }
 
-    Blit32BppBitmapToBuffer(&StringBitmap, x, y);
+    Blit32BppBitmapToBuffer(&StringBitmap, x, y, 0 ); //TODO: make brightness usefull here
 
     if (StringBitmap.Memory)        //remember to free memory
     {
@@ -730,6 +746,20 @@ void RenderFrameGraphics(void)
         case GAMESTATE_OVERWORLD:
         {
             DrawOverworldScreen();
+            break;
+        }
+        case GAMESTATE_BATTLE:
+        {
+            DrawBattleScreen();
+            break;
+        }
+        case GAMESTATE_LOADGAMESAVE:
+        {
+            DrawLoadGameSave();
+            break;
+        }
+        case GAMESTATE_DELETESAVEYESNO:
+        {
             break;
         }
         default:
@@ -784,7 +814,7 @@ void RenderFrameGraphics(void)
 }
 
 
-void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ int16_t y)
+void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ int16_t y, _In_ int16_t BrightnessAdjustment)
 {
     int32_t StartingScreenPixel = ((GAME_RES_HEIGHT * GAME_RES_WIDTH) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
     int32_t StartingBitmapPixel = ((GameBitmap->BitmapInfo.bmiHeader.biWidth * GameBitmap->BitmapInfo.bmiHeader.biHeight) - GameBitmap->BitmapInfo.bmiHeader.biWidth);
@@ -792,43 +822,129 @@ void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ i
     int32_t BitmapOffset = 0;
     PIXEL32 BitmapPixel = { 0 };
 
+#ifdef AVX
+
+    __m256i BitmapOctoPixel; 
+
+    for (int16_t YPixel = 0; YPixel < GameBitmap->BitmapInfo.bmiHeader.biHeight; YPixel++)
+    {
+        int16_t PixelsRemainingOnThisRow = GameBitmap->BitmapInfo.bmiHeader.biWidth;
+
+        int16_t XPixel = 0;
+        while (PixelsRemainingOnThisRow >= 8)
+        {
+
+            MemoryOffset = StartingScreenPixel + XPixel - (GAME_RES_WIDTH * YPixel);
+
+            BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
+
+            
+            BitmapOctoPixel = _mm256_load_si256((const __m256i*)((PIXEL32*)GameBitmap->Memory + BitmapOffset));
+            
+
+            __m256i Half1 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(BitmapOctoPixel, 0));
+            
+
+            // Add the brightness adjustment to each 16-bit element, except alpha.
+            Half1 = _mm256_add_epi16(Half1, _mm256_set_epi16(
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment,
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment,
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment,
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment));
+
+            __m256i Half2 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(BitmapOctoPixel, 1));
+
+            Half2 = _mm256_add_epi16(Half2, _mm256_set_epi16(
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment,
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment,
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment,
+                0, BrightnessAdjustment, BrightnessAdjustment, BrightnessAdjustment));
+
+            // Now we need to reassemble the two halves back into a single 256-bit group of 8 pixels.
+            // _mm256_packus_epi16(a,b) takes the 16-bit signed integers in the 256-bit vectors a and b
+            // and converts them to a 256-bit vector of 8-bit unsigned integers. The result contains the
+            // first 8 integers from a, followed by the first 8 integers from b, followed by the last 8
+            // integers from a, followed by the last 8 integers from b.
+            // Values that are out of range are set to 0 or 255.
+            __m256i Recombined = _mm256_packus_epi16(Half1, Half2);
+
+            BitmapOctoPixel = _mm256_permute4x64_epi64(Recombined, _MM_SHUFFLE(3, 1, 2, 0));
+
+            // Create a mask that selects only the pixels that have an Alpha == 255.
+            __m256i Mask = _mm256_cmpeq_epi8(BitmapOctoPixel, _mm256_set1_epi8(-1));
+
+            // Conditionally store the result to the global back buffer, based on the mask
+            // we just created that selects only the pixels where Alpha == 255.
+            _mm256_maskstore_epi32((int*)((PIXEL32*)gBackBuffer.Memory + MemoryOffset), Mask, BitmapOctoPixel);
+
+            PixelsRemainingOnThisRow -= 8;
+
+            XPixel += 8;
+        }
+        while (PixelsRemainingOnThisRow > 0)
+        {
+            MemoryOffset = StartingScreenPixel + XPixel - (GAME_RES_WIDTH * YPixel);
+
+            BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
+
+            memcpy_s(&BitmapPixel, sizeof(PIXEL32), (PIXEL32*)GameBitmap->Memory + BitmapOffset, sizeof(PIXEL32));     //copy contents of bitmap pixel
+
+            if (BitmapPixel.Alpha > 0)      ////not alpha blending, only drawing non 0 alpha pixels
+            {
+                BitmapPixel.Red = min(255, max((BitmapPixel.Red + BrightnessAdjustment), 0));
+                BitmapPixel.Green = min(255, max((BitmapPixel.Green + BrightnessAdjustment), 0));
+                BitmapPixel.Blue = min(255, max((BitmapPixel.Blue + BrightnessAdjustment), 0));
+
+                memcpy_s((PIXEL32*)gBackBuffer.Memory + MemoryOffset, sizeof(PIXEL32), &BitmapPixel, sizeof(PIXEL32));     //place contents of bitmap pixel onto backbuffer
+            }
+            PixelsRemainingOnThisRow--;
+            XPixel++;
+        }
+    }
+
+#elif defined SSE2
+
+    //TODO:
+
+#else
+
     for (int16_t YPixel = 0; YPixel < GameBitmap->BitmapInfo.bmiHeader.biHeight; YPixel++)
     {
         for (int16_t XPixel = 0; XPixel < GameBitmap->BitmapInfo.bmiHeader.biWidth; XPixel++)
         {
             ////preventing pixels being drawn outside screen
-            if ((x < 1) || (x < GAME_RES_WIDTH - GameBitmap->BitmapInfo.bmiHeader.biWidth) || (y < 1) || (y < GAME_RES_HEIGHT - GameBitmap->BitmapInfo.bmiHeader.biHeight))         //////TODO: please optimize this way too many branches
-            {
-                if (x < 1)
-                {
-                    if (XPixel < -x)
-                    {
-                        break;
-                    }
-                }
-                else if (x > GAME_RES_WIDTH - GameBitmap->BitmapInfo.bmiHeader.biWidth)
-                {
-                    if (XPixel > GAME_RES_WIDTH - x - 1)
-                    {
-                        break;
-                    }
-                }
+            //if ((x < 1) || (x < GAME_RES_WIDTH - GameBitmap->BitmapInfo.bmiHeader.biWidth) || (y < 1) || (y < GAME_RES_HEIGHT - GameBitmap->BitmapInfo.bmiHeader.biHeight))         //////TODO: please optimize this way too many branches
+            //{
+            //    if (x < 1)
+            //    {
+            //        if (XPixel < -x)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    else if (x > GAME_RES_WIDTH - GameBitmap->BitmapInfo.bmiHeader.biWidth)
+            //    {
+            //        if (XPixel > GAME_RES_WIDTH - x - 1)
+            //        {
+            //            break;
+            //        }
+            //    }
 
-                if ( y < 1)
-                {
-                    if (YPixel < -y)
-                    {
-                        break;
-                    }
-                }
-                else if (y > GAME_RES_HEIGHT - GameBitmap->BitmapInfo.bmiHeader.biHeight)
-                {
-                    if (YPixel > GAME_RES_HEIGHT - y - 1)
-                    {
-                        break;
-                    }
-                }
-            }
+            //    if ( y < 1)
+            //    {
+            //        if (YPixel < -y)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    else if (y > GAME_RES_HEIGHT - GameBitmap->BitmapInfo.bmiHeader.biHeight)
+            //    {
+            //        if (YPixel > GAME_RES_HEIGHT - y - 1)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //}
             MemoryOffset = StartingScreenPixel + XPixel - (GAME_RES_WIDTH * YPixel);
             
             BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
@@ -837,13 +953,19 @@ void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ i
 
             if (BitmapPixel.Alpha > 0)
             {
+                BitmapPixel.Red = min(255, max((BitmapPixel.Red + BrightnessAdjustment), 0));
+                BitmapPixel.Green = min(255, max((BitmapPixel.Green + BrightnessAdjustment), 0));
+                BitmapPixel.Blue = min(255, max((BitmapPixel.Blue + BrightnessAdjustment), 0));
+
                 memcpy_s((PIXEL32*)gBackBuffer.Memory + MemoryOffset, sizeof(PIXEL32), &BitmapPixel, sizeof(PIXEL32));     //place contents of bitmap pixel onto backbuffer
             }
         }
     }
+
+#endif
 }   
 
-void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap)
+void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t BrightnessAdjustment)
 {
     int32_t StartingScreenPixel = ((GAME_RES_HEIGHT * GAME_RES_WIDTH) - GAME_RES_WIDTH);
     int32_t StartingBitmapPixel = ((GameBitmap->BitmapInfo.bmiHeader.biWidth * GameBitmap->BitmapInfo.bmiHeader.biHeight) - GameBitmap->BitmapInfo.bmiHeader.biWidth) +gCamera.x - (GameBitmap->BitmapInfo.bmiHeader.biWidth * gCamera.y);
@@ -861,9 +983,43 @@ void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap)
 
             BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
 
-            BitmapOctoPixel = _mm256_loadu_si256((PIXEL32*)GameBitmap->Memory + BitmapOffset);
+            BitmapOctoPixel = _mm256_loadu_si256((const __m256i*)((PIXEL32*)GameBitmap->Memory + BitmapOffset));
 
-            _mm256_store_si256((PIXEL32*)gBackBuffer.Memory + MemoryOffset, BitmapOctoPixel);
+
+            //        AARRGGBBAARRGGBB-AARRGGBBAARRGGBB-AARRGGBBAARRGGBB-AARRGGBBAARRGGBB
+            // YMM0 = FF5B6EE1FF5B6EE1-FF5B6EE1FF5B6EE1-FF5B6EE1FF5B6EE1-FF5B6EE1FF5B6EE1
+
+            __m256i Half1 = _mm256_cvtepu8_epi16( _mm256_extracti128_si256(BitmapOctoPixel, 0));
+
+            //        AAAARRRRGGGGBBBB-AAAARRRRGGGGBBBB-AAAARRRRGGGGBBBB-AAAARRRRGGGGBBBB
+            // YMM0 = 00FF005B006E00E1-00FF005B006E00E1-00FF005B006E00E1-00FF005B006E00E1
+
+            Half1 = _mm256_add_epi16(Half1, _mm256_set1_epi16(BrightnessAdjustment));
+
+            //        AAAARRRRGGGGBBBB-AAAARRRRGGGGBBBB-AAAARRRRGGGGBBBB-AAAARRRRGGGGBBBB        
+            // YMM0 = 0000FF5Cff6FFFE2-0000FF5Cff6FFFE2-0000FF5Cff6FFFE2-0000FF5Cff6FFFE2
+
+            //      take apart 256 bits into 2x 256 bits (half1&2), so we can do math with each pixel conataining 16bits of info (intead of 8bits) and brightness (which is 16bits)
+            //
+
+            __m256i Half2 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(BitmapOctoPixel, 1));
+
+            //  
+            //
+
+            Half2 = _mm256_add_epi16(Half2, _mm256_set1_epi16(BrightnessAdjustment));
+            
+            //
+            //
+
+            __m256i Recombined = _mm256_packus_epi16(Half1, Half2);
+
+            // packus doesnt retain order very well, so we need to shuffle
+            // packus also clamps value between 255 and 0 so we dont have to
+             
+            BitmapOctoPixel = _mm256_permute4x64_epi64(Recombined, _MM_SHUFFLE(3, 1, 2, 0 ));
+
+            _mm256_store_si256((__m256i*)((PIXEL32*)gBackBuffer.Memory + MemoryOffset), BitmapOctoPixel);
         }
     }
 
@@ -896,6 +1052,12 @@ void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap)
             BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
 
             memcpy_s(&BitmapPixel, sizeof(PIXEL32), (PIXEL32*)GameBitmap->Memory + BitmapOffset, sizeof(PIXEL32));     //copy contents of bitmap pixel
+
+            BitmapPixel.Red = (uint8_t) min(255, max((BitmapPixel.Red + BrightnessAdjustment), 0));
+
+            BitmapPixel.Blue = (uint8_t) min(255, max((BitmapPixel.Blue + BrightnessAdjustment), 0));
+
+            BitmapPixel.Green = (uint8_t) min(255, max((BitmapPixel.Green + BrightnessAdjustment), 0));
 
             memcpy_s((PIXEL32*)gBackBuffer.Memory + MemoryOffset, sizeof(PIXEL32), &BitmapPixel, sizeof(PIXEL32));     //place contents of bitmap pixel onto backbuffer
         }
@@ -2071,6 +2233,18 @@ void PlayGameSound(_In_ GAMESOUND* GameSound)
     }
 }
 
+void PauseGameMusic(void)
+{
+    gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
+}
+
+void StopGameMusic(void)
+{
+    gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
+
+    gXAudioMusicSourceVoice->lpVtbl->FlushSourceBuffers(gXAudioMusicSourceVoice);
+}
+
 void PlayGameMusic(_In_ GAMESOUND* GameSound)
 {
     gXAudioMusicSourceVoice->lpVtbl->Stop(gXAudioMusicSourceVoice, 0, 0);
@@ -2457,6 +2631,22 @@ Exit:
     }
 
     return(Error);
+}
+
+BOOL MusicIsPlaying(void)
+{
+    XAUDIO2_VOICE_STATE  State = { 0 };
+
+    gXAudioMusicSourceVoice->lpVtbl->GetState(gXAudioMusicSourceVoice, &State, 0);
+
+    if (State.BuffersQueued > 0)
+    {
+        return(TRUE);
+    }
+    else
+    {
+        return(FALSE);
+    }
 }
 
 DWORD LoadAssetFromArchive(_In_ char* ArchiveName, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource)

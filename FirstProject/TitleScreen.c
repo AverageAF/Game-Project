@@ -3,15 +3,17 @@
 #include "TitleScreen.h"
 
 
+MENUITEM gMI_StartNewGame = { "Start New Game", (GAME_RES_WIDTH / 2) - (6 * 14 / 2), 112, TRUE, MenuItem_TitleScreen_StartNew };
+
 MENUITEM gMI_ResumeGame = { "Resume", (GAME_RES_WIDTH / 2) - (6 * 6 / 2), 112, FALSE, MenuItem_TitleScreen_Resume };
 
-MENUITEM gMI_StartNewGame = { "Start New Game", (GAME_RES_WIDTH / 2) - (6 * 14 / 2), 128, TRUE, MenuItem_TitleScreen_StartNew };
+MENUITEM gMI_LoadSavedGame = { "Load Saved Game", (GAME_RES_WIDTH / 2) - (6 * 16 / 2), 128, TRUE, MenuItem_TitleScreen_LoadSave };
 
 MENUITEM gMI_Options = { "Options", (GAME_RES_WIDTH / 2) - (6 * 7 / 2), 144, TRUE, MenuItem_TitleScreen_Options };
 
 MENUITEM gMI_Exit = { "Exit", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 160, TRUE, MenuItem_TitleScreen_Exit };
 
-MENUITEM* gMI_TitleScreenItems[] = { &gMI_ResumeGame, &gMI_StartNewGame, &gMI_Options, &gMI_Exit };
+MENUITEM* gMI_TitleScreenItems[] = { &gMI_StartNewGame, &gMI_ResumeGame, &gMI_LoadSavedGame, &gMI_Options, &gMI_Exit };
 
 MENU gMenu_TitleScreen = { "Title Screen Menu", 1, _countof(gMI_TitleScreenItems), gMI_TitleScreenItems };
 
@@ -32,39 +34,46 @@ void DrawTitleScreen(void)
     {
         LocalFrameCounter = 0;
 
+        PauseGameMusic();
+
         if (gPlayer.Active)
         {
-            gMenu_TitleScreen.SelectedItem = 0;
+            gMenu_TitleScreen.SelectedItem = 1;
+            gMI_ResumeGame.Enabled = TRUE;              ////TODO: dont change title screen here, change once save game exists and likewise restore if saves are deleted
+            gMI_StartNewGame.Enabled = FALSE;
         }
         else
         {
-            gMenu_TitleScreen.SelectedItem = 1;
+            gMenu_TitleScreen.SelectedItem = 0;
         }
+
+        gInputEnabled = FALSE;
     }
 
-    if (LocalFrameCounter <= 8)
+    if (LocalFrameCounter <= 5)
     {
         TextColor.Red = 64;
         TextColor.Blue = 64;
         TextColor.Green = 64;
     }
-    if (LocalFrameCounter == 16)
+    if (LocalFrameCounter == 10)
     {
         TextColor.Red = 128;
         TextColor.Blue = 128;
         TextColor.Green = 128;
     }
-    if (LocalFrameCounter == 24)
+    if (LocalFrameCounter == 15)
     {
         TextColor.Red = 192;
         TextColor.Blue = 192;
         TextColor.Green = 192;
     }
-    if (LocalFrameCounter == 32)
+    if (LocalFrameCounter == 20)
     {
         TextColor.Red = 255;
         TextColor.Blue = 255;
         TextColor.Green = 255;
+        gInputEnabled = TRUE;
     }
 
     //memset(gBackBuffer.Memory, 0, GAME_DRAWING_AREA_MEMORY_SIZE);
@@ -103,7 +112,6 @@ void PPI_TitleScreen(void)
         if (gMenu_TitleScreen.SelectedItem == gMenu_TitleScreen.ItemCount - 1)
         {
             gMenu_TitleScreen.Items[gMenu_TitleScreen.SelectedItem]->Action();
-            //gMenu_ExitYesNoScreen.SelectedItem = 0;
             PlayGameSound(&gSoundMenuChoose);
         }
         else
@@ -115,26 +123,47 @@ void PPI_TitleScreen(void)
 
     if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
     {
-
-        if (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1)
+        if (gPlayer.Active)
         {
-            gMenu_TitleScreen.SelectedItem++;
-            PlayGameSound(&gSoundMenuNavigate);
+            if (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1)
+            {
+                gMenu_TitleScreen.SelectedItem++;
+                PlayGameSound(&gSoundMenuNavigate);
+            }
+        }
+        else
+        {
+            if (gMenu_TitleScreen.SelectedItem == 0)    //jump over "resume" when so save game
+            {
+                gMenu_TitleScreen.SelectedItem += 2;
+                PlayGameSound(&gSoundMenuNavigate);
+            }
+            else if ((gMenu_TitleScreen.SelectedItem >= 2) && (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1))
+            {
+                gMenu_TitleScreen.SelectedItem++;
+                PlayGameSound(&gSoundMenuNavigate);
+            }
         }
     }
     if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
     {
         if (gPlayer.Active)                                //allow navigation to "resume" when save file present
         {
-            if (gMenu_TitleScreen.SelectedItem > 0)
+            if (gMenu_TitleScreen.SelectedItem > 1)
             {
-                gMenu_TitleScreen.SelectedItem--;
+                gMenu_TitleScreen.SelectedItem --;
                 PlayGameSound(&gSoundMenuNavigate);
             }
+            
         }
         else                                                //prevent navigation to "Resume" with no save file
         {
-            if (gMenu_TitleScreen.SelectedItem > 1)
+            if (gMenu_TitleScreen.SelectedItem == 2)    //jump over "resume" when so save game
+            {
+                gMenu_TitleScreen.SelectedItem -= 2;
+                PlayGameSound(&gSoundMenuNavigate);
+            }
+            else if (gMenu_TitleScreen.SelectedItem > 2)
             {
                 gMenu_TitleScreen.SelectedItem--;
                 PlayGameSound(&gSoundMenuNavigate);
@@ -152,7 +181,8 @@ void PPI_TitleScreen(void)
 
 void MenuItem_TitleScreen_Resume(void)
 {
-
+    gPreviousGameState = gCurrentGameState;
+    gCurrentGameState = GAMESTATE_OVERWORLD;
 }
 void MenuItem_TitleScreen_StartNew(void)
 {
@@ -171,5 +201,11 @@ void MenuItem_TitleScreen_Exit(void)
 {
     gPreviousGameState = gCurrentGameState;
     gCurrentGameState = GAMESTATE_EXITYESNO;
-    //gMenu_ExitYesNoScreen.SelectedItem = 0;
+}
+
+
+void MenuItem_TitleScreen_LoadSave(void)
+{
+    gPreviousGameState = gCurrentGameState;
+    gCurrentGameState = GAMESTATE_LOADGAMESAVE;
 }

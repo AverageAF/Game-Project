@@ -21,6 +21,7 @@ void DrawOpeningSplashScreen(void)
     if (gGamePerformanceData.TotalFramesRendered > LastFrameSeen + 1)
     {
         LocalFrameCounter = 0;
+        gInputEnabled = FALSE;
     }
 
     if (gGamePerformanceData.TotalFramesRendered % 15 == 0)
@@ -32,8 +33,12 @@ void DrawOpeningSplashScreen(void)
 
     if (Blink && (WaitForSingleObject(gAssetLoadingThreadHandle, 0) != WAIT_OBJECT_0))
     {
-        //TODO:Draw "Loading..." text
-        BlitStringToBuffer("\xf2", &g6x7Font, &(PIXEL32) {0x20, 0x20, 0x20, 0xFF}, GAME_RES_WIDTH - 6, GAME_RES_HEIGHT - 7);
+        //TODO:Draw better "Loading..." text
+        BlitStringToBuffer("Loading...", &g6x7Font, &(PIXEL32) {0x20, 0x20, 0x20, 0xFF}, GAME_RES_WIDTH - (6*11), GAME_RES_HEIGHT - 8);
+    }
+    else
+    {
+        gInputEnabled = TRUE;
     }
 
     if (LocalFrameCounter >= 60)
@@ -77,6 +82,7 @@ void DrawOpeningSplashScreen(void)
                 }
                 gPreviousGameState = gCurrentGameState;
                 gCurrentGameState = GAMESTATE_TITLESCREEN;
+                //gCurrentGameState = GAMESTATE_OVERWORLD;
             }
         }
 
@@ -112,6 +118,7 @@ void PPI_OpeningSplashScreen(void)      //skip splash screen
             {
                 gPreviousGameState = gCurrentGameState;
                 gCurrentGameState = GAMESTATE_TITLESCREEN;
+                //gCurrentGameState = GAMESTATE_OVERWORLD;
             }
         }
     }
