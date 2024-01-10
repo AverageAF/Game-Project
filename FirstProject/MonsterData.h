@@ -44,7 +44,7 @@ void SetBattleMonsterMoveSlot(struct BattleMonster* bMonster, uint16_t move, uin
 
 uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove);
 
-void CopyMonster(struct Monster destination, struct Monster source);
+void CopyMonsterToPlayerParty(uint8_t partyIndex, struct Monster source);
 
 void DriveMonsterToMonster(const struct DriveMonster* source, struct Monster* destination);
 
@@ -53,14 +53,6 @@ uint32_t GetMonsterData(struct Monster* monster, int32_t field, uint8_t* data);
 uint32_t GetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, uint8_t* data);
 
 void CalculateMonsterStats(struct Monster* monster);
-
-//static void EncryptDriveMonster(struct DriveMonster* driveMonster);
-
-//static void DecryptDriveMonster(struct DriveMonster* driveMonster);
-
-//static union MonsterSubstruct* GetSubstruct(struct DriveMonster* driveMonster, uint32_t MonsterSeed, uint8_t substructType);
-
-//static uint16_t CalculateDriveMonsterCheckSum(struct DriveMonster* driveMonster);
 
 uint8_t CountAliveMonstersInBattle(uint8_t caseId);
 

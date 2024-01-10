@@ -137,10 +137,6 @@ void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_
 
     SetDriveMonsterData(driveMonster, MONSTER_DATA_MONSTER_SEED, &MonsterSeed);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_PLAYER_SEED, &Value);
-    //checksum = CalculateDriveMonsterCheckSum(driveMonster);
-    //SetDriveMonsterData(driveMonster, MONSTER_DATA_CHECKSUM, &checksum);
-
-    //EncryptDriveMonster(driveMonster);
 
     GetMonsterNameFromIndex(MonsterName, Index);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_NICKNAME, MonsterName);
@@ -478,27 +474,6 @@ void SetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, const
 
     uint16_t CalculatedCheck = 0;
 
-    //struct MonsterSubstruct0* Substruct0 = NULL;
-    //struct MonsterSubstruct1* Substruct1 = NULL;
-    //struct MonsterSubstruct2* Substruct2 = NULL;
-    //struct MonsterSubstruct3* Substruct3 = NULL;
-
-    //if (field > MONSTER_DATA_ENCRYPT)
-    //{
-    //    Substruct0 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 0)->type0);
-    //    Substruct1 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 1)->type1);
-    //    Substruct2 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 2)->type2);
-    //    Substruct3 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 3)->type3);
-
-    //    DecryptDriveMonster(driveMonster);
-
-    //    if ((CalculatedCheck = CalculateDriveMonsterCheckSum(driveMonster)) != driveMonster->checkSum)
-    //    {
-    //        LogMessageA(LL_WARNING, "[%s] CalculateMonsterCheckSum (%d) did not return same value as driveMonster->checkSum (%d) in SetDriveMonsterData!", __FUNCTION__, CalculatedCheck, driveMonster->checkSum);
-    //        //EncryptDriveMonster(driveMonster);
-    //    }
-    //}
-
     switch (field)
     {
         case MONSTER_DATA_MONSTER_SEED:
@@ -735,11 +710,6 @@ uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove)
     return(value);
 }
 
-void CopyMonster(struct Monster *destination, struct Monster *source)
-{
-    destination = source;
-}
-
 void CopyMonsterToPlayerParty(uint8_t partyIndex, struct Monster source)
 {
     gPlayerParty[partyIndex] = source;
@@ -822,26 +792,6 @@ uint32_t GetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, u
     uint32_t GetValue = 0;
 
     uint16_t CalculatedCheck = 0;
-
-    /*struct MonsterSubstruct0* substruct0 = NULL;
-    struct MonsterSubstruct1* substruct1 = NULL;
-    struct MonsterSubstruct2* substruct2 = NULL;
-    struct MonsterSubstruct3* substruct3 = NULL;
-
-    if (field > MONSTER_DATA_ENCRYPT)
-    {
-        substruct0 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 0)->type0);
-        substruct1 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 1)->type1);
-        substruct2 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 2)->type2);
-        substruct3 = &(GetSubstruct(driveMonster, driveMonster->MonsterSeed, 3)->type3);
-
-        DecryptDriveMonster(driveMonster);
-
-        if ((CalculatedCheck = CalculateDriveMonsterCheckSum(driveMonster)) != driveMonster->checkSum)
-        {
-            LogMessageA(LL_WARNING, "[%s] CalculateMonsterCheckSum (%d) did not return same value as driveMonster->checkSum (%d) in GetDriveMonsterData!", __FUNCTION__, CalculatedCheck, driveMonster->checkSum);
-        }
-    }*/
 
     switch (field)
     {
@@ -1021,11 +971,6 @@ uint32_t GetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, u
             break;
     }
 
-    /*if (field > MONSTER_DATA_ENCRYPT)
-    {
-        EncryptDriveMonster(driveMonster);
-    }*/
-
     return (GetValue);
 }
 
@@ -1116,136 +1061,6 @@ void CalculateMonsterStats(struct Monster* monster)
     SetMonsterData(monster, MONSTER_DATA_HEALTH, &CurrentHP);
 
 }
-
-//static void EncryptDriveMonster(struct DriveMonster* driveMonster)
-//{
-//    uint32_t i;
-//    for (i = 0; i < (size_t)(sizeof(driveMonster->secure.raw) / sizeof((driveMonster->secure.raw)[0])); i++)
-//    {
-//        driveMonster->secure.raw[i] ^= driveMonster->MonsterSeed;
-//        driveMonster->secure.raw[i] ^= driveMonster->PlayerSeed;
-//    }
-//}
-
-//static void DecryptDriveMonster(struct DriveMonster* driveMonster)
-//{
-//    uint32_t i;
-//    for (i = 0; i < (size_t)(sizeof(driveMonster->secure.raw) / sizeof((driveMonster->secure.raw)[0])); i++)
-//    {
-//        driveMonster->secure.raw[i] ^= driveMonster->PlayerSeed;
-//        driveMonster->secure.raw[i] ^= driveMonster->MonsterSeed;
-//    }
-//}
-
-//#define SUBSTRUCT_CASE(n, v1, v2, v3, v4)                               \
-//case n:                                                                 \
-//    {                                                                   \
-//    union MonsterSubstruct *substructs0 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs1 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs2 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs3 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs4 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs5 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs6 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs7 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs8 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs9 = driveMonster->secure.substructs;    \
-//    union MonsterSubstruct *substructs10 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs11 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs12 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs13 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs14 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs15 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs16 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs17 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs18 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs19 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs20 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs21 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs22 = driveMonster->secure.substructs;   \
-//    union MonsterSubstruct *substructs23 = driveMonster->secure.substructs;   \
-//                                                                        \
-//        switch (substructType)                                          \
-//        {                                                               \
-//        case 0:                                                         \
-//            substruct = &substructs ## n [v1];                          \
-//            break;                                                      \
-//        case 1:                                                         \
-//            substruct = &substructs ## n [v2];                          \
-//            break;                                                      \
-//        case 2:                                                         \
-//            substruct = &substructs ## n [v3];                          \
-//            break;                                                      \
-//        case 3:                                                         \
-//            substruct = &substructs ## n [v4];                          \
-//            break;                                                      \
-//        }                                                               \
-//        break;                                                          \
-//    } 
-
-//static union MonsterSubstruct* GetSubstruct(struct DriveMonster* driveMonster, uint32_t MonsterSeed, uint8_t substructType)
-//{
-//    union MonsterSubstruct* substruct = NULL;
-//
-//    switch (MonsterSeed % 24)
-//    {
-//        SUBSTRUCT_CASE(0, 0, 1, 2, 3)
-//        SUBSTRUCT_CASE(1, 0, 1, 3, 2)
-//        SUBSTRUCT_CASE(2, 0, 2, 1, 3)
-//        SUBSTRUCT_CASE(3, 0, 3, 1, 2)
-//        SUBSTRUCT_CASE(4, 0, 2, 3, 1)
-//        SUBSTRUCT_CASE(5, 0, 3, 2, 1)
-//        SUBSTRUCT_CASE(6, 1, 0, 2, 3)
-//        SUBSTRUCT_CASE(7, 1, 0, 3, 2)
-//        SUBSTRUCT_CASE(8, 2, 0, 1, 3)
-//        SUBSTRUCT_CASE(9, 3, 0, 1, 2)
-//        SUBSTRUCT_CASE(10, 2, 0, 3, 1)
-//        SUBSTRUCT_CASE(11, 3, 0, 2, 1)
-//        SUBSTRUCT_CASE(12, 1, 2, 0, 3)
-//        SUBSTRUCT_CASE(13, 1, 3, 0, 2)
-//        SUBSTRUCT_CASE(14, 2, 1, 0, 3)
-//        SUBSTRUCT_CASE(15, 3, 1, 0, 2)
-//        SUBSTRUCT_CASE(16, 2, 3, 0, 1)
-//        SUBSTRUCT_CASE(17, 3, 2, 0, 1)
-//        SUBSTRUCT_CASE(18, 1, 2, 3, 0)
-//        SUBSTRUCT_CASE(19, 1, 3, 2, 0)
-//        SUBSTRUCT_CASE(20, 2, 1, 3, 0)
-//        SUBSTRUCT_CASE(21, 3, 1, 2, 0)
-//        SUBSTRUCT_CASE(22, 2, 3, 1, 0)
-//        SUBSTRUCT_CASE(23, 3, 2, 1, 0)
-//    }
-//
-//    return (substruct);
-//}
-
-//static uint16_t CalculateDriveMonsterCheckSum(struct DriveMonster* driveMonster)
-//{
-//    uint16_t checksum = 0;
-//    union MonsterSubstruct* substruct0 = GetSubstruct(driveMonster, driveMonster->MonsterSeed, 0);
-//    union MonsterSubstruct* substruct1 = GetSubstruct(driveMonster, driveMonster->MonsterSeed, 1);
-//    union MonsterSubstruct* substruct2 = GetSubstruct(driveMonster, driveMonster->MonsterSeed, 2);
-//    union MonsterSubstruct* substruct3 = GetSubstruct(driveMonster, driveMonster->MonsterSeed, 3);
-//    int32_t i;
-//
-//    for (i = 0; i < (int32_t)(size_t)(sizeof(substruct0->raw) / sizeof((substruct0->raw)[0])); i++)
-//    {
-//        checksum += substruct0->raw[i];
-//    }
-//    for (i = 0; i < (int32_t)(size_t)(sizeof(substruct1->raw) / sizeof((substruct1->raw)[0])); i++)
-//    {
-//        checksum += substruct1->raw[i];
-//    }
-//    for (i = 0; i < (int32_t)(size_t)(sizeof(substruct2->raw) / sizeof((substruct2->raw)[0])); i++)
-//    {
-//        checksum += substruct2->raw[i];
-//    }
-//    for (i = 0; i < (int32_t)(size_t)(sizeof(substruct3->raw) / sizeof((substruct3->raw)[0])); i++)
-//    {
-//        checksum += substruct3->raw[i];
-//    }
-//
-//    return (checksum);
-//}
 
 uint8_t CountAliveMonstersInBattle(uint8_t caseId)
 {

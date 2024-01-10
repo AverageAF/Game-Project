@@ -378,8 +378,8 @@ struct DriveMonster
 	uint8_t playerName[MAX_NAME_LENGTH + 1];
 	uint8_t hasIndex : 1;
 	uint8_t Filler : 7;
-	uint16_t checkSum;
-	uint16_t unknown;
+	uint16_t checkSum;		//UNUSED: remove??
+	uint16_t unknown;		//UNUSED: remove??
 
 	////////////////////////////////////////
 

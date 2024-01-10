@@ -575,7 +575,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].Visible = TRUE;
     gCharacterSprite[0].Exists = TRUE;
     gCharacterSprite[0].Loaded = TRUE;
-    gCharacterSprite[0].Dialogue[0] = "I dropped my glasses\nI can't find them anywhere!";
+    gCharacterSprite[0].Dialogue[0] = "Here have a Monster!\nI don't really need one";
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
 
@@ -2474,65 +2474,159 @@ void EnterDialogue(void)
     gOverWorldControls = FALSE;
 }
 
-
-//TODO create flags to allow for multiple dialogue boxes back to back; also allow for the dialogue box to go away on a timer without player input (FLAG_BRIEF)
-
-
 //MAX characters per row = 32, MAX rows = 7, only input needed is text
 //use character "\n" with no spaces behind for next row (spaces after will indent)
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
 {
-    static uint16_t DialogueCharactersToShow;
+    static uint8_t DialogueCharactersToShow;
+    static uint8_t DialogueCharactersWritten;
+    static uint8_t DialogueRowsToShow;
     char DialogueLineScratch[32] = { 0 };
 
     char InString[224] = { 0 };
-    uint8_t Row = 0;
     char* NextToken = NULL;
     char Separator[] = "\n";
+
+    char* StrPtr[8];
 
     DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
     if (strlen(Dialogue) <= 32 * 7 && strlen(Dialogue) > 0)
     {
         strcpy_s(InString, 224, Dialogue);        ////need to define max msg length bc sizeof() and strlen() both result in errors
 
-        char* StrPtr = strtok_s(InString, Separator, &NextToken);       ////split string into pieces using \n as a separator
+        StrPtr[1] = strtok_s(InString, Separator, &NextToken);       ////split string into pieces using \n as a separator
+        StrPtr[2] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[3] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[4] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[5] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[6] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[7] = strtok_s(NULL, Separator, &NextToken);
 
-        while (StrPtr != NULL)
+        if (((Counter % (gRegistryParams.TextSpeed + 1) == 0) && (gRegistryParams.TextSpeed < 4)) && gFinishedDialogueTextAnimation == FALSE)
         {
-            if ((Counter % (gRegistryParams.TextSpeed + 1) == 0) && (gRegistryParams.TextSpeed < 4))
+            if (DialogueCharactersToShow <= strlen(StrPtr[DialogueRowsToShow + 1]))
             {
-                if (DialogueCharactersToShow <= strlen(StrPtr) && gFinishedDialogueTextAnimation == FALSE)
-                {
-                    DialogueCharactersToShow++;
-                }
-                else if (DialogueCharactersToShow > strlen(StrPtr) || gFinishedDialogueTextAnimation == TRUE)   ////TODO FIX BUG: when using \n, gFinishedDialogueTextAnimation will be set at shortest line finishing, not once all text is finished
-                {
-                    DialogueCharactersToShow = 0;
-                    goto StartBlit;
-                }
+                DialogueCharactersToShow++;
+                DialogueCharactersWritten++;
             }
-            else if (gRegistryParams.TextSpeed == 4 || gFinishedDialogueTextAnimation == TRUE)
+            else if (DialogueCharactersToShow > strlen(StrPtr[DialogueRowsToShow + 1]) && DialogueCharactersWritten < strlen(Dialogue))   ////TODO FIX BUG: when using \n, gFinishedDialogueTextAnimation will be set at shortest line finishing, not once all text is finished
             {
+                DialogueCharactersToShow = 0;
+                DialogueRowsToShow++;
+            }
+
+            if (DialogueCharactersWritten > strlen(Dialogue))
+            {
+                DialogueCharactersWritten = 0;
+                DialogueCharactersToShow = 0;
+                DialogueRowsToShow = 0;
+                goto StartBlit;
+            }
+        }
+        else if (gRegistryParams.TextSpeed == 4 || gFinishedDialogueTextAnimation == TRUE)
+        {
 
         StartBlit:
 
-                BlitStringToBuffer(StrPtr, &g6x7Font, &COLOR_BLACK, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
-                BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 276, 224);
-                gDialogueControls = TRUE;
-                gFinishedDialogueTextAnimation = TRUE;
 
-                StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
-                Row++;
-            }
-
-            if (!gFinishedDialogueTextAnimation)
+            BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));                 //////every time \n is called add a row to the dialogue box
+            if (StrPtr[2] != NULL)
             {
-                snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr);
+                BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+            }
+            if (StrPtr[3] != NULL)
+            {
+                BlitStringToBuffer(StrPtr[3], &g6x7Font, &COLOR_BLACK, 100, 174 + ((2) * 8));
+            }
+            if (StrPtr[4] != NULL)
+            {
+                BlitStringToBuffer(StrPtr[4], &g6x7Font, &COLOR_BLACK, 100, 174 + ((3) * 8));
+            }
+            if (StrPtr[5] != NULL)
+            {
+                BlitStringToBuffer(StrPtr[5], &g6x7Font, &COLOR_BLACK, 100, 174 + ((4) * 8));
+            }
+            if (StrPtr[6] != NULL)
+            {
+                BlitStringToBuffer(StrPtr[6], &g6x7Font, &COLOR_BLACK, 100, 174 + ((5) * 8));
+            }
+            if (StrPtr[7] != NULL)
+            {
+                BlitStringToBuffer(StrPtr[7], &g6x7Font, &COLOR_BLACK, 100, 174 + ((6) * 8));
+            }
+            BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 276, 224);
+            gFinishedDialogueTextAnimation = TRUE;
+            gDialogueControls = TRUE;
 
-                BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
+        }
 
-                StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
-                Row++;
+        if (!gFinishedDialogueTextAnimation)
+        {
+            switch (DialogueRowsToShow)
+            {
+                case 0:
+                {
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[1]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));                 //////every time \n is called add a row to the dialogue box
+                    break;
+                }
+                case 1:
+                {
+                    BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[2]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+                    break;
+                }
+                case 2:
+                {
+                    BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));
+                    BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[3]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((2) * 8));
+                    break;
+                }
+                case 3:
+                {
+                    BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));
+                    BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+                    BlitStringToBuffer(StrPtr[3], &g6x7Font, &COLOR_BLACK, 100, 174 + ((2) * 8));
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[4]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((3) * 8));
+                    break;
+                }
+                case 4:
+                {
+                    BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));
+                    BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+                    BlitStringToBuffer(StrPtr[3], &g6x7Font, &COLOR_BLACK, 100, 174 + ((2) * 8));
+                    BlitStringToBuffer(StrPtr[4], &g6x7Font, &COLOR_BLACK, 100, 174 + ((3) * 8));
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[5]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((4) * 8));
+                    break;
+                }
+                case 5:
+                {
+                    BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));
+                    BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+                    BlitStringToBuffer(StrPtr[3], &g6x7Font, &COLOR_BLACK, 100, 174 + ((2) * 8));
+                    BlitStringToBuffer(StrPtr[4], &g6x7Font, &COLOR_BLACK, 100, 174 + ((3) * 8));
+                    BlitStringToBuffer(StrPtr[5], &g6x7Font, &COLOR_BLACK, 100, 174 + ((4) * 8));
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[6]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((5) * 8));
+                    break;
+                }
+                case 6:
+                {
+                    BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 100, 174 + ((0) * 8));
+                    BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 100, 174 + ((1) * 8));
+                    BlitStringToBuffer(StrPtr[3], &g6x7Font, &COLOR_BLACK, 100, 174 + ((2) * 8));
+                    BlitStringToBuffer(StrPtr[4], &g6x7Font, &COLOR_BLACK, 100, 174 + ((3) * 8));
+                    BlitStringToBuffer(StrPtr[5], &g6x7Font, &COLOR_BLACK, 100, 174 + ((4) * 8));
+                    BlitStringToBuffer(StrPtr[6], &g6x7Font, &COLOR_BLACK, 100, 174 + ((5) * 8));
+                    snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr[7]);
+                    BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((6) * 8));
+                    break;
+                }
             }
         }
     }
@@ -2547,5 +2641,4 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
 
     }
 }
-
 
