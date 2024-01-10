@@ -11,6 +11,7 @@
 
 ///////// load starting monster
 
+uint8_t gPartyMemberToSwitchIn = 0;
 uint8_t gCurrentPartyMember = 0;
 uint8_t gCurrentOpponentPartyMember = 0;
 uint8_t gSelectedPlayerMove = 0;
@@ -31,18 +32,18 @@ MENU gMenu_BattleScreen = { "Battle Menu", 0 , _countof(gMI_BattleScreen_Items),
 
 ////////Menu choices for switching monsters in battle
 
-//MENUITEM gMI_SwitchScreen_PartySlot0 = { &gPlayer.Party[0].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64, FALSE, MenuItem_SwitchScreen_PartySlot0 };
-//MENUITEM gMI_SwitchScreen_PartySlot1 = { &gPlayer.Party[1].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 16, FALSE, MenuItem_SwitchScreen_PartySlot1 };
-//MENUITEM gMI_SwitchScreen_PartySlot2 = { &gPlayer.Party[2].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 32, FALSE, MenuItem_SwitchScreen_PartySlot2 };
-//MENUITEM gMI_SwitchScreen_PartySlot3 = { &gPlayer.Party[3].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 48, FALSE, MenuItem_SwitchScreen_PartySlot3 };
-//MENUITEM gMI_SwitchScreen_PartySlot4 = { &gPlayer.Party[4].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 64, FALSE, MenuItem_SwitchScreen_PartySlot4 };
-//MENUITEM gMI_SwitchScreen_PartySlot5 = { &gPlayer.Party[5].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 80, FALSE, MenuItem_SwitchScreen_PartySlot5 };
+MENUITEM gMI_SwitchScreen_PartySlot0 = { &gPlayerParty[0].DriveMonster.nickname, 70, 187, FALSE, MenuItem_SwitchScreen_PartySlot0 };
+MENUITEM gMI_SwitchScreen_PartySlot1 = { &gPlayerParty[1].DriveMonster.nickname, 200, 187, FALSE, MenuItem_SwitchScreen_PartySlot1 };
+MENUITEM gMI_SwitchScreen_PartySlot2 = { &gPlayerParty[2].DriveMonster.nickname, 70, 207, FALSE, MenuItem_SwitchScreen_PartySlot2 };
+MENUITEM gMI_SwitchScreen_PartySlot3 = { &gPlayerParty[3].DriveMonster.nickname, 200, 207, FALSE, MenuItem_SwitchScreen_PartySlot3 };
+MENUITEM gMI_SwitchScreen_PartySlot4 = { &gPlayerParty[4].DriveMonster.nickname, 70, 230, FALSE, MenuItem_SwitchScreen_PartySlot4 };
+MENUITEM gMI_SwitchScreen_PartySlot5 = { &gPlayerParty[5].DriveMonster.nickname, 200, 230, FALSE, MenuItem_SwitchScreen_PartySlot5 };
 
-//MENUITEM gMI_SwitchScreen_BackButton = { "Back", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 64 + 96, TRUE, MenuItem_SwitchScreen_BackButton };
+MENUITEM gMI_SwitchScreen_BackButton = { "Back", 28, 190, TRUE, MenuItem_SwitchScreen_BackButton };
 
-//MENUITEM* gMI_SwitchScreen_Items[] = { &gMI_SwitchScreen_PartySlot0, &gMI_SwitchScreen_PartySlot1, &gMI_SwitchScreen_PartySlot2, &gMI_SwitchScreen_PartySlot3, &gMI_SwitchScreen_PartySlot4, &gMI_SwitchScreen_PartySlot5 };
+MENUITEM* gMI_SwitchScreen_Items[] = { &gMI_SwitchScreen_PartySlot0, &gMI_SwitchScreen_PartySlot1, &gMI_SwitchScreen_PartySlot2, &gMI_SwitchScreen_PartySlot3, &gMI_SwitchScreen_PartySlot4, &gMI_SwitchScreen_PartySlot5, &gMI_SwitchScreen_BackButton };
 
-//MENU gMenu_SwitchScreen = { "Switch Menu", 0, _countof(gMI_SwitchScreen_Items), gMI_SwitchScreen_Items };
+MENU gMenu_SwitchScreen = { "Switch Menu", 0, _countof(gMI_SwitchScreen_Items), gMI_SwitchScreen_Items };
 
 //////////Menu choices for selecting moves
 
@@ -68,6 +69,11 @@ char gBattleTextLine[MAX_DIALOGUE_ROWS + 1][MAX_BATTLECHAR_PER_ROW];      //firs
 
 BOOL gSkipToNextText;
 
+GAMEBITMAP* gBattleScene = NULL;
+
+GAMEBITMAP* gPlayerMonsterSprite = NULL;
+
+GAMEBITMAP* gOpponentMonsterSprite = NULL;
 
 
 void DrawBattleScreen(void)
@@ -90,12 +96,6 @@ void DrawBattleScreen(void)
     static uint8_t OpponentMove = 0;
     static BOOL IsPlayerMovingFirst = FALSE;
     static BOOL MonsterHasKOed = FALSE;
-
-    GAMEBITMAP* BattleScene = NULL;
-
-    GAMEBITMAP* PlayerMonsterSprite = NULL;
-
-    GAMEBITMAP* OpponentMonsterSprite = NULL;
 
     uint8_t Opponent = NULL;
 
@@ -170,7 +170,6 @@ void DrawBattleScreen(void)
         }
     }
 
-
     //////TODO: Add battle intro and battle music/////////////
     //if (LocalFrameCounter == 0)
     //{
@@ -183,11 +182,11 @@ void DrawBattleScreen(void)
     {
         if (gPlayerParty[0].DriveMonster.Index == Counter)
         {
-            PlayerMonsterSprite = &gBattleSpriteBack[Counter];
+            gPlayerMonsterSprite = &gBattleSpriteBack[Counter];
         }
         if (gOpponentParty[0].DriveMonster.Index == Counter)
         {
-            OpponentMonsterSprite = &gBattleSpriteFront[Counter];
+            gOpponentMonsterSprite = &gBattleSpriteFront[Counter];
         }
     }
 
@@ -587,6 +586,192 @@ void DrawBattleScreen(void)
             if (MonsterHasKOed == TRUE)
             {
                 gCurrentBattleState = BATTLESTATE_KO;
+            }
+
+            break;
+        }
+        case BATTLESTATE_SWITCHING_TEXT:
+        {
+            IsPlayerMovingFirst = TRUE;
+
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "Come back %s!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "Go %s!", &gPlayerParty[gPartyMemberToSwitchIn].DriveMonster.nickname);
+            BattleTextLineCount++;
+            
+            /*
+            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
+            BattleTextLineCount++;*/
+
+
+            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_SWITCHING_WAIT;
+                gSkipToNextText = FALSE;
+            }
+            else
+            {
+                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
+                {
+                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
+                    {
+                        BattleTextLineCharactersToShow++;
+                        BattleTextLineCharactersWritten++;
+                    }
+                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextRowsToShow++;
+                    }
+                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextLineCharactersWritten = 0;
+                        BattleTextRowsToShow = 0;
+                        gCurrentBattleState = BATTLESTATE_SWITCHING_WAIT;
+                        gFinishedBattleTextAnimation = TRUE;
+
+                        goto WaitSwitching;
+                    }
+                }
+
+                if (!gFinishedBattleTextAnimation)
+                {
+                    switch (BattleTextRowsToShow)
+                    {
+                        case 0:
+                        {
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+                            break;
+                        }
+                        case 1:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            break;
+                        }
+                        case 2:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            break;
+                        }
+                        case 3:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            break;
+                        }
+                        case 4:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            break;
+                        }
+                        case 5:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            break;
+                        }
+                        case 6:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            break;
+        }
+        case BATTLESTATE_SWITCHING_WAIT:
+        {
+
+        WaitSwitching:
+
+            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+
+            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+            if (BattleTextLineCount > 1)
+            {
+                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+            }
+            if (BattleTextLineCount > 2)
+            {
+                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+            }
+            if (BattleTextLineCount > 3)
+            {
+                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+            }
+            if (BattleTextLineCount > 4)
+            {
+                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+            }
+            if (BattleTextLineCount > 5)
+            {
+                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+            }
+            if (BattleTextLineCount > 6)
+            {
+                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+            }
+            BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 312, 228);
+            gFinishedBattleTextAnimation = TRUE;
+
+            gCurrentPartyMember = gPartyMemberToSwitchIn;                                               ////instant monsters are swapped
+
+            for (uint8_t Counter = 0; Counter < NUM_MONSTERS; Counter++)
+            {
+                if (gPlayerParty[gCurrentPartyMember].DriveMonster.Index == Counter)
+                {
+                    gPlayerMonsterSprite = &gBattleSpriteBack[Counter];
+                }
             }
 
             break;
@@ -997,7 +1182,6 @@ void DrawBattleScreen(void)
 
             DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
 
-
             BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
             if (BattleTextLineCount > 1)
             {
@@ -1035,7 +1219,7 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_SWITCH_FIGHT:
         {
-
+            break;
         }
         case BATTLESTATE_CHOOSE_MOVE:
         {
@@ -1044,30 +1228,32 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_CHOOSE_MONSTER:
         {
-
+            DrawMonsterPartyButtons();
+            break;
         }
         case BATTLESTATE_CHOOSE_ITEM:
         {
-
+            break;
         }
     }
+
 
 
     switch (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][gPlayer.WorldPos.x / 16])
     {
         case TILE_GRASS_01:
         {
-            BattleScene = &gBattleScreen_Grass01;
+            gBattleScene = &gBattleScreen_Grass01;
             break;
         }
         case TILE_TALLGRASS_01:
         {
-            BattleScene = &gBattleScreen_Grass01;
+            gBattleScene = &gBattleScreen_Grass01;
             break;
         }
         case TILE_STONEBRICKS_FLOOR_01:
         {
-            BattleScene = &gBattleScreen_StoneBricks01;
+            gBattleScene = &gBattleScreen_StoneBricks01;
             break;
         }
         default:
@@ -1076,27 +1262,27 @@ void DrawBattleScreen(void)
         }
     }
 
-    if (BattleScene != 0)
+    if (gBattleScene != 0)
     {
-        Blit32BppBitmapToBuffer(BattleScene, (65), (49), BrightnessAdjustment);
+        Blit32BppBitmapToBuffer(gBattleScene, (65), (49), BrightnessAdjustment);
     }
     else
     {
         ASSERT(FALSE, "BattleScene is NULL!");
     }
 
-    if (PlayerMonsterSprite != 0)
+    if (gPlayerMonsterSprite != 0)
     {
-        Blit32BppBitmapToBuffer(PlayerMonsterSprite, (65), (111), BrightnessAdjustment);
+        Blit32BppBitmapToBuffer(gPlayerMonsterSprite, (65), (111), BrightnessAdjustment);
     }
     else
     {
         ASSERT(FALSE, "Player battle monster is NULL!");
     }
 
-    if (OpponentMonsterSprite != 0)
+    if (gOpponentMonsterSprite != 0)
     {
-        Blit32BppBitmapToBuffer(OpponentMonsterSprite, (255), (79), BrightnessAdjustment);
+        Blit32BppBitmapToBuffer(gOpponentMonsterSprite, (255), (79), BrightnessAdjustment);
     }
     else
     {
@@ -1177,6 +1363,23 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_FIRSTMOVE_CALC:
         {
+            break;
+        }
+        case BATTLESTATE_SWITCHING_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SWITCHING_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_SWITCHING_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                gFinishedBattleTextAnimation = FALSE;
+            }
             break;
         }
         case BATTLESTATE_SECONDMOVE_TEXT:
@@ -1261,7 +1464,7 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_SWITCH_FIGHT:
         {
-
+            break;
         }
         case BATTLESTATE_CHOOSE_MOVE:
         {
@@ -1335,11 +1538,67 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_CHOOSE_MONSTER:
         {
+            if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+            {
+                if (gMenu_SwitchScreen.SelectedItem == 6)
+                {
+                    gMenu_SwitchScreen.Items[gMenu_SwitchScreen.SelectedItem]->Action();
+                    PlayGameSound(&gSoundMenuChoose);
+                }
+                else
+                {
+                    gMenu_SwitchScreen.SelectedItem = 6;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
 
+            if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
+            {
+                if (gMenu_SwitchScreen.SelectedItem > 0 && gMenu_SwitchScreen.SelectedItem != 6)
+                {
+                    gMenu_SwitchScreen.SelectedItem--;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gMenu_SwitchScreen.SelectedItem == 0)
+                {
+                    gMenu_SwitchScreen.SelectedItem = 6;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gMenu_SwitchScreen.SelectedItem == 6)
+                {
+                    gMenu_SwitchScreen.SelectedItem = gPlayerPartyCount - 1;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+            else if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+            {
+                if (gMenu_SwitchScreen.SelectedItem < gPlayerPartyCount - 1)
+                {
+                    gMenu_SwitchScreen.SelectedItem++;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gMenu_SwitchScreen.SelectedItem == 6)
+                {
+                    gMenu_SwitchScreen.SelectedItem = 0;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gMenu_SwitchScreen.SelectedItem == gPlayerPartyCount - 1)
+                {
+                    gMenu_SwitchScreen.SelectedItem = 6;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gMenu_SwitchScreen.Items[gMenu_SwitchScreen.SelectedItem]->Action();
+                PlayGameSound(&gSoundMenuChoose);
+            }
+            break;
         }
         case BATTLESTATE_CHOOSE_ITEM:
         {
-
+            break;
         }
     }
 }
@@ -1396,6 +1655,24 @@ void DrawMoveButtons(void)
     BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_MoveScreen_Items[gMenu_MoveScreen.SelectedItem]->x - 6, gMI_MoveScreen_Items[gMenu_MoveScreen.SelectedItem]->y);
 }
 
+void DrawMonsterPartyButtons(void)
+{
+    DrawWindow(gMI_SwitchScreen_Items[6]->x - 3, gMI_SwitchScreen_Items[6]->y - 5, 32, 16, &COLOR_BLACK, &COLOR_DARK_RED, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
+
+    for (uint8_t playerParty = 0; playerParty < gPlayerPartyCount; playerParty++)
+    {
+        uint16_t HpPercent = 100 - ((gPlayerParty[playerParty].Health * 100) / (gPlayerParty[playerParty].MaxHealth));
+
+        uint16_t ExpPercent = 100 - (((gPlayerParty[playerParty].DriveMonster.Experience - gExperienceTables[gBaseStats[gPlayerParty[playerParty].DriveMonster.Index].growthRate][gPlayerParty[playerParty].Level]) * 100) / (gExperienceTables[gBaseStats[gPlayerParty[playerParty].DriveMonster.Index].growthRate][gPlayerParty[playerParty].Level + 1] - gExperienceTables[gBaseStats[gPlayerParty[playerParty].DriveMonster.Index].growthRate][gPlayerParty[playerParty].Level]));
+
+        DrawMonsterHpBar(gMI_SwitchScreen_Items[playerParty]->x, gMI_SwitchScreen_Items[playerParty]->y + 5, HpPercent, ExpPercent, gPlayerParty[playerParty].Level, gPlayerParty[playerParty].DriveMonster.nickname, TRUE);
+    }
+
+    BlitStringToBuffer(gMI_SwitchScreen_BackButton.Name, &g6x7Font, &COLOR_BLACK, gMI_SwitchScreen_BackButton.x, gMI_SwitchScreen_BackButton.y);
+
+    BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_SwitchScreen_Items[gMenu_SwitchScreen.SelectedItem]->x - 9, gMI_SwitchScreen_Items[gMenu_SwitchScreen.SelectedItem]->y);
+}
+
 //////// initial choice menu
 
 void MenuItem_BattleScreen_FightButton(void)
@@ -1425,7 +1702,8 @@ void MenuItem_BattleScreen_EscapeButton(void)
 
 void MenuItem_BattleScreen_SwitchButton(void)
 {
-
+    gPreviousBattleState = gCurrentBattleState;
+    gCurrentBattleState = BATTLESTATE_CHOOSE_MONSTER;
 }
 
 void MenuItem_BattleScreen_ItemsButton(void)
@@ -1437,37 +1715,86 @@ void MenuItem_BattleScreen_ItemsButton(void)
 
 void MenuItem_SwitchScreen_PartySlot0(void)
 {
-
+    if (gCurrentPartyMember == 0)
+    {
+        //trying to swap to monster already in battle
+    }
+    else
+    {
+        gPartyMemberToSwitchIn = 0;
+        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+    }
 }
 
 void MenuItem_SwitchScreen_PartySlot1(void)
 {
-
+    if (gCurrentPartyMember == 1)
+    {
+        //trying to swap to monster already in battle
+    }
+    else
+    {
+        gPartyMemberToSwitchIn = 1;
+        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+    }
 }
 
 void MenuItem_SwitchScreen_PartySlot2(void)
 {
-
+    if (gCurrentPartyMember == 2)
+    {
+        //trying to swap to monster already in battle
+    }
+    else
+    {
+        gPartyMemberToSwitchIn = 2;
+        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+    }
 }
 
 void MenuItem_SwitchScreen_PartySlot3(void)
 {
-
+    if (gCurrentPartyMember == 3)
+    {
+        //trying to swap to monster already in battle
+    }
+    else
+    {
+        gPartyMemberToSwitchIn = 3;
+        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+    }
 }
 
 void MenuItem_SwitchScreen_PartySlot4(void)
 {
-
+    if (gCurrentPartyMember == 4)
+    {
+        //trying to swap to monster already in battle
+    }
+    else
+    {
+        gPartyMemberToSwitchIn = 4;
+        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+    }
 }
 
 void MenuItem_SwitchScreen_PartySlot5(void)
 {
-
+    if (gCurrentPartyMember == 5)
+    {
+        //trying to swap to monster already in battle
+    }
+    else
+    {
+        gPartyMemberToSwitchIn = 5;
+        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+    }
 }
 
 void MenuItem_SwitchScreen_BackButton(void)
 {
-
+    gPreviousBattleState = gCurrentBattleState;
+    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
 }
 
 ///////////// selecting moves screen

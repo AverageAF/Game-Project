@@ -22,6 +22,8 @@ typedef enum BATTLESTATE
 	BATTLESTATE_CHOOSE_MOVE,
 	BATTLESTATE_CHOOSE_MONSTER,
 	BATTLESTATE_CHOOSE_ITEM,
+	BATTLESTATE_SWITCHING_TEXT,
+	BATTLESTATE_SWITCHING_WAIT,
 
 } BATTLESTATE;
 
@@ -35,6 +37,7 @@ typedef enum NPC_AI_FLAG
 BATTLESTATE gPreviousBattleState;
 BATTLESTATE gCurrentBattleState;
 
+uint8_t gPartyMemberToSwitchIn;
 uint8_t gCurrentPartyMember;
 uint8_t gCurrentOpponentPartyMember;
 uint8_t gSelectedPlayerMove;
@@ -46,6 +49,8 @@ void DrawBattleScreen(void);
 void DrawBattleButtons(void);
 
 void DrawMoveButtons(void);
+
+void DrawMonsterPartyButtons(void);
 
 
 ////////////MENU//BUTTONS//////////////

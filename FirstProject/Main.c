@@ -2757,7 +2757,18 @@ void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t perc
         for (int Pixel = 0; Pixel < 100 - percentHp100; Pixel++)
         {
             int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
-            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_GREEN, sizeof(PIXEL32));
+            if (percentHp100 < 51)
+            {
+                memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_GREEN, sizeof(PIXEL32));
+            }
+            else if (percentHp100 > 50 && percentHp100 < 91)
+            {
+                memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_GOLD, sizeof(PIXEL32));
+            }
+            else if (percentHp100 > 90)
+            {
+                memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_RED, sizeof(PIXEL32));
+            }
         }
     }
     if (showExpBar)

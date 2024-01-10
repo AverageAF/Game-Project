@@ -35,15 +35,15 @@ uint8_t gSelectedMonster = 0;       //tells game what monster was selected from 
 
 MENUITEM gMI_Inventory_Monster_Slot0 = { "Slot1", 204, 36 + (10 * 2), TRUE, MenuItem_Inventory_MonsterSelected_Action };
 
-MENUITEM gMI_Inventory_Monster_Slot1 = { "Slot2", 260, 36 + (10 * 4), TRUE, MenuItem_Inventory_MonsterSelected_Action };
+MENUITEM gMI_Inventory_Monster_Slot1 = { "Slot2", 260, 36 + (10 * 5), TRUE, MenuItem_Inventory_MonsterSelected_Action };
 
-MENUITEM gMI_Inventory_Monster_Slot2 = { "Slot3", 204, 36 + (10 * 6), TRUE, MenuItem_Inventory_MonsterSelected_Action };
+MENUITEM gMI_Inventory_Monster_Slot2 = { "Slot3", 204, 36 + (10 * 8), TRUE, MenuItem_Inventory_MonsterSelected_Action };
 
-MENUITEM gMI_Inventory_Monster_Slot3 = { "Slot4", 260, 36 + (10 * 8), TRUE, MenuItem_Inventory_MonsterSelected_Action };
+MENUITEM gMI_Inventory_Monster_Slot3 = { "Slot4", 260, 36 + (10 * 11), TRUE, MenuItem_Inventory_MonsterSelected_Action };
 
-MENUITEM gMI_Inventory_Monster_Slot4 = { "Slot5", 204, 36 + (10 * 10), TRUE, MenuItem_Inventory_MonsterSelected_Action };
+MENUITEM gMI_Inventory_Monster_Slot4 = { "Slot5", 204, 36 + (10 * 14), TRUE, MenuItem_Inventory_MonsterSelected_Action };
 
-MENUITEM gMI_Inventory_Monster_Slot5 = { "Slot6", 260, 36 + (10 * 12), TRUE, MenuItem_Inventory_MonsterSelected_Action };
+MENUITEM gMI_Inventory_Monster_Slot5 = { "Slot6", 260, 36 + (10 * 17), TRUE, MenuItem_Inventory_MonsterSelected_Action };
 
 MENUITEM* gMI_InventoryMonster_Items[] = { &gMI_Inventory_Monster_Slot0, &gMI_Inventory_Monster_Slot1, &gMI_Inventory_Monster_Slot2, &gMI_Inventory_Monster_Slot3, &gMI_Inventory_Monster_Slot4, &gMI_Inventory_Monster_Slot5 };
 
