@@ -24,6 +24,8 @@
 #define CALCULATE_AVG_FPS_EVERY_X_FRAMES 30			//goal of 120fps
 #define GOAL_MICROSECONDS_PER_FRAME 16667ULL		//16667 = 60fps <8000 for 120fps
 
+#define MAX_LEVEL 100
+
 
 #pragma warning(push, 3)
 
@@ -73,6 +75,9 @@
 #define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF7c7c7c }
 #define COLOR_DARK_GRAY (PIXEL32){ .Bytes = 0xFF303030 }
 #define COLOR_LIGHT_GRAY (PIXEL32){ .Bytes = 0xFFacacac }
+#define COLOR_LIGHT_GREEN (PIXEL32){ .Bytes = 0xFF00b800 }
+#define COLOR_DARK_GREEN (PIXEL32){ .Bytes = 0xFF005800 }
+#define COLOR_NEON_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
@@ -92,7 +97,6 @@
 #define MONSTER_FLAG_LEGENDARY (1 << 0)
 #define NUM_MONSTER_STATS 6
 #define END_OF_STRING 0xFF
-#define MAX_LEVEL 100
 #define MAX_STAT_CHANGES 6
 #define MAX_DIALOGUE_ROWS 7
 
@@ -163,11 +167,12 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 {
 	EVENT_FLAG_NONE,
 	EVENT_FLAG_BATLLE,
+	EVENT_FLAG_HEAL,
 	EVENT_FLAG_CUTSCENE,
 	EVENT_FLAG_ITEM,
 	EVENT_FLAG_MONSTER,
 	EVENT_FLAG_MOVEMENT,
-};
+} EVENT_FLAGS;
 
 typedef enum WINDOW_FLAGS
 {
@@ -508,6 +513,22 @@ struct BaseStats
 
 };
 
+
+struct BattleMove
+{
+	uint16_t effect;
+
+	uint8_t power1;
+	uint8_t power2;
+	uint8_t power3;
+	uint8_t element;
+	uint8_t secondEffectChance;
+	uint16_t target;
+	int8_t speedPriority;
+	uint32_t flags;
+	uint8_t split;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct PLAYER
@@ -553,6 +574,7 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	BOOL InteractedWith;
 	uint8_t Event;
 	struct Monster MonsterParty[MAX_PARTY_SIZE];
+	uint8_t BattleAiFlag;
 
 } INGAMESPRITE;
 
@@ -667,6 +689,9 @@ GAMESOUND gMusicDungeon01;
 const uint8_t gMonsterNames[NUM_MONSTERS][MAX_MONSTER_NAME_LENGTH + 1];
 const uint8_t gBattleMoveNames[NUM_BATTLEMOVES][MAX_MOVE_NAME_LENGTH + 1];
 const uint8_t* const gMoveDescriptionPointers[NUM_BATTLEMOVES];
+const struct BattleMove gBattleMoves[NUM_BATTLEMOVES];
+const struct BaseStats gBaseStats[];
+const uint32_t gExperienceTables[][MAX_LEVEL + 1];
 
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);

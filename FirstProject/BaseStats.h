@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SimpleConstants.h"
 #include "Main.h"
 
 #define MONSTER_GENDERLESS 0xFF

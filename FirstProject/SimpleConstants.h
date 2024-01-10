@@ -73,6 +73,25 @@
 #define MONSTER_ALREADY_KNOWS_MOVE 0xFFFE
 #define MONSTER_MOVE_NONE 0
 
+#define EFFECT_HIT 0
+#define EFFECT_MULTI_HIT 1
+#define EFFECT_HIT_FLINCH 2
+#define EFFECT_ATTACK_UP 3
+#define EFFECT_ATTACK_DOWN 4
+#define EFFECT_DEFENSE_UP 5
+#define EFFECT_DEFENSE_DOWN 6
+
+#define FLAG_CONTACTMOVE 1
+#define FLAG_BLOCKABLEMOVE 2
+#define FLAG_STATUSMOVE 3
+
+#define SPLIT_PHYS 0x0
+#define SPLIT_PSI 0x1
+#define SPLIT_STATUS 0x2
+
+#define MOVE_TARGET_SELECTED 0
+#define MOVE_TARGET_USER 1
+
 ///////////////////////////////MOVES///////////////////////////////////
 
 ////////////////////////SIGNATURE//MOVES///////////////////////////////

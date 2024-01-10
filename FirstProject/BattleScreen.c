@@ -6,9 +6,14 @@
 #include "MonsterData.h"
 
 
+
+
+
 ///////// load starting monster
 
 uint8_t gCurrentPartyMember = 0;
+uint8_t gCurrentOpponentPartyMember = 0;
+uint8_t gSelectedPlayerMove = 0;
 
 ////////Initial starting choices at the start of battle
 
@@ -177,7 +182,7 @@ void DrawBattleScreen(void)
 
     switch (gCurrentBattleState)
     {
-        case BATTLESTATE_OPENING_TEXT:          //TODO: steal code from dialoguewindow for longer multi row text messages
+        case BATTLESTATE_OPENING_TEXT:
         {
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
@@ -287,7 +292,7 @@ void DrawBattleScreen(void)
 
             break;
         }
-        case BATTLESTATE_WAIT_INPUT1:       //TODO: impliment longer strings with a token finder
+        case BATTLESTATE_WAIT_INPUT1:
         {
     WaitText:
 
@@ -321,6 +326,47 @@ void DrawBattleScreen(void)
             }
             BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 312, 228);
             gFinishedBattleTextAnimation = TRUE;
+
+            break;
+        }
+        case BATTLESTATE_CALCULATE:
+        {
+            uint8_t OpponentMove = 0;
+
+            if (Opponent == NULL)
+            {
+                OpponentMove = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
+            }
+            else
+            {
+                OpponentMove = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
+            }
+
+            BOOL IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
+
+            uint16_t DamageToPlayer = CalcPotentialDamageToPlayerMonster(
+                                                                        gOpponentParty[gCurrentOpponentPartyMember].Level, 
+                                                                        gOpponentParty[gCurrentOpponentPartyMember].Attack, 
+                                                                        gPlayerParty[gCurrentPartyMember].Defense,
+                                                                        gOpponentParty[gCurrentOpponentPartyMember].Psi,
+                                                                        gPlayerParty[gCurrentPartyMember].Resolve,
+                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power1,
+                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power2,
+                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power3,
+                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].split);
+
+            uint16_t DamageToOpponent = CalcPotentialDamageToPlayerMonster(
+                                                                        gPlayerParty[gCurrentPartyMember].Level,
+                                                                        gPlayerParty[gCurrentPartyMember].Attack,
+                                                                        gOpponentParty[gCurrentOpponentPartyMember].Defense,
+                                                                        gPlayerParty[gCurrentPartyMember].Psi,
+                                                                        gOpponentParty[gCurrentOpponentPartyMember].Resolve,
+                                                                        gBattleMoves[gSelectedPlayerMove].power1,
+                                                                        gBattleMoves[gSelectedPlayerMove].power2,
+                                                                        gBattleMoves[gSelectedPlayerMove].power3,
+                                                                        gBattleMoves[gSelectedPlayerMove].split);
+
+            ModiftyMonsterHealthValuesThisTurn(DamageToPlayer, DamageToOpponent, IsPlayerMovingFirst);
 
             break;
         }
@@ -398,6 +444,30 @@ void DrawBattleScreen(void)
     {
         ASSERT(FALSE, "Opponent battle monster is NULL!");
     }
+
+    /////////////////////////////////////////TEMP HP BARS//////////////////////////////////////////////////////
+
+    /*uint16_t HpBarSize = snprintf(NULL, 0, "%d", gPlayerParty[gCurrentPartyMember].Health);
+    char* HpBarString = malloc(HpBarSize + 1);
+    snprintf(HpBarString, HpBarSize + 1, "%d", gPlayerParty[gCurrentPartyMember].Health);
+    BlitStringToBuffer(HpBarString, &g6x7Font, &COLOR_DARK_RED, 65, 111);
+
+    HpBarSize = snprintf(NULL, 0, "%d", gOpponentParty[gCurrentOpponentPartyMember].Health);
+    HpBarString = malloc(HpBarSize + 1);
+    snprintf(HpBarString, HpBarSize + 1, "%d", gOpponentParty[gCurrentOpponentPartyMember].Health);
+    BlitStringToBuffer(HpBarString, &g6x7Font, &COLOR_DARK_RED, 255, 79);*/
+
+    uint16_t HpPercent = 100 - ((gPlayerParty[gCurrentPartyMember].Health * 100) / (gPlayerParty[gCurrentPartyMember].MaxHealth));
+
+    uint16_t ExpPercent = 100 - (((gPlayerParty[gCurrentPartyMember].DriveMonster.Experience - gExperienceTables[gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].growthRate][gPlayerParty[gCurrentPartyMember].Level]) * 100) / (gExperienceTables[gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].growthRate][gPlayerParty[gCurrentPartyMember].Level + 1] - gExperienceTables[gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].growthRate][gPlayerParty[gCurrentPartyMember].Level]));
+
+    DrawMonsterHpBar(65 + 1, 111 - 8, HpPercent, ExpPercent, gPlayerParty[gCurrentPartyMember].Level, gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, TRUE);
+
+    HpPercent = 100 - ((gOpponentParty[gCurrentOpponentPartyMember].Health * 100) / (gOpponentParty[gCurrentOpponentPartyMember].MaxHealth));
+
+    DrawMonsterHpBar(255 - 46, 79 - 8, HpPercent, 0, gOpponentParty[gCurrentOpponentPartyMember].Level, gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, FALSE);
+
+    //////////////////////////////////////////////TODO///REMOVE////////////////////////////////////////////////
 
     LocalFrameCounter++;
 
@@ -608,6 +678,50 @@ void DrawMoveButtons(void)
     BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_MoveScreen_Items[gMenu_MoveScreen.SelectedItem]->x - 6, gMI_MoveScreen_Items[gMenu_MoveScreen.SelectedItem]->y);
 }
 
+void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar)
+{
+    DrawWindow(x - 3, y - 10, 100 + 16, 2 + 13, &COLOR_BLACK, &COLOR_DARK_WHITE, NULL, WINDOW_FLAG_ROUNDED | WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    int32_t StartingScreenPixel = ((GAME_RES_WIDTH * GAME_RES_HEIGHT) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
+
+    for (int Row = 0; Row < 2; Row++)
+    {
+
+        for (int Pixel = 0; Pixel < 100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_GREEN, sizeof(PIXEL32));
+        }
+
+        for (int Pixel = 0; Pixel < 100 - percentHp100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_GREEN, sizeof(PIXEL32));
+        }
+    }
+    if (showExpBar)
+    {
+        for (int Pixel = 0; Pixel < 100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_BLUE, sizeof(PIXEL32));
+        }
+
+        for (int Pixel = 0; Pixel < 100 - percentExp100; Pixel++)
+        {
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_NEON_BLUE, sizeof(PIXEL32));
+        }
+    }
+
+    uint16_t LevelSize = snprintf(NULL, 0, "%d", monsterLevel);
+    char* LevelString = malloc(LevelSize + 6);
+    snprintf(LevelString, LevelSize + 6, "Lvl: %d", monsterLevel);
+    BlitStringToBuffer(LevelString, &g6x7Font, &COLOR_DARK_RED, x - 1, y - 8);
+
+    BlitStringToBuffer(monsterNickname, &g6x7Font, &COLOR_DARK_RED, x + 11 + 30, y - 8);
+}
+
 //////// initial choice menu
 
 void MenuItem_BattleScreen_FightButton(void)
@@ -686,12 +800,28 @@ void MenuItem_SwitchScreen_BackButton(void)
 
 void MenuItem_MoveScreen_MoveSlot0(void)
 {
-    //end player turn start calculating
+    if (gMI_MoveScreen_MoveSlot0.Name == gBattleMoveNames[BATTLEMOVE_NULL])
+    {
+
+    }
+    else          //end player turn start calculating
+    {
+        gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0];
+        gCurrentBattleState = BATTLESTATE_CALCULATE;
+    }
 }
 
 void MenuItem_MoveScreen_MoveSlot1(void)
 {
-    //end player turn start calculating
+    if (gMI_MoveScreen_MoveSlot1.Name == gBattleMoveNames[BATTLEMOVE_NULL])
+    {
+
+    }
+    else          //end player turn start calculating
+    {
+        gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1];
+        gCurrentBattleState = BATTLESTATE_CALCULATE;
+    }
 }
 
 void MenuItem_MoveScreen_MoveSlot2(void)
@@ -714,3 +844,535 @@ void MenuItem_MoveScreen_BackButton(void)
     gPreviousBattleState = gCurrentBattleState;
     gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
 }
+
+uint8_t CalculateOpponentMoveChoice(uint8_t npcaiFlag)
+{
+    DWORD Random;
+    uint8_t moveChoice;
+
+    
+    if (npcaiFlag && FLAG_NPCAI_NEVERSTATUS == npcaiFlag)
+    {
+
+    ReRandomizeStatus:
+
+        rand_s((unsigned int*)&Random);
+        Random = Random % (MAX_NONSIGNATURE_MOVES);
+        moveChoice = (uint8_t*)Random;
+
+        if (BATTLEMOVE_NULL == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[moveChoice] || gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[moveChoice]].split == SPLIT_STATUS)
+        {
+            goto ReRandomizeStatus;
+        }
+    }
+    else if (npcaiFlag && FLAG_NPCAI_HIGHESTPOWER == npcaiFlag)
+    {
+        uint8_t power1 = 0;
+        uint8_t power2 = 0;
+        uint8_t power3 = 0;
+        uint8_t powerTot = 0;
+        uint8_t powerHighest = 0;
+
+        for (uint8_t i = 0; i < MAX_NONSIGNATURE_MOVES; i++)
+        {
+            power1 = gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[i]].power1;
+            power2 = gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[i]].power2;
+            power3 = gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[i]].power3;
+
+            powerTot = power1 + power2 + power3;
+            if (powerTot >= powerHighest)
+            {
+                powerHighest = powerTot;
+                moveChoice = i;
+            }
+        }
+    }
+    else
+    {
+
+    ReRandomize:
+
+        rand_s((unsigned int*)&Random);
+        Random = Random % (MAX_NONSIGNATURE_MOVES);
+        moveChoice = (uint8_t*)Random;
+
+        if (BATTLEMOVE_NULL == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[moveChoice])
+        {
+            goto ReRandomize;
+        }
+    }
+
+    return(moveChoice);
+}
+
+BOOL CalculateSpeedPriorityIfPlayerMovesFirst(uint16_t speedStatPlayer, uint16_t speedStatOpponent)
+{
+    if (gPlayerParty[gCurrentPartyMember].Speed > gOpponentParty[gCurrentOpponentPartyMember].Speed)
+    {
+        return(TRUE);
+    }
+    else if (gPlayerParty[gCurrentPartyMember].Speed < gOpponentParty[gCurrentOpponentPartyMember].Speed)
+    {
+        return(FALSE);
+    }
+    else        //speed tie
+    {
+        DWORD Random;
+        BOOL coinFlip;
+
+        rand_s((unsigned int*)&Random);
+        Random = Random % 2;
+        coinFlip = (BOOL*)Random;
+
+        return(coinFlip);
+    }
+}
+
+uint16_t CalcPotentialDamageToPlayerMonster(uint8_t oppLevel, uint16_t oppMonAtk, uint16_t playerMonDef, uint16_t oppMonPsi, uint16_t playerMonRes, uint8_t movePower1, uint8_t movePower2, uint8_t movePower3, uint8_t split)
+{
+    DWORD Random;
+    uint16_t Random16;
+
+    uint16_t PotentialDmg;
+    uint16_t HighestRoll;
+    uint16_t LowestRoll;
+    float Power1Ratio;
+    float Power2Ratio;
+    float Power3Ratio;
+    uint8_t Power1 = 0;
+    uint8_t Power2 = 0;
+    uint8_t Power3 = 0;
+
+    if (split == SPLIT_PHYS)
+    {
+        if (movePower1 > 0)
+        {
+            if (oppMonAtk > playerMonDef * 1.15)
+            {
+                Power1Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 85.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 1.15 && oppMonAtk > playerMonDef * 0.85)
+            {
+                Power1Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 100.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 0.85 && oppMonAtk > playerMonDef * 0.6)
+            {
+                Power1Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 110.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 0.6)
+            {
+                Power1Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 120.0f));
+            }
+            else
+            {
+                Power1Ratio = 0;
+            }
+            Power1 = ((((oppLevel / 2) + 4) * movePower1 * Power1Ratio) / 64) + 4;
+        }
+
+
+        if (movePower2 > 0)
+        {
+            if (oppMonAtk > playerMonDef * 1.25)
+            {
+                Power2Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 95.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 1.25 && oppMonAtk > playerMonDef * 0.75)
+            {
+                Power2Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 90.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 0.75 && oppMonAtk > playerMonDef * 0.5)
+            {
+                Power2Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 100.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 0.6)
+            {
+                Power2Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 110.0f));
+            }
+            else
+            {
+                Power2Ratio = 0;
+            }
+            Power2 = ((((oppLevel / 2) + 4) * movePower2 * Power2Ratio) / 64) + 4;
+        }
+
+
+        if (movePower3 > 0)
+        {
+            if (oppMonAtk > playerMonDef * 1.05)
+            {
+                Power3Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 100.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 1.05 && oppMonAtk > playerMonDef * 0.95)
+            {
+                Power3Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 95.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 0.95 && oppMonAtk > playerMonDef * 0.6)
+            {
+                Power3Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 85.0f));
+            }
+            else if (oppMonAtk <= playerMonDef * 0.6)
+            {
+                Power3Ratio = ((oppMonAtk * 100.0f) / (playerMonDef * 70.0f));
+            }
+            else
+            {
+                Power3Ratio = 0;
+            }
+            Power3 = ((((oppLevel / 2) + 4) * movePower3 * Power3Ratio) / 64) + 4;
+        }
+    }
+    else if (split == SPLIT_PSI)
+    {
+        if (movePower1 > 0)
+        {
+            if (oppMonPsi > playerMonRes * 1.15)
+            {
+                Power1Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 85.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 1.15 && oppMonPsi > playerMonRes * 0.85)
+            {
+                Power1Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 100.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 0.85 && oppMonPsi > playerMonRes * 0.6)
+            {
+                Power1Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 110.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 0.6)
+            {
+                Power1Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 120.0f));
+            }
+            else
+            {
+                Power1Ratio = 0;
+            }
+            Power1 = ((((oppLevel / 2) + 4) * movePower1 * Power1Ratio) / 64) + 4;
+        }
+
+
+        if (movePower2 > 0)
+        {
+            if (oppMonPsi > playerMonRes * 1.25)
+            {
+                Power2Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 95.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 1.25 && oppMonPsi > playerMonRes * 0.75)
+            {
+                Power2Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 90.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 0.75 && oppMonPsi > playerMonRes * 0.5)
+            {
+                Power2Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 100.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 0.6)
+            {
+                Power2Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 110.0f));
+            }
+            else
+            {
+                Power2Ratio = 0;
+            }
+            Power2 = ((((oppLevel / 2) + 4) * movePower2 * Power2Ratio) / 64) + 4;
+        }
+
+
+        if (movePower3 > 0)
+        {
+            if (oppMonPsi > playerMonRes * 1.05)
+            {
+                Power3Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 100.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 1.05 && oppMonPsi > playerMonRes * 0.95)
+            {
+                Power3Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 95.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 0.95 && oppMonPsi > playerMonRes * 0.6)
+            {
+                Power3Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 85.0f));
+            }
+            else if (oppMonPsi <= playerMonRes * 0.6)
+            {
+                Power3Ratio = ((oppMonPsi * 100.0f) / (playerMonRes * 70.0f));
+            }
+            else
+            {
+                Power3Ratio = 0;
+            }
+            Power3 = ((((oppLevel / 2) + 4) * movePower3 * Power3Ratio) / 64) + 4;
+        }
+    }
+
+    HighestRoll = Power1 + Power2 + Power3;
+    LowestRoll = HighestRoll * 0.85;
+
+    rand_s((unsigned int*)&Random);
+    Random16 = (uint16_t*)Random;
+
+    PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
+
+    if (Random16 % 16 == 0)     //TODO:BATTLE_TEXT_FLAG for crits, element effectiveness, ect..
+    {
+        PotentialDmg =+  (PotentialDmg * 1.5);
+    }
+    return (PotentialDmg);
+}
+
+uint16_t CalcPotentialDamageToOpponentMonster(uint8_t playerLevel, uint16_t playerMonAtk, uint16_t oppMonDef, uint16_t playerMonPsi, uint16_t oppMonRes, uint8_t movePower1, uint8_t movePower2, uint8_t movePower3, uint8_t split)
+{
+    DWORD Random;
+    uint16_t Random16;
+
+    uint16_t PotentialDmg;
+    uint16_t HighestRoll;
+    uint16_t LowestRoll;
+    float Power1Ratio;
+    float Power2Ratio;
+    float Power3Ratio;
+    uint8_t Power1 = 0;
+    uint8_t Power2 = 0;
+    uint8_t Power3 = 0;
+
+    if (split == SPLIT_PHYS)
+    {
+        if (movePower1 > 0)
+        {
+            if (playerMonAtk > oppMonDef * 1.15)
+            {
+                Power1Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 85.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 1.15 && playerMonAtk > oppMonDef * 0.85)
+            {
+                Power1Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 100.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 0.85 && playerMonAtk > oppMonDef * 0.6)
+            {
+                Power1Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 110.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 0.6)
+            {
+                Power1Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 120.0f));
+            }
+            else
+            {
+                Power1Ratio = 0;
+            }
+            Power1 = ((((playerLevel / 2) + 4) * movePower1 * Power1Ratio) / 64) + 4;
+        }
+
+
+        if (movePower2 > 0)
+        {
+            if (playerMonAtk > oppMonDef * 1.25)
+            {
+                Power2Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 95.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 1.25 && playerMonAtk > oppMonDef * 0.75)
+            {
+                Power2Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 90.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 0.75 && playerMonAtk > oppMonDef * 0.5)
+            {
+                Power2Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 100.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 0.6)
+            {
+                Power2Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 110.0f));
+            }
+            else
+            {
+                Power2Ratio = 0;
+            }
+            Power2 = ((((playerLevel / 2) + 4) * movePower2 * Power2Ratio) / 64) + 4;
+        }
+
+
+        if (movePower3 > 0)
+        {
+            if (playerMonAtk > oppMonDef * 1.05)
+            {
+                Power3Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 100.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 1.05 && playerMonAtk > oppMonDef * 0.95)
+            {
+                Power3Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 95.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 0.95 && playerMonAtk > oppMonDef * 0.6)
+            {
+                Power3Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 85.0f));
+            }
+            else if (playerMonAtk <= oppMonDef * 0.6)
+            {
+                Power3Ratio = ((playerMonAtk * 100.0f) / (oppMonDef * 70.0f));
+            }
+            else
+            {
+                Power3Ratio = 0;
+            }
+            Power3 = ((((playerLevel / 2) + 4) * movePower3 * Power3Ratio) / 64) + 4;
+        }
+    }
+    else if (split == SPLIT_PSI)
+    {
+        if (movePower1 > 0)
+        {
+            if (playerMonPsi > oppMonRes * 1.15)
+            {
+                Power1Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 85.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 1.15 && playerMonPsi > oppMonRes * 0.85)
+            {
+                Power1Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 100.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 0.85 && playerMonPsi > oppMonRes * 0.6)
+            {
+                Power1Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 110.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 0.6)
+            {
+                Power1Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 120.0f));
+            }
+            else
+            {
+                Power1Ratio = 0;
+            }
+            Power1 = ((((playerLevel / 2) + 4) * movePower1 * Power1Ratio) / 64) + 4;
+        }
+
+
+        if (movePower2 > 0)
+        {
+            if (playerMonPsi > oppMonRes * 1.25)
+            {
+                Power2Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 95.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 1.25 && playerMonPsi > oppMonRes * 0.75)
+            {
+                Power2Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 90.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 0.75 && playerMonPsi > oppMonRes * 0.5)
+            {
+                Power2Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 100.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 0.6)
+            {
+                Power2Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 110.0f));
+            }
+            else
+            {
+                Power2Ratio = 0;
+            }
+            Power2 = ((((playerLevel / 2) + 4) * movePower2 * Power2Ratio) / 64) + 4;
+        }
+
+
+        if (movePower3 > 0)
+        {
+            if (playerMonPsi > oppMonRes * 1.05)
+            {
+                Power3Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 100.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 1.05 && playerMonPsi > oppMonRes * 0.95)
+            {
+                Power3Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 95.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 0.95 && playerMonPsi > oppMonRes * 0.6)
+            {
+                Power3Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 85.0f));
+            }
+            else if (playerMonPsi <= oppMonRes * 0.6)
+            {
+                Power3Ratio = ((playerMonPsi * 100.0f) / (oppMonRes * 70.0f));
+            }
+            else
+            {
+                Power3Ratio = 0;
+            }
+            Power3 = ((((playerLevel / 2) + 4) * movePower3 * Power3Ratio) / 64) + 4;
+        }
+    }
+
+    HighestRoll = Power1 + Power2 + Power3;
+    LowestRoll = HighestRoll * 0.85;
+
+    rand_s((unsigned int*)&Random);
+    Random16 = (uint16_t*)Random;
+
+    PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
+
+    if (Random16 % 16 == 0)     //TODO:BATTLE_TEXT_FLAG for crits, element effectiveness, ect..
+    {
+        PotentialDmg = +(PotentialDmg * 1.5);
+    }
+    return (PotentialDmg);
+}
+
+void ModiftyMonsterHealthValuesThisTurn(uint16_t damageToPlayer, uint16_t damageToOpponent, BOOL isPlayerGoingFirst)
+{
+    /*static BOOL FirstMoveFinished = 0;                ////for BATTLE_STATE_ANIMATE so i can come back and start on second move
+    static BOOL SecondMoveFinished = 0;*/
+
+    if (isPlayerGoingFirst && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0) && (gPlayerParty[gCurrentPartyMember].Health != 0))
+    {
+        for (uint16_t i = damageToOpponent; i > 0; i--)
+        {
+            gOpponentParty[gCurrentOpponentPartyMember].Health--;
+            if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
+            {
+                //FirstMoveFinished = TRUE;
+                goto SecondMove;
+            }
+        }
+    }
+    else if (!isPlayerGoingFirst && (gPlayerParty[gCurrentPartyMember].Health != 0) && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0))
+    {
+
+        for (uint16_t i = damageToPlayer; i > 0; i--)
+        {
+            gPlayerParty[gCurrentPartyMember].Health--;
+            if (gPlayerParty[gCurrentPartyMember].Health == 0)
+            {
+                //FirstMoveFinished = TRUE;
+                goto SecondMove;
+            }
+        }
+    }
+    //FirstMoveFinished = TRUE;
+SecondMove:
+
+    //if (FirstMoveFinished == TRUE)
+    {
+        if (isPlayerGoingFirst && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0) && (gPlayerParty[gCurrentPartyMember].Health != 0))
+        {
+            for (uint16_t i = damageToPlayer; i > 0; i--)
+            {
+                gPlayerParty[gCurrentPartyMember].Health--;
+                if (gPlayerParty[gCurrentPartyMember].Health == 0)
+                {
+                    //SecondMoveFinished = TRUE;
+                    goto CalcEnd;
+                }
+            }
+        }
+        else if (!isPlayerGoingFirst && (gPlayerParty[gCurrentPartyMember].Health != 0) && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0))
+        {
+            for (uint16_t i = damageToOpponent; i > 0; i--)
+            {
+                gOpponentParty[gCurrentOpponentPartyMember].Health--;
+                if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
+                {
+                    //SecondMoveFinished = TRUE;
+                    goto CalcEnd;
+                }
+            }
+        }
+    }
+    //SecondMoveFinished = TRUE;
+CalcEnd:
+
+    //if (SecondMoveFinished == TRUE)
+    {
+        gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+    }
+}
+
+

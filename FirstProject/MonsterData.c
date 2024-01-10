@@ -1152,7 +1152,7 @@ struct Monster GenerateRandMonsterForWildEncounter(uint8_t level, uint16_t item)
     Random = Random % (NUM_MONSTERS - 1);
     randIndex = (uint8_t*)Random;
 
-    CreateMonster(&monster, randIndex, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    CreateMonster(&monster, randIndex + 1, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);

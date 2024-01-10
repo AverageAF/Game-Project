@@ -72,28 +72,9 @@ void DrawOverworldScreen(void)
         {
             if (gCharacterSprite[Counter].InteractedWith == TRUE) 
             {
-                switch (Counter)
-                {
-                    case 0:
-                    {
-                        DrawDialogueBox(gCharacterSprite[0].Dialogue[0], LocalFrameCounter, NULL, NULL);
-                        goto FoundSprite;
-                    }
-                    case 1:
-                    {
-                        DrawDialogueBox(gCharacterSprite[1].Dialogue[0], LocalFrameCounter, NULL, NULL);
-                        goto FoundSprite;
-                    }
-                    case 2:
-                    {
-                        DrawDialogueBox(gCharacterSprite[2].Dialogue[0], LocalFrameCounter, NULL, NULL);
-                        goto FoundSprite;
-                    }
-                    default:
-                    {
-                        ASSERT(FALSE, "Interacted Sprite has no Dialogue!");
-                    }
-                }
+                DrawDialogueBox(gCharacterSprite[Counter].Dialogue[0], LocalFrameCounter, NULL, NULL);
+                goto FoundSprite;
+
             }
         }
     }
@@ -729,6 +710,12 @@ void PPI_Overworld(void)
                             {
                                 ScriptGiveMonster(MONSTER_WOLF, 5, 0);
                                 gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
+                                gCharacterSprite[Index].InteractedWith = FALSE;
+                                break;
+                            }
+                            case EVENT_FLAG_HEAL:
+                            {
+                                HealPlayerParty();
                                 gCharacterSprite[Index].InteractedWith = FALSE;
                                 break;
                             }

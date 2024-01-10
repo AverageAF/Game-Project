@@ -615,10 +615,30 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].Exists = TRUE;
     gCharacterSprite[2].Loaded = TRUE;
     gCharacterSprite[2].Dialogue[0] = "Lets have a battle!";
+    gCharacterSprite[2].BattleAiFlag = FLAG_NPCAI_HIGHESTPOWER;
 
     sprintf_s(gCharacterSprite[2].Name, sizeof(gCharacterSprite[2].Name), "Jerry");
 
     gCharacterSprite[2].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(1, 5, 0);
+
+    //////////////////////////////////////////////////////////////
+
+    gCharacterSprite[3].ScreenPos.x = 256;
+    gCharacterSprite[3].ScreenPos.y = 16;
+    gCharacterSprite[3].WorldPos.x = 256;
+    gCharacterSprite[3].WorldPos.y = 16;
+    gCharacterSprite[3].ResetScreenPos.x = 256;
+    gCharacterSprite[3].ResetScreenPos.y = 16;
+    gCharacterSprite[3].ResetWorldPos.x = 256;
+    gCharacterSprite[3].ResetWorldPos.y = 16;
+    gCharacterSprite[3].Direction = DOWN;
+    gCharacterSprite[3].ResetDirection = DOWN;
+    gCharacterSprite[3].Event = EVENT_FLAG_HEAL;
+    gCharacterSprite[3].Movement = MOVEMENT_STILL;
+    gCharacterSprite[3].Visible = TRUE;
+    gCharacterSprite[3].Exists = TRUE;
+    gCharacterSprite[3].Loaded = TRUE;
+    gCharacterSprite[3].Dialogue[0] = "Let me heal your monster!\n...\n...\n...\nThere! They seem much better!";
 
     //////////////////////////////////////////////////////////////
 
@@ -2209,6 +2229,10 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "ManFacingLeft.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_0] },
         {   "ManFacingRight.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_0] },
         {   "ManFacingUp.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_0] },
+        {   "ManFacingDown.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_0] },
+        {   "ManFacingLeft.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_0] },
+        {   "ManFacingRight.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingUp.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_0] },
         {   "BattleBackgroundGrass01.bmpx", &gBattleScreen_Grass01 },
         {   "BattleBackgroundStoneBricks01.bmpx", &gBattleScreen_StoneBricks01 },
         {   "Wolf64Back01.bmpx", &gBattleSpriteBack[MONSTER_WOLF] },
