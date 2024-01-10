@@ -65,7 +65,6 @@
 #define FADE_DURATION_FRAMES 20
 
 #define COLOR_BLACK (PIXEL32){ .Bytes = 0xFF000000 }
-#define COLOR_NES_TAN (PIXEL32){ .Bytes = 0xFFfca044 }
 #define COLOR_DARK_RED (PIXEL32){ .Bytes = 0xFFa81000 }
 #define COLOR_NES_RED (PIXEL32){ .Bytes = 0xFFB80020 }
 #define COLOR_FORREST_GREEN (PIXEL32) { .Bytes = 0xFF007800 }
@@ -73,7 +72,6 @@
 #define COLOR_LIGHT_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
 #define COLOR_NES_WHITE (PIXEL32){ .Bytes = 0xFFFCFCFC }
 #define COLOR_DARK_WHITE (PIXEL32){ .Bytes = 0xFFDCDCDC }
-#define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF7c7c7c }
 #define COLOR_DARK_GRAY (PIXEL32){ .Bytes = 0xFF303030 }
 #define COLOR_LIGHT_GRAY (PIXEL32){ .Bytes = 0xFFacacac }
 #define COLOR_LIGHT_GREEN (PIXEL32){ .Bytes = 0xFF00b800 }
@@ -81,8 +79,19 @@
 #define COLOR_NEON_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
 #define COLOR_NES_PINK (PIXEL32){ .Bytes = 0xFFf85898 }
 #define COLOR_GOLD (PIXEL32){ .Bytes = 0xFFFFD700 }
-#define COLOR_NES_PURPLE (PIXEL32){ .Bytes = 0xFF940084 }
 #define COLOR_NES_MAGENTA (PIXEL32){ .Bytes = 0xFFd800cc }
+
+#define COLOR_NES_TAN (PIXEL32){ .Bytes = 0xFFfca044 }			//element none
+#define COLOR_NES_BROWN (PIXEL32){ .Bytes = 0xFF503000 }		//earth
+#define COLOR_NES_SKY_BLUE (PIXEL32){ .Bytes = 0xFFa4e4fc }		//air
+#define COLOR_NES_ORANGE (PIXEL32){ .Bytes = 0xFFf83800 }		//fire
+#define COLOR_NES_BLUE (PIXEL32){ .Bytes = 0xFF0000fc }			//water
+#define COLOR_NES_YELLOW (PIXEL32){ .Bytes = 0xFFf8b800 }		//electric
+#define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF7c7c7c }			//metal
+#define COLOR_NES_PURPLE (PIXEL32){ .Bytes = 0xFF940084 }		//soul
+#define COLOR_NES_LIGHT_GREEN (PIXEL32){ .Bytes = 0xFF00a844 }	//life
+#define COLOR_NES_BLACK_RED (PIXEL32){ .Bytes = 0xFF160000}		//death
+
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
