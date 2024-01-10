@@ -2930,10 +2930,6 @@ BOOL CalculateSpeedPriorityIfPlayerMovesFirst(uint16_t speedStatPlayer, uint16_t
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//should replace CalcPotentialDamage
-
 uint16_t CalcDmgFromMonsterAToMonsterB(uint8_t AMonLevel, uint16_t AMonAtk, uint16_t BMonDef, uint16_t AMonPsi, uint16_t BMonRes, uint8_t AMovePower1, uint8_t AMovePower2, uint8_t AMovePower3, uint8_t AMoveSplit, BOOL IsMonAPlayer)
 {
     DWORD Random;
@@ -2974,7 +2970,7 @@ uint16_t CalcDmgFromMonsterAToMonsterB(uint8_t AMonLevel, uint16_t AMonAtk, uint
                     case 5:
                     case 6:
                     {
-                        AMonAtkMod = ((2.0f * AMonAtk) / ((7 - gStatChangesCurrentPlayerMon[stattype]) + 2));           ////math here seems wrong, appears to double attack at '5' instead of halving it
+                        AMonAtkMod = ((2.0f * AMonAtk) / ((7 - gStatChangesCurrentPlayerMon[stattype]) + 2));
                         break;
                     }
                     case 8:
@@ -3386,13 +3382,10 @@ uint16_t CalcDmgFromMonsterAToMonsterB(uint8_t AMonLevel, uint16_t AMonAtk, uint
     if (Random16 % 16 == 0 && AMoveSplit != SPLIT_STATUS && gLastMoveElementalBonus != ELEMENT_IMMUNE)
     {
         gWasLastMoveCriticalHit = TRUE;
-        PotentialDmg *= 1.5;           ////bug? should be fixed
+        PotentialDmg *= 1.5;
     }
     return (PotentialDmg);
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster, BOOL IsPlayerMoveFirst)
 {

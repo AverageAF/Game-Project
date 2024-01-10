@@ -145,7 +145,7 @@ void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_
     SetDriveMonsterData(driveMonster, MONSTER_DATA_EXPERIENCE, &gExperienceTables[gBaseStats[Index].growthRate][Level]);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_FRIENDSHIP, &gBaseStats[Index].friendship);
     MetLocation = gCurrentArea.Name;
-    SetDriveMonsterData(driveMonster, MONSTER_DATA_MET_LOCATION, &Value);
+    SetDriveMonsterData(driveMonster, MONSTER_DATA_MET_LOCATION, &MetLocation);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_MET_LEVEL, &Level);
 
     if (FixedGenetics < USE_RANDOM_GENETICS)

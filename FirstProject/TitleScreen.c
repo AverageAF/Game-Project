@@ -3,22 +3,39 @@
 #include "TitleScreen.h"
 
 
-MENUITEM gMI_StartNewGame = { "Start New Game", (GAME_RES_WIDTH / 2) - (6 * 14 / 2), 112, TRUE, MenuItem_TitleScreen_StartNew };
+//MENUITEM gMI_StartNewGame = { "Start New Game", (GAME_RES_WIDTH / 2) - (6 * 14 / 2), 112, TRUE, MenuItem_TitleScreen_StartNew };
+//
+//MENUITEM gMI_ResumeGame = { "Resume", (GAME_RES_WIDTH / 2) - (6 * 6 / 2), 112, FALSE, MenuItem_TitleScreen_Resume };
+//
+//MENUITEM gMI_LoadSavedGame = { "Load Saved Game", (GAME_RES_WIDTH / 2) - (6 * 16 / 2), 128, TRUE, MenuItem_TitleScreen_LoadSave };
+//
+//MENUITEM gMI_Options = { "Options", (GAME_RES_WIDTH / 2) - (6 * 7 / 2), 144, TRUE, MenuItem_TitleScreen_Options };
+//
+//MENUITEM gMI_Exit = { "Exit", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 160, TRUE, MenuItem_TitleScreen_Exit };
+//
+//MENUITEM* gMI_TitleScreenItems[] = { &gMI_StartNewGame, &gMI_ResumeGame, &gMI_LoadSavedGame, &gMI_Options, &gMI_Exit };
+//
+//MENU gMenu_TitleScreen = { "Title Screen Menu", 1, _countof(gMI_TitleScreenItems), gMI_TitleScreenItems };
 
-MENUITEM gMI_ResumeGame = { "Resume", (GAME_RES_WIDTH / 2) - (6 * 6 / 2), 112, FALSE, MenuItem_TitleScreen_Resume };
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
-MENUITEM gMI_LoadSavedGame = { "Load Saved Game", (GAME_RES_WIDTH / 2) - (6 * 16 / 2), 128, TRUE, MenuItem_TitleScreen_LoadSave };
+MENUITEM gMI_StartNewGame = { "Start New Game", (GAME_RES_WIDTH / 2) - (6 * 14 / 2), 96, TRUE, MenuItem_TitleScreen_StartNew };
 
-MENUITEM gMI_Options = { "Options", (GAME_RES_WIDTH / 2) - (6 * 7 / 2), 144, TRUE, MenuItem_TitleScreen_Options };
+MENUITEM gMI_ResumeGame = { "Resume", (GAME_RES_WIDTH / 2) - (6 * 6 / 2), 112, TRUE, MenuItem_TitleScreen_Resume };
 
-MENUITEM gMI_Exit = { "Exit", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 160, TRUE, MenuItem_TitleScreen_Exit };
+MENUITEM gMI_LoadGame = { "Load Game", (GAME_RES_WIDTH / 2) - (6 * 10 / 2) + 2, 128, TRUE, MenuItem_TitleScreen_LoadGame };
 
-MENUITEM* gMI_TitleScreenItems[] = { &gMI_StartNewGame, &gMI_ResumeGame, &gMI_LoadSavedGame, &gMI_Options, &gMI_Exit };
+MENUITEM gMI_SaveGame = { "Save Game", (GAME_RES_WIDTH / 2) - (6 * 10 / 2) + 2, 144, TRUE, MenuItem_TitleScreen_SaveGame };
+
+MENUITEM gMI_Options = { "Options", (GAME_RES_WIDTH / 2) - (6 * 7 / 2), 160, TRUE, MenuItem_TitleScreen_Options };
+
+MENUITEM gMI_Exit = { "Exit", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 172, TRUE, MenuItem_TitleScreen_Exit };
+
+MENUITEM* gMI_TitleScreenItems[] = { &gMI_StartNewGame, &gMI_ResumeGame, &gMI_LoadGame, &gMI_SaveGame, &gMI_Options, &gMI_Exit };
 
 MENU gMenu_TitleScreen = { "Title Screen Menu", 1, _countof(gMI_TitleScreenItems), gMI_TitleScreenItems };
 
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void DrawTitleScreen(void)
 {
@@ -37,8 +54,8 @@ void DrawTitleScreen(void)
         if (gPlayer.Active)
         {
             gMenu_TitleScreen.SelectedItem = 1;
-            gMI_ResumeGame.Enabled = TRUE;              ////TODO: dont change title screen here, change once save game exists and likewise restore if saves are deleted
-            gMI_StartNewGame.Enabled = FALSE;
+            //gMI_ResumeGame.Enabled = TRUE;              ////TODO: dont change title screen here, change once save game exists and likewise restore if saves are deleted
+            //gMI_StartNewGame.Enabled = FALSE;
         }
         else
         {
@@ -98,52 +115,62 @@ void PPI_TitleScreen(void)
 
     if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
     {
-        if (gPlayer.Active)
+        if (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1)
         {
-            if (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1)
-            {
-                gMenu_TitleScreen.SelectedItem++;
-                PlayGameSound(&gSoundMenuNavigate);
-            }
+            gMenu_TitleScreen.SelectedItem++;
+            PlayGameSound(&gSoundMenuNavigate);
         }
-        else
-        {
-            if (gMenu_TitleScreen.SelectedItem == 0)    //jump over "resume" when so save game
-            {
-                gMenu_TitleScreen.SelectedItem += 2;
-                PlayGameSound(&gSoundMenuNavigate);
-            }
-            else if ((gMenu_TitleScreen.SelectedItem >= 2) && (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1))
-            {
-                gMenu_TitleScreen.SelectedItem++;
-                PlayGameSound(&gSoundMenuNavigate);
-            }
-        }
+        //if (gPlayer.Active)
+        //{
+        //    if (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1)
+        //    {
+        //        gMenu_TitleScreen.SelectedItem++;
+        //        PlayGameSound(&gSoundMenuNavigate);
+        //    }
+        //}
+        //else
+        //{
+        //    if (gMenu_TitleScreen.SelectedItem == 0)    //jump over "resume" when so save game
+        //    {
+        //        gMenu_TitleScreen.SelectedItem += 2;
+        //        PlayGameSound(&gSoundMenuNavigate);
+        //    }
+        //    else if ((gMenu_TitleScreen.SelectedItem >= 2) && (gMenu_TitleScreen.SelectedItem < gMenu_TitleScreen.ItemCount - 1))
+        //    {
+        //        gMenu_TitleScreen.SelectedItem++;
+        //        PlayGameSound(&gSoundMenuNavigate);
+        //    }
+        //}
     }
     if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
     {
-        if (gPlayer.Active)                                //allow navigation to "resume" when save file present
+        if (gMenu_TitleScreen.SelectedItem > 0)
         {
-            if (gMenu_TitleScreen.SelectedItem > 1)
-            {
-                gMenu_TitleScreen.SelectedItem --;
-                PlayGameSound(&gSoundMenuNavigate);
-            }
-            
+            gMenu_TitleScreen.SelectedItem --;
+            PlayGameSound(&gSoundMenuNavigate);
         }
-        else                                                //prevent navigation to "Resume" with no save file
-        {
-            if (gMenu_TitleScreen.SelectedItem == 2)    //jump over "resume" when so save game
-            {
-                gMenu_TitleScreen.SelectedItem -= 2;
-                PlayGameSound(&gSoundMenuNavigate);
-            }
-            else if (gMenu_TitleScreen.SelectedItem > 2)
-            {
-                gMenu_TitleScreen.SelectedItem--;
-                PlayGameSound(&gSoundMenuNavigate);
-            }
-        }
+        //if (gPlayer.Active)                                //allow navigation to "resume" when save file present
+        //{
+        //    if (gMenu_TitleScreen.SelectedItem > 1)
+        //    {
+        //        gMenu_TitleScreen.SelectedItem --;
+        //        PlayGameSound(&gSoundMenuNavigate);
+        //    }
+        //    
+        //}
+        //else                                                //prevent navigation to "Resume" with no save file
+        //{
+        //    if (gMenu_TitleScreen.SelectedItem == 2)    //jump over "resume" when so save game
+        //    {
+        //        gMenu_TitleScreen.SelectedItem -= 2;
+        //        PlayGameSound(&gSoundMenuNavigate);
+        //    }
+        //    else if (gMenu_TitleScreen.SelectedItem > 2)
+        //    {
+        //        gMenu_TitleScreen.SelectedItem--;
+        //        PlayGameSound(&gSoundMenuNavigate);
+        //    }
+        //}
     }
 
     if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
@@ -179,8 +206,13 @@ void MenuItem_TitleScreen_Exit(void)
 }
 
 
-void MenuItem_TitleScreen_LoadSave(void)
+void MenuItem_TitleScreen_LoadGame(void)
 {
     gPreviousGameState = gCurrentGameState;
     gCurrentGameState = GAMESTATE_LOADGAMESAVE;
+}
+void MenuItem_TitleScreen_SaveGame(void)
+{
+    gPreviousGameState = gCurrentGameState;
+    gCurrentGameState = GAMESTATE_SAVEGAMESAVE;
 }

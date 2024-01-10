@@ -1,5 +1,7 @@
 #include "Main.h"
 #include "LoadGameSave.h"
+#include "OverWorld.h"
+#include "MonsterData.h"
 
 MENUITEM gMI_LoadGameSave_Back = { "Back",(GAME_RES_WIDTH / 2) - (6 * 5 / 2) - 150, (GAME_RES_HEIGHT - 14), TRUE, MenuItem_LoadGameSave_Back };
 
@@ -88,6 +90,11 @@ void PPI_LoadGameSave(void)
             gMenu_LoadGameSave.SelectedItem = 3;
             PlayGameSound(&gSoundMenuNavigate);
         }
+        else if (gMenu_LoadGameSave.SelectedItem > 3)
+        {
+            gMenu_LoadGameSave.SelectedItem = 0;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
         else
         {
             gMenu_LoadGameSave.SelectedItem--;
@@ -130,7 +137,250 @@ void MenuItem_LoadGameSave_Back(void)
 
 void MenuItem_LoadGameSave_Slot1(void)
 {
+    // open the file 
+#pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
+    FILE* fp = fopen("saveslot1.json", "r");
+#pragma warning(pop)
+    if (fp == NULL) {
+        ASSERT(FALSE, "Unable to open save file saveslot1.json for reading");
+        //return 1;
+    }
 
+    // read the file contents into a string 
+    char buffer[4096];
+    int len = fread(buffer, 1, sizeof(buffer), fp);
+    fclose(fp);
+
+    // parse the JSON data 
+    cJSON* json = cJSON_Parse(buffer);
+    if (json == NULL) {
+        const char* error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL) {
+            ASSERT(FALSE, "Error: %s\n", error_ptr);
+        }
+        cJSON_Delete(json);
+        //return 1;
+    }
+
+    // access the JSON data 
+    for (uint8_t letter = 0; letter < MAX_NAME_LENGTH - 1; letter++)
+    {
+        char* nameletter = malloc(6);
+        snprintf(nameletter, 6, "Name%d", letter);
+        cJSON* playerletter = cJSON_GetObjectItemCaseSensitive(json, nameletter);       //searching for object "nameletter" like Name0 or Name1
+        if (cJSON_IsNumber(playerletter) && (playerletter->valueint != NULL))
+        {
+            gPlayer.Name[letter] = playerletter->valueint;
+        }
+    }
+
+    cJSON* PartyCount = cJSON_GetObjectItemCaseSensitive(json, "PartyCount");
+    if (cJSON_IsNumber(PartyCount) && (PartyCount->valueint != NULL))
+    {
+        gPlayerPartyCount = PartyCount->valueint;
+    }
+
+    for (uint8_t monster = 0; monster < gPlayerPartyCount; monster++)
+    {
+        //struct Monster* LoadingMonster = { 0 };
+        //ZeroMonsterData(LoadingMonster);
+        //ZeroDriveMonsterData(&LoadingMonster->DriveMonster);
+        struct DriveMonster LoadingDMonster = { 0 };
+        ZeroDriveMonsterData(&LoadingDMonster);
+        char* monsterinfo = malloc(16);
+        cJSON* loadedinfo;
+
+        snprintf(monsterinfo, 16, "Nickname%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsString(loadedinfo) && (loadedinfo->valuestring != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_NICKNAME, loadedinfo->valuestring);
+        }
+        snprintf(monsterinfo, 16, "MonsterIndex%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_INDEX, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "Experience%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_EXPERIENCE, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "Friendship%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_FRIENDSHIP, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "OriginalOwner%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsString(loadedinfo) && (loadedinfo->valuestring != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_PLAYER_NAME, loadedinfo->valuestring);
+        }
+        snprintf(monsterinfo, 16, "PlayerSeed%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_PLAYER_SEED, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MonsterSeed%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MONSTER_SEED, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MetLevel%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LEVEL, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MetLocation%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            switch (loadedinfo->valueint)   ////BUGFIX: probably will break because I havent incorperated GAMEAREA.index into MonsterData.c
+            {
+                case 0:
+                    SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gHome01Area.Name);
+                    break;
+                case 1:
+                    SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gOverworldArea.Name);
+                    break;
+                case 2:
+                    SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gDungeon01Area.Name);
+                    break;
+            }
+        }
+        snprintf(monsterinfo, 16, "HpGenes%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_HP_GENETICS, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "AtkGenes%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_ATTACK_GENETICS, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "DefGenes%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_DEFENSE_GENETICS, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "SpeGenes%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_SPEED_GENETICS, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "PsiGenes%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_PSI_GENETICS, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "ResGenes%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_RESOLVE_GENETICS, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "HpTrain%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_HP_TRAINING, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "AtkTrain%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_ATTACK_TRAINING, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "DefTrain%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_DEFENSE_TRAINING, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "SpeTrain%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_SPEED_TRAINING, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "PsiTrain%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_PSI_TRAINING, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "ResTrain%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_RESOLVE_TRAINING, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "SigMove%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_SIGNATURE_MOVE, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "AbilityNum%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_ABILITY_NUMBER, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MoveFirst%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MOVE_1, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MoveSecond%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MOVE_2, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MoveThird%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MOVE_3, &loadedinfo->valueint);
+        }
+        snprintf(monsterinfo, 16, "MoveFourth%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MOVE_4, &loadedinfo->valueint);
+        }
+
+        gPlayerParty[monster].DriveMonster = LoadingDMonster;
+        uint8_t Level = GetLevelFromDriveMonsterExp(&gPlayerParty[monster].DriveMonster);
+        SetMonsterData(&gPlayerParty[monster], MONSTER_DATA_LEVEL, &Level);
+        CalculateMonsterStats(&gPlayerParty[monster]);
+
+        snprintf(monsterinfo, 16, "CurrentHealth%d", monster);
+        loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        {
+            gPlayerParty[monster].Health = loadedinfo->valueint;
+        }
+    }
+
+    // delete the JSON object 
+    cJSON_Delete(json);
+    //return 0;
+    PlayGameSound(&gSoundMenuChoose);
 }
 
 

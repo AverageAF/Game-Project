@@ -21,6 +21,7 @@
 #include "miniz.h"
 #include "BattleScreen.h"
 #include "LoadGameSave.h"
+#include "SaveGameSave.h"
 #include "SimpleConstants.h"
 #include "Inventory.h"
 #include "InventoryItems.h"
@@ -533,6 +534,11 @@ void ProcessPlayerInput(void)
             PPI_LoadGameSave();
             break;
         }
+        case GAMESTATE_SAVEGAMESAVE:
+        {
+            PPI_SaveGameSave();
+            break;
+        }
         case GAMESTATE_MONSTERSTATS:
         {
             PPI_MonsterStatsScreen();
@@ -834,6 +840,11 @@ void RenderFrameGraphics(void)
         case GAMESTATE_LOADGAMESAVE:
         {
             DrawLoadGameSave();
+            break;
+        }
+        case GAMESTATE_SAVEGAMESAVE:
+        {
+            DrawSaveGameSave();
             break;
         }
         case GAMESTATE_MONSTERSTATS:
@@ -2360,21 +2371,23 @@ void InitializeGlobals(void)
     gEncounterTiles[0] = TILE_TALLGRASS_01;
     gEncounterTiles[1] = TILE_STONEBRICKS_FLOOR_01;
 
+
+    gHome01Area = (GAMEAREA){ .Name = "Home",
+                                 .Area = (RECT){.left = 3856, .top = 256, .right = 4240, .bottom = 496 },
+                                 .Music = &gMusicOverWorld01,
+                                 .Index = 0 };
+
     gOverworldArea = (GAMEAREA){ .Name = "Overworld",
                                  .Area = (RECT){.left = 0, .top = 0, .right = 3840, .bottom = 2400 },
-                                 .Music = &gMusicOverWorld01 };      
+                                 .Music = &gMusicOverWorld01, 
+                                 .Index = 1 };      
 
 
 
     gDungeon01Area = (GAMEAREA){ .Name = "Dungeon 01",
                                  .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
-                                 .Music = &gMusicDungeon01 };   
-
-
-
-    gHome01Area     = (GAMEAREA){ .Name = "Home",
-                                 .Area = (RECT){.left = 3856, .top = 256, .right = 4240, .bottom = 496 },
-                                 .Music = &gMusicOverWorld01 };
+                                 .Music = &gMusicDungeon01,
+                                 .Index = 2 };   
 
     gCurrentArea = gHome01Area;
 

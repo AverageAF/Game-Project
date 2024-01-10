@@ -94,18 +94,8 @@ void PPI_ExitYesNoScreen(void)
 
     if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
     {
-        if (gMenu_ExitYesNoScreen.SelectedItem == 1)
-        {
-            gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->Action();
-            PlayGameSound(&gSoundMenuChoose);
-
-        }
-        else
-        {
-            gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->Action();
-            PlayGameSound(&gSoundMenuChoose);
-
-        }
+        gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->Action();
+        PlayGameSound(&gSoundMenuChoose);
     }
 }
 

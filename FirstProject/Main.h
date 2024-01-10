@@ -29,6 +29,8 @@
 
 #pragma warning(push, 3)
 
+#include "cJSON.h"
+
 #include <Windows.h>
 
 #include <xaudio2.h>                // Audio library
@@ -171,6 +173,7 @@ typedef enum GAMESTATE
 	GAMESTATE_EXITYESNO,
 	GAMESTATE_CHARACTERNAME,
 	GAMESTATE_LOADGAMESAVE,
+	GAMESTATE_SAVEGAMESAVE,
 	GAMESTATE_DELETESAVEYESNO,
 	GAMESTATE_INVENTORYSCREEN,
 	GAMESTATE_MONSTERSTATS,
@@ -323,6 +326,8 @@ typedef struct GAMESOUND
 
 typedef struct GAMEAREA
 {
+	uint16_t Index;
+
 	char* Name;
 
 	RECT Area;
