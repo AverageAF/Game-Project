@@ -7,12 +7,14 @@
 
 #include "InventoryItems.h"
 #include "Inventory.h"
+#include "OverWorld.h"
 
 ///////// capture monster variables
 
 BOOL gCaptureMonsterSuccess = FALSE;
 BOOL gCaptureCalculationFinished = FALSE;
 uint8_t gCaptureNumDotsWait = 1;
+uint8_t gCaptureHpHelp = 0;
 
 ///////// item variables
 
@@ -177,9 +179,23 @@ void DrawBattleScreen(void)
 
         if (Opponent == NULL)
         {
+            DWORD Random;
+            uint8_t MonsterIndex;
+
+        ReRandomizeIndex:
+
+            rand_s((unsigned int*)&Random);
+            Random %= NUM_MONSTER_ENCOUNTER_CHANCE_SLOTS;
+            MonsterIndex = gCurrentEncounterArea.MonsterIndexChanceSlots[(uint8_t)Random];
+
+            if (MonsterIndex == MONSTER_NULL)
+            {
+                goto ReRandomizeIndex;
+            }
+
             BattleTextLineCount = 0;
-            //CopyMonsterToOpponentParty(0, GenerateScriptedMonsterForWildEncounter(3, 5, 0));
-            CopyMonsterToOpponentParty(0, GenerateRandMonsterForWildEncounter(6, 4, 0));
+            CopyMonsterToOpponentParty(0, GenerateScriptedMonsterForWildEncounter(MonsterIndex, gCurrentEncounterArea.MaxLevel, gCurrentEncounterArea.MinLevel, 0));
+            //CopyMonsterToOpponentParty(0, GenerateRandMonsterForWildEncounter(6, 4, 0));
             sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s encountered a %s!", gPlayer.Name, &gMonsterNames[gOpponentParty[0].DriveMonster.Index]);
             BattleTextLineCount++;
             sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s Sent out %s!", gPlayer.Name, &gPlayerParty[0].DriveMonster.nickname);
@@ -609,11 +625,11 @@ void DrawBattleScreen(void)
                 {
                     CatchDifficulty = 0;
                 }
-                else if (gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate > gCaptureDeviceHelp)
+                else if (gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate > gCaptureDeviceHelp + gCaptureHpHelp + 16)
                 {
-                    CatchDifficulty = gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate - gCaptureDeviceHelp;
+                    CatchDifficulty = gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate - gCaptureDeviceHelp - gCaptureHpHelp;
                 }
-                else if (gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate <= gCaptureDeviceHelp)
+                else if (gBaseStats[gOpponentParty[0].DriveMonster.Index].catchrate <= gCaptureDeviceHelp + gCaptureHpHelp + 16)
                 {
                     CatchDifficulty = 16;
                 }
@@ -1192,6 +1208,27 @@ void DrawBattleScreen(void)
     DrawMonsterHpBar(65 + 1, 111 - 8, HpPercent, ExpPercent, gPlayerParty[gCurrentPartyMember].Level, gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, TRUE);
 
     HpPercent = 100 - ((gOpponentParty[gCurrentOpponentPartyMember].Health * 100) / (gOpponentParty[gCurrentOpponentPartyMember].MaxHealth));
+
+    if (HpPercent > 75)
+    {
+        gCaptureHpHelp = 0;
+    }
+    else if (HpPercent > 50 && HpPercent <= 75)
+    {
+        gCaptureHpHelp = 10;
+    }
+    else if (HpPercent > 25 && HpPercent <= 50)
+    {
+        gCaptureHpHelp = 25;
+    }
+    else if (HpPercent > 0 && HpPercent <= 25)
+    {
+        gCaptureHpHelp = 45;
+    }
+    else
+    {
+        gCaptureHpHelp = 0;
+    }
 
     DrawMonsterHpBar(255 - 46, 79 - 8, HpPercent, 0, gOpponentParty[gCurrentOpponentPartyMember].Level, gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, FALSE);
 
@@ -1926,7 +1963,7 @@ void MenuItem_BattleScreen_ItemsButton(void)
 /////// switching monsters screen
 void MenuItem_SwitchScreen_PartySelected(void)
 {
-    if (gPreviousBattleState == BATTLESTATE_RUN_FIGHT)
+    if (gPreviousBattleState == BATTLESTATE_RUN_FIGHT || gPreviousBattleState == BATTLESTATE_KO_WAIT)
     {
         if (gCurrentPartyMember == gMenu_SwitchScreen.SelectedItem || gPlayerParty[gMenu_SwitchScreen.SelectedItem].Health == gMenu_SwitchScreen.SelectedItem)
         {

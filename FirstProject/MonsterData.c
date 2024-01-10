@@ -106,7 +106,7 @@ void CreateMonster(struct Monster* monster, uint8_t Index, uint8_t Level, uint8_
 //TODO: FINISH
 void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed)
 {
-    uint8_t MonsterName[MAX_MONSTER_NAME_LENGTH + 1];
+    uint8_t MonsterName[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
     uint32_t MonsterSeed;
     char* MetLocation;
     uint32_t Value;
@@ -1126,13 +1126,19 @@ uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterS
 }
 
 ////TEMPORARY WILL BE BASED ON MAP LATER
-struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t level, uint16_t item)
+struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t maxLevel, uint8_t minLevel, uint16_t item)
 {
     uint8_t heldItem[2];
     struct Monster monster;
     //uint16_t targetIndex;
 
-    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    DWORD Random;
+    uint8_t randLevel;
+    rand_s((unsigned int*)&Random);
+    randLevel = (uint8_t*)Random;
+    randLevel = ((randLevel % (maxLevel - minLevel + 1)) + minLevel);
+
+    CreateMonster(&monster, index, randLevel, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);

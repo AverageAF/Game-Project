@@ -42,6 +42,23 @@ GAMEAREA gDungeon01Area;
 
 GAMEAREA gHome01Area;
 
+#define NUM_ENCOUNTER_AREAS 5
+
+ENCOUNTERAREA gDungeon01EncounterArea;
+
+ENCOUNTERAREA gOverworld01EncounterArea;
+
+ENCOUNTERAREA gOverworld02EncounterArea;
+
+ENCOUNTERAREA gOverworld03EncounterArea;
+
+ENCOUNTERAREA gNullEncounterArea;
+
+ENCOUNTERAREA gCurrentEncounterArea;
+
+ENCOUNTERAREA gEncounterAreas[NUM_ENCOUNTER_AREAS];
+
+
 void DrawOverworldScreen(void);
 
 void PPI_Overworld(void);

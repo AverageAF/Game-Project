@@ -2350,7 +2350,7 @@ void InitializeGlobals(void)
     gEncounterTiles[0] = TILE_TALLGRASS_01;
     gEncounterTiles[1] = TILE_STONEBRICKS_FLOOR_01;
 
-    gOverworldArea = (GAMEAREA){ .Name = "Overworld01",
+    gOverworldArea = (GAMEAREA){ .Name = "Overworld",
                                  .Area = (RECT){.left = 0, .top = 0, .right = 3840, .bottom = 2400 },
                                  .Music = &gMusicOverWorld01 };      
 
@@ -2367,6 +2367,39 @@ void InitializeGlobals(void)
                                  .Music = &gMusicOverWorld01 };
 
     gCurrentArea = gHome01Area;
+
+    gNullEncounterArea = (ENCOUNTERAREA){ 0 };
+
+    gOverworld01EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld01Enc",
+                                                .Area = (RECT){.left = 16, .top = 176, .right = 80, .bottom = 192 },
+                                                .MaxLevel = 6,
+                                                .MinLevel = 4,
+                                                .MonsterIndexChanceSlots = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+
+    gOverworld02EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld02Enc",
+                                                .Area = (RECT){.left = 384, .top = 80, .right = 528, .bottom = 448 },
+                                                .MaxLevel = 8,
+                                                .MinLevel = 6,
+                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0 } };
+
+    gOverworld03EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld03Enc",
+                                                .Area = (RECT){.left = 112, .top = 464, .right = 480, .bottom = 608 },
+                                                .MaxLevel = 10,
+                                                .MinLevel = 8,
+                                                .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0 } };
+
+    gDungeon01EncounterArea = (ENCOUNTERAREA){ .Name = "Dungeon01Enc",
+                                                .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
+                                                .MaxLevel = 15,
+                                                .MinLevel = 12,
+                                                .MonsterIndexChanceSlots = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0 } };
+
+    gEncounterAreas[0] = gNullEncounterArea;
+    gEncounterAreas[1] = gOverworld01EncounterArea;
+    gEncounterAreas[2] = gOverworld02EncounterArea;
+    gEncounterAreas[3] = gOverworld03EncounterArea;
+    gEncounterAreas[4] = gDungeon01EncounterArea;
+
 
     gGameIsRunning = TRUE;
 

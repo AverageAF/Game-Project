@@ -670,9 +670,9 @@ void PPI_Overworld(void)
                                 }
                             }
                         }
-                        for (uint8_t Counter = 0; Counter < _countof(gEncounterTiles); Counter++)
+                        for (uint8_t EncounterTile = 0; EncounterTile < _countof(gEncounterTiles); EncounterTile++)
                         {
-                            if ((gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16)] == gEncounterTiles[Counter]) && (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD))
+                            if ((gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16)] == gEncounterTiles[EncounterTile]) && (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD))
                             {
                                 DWORD Random = 0;
 
@@ -682,8 +682,16 @@ void PPI_Overworld(void)
 
                                 if (Random > (1000 - gPlayer.RandomEncounterPercent))
                                 {
-                                    gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
-                                    RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+
+                                    for (uint8_t EncounterArea = 0; EncounterArea < NUM_ENCOUNTER_AREAS; EncounterArea++)       //TODO: lots of if nested if statements maybe work on that
+                                    {
+                                        if ((gPlayer.WorldPos.x >= gEncounterAreas[EncounterArea].Area.left) && (gPlayer.WorldPos.x <= gEncounterAreas[EncounterArea].Area.right) && (gPlayer.WorldPos.y >= gEncounterAreas[EncounterArea].Area.top) && (gPlayer.WorldPos.y <= gEncounterAreas[EncounterArea].Area.bottom))
+                                        {
+                                            gCurrentEncounterArea = gEncounterAreas[EncounterArea];
+                                            gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
+                                            RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                                        }
+                                    }
                                 }
                             }
                         }

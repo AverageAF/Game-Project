@@ -330,6 +330,22 @@ typedef struct GAMEAREA
 
 } GAMEAREA;
 
+#define NUM_MONSTER_ENCOUNTER_CHANCE_SLOTS 16
+
+typedef struct ENCOUNTERAREA
+{
+	char* Name;
+
+	RECT Area;
+
+	uint8_t MinLevel;
+
+	uint8_t MaxLevel;
+
+	uint8_t MonsterIndexChanceSlots[NUM_MONSTER_ENCOUNTER_CHANCE_SLOTS];
+
+} ENCOUNTERAREA;
+
 typedef union PIXEL32 
 {
 	struct Colors {
