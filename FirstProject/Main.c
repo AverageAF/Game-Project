@@ -84,7 +84,7 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
     HANDLE ProcessHandle = GetCurrentProcess();
     HMODULE NtDllModuleHandle = NULL;
 
-    gPassableTiles[0] = TILE_GRASS_01;
+    InitializeGlobals();
 
     //this crit section is used to sync access to log file with LogMessageA when used by multiple threads
 #pragma warning(suppress: 6031)
@@ -227,8 +227,6 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         MessageBoxA(NULL, "Failed to Initialize Player Sprite!", "Error!", MB_ICONERROR | MB_OK);
         goto Exit;
     }
-
-    gGameIsRunning = TRUE;
 
     while (gGameIsRunning == TRUE) //basic message loop
     {
@@ -632,188 +630,16 @@ Exit:
 
 DWORD InitializePlayer(void)
 {
-    DWORD Error = ERROR_SUCCESS;
-
-    gPlayer.ScreenPos.x = 192;
-    gPlayer.ScreenPos.y = 32;
-    gPlayer.WorldPos.x = 192;
-    gPlayer.WorldPos.y = 32;
+    gPlayer.ScreenPos.x = 192;      //368 positions for top right corner            //192
+    gPlayer.ScreenPos.y = 32;       //0                                             //32
+    gPlayer.WorldPos.x = 192;       //3824                                          //192
+    gPlayer.WorldPos.y = 32;        //0                                             //32
+    gCamera.x = 0;      //3456                                                      //0
+    gCamera.y = 0;      //0                                                         //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
 
-
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingDown0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingDown0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingDown0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingDown0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingDown0!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingDown1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingDown1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingDown1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingDown1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingDown1!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingDown2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingDown2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingDown2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingDown2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingDown2!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingLeft0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_LEFT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingLeft0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingLeft0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_LEFT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingLeft0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingLeft0!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingLeft1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_LEFT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingLeft1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingLeft1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_LEFT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingLeft1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingLeft1!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingLeft2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_LEFT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingLeft2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingLeft2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_LEFT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingLeft2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingLeft2!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingRight0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingRight0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingRight0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingRight0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingRight0!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingRight1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_RIGHT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingRight1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingRight1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingRight1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingRight1!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingRight2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_RIGHT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingRight2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingRight2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingRight2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingRight2!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingUp0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingUp0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingUp0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingUp0.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingUp0!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingUp1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingUp1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingUp1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingUp1.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingUp1!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingUp2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingUp2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromFile failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-    /*if ((Error = Load32BppBitmapFromMem(ASSET_FILE, "Suit0FacingUp2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading Suit0FacingUp2.bmpx failed!", __FUNCTION__);
-        MessageBoxA(NULL, "Load32BppBitmapFromMem failed on Suit0FacingUp2!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }*/
-
-
-Exit:
-    return(Error);
+    return(0);
 }
 
 void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXEL32* Color, _In_ uint16_t x, _In_ uint16_t y)
@@ -958,7 +784,7 @@ void RenderFrameGraphics(void)
 }
 
 
-void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ uint16_t y)
+void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ int16_t y)
 {
     int32_t StartingScreenPixel = ((GAME_RES_HEIGHT * GAME_RES_WIDTH) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
     int32_t StartingBitmapPixel = ((GameBitmap->BitmapInfo.bmiHeader.biWidth * GameBitmap->BitmapInfo.bmiHeader.biHeight) - GameBitmap->BitmapInfo.bmiHeader.biWidth);
@@ -970,6 +796,39 @@ void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ 
     {
         for (int16_t XPixel = 0; XPixel < GameBitmap->BitmapInfo.bmiHeader.biWidth; XPixel++)
         {
+            ////preventing pixels being drawn outside screen
+            if ((x < 1) || (x < GAME_RES_WIDTH - GameBitmap->BitmapInfo.bmiHeader.biWidth) || (y < 1) || (y < GAME_RES_HEIGHT - GameBitmap->BitmapInfo.bmiHeader.biHeight))         //////TODO: please optimize this way too many branches
+            {
+                if (x < 1)
+                {
+                    if (XPixel < -x)
+                    {
+                        break;
+                    }
+                }
+                else if (x > GAME_RES_WIDTH - GameBitmap->BitmapInfo.bmiHeader.biWidth)
+                {
+                    if (XPixel > GAME_RES_WIDTH - x - 1)
+                    {
+                        break;
+                    }
+                }
+
+                if ( y < 1)
+                {
+                    if (YPixel < -y)
+                    {
+                        break;
+                    }
+                }
+                else if (y > GAME_RES_HEIGHT - GameBitmap->BitmapInfo.bmiHeader.biHeight)
+                {
+                    if (YPixel > GAME_RES_HEIGHT - y - 1)
+                    {
+                        break;
+                    }
+                }
+            }
             MemoryOffset = StartingScreenPixel + XPixel - (GAME_RES_WIDTH * YPixel);
             
             BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
@@ -2830,4 +2689,42 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
 
 Exit:
     return(Error);
+}
+
+
+void InitializeGlobals(void)
+{
+    ASSERT(_countof(gPassableTiles) == 3, "The gPassableTiles array is the wrong size!");
+
+    ////make sure gPassableTiles array is large enough to fit all tiles (declared in main.h)
+    gPassableTiles[0] = TILE_GRASS_01;
+    gPassableTiles[1] = TILE_STONE_BRICKS_01;
+    gPassableTiles[2] = TILE_TELEPORT01;
+
+    gOverworldArea = (RECT){ .left = 0, .top = 0, .right = 3840, .bottom = 2400 };
+
+    gDungeon01Area = (RECT){ .left = 3856, .top = 0, .right = 4240, .bottom = 240 };
+
+    gCurrentArea = gOverworldArea;
+
+    gGameIsRunning = TRUE;
+
+    ASSERT(_countof(gPortCoords) == 2, "The gTeleportCoords array is the wrong size!");
+
+    gTeleport001 = (PORTCOORDS){    .AreaDest   =       gDungeon01Area,
+                                    .CameraPos  =    (UPOINT) { .x = 3856, .y = 0 },//3856 0
+                                    .ScreenPos  =    (UPOINT) { .x = 144, .y = 96 },//144 96
+                                    .WorldDest  =    (UPOINT) { .x = 4000,.y = 96 },
+                                    .WorldPos   =    (UPOINT) { .x = 464, .y = 384 } };
+
+    gTeleport002 = (PORTCOORDS){    .AreaDest   =       gOverworldArea,
+                                    .CameraPos  =    (UPOINT) {.x = 208, .y = 240 },//208 240
+                                    .ScreenPos  =    (UPOINT) {.x = 256,  .y = 144 },//256 144
+                                    .WorldDest  =    (UPOINT) {.x = 464,  .y = 384 },
+                                    .WorldPos   =    (UPOINT) {.x = 4000, .y = 96 } };
+
+    gPortCoords[0] = gTeleport001;
+
+    gPortCoords[1] = gTeleport002;
+
 }

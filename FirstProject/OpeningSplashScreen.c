@@ -105,12 +105,14 @@ void PPI_OpeningSplashScreen(void)      //skip splash screen
     {
         if (WaitForSingleObject(gAssetLoadingThreadHandle, 0) == WAIT_OBJECT_0)
         {
-            gPreviousGameState = gCurrentGameState;
-            gCurrentGameState = GAMESTATE_TITLESCREEN;
-        }
-        else
-        {
-            //TODO:Draw "Loading..." text
+            DWORD ThreadExitCode = ERROR_SUCCESS;
+            GetExitCodeThread(gAssetLoadingThreadHandle, &ThreadExitCode);
+
+            if (ThreadExitCode != ERROR_SUCCESS)
+            {
+                gPreviousGameState = gCurrentGameState;
+                gCurrentGameState = GAMESTATE_TITLESCREEN;
+            }
         }
     }
 }

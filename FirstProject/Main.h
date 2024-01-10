@@ -225,6 +225,7 @@ typedef struct PLAYER
 	BOOL Active;
 	UPOINT ScreenPos;
 	UPOINT WorldPos;
+	BOOL HasMovedSincePort;
 	uint8_t MovementRemaining;
 	DIRECTION Direction;
 	uint8_t CurrentSuit;
@@ -277,7 +278,7 @@ typedef struct MENU
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
-uint8_t gPassableTiles[1];
+uint8_t gPassableTiles[3];
 
 REGISTRYPARAMS gRegistryParams;
 
@@ -328,7 +329,7 @@ DWORD Load32BppBitmapFromMem(_In_ void* Buffer, _Inout_ GAMEBITMAP* GameBitmap);
 
 DWORD InitializePlayer(void);
 
-void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ uint16_t y);
+void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ int16_t y);
 
 void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap);
 
@@ -378,4 +379,6 @@ DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESO
 
 
 DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
+
+void InitializeGlobals(void);
 

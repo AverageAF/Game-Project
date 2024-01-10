@@ -25,18 +25,42 @@ void DrawOverworldScreen(void)
 
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
 
-    //for (uint16_t Row = 0; Row < GAME_RES_HEIGHT / 16; Row++)         ////for debugging
-    //{
-    //    for (uint16_t Column = 0; Column < GAME_RES_WIDTH / 16; Column++)
-    //    { 
-    //        char Buffer[8] = { 0 };
+    if (gGamePerformanceData.DisplayDebugInfo)
+    {
+        char Buffer[4] = { 0 };
+        //debug tile centered on player
+        _itoa_s(gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][gPlayer.WorldPos.x / 16], Buffer, sizeof(Buffer), 10);
 
-    //        _itoa_s(gOverWorld01.TileMap.Map[Row][Column], Buffer, sizeof(Buffer), 10);
+        BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, gPlayer.ScreenPos.x + 5, gPlayer.ScreenPos.y + 4);
+        //tile above player
+        if (gPlayer.ScreenPos.y >= 16)
+        {
+            _itoa_s(gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) - 1][(gPlayer.WorldPos.x / 16)], Buffer, sizeof(Buffer), 10);
 
-    //        BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, Column * 16, Row * 16);
-    //    }
-    //}
+            BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, gPlayer.ScreenPos.x + 5, (gPlayer.ScreenPos.y - 16) + 4);
+        }
+        //to the right of player
+        if (gPlayer.ScreenPos.x <= GAME_RES_WIDTH - 16)
+        {
+            _itoa_s(gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) + 1], Buffer, sizeof(Buffer), 10);
 
+            BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, (gPlayer.ScreenPos.x + 16) + 5, (gPlayer.ScreenPos.y) + 4);
+        }
+        //to the left of player
+        if (gPlayer.ScreenPos.x >= 16)
+        {
+            _itoa_s(gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) - 1], Buffer, sizeof(Buffer), 10);
+
+            BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, (gPlayer.ScreenPos.x - 16) + 5, (gPlayer.ScreenPos.y) + 4);
+        }
+        //below the player
+        if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 16)
+        {
+            _itoa_s(gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][(gPlayer.WorldPos.x / 16)], Buffer, sizeof(Buffer), 10);
+
+            BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, (gPlayer.ScreenPos.x) + 5, (gPlayer.ScreenPos.y + 16) + 4);
+        }
+    }
     LocalFrameCounter++;
 
     LastFrameSeen = gGamePerformanceData.TotalFramesRendered;
@@ -56,6 +80,11 @@ void PPI_Overworld(void)
         PlayGameSound(&gSoundMenuChoose);
     }
 
+    //ASSERT(gCamera.x <= gCurrentArea.right - GAME_RES_WIDTH, "Camera went out of bounds!");
+
+    //ASSERT(gCamera.y <= gCurrentArea.bottom - GAME_RES_HEIGHT, "Camera went out of bounds!");
+
+
     if (!gPlayer.MovementRemaining)
     {
         //BOOL CanMoveToDesiredTile = FALSE;
@@ -66,6 +95,11 @@ void PPI_Overworld(void)
 
             for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
             {
+                if (((gPlayer.WorldPos.y / 16) + 1 > gOverWorld01.TileMap.Height - 1))      ////not perfect but prevents crashing when walking to bottom of world
+                {
+                    break;
+                }
+
                 if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
                 {
                     CanMoveToDesiredTile = TRUE;
@@ -179,9 +213,16 @@ void PPI_Overworld(void)
             {
                 gPlayer.ScreenPos.y++;
             }
-            else            ////todo: prevent camera from going beyond world background
+            else
             {
-                gCamera.y++;
+                if (gCamera.y < gCurrentArea.bottom - GAME_RES_HEIGHT)
+                {
+                    gCamera.y++;
+                }
+                else
+                {
+                    gPlayer.ScreenPos.y++;
+                }
             }
             gPlayer.WorldPos.y++;
         }
@@ -194,7 +235,7 @@ void PPI_Overworld(void)
             }
             else
             {
-                if (gCamera.x > 0)
+                if (gCamera.x > gCurrentArea.left)
                 {
                     gCamera.x--;
                 }
@@ -211,9 +252,16 @@ void PPI_Overworld(void)
             {
                 gPlayer.ScreenPos.x++;
             }
-            else                ////todo: prevent camera from going beyond world background
+            else        
             {
-                gCamera.x++;
+                if (gCamera.x < gCurrentArea.right - GAME_RES_WIDTH)
+                {
+                    gCamera.x++;
+                }
+                else
+                {
+                    gPlayer.ScreenPos.x++;
+                }
             }
             gPlayer.WorldPos.x++;
         }
@@ -225,7 +273,7 @@ void PPI_Overworld(void)
             }
             else
             {
-                if (gCamera.y > 0)
+                if (gCamera.y > gCurrentArea.top)
                 {
                     gCamera.y--;
                 }
@@ -239,8 +287,9 @@ void PPI_Overworld(void)
 
         switch (gPlayer.MovementRemaining)
         {
-            case 16:
+            case 15:
             {
+                gPlayer.HasMovedSincePort = TRUE;
                 gPlayer.SpriteIndex = 1;
                 break;
             }
@@ -262,6 +311,15 @@ void PPI_Overworld(void)
             case 0:
             {
                 gPlayer.SpriteIndex = 0;
+                // is the player on a portal
+                if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16)][(gPlayer.WorldPos.x / 16)] == TILE_TELEPORT01)
+                {
+                    if (gPlayer.HasMovedSincePort == TRUE)
+                    {
+                        TeleportHandler();
+                    }
+                }
+
                 break;
             }
             default:
@@ -272,3 +330,29 @@ void PPI_Overworld(void)
     }
 }                                                   
 
+
+void TeleportHandler(void)
+{
+    BOOL PortalFound = FALSE;
+
+    for (uint16_t Counter = 0; Counter < _countof(gPortCoords); Counter++)
+    {
+        if (gPlayer.WorldPos.x == gPortCoords[Counter].WorldPos.x && gPlayer.WorldPos.y == gPortCoords[Counter].WorldPos.y)
+        {
+            PortalFound = TRUE;
+            gPlayer.WorldPos.x = gPortCoords[Counter].WorldDest.x;
+            gPlayer.WorldPos.y = gPortCoords[Counter].WorldDest.y;
+            gPlayer.ScreenPos.x = gPortCoords[Counter].ScreenPos.x;
+            gPlayer.ScreenPos.y = gPortCoords[Counter].ScreenPos.y;
+            gCamera.x = gPortCoords[Counter].CameraPos.x;
+            gCamera.y = gPortCoords[Counter].CameraPos.y;
+            gCurrentArea = gPortCoords[Counter].AreaDest;
+            gPlayer.HasMovedSincePort = FALSE;
+            break;
+        }
+    }
+    if (PortalFound == FALSE)
+    {
+        ASSERT(FALSE, "Player is standing on a portal with no portal handler!")
+    }
+}
