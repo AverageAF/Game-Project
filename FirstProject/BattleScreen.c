@@ -12,6 +12,8 @@ void DrawBattleScreen(void)
 
     static int16_t BrightnessAdjustment = -255;
 
+    GAMEBITMAP* BattleScene = NULL;
+
     if ((gGamePerformanceData.TotalFramesRendered > (LastFrameSeen + 1)))
     {
         LocalFrameCounter = 0;
@@ -19,50 +21,48 @@ void DrawBattleScreen(void)
         gInputEnabled = FALSE;
     }
 
-    if (LocalFrameCounter == 0)
-    {
-        //StopMusic();
-        //PlayGameMusic(&MusicBattleInto01, FALSE, TRUE);
-        //PlayGameMusic(&MusicBattle01, TRUE, FALSE);       ////queue full loop behind intro
-    }
 
-    if (LocalFrameCounter == 5)
-    {
-        TextColor.Colors.Red = 64;
-        TextColor.Colors.Blue = 64;
-        TextColor.Colors.Green = 64;
-        BrightnessAdjustment = -128;
+    //////TODO: Add battle intro and battle music/////////////
+    //if (LocalFrameCounter == 0)
+    //{
+    //    StopMusic();
+    //    PlayGameMusic(&MusicBattleInto01, FALSE, TRUE);
+    //    PlayGameMusic(&MusicBattle01, TRUE, FALSE);       ////queue full loop behind intro
+    //}
 
-    }
-    if (LocalFrameCounter == 10)
-    {
-        TextColor.Colors.Red = 128;
-        TextColor.Colors.Blue = 128;
-        TextColor.Colors.Green = 128;
-        BrightnessAdjustment = -64;
-    }
-    if (LocalFrameCounter == 15)
-    {
-        TextColor.Colors.Red = 192;
-        TextColor.Colors.Blue = 192;
-        TextColor.Colors.Green = 192;
-        BrightnessAdjustment = -32;
-    }
-    if (LocalFrameCounter == 20)
-    {
-        TextColor.Colors.Red = 255;
-        TextColor.Colors.Blue = 255;
-        TextColor.Colors.Green = 255;
-        BrightnessAdjustment = 0;
-        gInputEnabled = TRUE;
-    }
-	//__stosd(gBackBuffer.Memory, 0xFF00FF00, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
-	DrawWindow(1, 1, 256, 128, (PIXEL32){ 0xFF000000}, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_VERT_CENTERED); 
+    DrawWindow(1, 1, 256, 128, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_VERT_CENTERED | WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED);
 
+    switch (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][gPlayer.WorldPos.x / 16])
+    {
+        case TILE_GRASS_01:
+        {
+            BattleScene = &gBattleScreen_Grass01;
+            break;
+        }
+        case TILE_STONE_BRICKS_01:
+        {
+            BattleScene = &gBattleScreen_StoneBricks01;
+            break;
+        }
+        default:
+        {
+            ASSERT(FALSE, "Player encountered a monster on an unknown tile!")
+        }
+    }
+
+    if (BattleScene != 0)
+    {
+        Blit32BppBitmapToBuffer(BattleScene, (65), (57), BrightnessAdjustment);
+    }
+    else
+    {
+        ASSERT(FALSE, "BattleScene is NULL!");
+    }
 
     LocalFrameCounter++;
 

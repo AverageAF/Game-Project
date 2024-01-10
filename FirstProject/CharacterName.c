@@ -117,7 +117,7 @@ MENUITEM gMI_CharacterName_z = { "z", 336, 144, TRUE, MenuItem_CharacterName_Add
 
 MENUITEM gMI_CharacterName_Back = { "Back", 36, 192, TRUE, MenuItem_CharacterName_Back };
 
-MENUITEM gMI_CharacterName_OK = { "OK", 336, 192, TRUE, MenuItem_CharacterName_Okay };
+MENUITEM gMI_CharacterName_OK = { "OK", 330, 192, TRUE, MenuItem_CharacterName_Okay };
 
 MENUITEM* gMI_CharacterNameItems[] = {
 	&gMI_CharacterName_A, &gMI_CharacterName_B, &gMI_CharacterName_C, &gMI_CharacterName_D, &gMI_CharacterName_E, &gMI_CharacterName_F,
@@ -131,7 +131,7 @@ MENUITEM* gMI_CharacterNameItems[] = {
 	&gMI_CharacterName_s, &gMI_CharacterName_t, &gMI_CharacterName_u, &gMI_CharacterName_v, &gMI_CharacterName_w, &gMI_CharacterName_x,
 	&gMI_CharacterName_y, &gMI_CharacterName_z, &gMI_CharacterName_OK, &gMI_CharacterName_Back };
 
-MENU gMenu_CharacterName = { "Name your Character!", 53, _countof(gMI_CharacterNameItems), gMI_CharacterNameItems };
+MENU gMenu_CharacterName = { "Name your character!", 53, _countof(gMI_CharacterNameItems), gMI_CharacterNameItems };
 
 
 void DrawCharacterNaming(void)
@@ -153,45 +153,22 @@ void DrawCharacterNaming(void)
         LocalFrameCounter = 0;
         gMenu_CharacterName.SelectedItem = 0;
         BrightnessAdjustment =  -255;
-        memset(&TextColor, 0, sizeof(PIXEL32));
+        memset(&TextColor, 0xFF, sizeof(PIXEL32));
         gInputEnabled = FALSE;
     }
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 
-    if (LocalFrameCounter <= 8)
-    {
-        TextColor.Colors.Red = 64;
-        TextColor.Colors.Blue = 64;
-        TextColor.Colors.Green = 64;
-        BrightnessAdjustment = -192;
 
-    }
-    if (LocalFrameCounter == 16)
-    {
-        TextColor.Colors.Red = 128;
-        TextColor.Colors.Blue = 128;
-        TextColor.Colors.Green = 128;
-        BrightnessAdjustment = -128;
-    }
-    if (LocalFrameCounter == 24)
-    {
-        TextColor.Colors.Red = 192;
-        TextColor.Colors.Blue = 192;
-        TextColor.Colors.Green = 192;
-        BrightnessAdjustment = -64;
-    }
-    if (LocalFrameCounter == 32)
-    {
-        TextColor.Colors.Red = 255;
-        TextColor.Colors.Blue = 255;
-        TextColor.Colors.Green = 255;
-        BrightnessAdjustment = 0;
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
-        gInputEnabled = TRUE;
-    }
+    BlitStringToBuffer(gMenu_CharacterName.Name, &g6x7Font, &TextColor, (GAME_RES_WIDTH / 2) - (strlen(gMenu_CharacterName.Name) * 3), 16);
 
-    BlitStringToBuffer(gMenu_CharacterName.Name, &g6x7Font, &TextColor, (GAME_RES_WIDTH / 2) - (strlen(gMenu_CharacterName.Name) * 6 / 2), 16);
+    DrawWindow(26, 108, 320, 47, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED);
+    DrawWindow(320, 188, 26, 15, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
+    DrawWindow(26, 188, 36, 15, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
+
+    DrawWindow(1, 58, (MAX_NAME_LENGTH * 3 + 128), 18, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
 
     if (LocalFrameCounter % 120 == 0)
     {
@@ -205,17 +182,17 @@ void DrawCharacterNaming(void)
         }
     }
 
-    Blit32BppBitmapToBuffer(&gPlayer.Sprite[SUIT_0][PlayerSprite], ((GAME_RES_WIDTH / 2) - (MAX_NAME_LENGTH * 6) / 2) - 24, 49, BrightnessAdjustment );
+    Blit32BppBitmapToBuffer(&gPlayer.Sprite[SUIT_0][PlayerSprite], ((GAME_RES_WIDTH / 2) - (MAX_NAME_LENGTH * 6) / 2) - 32, 49, BrightnessAdjustment );
 
     for (uint8_t Letter = 0; Letter < MAX_NAME_LENGTH; Letter++)
     {
         if (gPlayer.Name[Letter] == '\0')
         {
-            BlitStringToBuffer("_", &g6x7Font, &TextColor, (((GAME_RES_WIDTH / 2) - (MAX_NAME_LENGTH * 6) / 2) + (Letter * 6)), 64);
+            BlitStringToBuffer("_", &g6x7Font, &TextColor, (((GAME_RES_WIDTH / 2) - (MAX_NAME_LENGTH * 6) / 2) + (Letter * 6)) + 6, 64);
         }
         else
         {
-            BlitStringToBuffer(&gPlayer.Name[Letter], &g6x7Font, &TextColor, (((GAME_RES_WIDTH / 2) - (MAX_NAME_LENGTH * 6) / 2) + (Letter * 6)), 62);
+            BlitStringToBuffer(&gPlayer.Name[Letter], &g6x7Font, &TextColor, (((GAME_RES_WIDTH / 2) - (MAX_NAME_LENGTH * 6) / 2) + (Letter * 6)) + 6, 62);
         }
     }
 
@@ -246,15 +223,15 @@ void PPI_CharacterName(void)
         {
             gMenu_CharacterName.SelectedItem -= 26;
         }
-        else if (gMenu_CharacterName.SelectedItem < 25 && gMenu_CharacterName.SelectedItem > 0)
+        else if (gMenu_CharacterName.SelectedItem < 24 && gMenu_CharacterName.SelectedItem > 1)
         {
             gMenu_CharacterName.SelectedItem += 26;
         }
-        else if (gMenu_CharacterName.SelectedItem == 0)         //akward movement to the "back" and "ok" buttons
+        else if ((gMenu_CharacterName.SelectedItem == 0) || (gMenu_CharacterName.SelectedItem == 1))         //akward movement to the "back" and "ok" buttons
         {
             gMenu_CharacterName.SelectedItem = 53;
         }
-        else if (gMenu_CharacterName.SelectedItem == 25)
+        else if ((gMenu_CharacterName.SelectedItem == 25) || (gMenu_CharacterName.SelectedItem == 24))
         {
             gMenu_CharacterName.SelectedItem = 52;
         }
@@ -274,15 +251,15 @@ void PPI_CharacterName(void)
         {
             gMenu_CharacterName.SelectedItem += 26;
         }
-        else if (gMenu_CharacterName.SelectedItem > 27 && gMenu_CharacterName.SelectedItem < 51)
+        else if (gMenu_CharacterName.SelectedItem > 28 && gMenu_CharacterName.SelectedItem < 50)
         {
             gMenu_CharacterName.SelectedItem -= 26;
         }
-        else if (gMenu_CharacterName.SelectedItem == 26)            //akward movement to the "back" and "ok" buttons
+        else if ((gMenu_CharacterName.SelectedItem == 26) || (gMenu_CharacterName.SelectedItem == 27))            //akward movement to the "back" and "ok" buttons
         {
             gMenu_CharacterName.SelectedItem = 53;
         }
-        else if (gMenu_CharacterName.SelectedItem == 51)
+        else if ((gMenu_CharacterName.SelectedItem == 51) || (gMenu_CharacterName.SelectedItem == 50))
         {
             gMenu_CharacterName.SelectedItem = 52;
         }

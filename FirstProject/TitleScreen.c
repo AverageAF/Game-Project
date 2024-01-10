@@ -48,31 +48,8 @@ void DrawTitleScreen(void)
         gInputEnabled = FALSE;
     }
 
-    if (LocalFrameCounter <= 5)
-    {
-        TextColor.Colors.Red = 64;
-        TextColor.Colors.Blue = 64;
-        TextColor.Colors.Green = 64;
-    }
-    if (LocalFrameCounter == 10)
-    {
-        TextColor.Colors.Red = 128;
-        TextColor.Colors.Blue = 128;
-        TextColor.Colors.Green = 128;
-    }
-    if (LocalFrameCounter == 15)
-    {
-        TextColor.Colors.Red = 192;
-        TextColor.Colors.Blue = 192;
-        TextColor.Colors.Green = 192;
-    }
-    if (LocalFrameCounter == 20)
-    {
-        TextColor.Colors.Red = 255;
-        TextColor.Colors.Blue = 255;
-        TextColor.Colors.Green = 255;
-        gInputEnabled = TRUE;
-    }
+
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, NULL);
 
     //memset(gBackBuffer.Memory, 0, GAME_DRAWING_AREA_MEMORY_SIZE);
                             //    AARRGGBB

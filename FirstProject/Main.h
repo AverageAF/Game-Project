@@ -4,7 +4,7 @@
 #define _CRT_RAND_S 
 
 #ifdef _DEBUG
-	#define ASSERT(Expression, Message) if (!(Expression)) { *(int*)0 = 0; }
+	#define ASSERT(Expression, Message) if (!(Expression)) { __ud2(); }
 #else
 	#define ASSERT(Expression, Message) ((void),0);
 #endif
@@ -12,9 +12,6 @@
 #define GAME_NAME "A_Game"
 #define GAME_VERSION "0.9a"
 #define ASSET_FILE "C:\\Users\\Frankenstein\\source\\repos\\FirstProject\\x64\\Debug\\Assets.dat"		////a fullyqualified directory, TODO: change somehow to a relative directory
-#define LOG_FILE_NAME GAME_NAME ".log"
-#define GAME_CODE_MODULE "FirstProjectDLL.dll"
-#define GAME_CODE_MODULE_TMP "FirstProjectDLL.tmp"
 
 #define GAME_RES_WIDTH 384		//maybe 400
 #define GAME_RES_HEIGHT 240
@@ -59,9 +56,16 @@
 
 #define NUMBER_OF_SFX_SOURCE_VOICES 8
 
+#define FADE_DURATION_FRAMES 20
+#define COLOR_NES_WHITE (PIXEL32){ .Bytes = 0xFFFCFCFC }
+#define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF202020 }
+
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
+#define BATTLE_ENCOUNTER_GRACE_PERIOD 4				////grace period before triggering a battle
+
 #define MAX_NAME_LENGTH 8							//8 characters + 1 null
+#define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
 
 #define SUIT_0 0
 #define SUIT_1 1
@@ -101,6 +105,7 @@ typedef enum LOGLEVEL
 
 } LOGLEVEL;
 
+#define LOG_FILE_NAME GAME_NAME ".log"
 
 typedef enum GAMESTATE
 {
@@ -128,9 +133,12 @@ typedef enum RESOURCE_TYPE
 typedef enum WINDOW_FLAGS
 {
 	WINDOW_FLAG_BORDERED = 1,
-	WINDOW_FLAG_HORIZ_CENTERED = 2,
-	WINDOW_FLAG_VERT_CENTERED = 4,
-	WINDOW_FLAG_SHADOWED = 8,
+	WINDOW_FLAG_OPAQUE = 2,
+	WINDOW_FLAG_HORIZ_CENTERED = 4,
+	WINDOW_FLAG_VERT_CENTERED = 8,
+	WINDOW_FLAG_SHADOWED = 16,
+	WINDOW_FLAG_ROUNDED = 32,
+	WINDOW_FLAG_THICK = 64
 
 } WINDOW_FLAGS;
 
@@ -164,6 +172,10 @@ typedef struct GAMEINPUT
 
 } GAMEINPUT;
 
+typedef LONG(NTAPI* _NtQueryTimerResolution) (OUT PULONG MinimumResolution, OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
+
+_NtQueryTimerResolution NtQueryTimerResolution;
+
 typedef struct GAMEBITMAP
 {
 	BITMAPINFO BitmapInfo;
@@ -187,15 +199,6 @@ typedef struct GAMEAREA
 	GAMESOUND* Music;
 
 } GAMEAREA;
-
-//typedef struct PIXEL32
-//{
-//	uint8_t Blue;
-//	uint8_t Green;
-//	uint8_t Red;
-//	uint8_t Alpha;
-//
-//} PIXEL32;
 
 typedef union PIXEL32 
 {
@@ -268,6 +271,8 @@ typedef struct PLAYER
 	DIRECTION Direction;
 	uint8_t CurrentSuit;
 	uint8_t SpriteIndex;
+	uint64_t StepsTaken;
+	uint64_t StepsSinceLastEncounter;
 
 	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
 	uint16_t RandomEncounterPercent;
@@ -316,10 +321,6 @@ typedef struct MENU
 } MENU;
 
 
-HMODULE gGameCodeModule;
-
-FILETIME gGameCodeLastWriteTime;
-
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
@@ -328,8 +329,9 @@ uint8_t gPassableTiles[3];
 REGISTRYPARAMS gRegistryParams;
 
 GAMEBITMAP gBackBuffer;
-
 GAMEBITMAP g6x7Font;
+GAMEBITMAP gBattleScreen_Grass01;
+GAMEBITMAP gBattleScreen_StoneBricks01;
 GAMEMAP gOverWorld01;
 
 HWND gGameWindow;
@@ -365,23 +367,8 @@ GAMESOUND gSoundSplashScreen;
 GAMESOUND gMusicOverWorld01;
 GAMESOUND gMusicDungeon01;
 
-////imports from ntdll /////
-
-typedef LONG(NTAPI* _NtQueryTimerResolution) (OUT PULONG MinimumResolution, OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
-
-_NtQueryTimerResolution NtQueryTimerResolution;
-
-////imports gamecode from dll////
-
-typedef int(_cdecl* _RandomMonsterEncounter) (_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
-
-_RandomMonsterEncounter RandomMonsterEncounter;
-
-/////////////Function declarations//////////////////
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);
-
-BOOL LoadGameCode(_In_ char* ModuleFileName);
 
 DWORD CreateMainGameWindow(void);
 
@@ -389,7 +376,7 @@ BOOL GameIsAlreadyRunning(void);
 
 void ProcessPlayerInput(void);
 
-DWORD Load32BppBitmapFromFile(_In_ char* FileName, _Inout_ GAMEBITMAP* GameBitmap);
+//DWORD Load32BppBitmapFromFile(_In_ char* FileName, _Inout_ GAMEBITMAP* GameBitmap);
 
 DWORD Load32BppBitmapFromMem(_In_ void* Buffer, _Inout_ GAMEBITMAP* GameBitmap);
 
@@ -413,7 +400,7 @@ void DrawDebugInfo(void);
 
 HRESULT InitializeSoundEngine(void);
 
-DWORD LoadWaveFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
+//DWORD LoadWaveFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
 
 DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound);
 
@@ -429,11 +416,11 @@ BOOL MusicIsPlaying(void);
 DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource);
 
 
-DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
+//DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
 
 DWORD LoadTileMapFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ TILEMAP* TileMap);
 
-DWORD LoadOggFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
+//DWORD LoadOggFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
 
 DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESOUND* GameSound);
 
@@ -442,5 +429,10 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
 
 void InitializeGlobals(void);
 
-void DrawWindow(_In_ int16_t x, _In_ int16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_ PIXEL32 BackgroundColor, _In_ DWORD Flags);
+void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
+
+void DrawWindow( _In_opt_ uint16_t x, _In_opt_ uint16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_opt_ PIXEL32* BorderColor, _In_opt_ PIXEL32* BackgroundColor, _In_opt_ PIXEL32* ShadowColor, _In_ DWORD Flags);
+
+void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Inout_ PIXEL32* TextColor, _Inout_opt_ int16_t* BrightnessAdjustment);
+
 

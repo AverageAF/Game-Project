@@ -29,6 +29,8 @@ void DrawLoadGameSave(void)
 
     static uint64_t LastFrameSeen;
 
+    static int16_t BrightnessAdjustment = -255;
+
     if (gGamePerformanceData.TotalFramesRendered > LastFrameSeen + 1)
     {
         LocalFrameCounter = 0;
@@ -39,41 +41,10 @@ void DrawLoadGameSave(void)
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
     //memset(gBackBuffer.Memory, 0, GAME_DRAWING_AREA_MEMORY_SIZE);
 
-    if (LocalFrameCounter <= 4)
-    {
-        White.Colors.Red = 64;
-        White.Colors.Blue = 64;
-        White.Colors.Green = 64;
 
-        Red.Colors.Red = 64;
-    }
-    if (LocalFrameCounter == 8)
-    {
-        White.Colors.Red = 128;
-        White.Colors.Blue = 128;
-        White.Colors.Green = 128;
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &White, &BrightnessAdjustment);
 
-        Red.Colors.Red = 128;
-    }
-    if (LocalFrameCounter == 12)
-    {
-        White.Colors.Red = 192;
-        White.Colors.Blue = 192;
-        White.Colors.Green = 192;
-
-        Red.Colors.Red = 192;
-    }
-    if (LocalFrameCounter == 16)
-    {
-        White.Colors.Red = 255;
-        White.Colors.Blue = 255;
-        White.Colors.Green = 255;
-
-        Red.Colors.Red = 255;
-
-        gInputEnabled = TRUE;
-    }
-
+    ApplyFadeIn(LocalFrameCounter, (PIXEL32){ 0x00, 0x00, 0xFF, 0xFF }, &Red, &BrightnessAdjustment);
 
     BlitStringToBuffer(gMenu_LoadGameSave.Name, &g6x7Font, &Red, (GAME_RES_WIDTH / 2) - (strlen(gMenu_LoadGameSave.Name) * 6 / 2), 60);
 

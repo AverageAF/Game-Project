@@ -13,7 +13,7 @@ MENU gMenu_ExitYesNoScreen = { "Quit the game?", 0, _countof(gMI_ExitScreenItems
 
 void DrawExitYesNoScreen(void)
 {
-    static PIXEL32 White = { 0x00, 0x00, 0x00, 0x00 };
+    static PIXEL32 TextColor = { 0x00, 0x00, 0x00, 0x00 };
     static PIXEL32 Red = { 0x00, 0x00, 0x00, 0x00 };
     static PIXEL32 LimeGreen = { 0x00, 0x00, 0x00, 0x00 };
 
@@ -28,62 +28,20 @@ void DrawExitYesNoScreen(void)
     }
 
 
-    if (LocalFrameCounter <= 4)
-    {
-        White.Colors.Red = 64;
-        White.Colors.Blue = 64;
-        White.Colors.Green = 64;
 
-        Red.Colors.Red = 64;
-
-        LimeGreen.Colors.Blue = 6;
-        LimeGreen.Colors.Green = 64;
-    }
-    if (LocalFrameCounter == 8)
-    {
-        White.Colors.Red = 128;
-        White.Colors.Blue = 128;
-        White.Colors.Green = 128;
-
-        Red.Colors.Red = 128;
-
-        LimeGreen.Colors.Blue = 12;
-        LimeGreen.Colors.Green = 128;
-    }
-    if (LocalFrameCounter == 12)
-    {
-        White.Colors.Red = 192;
-        White.Colors.Blue = 192;
-        White.Colors.Green = 192;
-
-        Red.Colors.Red = 192;
-
-        LimeGreen.Colors.Blue = 18;
-        LimeGreen.Colors.Green = 192;
-    }
-    if (LocalFrameCounter == 16)
-    {
-        White.Colors.Red = 255;
-        White.Colors.Blue = 255;
-        White.Colors.Green = 255;
-
-        Red.Colors.Red = 255;
-
-        LimeGreen.Colors.Blue = 24;
-        LimeGreen.Colors.Green = 255;
-
-        gInputEnabled = TRUE;
-    }
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, NULL);
+    ApplyFadeIn(LocalFrameCounter, (PIXEL32) { 0x00, 0x00, 0xFF, 0xFF }, &Red, NULL);
+    ApplyFadeIn(LocalFrameCounter, (PIXEL32) { 0x00, 0xFF, 0x00, 0xFF }, &LimeGreen, NULL);
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 
-    BlitStringToBuffer(gMenu_ExitYesNoScreen.Name, &g6x7Font, &White, (GAME_RES_WIDTH / 2) - (strlen(gMenu_ExitYesNoScreen.Name) * 6 / 2), 60);                                                             //Quit the game?
+    BlitStringToBuffer(gMenu_ExitYesNoScreen.Name, &g6x7Font, &TextColor, (GAME_RES_WIDTH / 2) - (strlen(gMenu_ExitYesNoScreen.Name) * 6 / 2), 60);                                                             //Quit the game?
 
     BlitStringToBuffer(gMenu_ExitYesNoScreen.Items[0]->Name, &g6x7Font, &LimeGreen, (GAME_RES_WIDTH / 2) - (strlen(gMenu_ExitYesNoScreen.Items[0]->Name) * 6 / 2), gMenu_ExitYesNoScreen.Items[0]->y);          //yes
 
     BlitStringToBuffer(gMenu_ExitYesNoScreen.Items[1]->Name, &g6x7Font, &Red, (GAME_RES_WIDTH / 2) - (strlen(gMenu_ExitYesNoScreen.Items[1]->Name) * 6 / 2), gMenu_ExitYesNoScreen.Items[1]->y);                //no
 
-    BlitStringToBuffer("»", &g6x7Font, &White, gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->x - 6, gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->y);                     //Cursor
+    BlitStringToBuffer("»", &g6x7Font, &TextColor, gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->x - 6, gMenu_ExitYesNoScreen.Items[gMenu_ExitYesNoScreen.SelectedItem]->y);                     //Cursor
 
 
     LocalFrameCounter++;

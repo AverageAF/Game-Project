@@ -1,2 +1,0 @@
-copy C:\Users\Frankenstein\source\repos\FirstProject\FirstProjectDLL\x86\Debug\FirstProjectDLL.dll C:\Users\Frankenstein\source\repos\FirstProject\x86\Debug\FirstProjectDLL.tmp /Y
-copy C:\Users\Frankenstein\source\repos\FirstProject\FirstProjectDLL\x86\Debug\FirstProjectDLL.dll C:\Users\Frankenstein\source\repos\FirstProject\FirstProject\FirstProjectDLL.tmp /Y

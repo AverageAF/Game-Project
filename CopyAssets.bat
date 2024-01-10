@@ -1,6 +1,3 @@
-del %FIRSTPROJDIR%\x64\Debug\Assets\ /Q
-xcopy %FIRSTPROJDIR%\Assets %FIRSTPROJDIR%\x64\Debug\Assets /i /y
-
 
 del Assets.dat
 del CopyAssets.log
@@ -21,6 +18,8 @@ MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp1.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp2.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Maps\Overworld01.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Maps\BattleBackgroundGrass01.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Maps\BattleBackgroundStoneBricks01.bmpx >> CopyAssets.log
 
 REM -music-
 

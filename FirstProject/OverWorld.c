@@ -22,36 +22,7 @@ void DrawOverworldScreen(void)
         gInputEnabled = FALSE;
     }
 
-    if (LocalFrameCounter == 5)
-    {
-        TextColor.Colors.Red = 64;
-        TextColor.Colors.Blue = 64;
-        TextColor.Colors.Green = 64;
-        BrightnessAdjustment = -128;
-
-    }
-    if (LocalFrameCounter == 10)
-    {
-        TextColor.Colors.Red = 128;
-        TextColor.Colors.Blue = 128;
-        TextColor.Colors.Green = 128;
-        BrightnessAdjustment = -64;
-    }
-    if (LocalFrameCounter == 15)
-    {
-        TextColor.Colors.Red = 192;
-        TextColor.Colors.Blue = 192;
-        TextColor.Colors.Green = 192;
-        BrightnessAdjustment = -32;
-    }
-    if (LocalFrameCounter == 20)
-    {
-        TextColor.Colors.Red = 255;
-        TextColor.Colors.Blue = 255;
-        TextColor.Colors.Green = 255;
-        BrightnessAdjustment = 0;
-        gInputEnabled = TRUE;
-    }
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
     if (LocalFrameCounter == 30)
     {
@@ -67,7 +38,7 @@ void DrawOverworldScreen(void)
 
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
                                             //BB    GG    RR    AA
-    //DrawWindow(32, 32, 32, 32, (PIXEL32) { 0x00, 0x00, 0x00, 0xFF }, WINDOW_FLAG_BORDERED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_VERT_CENTERED);
+    //DrawWindow(32, 8, 96, 160, (PIXEL32) { 0x00, 0x00, 0x00, 0xFF }, WINDOW_FLAG_BORDERED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_SHADOWED);
 
     if (gGamePerformanceData.DisplayDebugInfo)
     {
@@ -155,6 +126,7 @@ void PPI_Overworld(void)
                 {
                     gPlayer.Direction = DOWN;
                     gPlayer.MovementRemaining = 16;
+                    gPlayer.StepsTaken++;
                 }
                 else
                 {
@@ -182,6 +154,7 @@ void PPI_Overworld(void)
                 {
                     gPlayer.Direction = LEFT;
                     gPlayer.MovementRemaining = 16;
+                    gPlayer.StepsTaken++;
                 }
                 else
                 {
@@ -208,6 +181,7 @@ void PPI_Overworld(void)
                 {
                     gPlayer.Direction = RIGHT;
                     gPlayer.MovementRemaining = 16;
+                    gPlayer.StepsTaken++;
                 }
                 else
                 {
@@ -236,6 +210,7 @@ void PPI_Overworld(void)
                     {
                         gPlayer.Direction = UP;
                         gPlayer.MovementRemaining = 16;
+                        gPlayer.StepsTaken++;
                     }
                 }
                 else
@@ -363,15 +338,19 @@ void PPI_Overworld(void)
                 }
                 else
                 {
-                    DWORD Random = 0;
-
-                    rand_s((unsigned int*)&Random);
-
-                    Random = Random % 1000;
-
-                    if (Random > (1000 - gPlayer.RandomEncounterPercent))
+                    if (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD)
                     {
-                        RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                        DWORD Random = 0;
+
+                        rand_s((unsigned int*)&Random);
+
+                        Random = Random % 1000;
+
+                        if (Random > (1000 - gPlayer.RandomEncounterPercent))
+                        {
+                            gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
+                            RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                        }
                     }
                 }
 
@@ -415,3 +394,8 @@ void TeleportHandler(void)
 }
 
 
+void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState)
+{
+    PreviousGameState = CurrentGameState;
+    *CurrentGameState = GAMESTATE_BATTLE;
+}

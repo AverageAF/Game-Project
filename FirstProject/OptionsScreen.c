@@ -40,48 +40,10 @@ void DrawOptionsScreen(void)
         gInputEnabled = FALSE;
     }
 
-    if (LocalFrameCounter <= 5)
-    {
-        TextColor.Colors.Red = 64;
-        TextColor.Colors.Blue = 64;
-        TextColor.Colors.Green = 64;
 
-        Gray.Colors.Red = 20;
-        Gray.Colors.Blue = 20;
-        Gray.Colors.Green = 20;
-    }
-    if (LocalFrameCounter == 10)
-    {
-        TextColor.Colors.Red = 128;
-        TextColor.Colors.Blue = 128;
-        TextColor.Colors.Green = 128;
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, NULL);
 
-        Gray.Colors.Red = 40;
-        Gray.Colors.Blue = 40;
-        Gray.Colors.Green = 40;
-    }
-    if (LocalFrameCounter == 15)
-    {
-        TextColor.Colors.Red = 192;
-        TextColor.Colors.Blue = 192;
-        TextColor.Colors.Green = 192;
-
-        Gray.Colors.Red = 60;
-        Gray.Colors.Blue = 60;
-        Gray.Colors.Green = 60;
-    }
-    if (LocalFrameCounter == 20)
-    {
-        TextColor.Colors.Red = 255;
-        TextColor.Colors.Blue = 255;
-        TextColor.Colors.Green = 255;
-
-        Gray.Colors.Red = 80;
-        Gray.Colors.Blue = 80;
-        Gray.Colors.Green = 80;
-
-        gInputEnabled = TRUE;
-    }
+    ApplyFadeIn(LocalFrameCounter, COLOR_NES_GRAY, & Gray, NULL);
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 

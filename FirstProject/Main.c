@@ -50,6 +50,15 @@ int gFontCharacterPixelOffset[] = {
         93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,97,93,93,93,93,93,93,93,93,93,93,93,93,93
 };
 
+//lookup table for fade in/out animations. Maps frame count to brightness adjustment
+
+const int16_t gFadeBrightnessGradient[] = {
+    -255, -255, -255, -255, -255, //-255, -255, -255, -255, -255,
+    -128, -128, -128, -128, -128, //-128, -128, -128, -128,-128,
+    -64, -64, -64, -64, -64, //-64, -64, -64, -64, -64,
+    -32, -32, -32, -32, -32 //-32, -32, -32, -32, -32
+};
+
 BOOL gWindowHasFocus;
 
 IXAudio2* gXAudio;
@@ -84,7 +93,9 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
     int64_t PreviousKernelCPUTime = 0;
 
     HANDLE ProcessHandle = GetCurrentProcess();
+    HMODULE NtDllModuleHandle = NULL;
 
+    InitializeGlobals();
 
     //this crit section is used to sync access to log file with LogMessageA when used by multiple threads
 #pragma warning(suppress: 6031)
@@ -94,19 +105,11 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
     if (LoadRegistryParameters() != ERROR_SUCCESS)
     {
-        LogMessageA(LL_ERROR, "[%s] Load Registry Parameters Failed!", __FUNCTION__);
         goto Exit;
     }
 
     LogMessageA(LL_INFO, "[%s] Starting %s version %s", __FUNCTION__, GAME_NAME, GAME_VERSION);
-    
-    if (LoadGameCode(GAME_CODE_MODULE) != ERROR_SUCCESS)
-    {
-        MessageBoxA(NULL, "Couldn't load "GAME_CODE_MODULE" Make sure it is in the game directory!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-        goto Exit;
-    }
 
-    InitializeGlobals();
 
     if (GameIsAlreadyRunning() == TRUE)
     {
@@ -115,7 +118,14 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         goto Exit;
     }
 
-    if ((NtQueryTimerResolution = (_NtQueryTimerResolution)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryTimerResolution")) == NULL)
+    if ((NtDllModuleHandle = GetModuleHandleA("ntdll.dll")) == NULL)
+    {
+        LogMessageA(LL_ERROR, "[%s] Couldn't load ntdll.dll! Error 0x%08lx!", __FUNCTION__, GetLastError());
+        MessageBoxA(NULL, "Couldn't load ntdll.dll!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        goto Exit;
+    }
+
+    if ((NtQueryTimerResolution = (_NtQueryTimerResolution)GetProcAddress(NtDllModuleHandle, "NtQueryTimerResolution")) == NULL)
     {
         LogMessageA(LL_ERROR, "[%s] Couldn't find function NtQueryTimerResolution in ntdll.dll! GetProcAddress Failed! Error 0x%08lx!", __FUNCTION__, GetLastError());
         MessageBoxA(NULL, "Couldn't find function NtQueryTimerResolution in ntdll.dll!", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -229,9 +239,7 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         goto Exit;
     }
 
-    /////////////////main game loop////////////////////////////////
-
-    while (gGameIsRunning == TRUE)
+    while (gGameIsRunning == TRUE) //basic message loop
     {
         QueryPerformanceCounter((LARGE_INTEGER*)&FrameStart);
 
@@ -270,7 +278,7 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
             gGamePerformanceData.CPUPercent = (double)(CurrentKernelCPUTime - PreviousKernelCPUTime) + (CurrentUserCPUTime - PreviousUserCPUTime);
             gGamePerformanceData.CPUPercent /= (gGamePerformanceData.CurrentSystemTime - gGamePerformanceData.PreviousSystemTime);
-            gGamePerformanceData.CPUPercent /= gGamePerformanceData.SystemInfo.dwNumberOfProcessors; 
+            gGamePerformanceData.CPUPercent /= gGamePerformanceData.SystemInfo.dwNumberOfProcessors; //kept returning 0 processors and then dividing by 0
             gGamePerformanceData.CPUPercent *= 100;
 
             GetProcessHandleCount(ProcessHandle, &gGamePerformanceData.HandleCount);
@@ -278,19 +286,6 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
             gGamePerformanceData.RawFPSAverage = 1.0f / ((ElapsedMicrosecondsPerFrameAccumulatorRaw / CALCULATE_AVG_FPS_EVERY_X_FRAMES) * 0.000001f);
             gGamePerformanceData.CookedFPSAverage = 1.0f / ((ElapsedMicrosecondsPerFrameAccumulatorCooked / CALCULATE_AVG_FPS_EVERY_X_FRAMES) * 0.000001f);
-
-#ifdef _DEBUG
-        
-            if (GetFileAttributesA(GAME_CODE_MODULE_TMP) != INVALID_FILE_ATTRIBUTES)
-            {
-                if (LoadGameCode(GAME_CODE_MODULE) != ERROR_SUCCESS)
-                {
-                    LogMessageA(LL_WARNING, "[%s] Couldn't load "GAME_CODE_MODULE" Make sure it is in the game directory!", __FUNCTION__);
-                    goto Exit;
-                }
-            }
-#endif
-
             ElapsedMicrosecondsPerFrameAccumulatorRaw = 0; 
             ElapsedMicrosecondsPerFrameAccumulatorCooked = 0;
 
@@ -337,61 +332,6 @@ LRESULT CALLBACK MainWindowProc(
         {   Result = DefWindowProcA(WindowHandle, Message, WParam, LParam);
         }
     }
-    return (Result);
-}
-
-BOOL LoadGameCode(_In_ char* ModuleFileName)
-{
-    DWORD Result = ERROR_SUCCESS;
-    HANDLE GameCodeFileHandle = INVALID_HANDLE_VALUE;
-
-    if (gGameCodeModule)
-    {
-        FreeLibrary(gGameCodeModule);
-
-        gGameCodeModule = NULL;
-    }
-
-    if (GetFileAttributesA(GAME_CODE_MODULE_TMP) != INVALID_FILE_ATTRIBUTES)
-    {
-        if (DeleteFileA(GAME_CODE_MODULE) == 0)
-        {
-            LogMessageA(LL_WARNING, "[%s] Failed to delete file "GAME_CODE_MODULE"! Error 0x%08lx!", __FUNCTION__, GetLastError());
-        }
-        else
-        {
-            LogMessageA(LL_INFO, "[%s] Successfully deleted file "GAME_CODE_MODULE".", __FUNCTION__);
-        }
-
-        if (MoveFileA(GAME_CODE_MODULE_TMP, GAME_CODE_MODULE) == 0)
-        {
-            LogMessageA(LL_WARNING, "[%s] Failed to replace file "GAME_CODE_MODULE" with "GAME_CODE_MODULE_TMP" ! Error 0x%08lx!", __FUNCTION__, GetLastError());
-        }
-        else
-        {
-            LogMessageA(LL_INFO, "[%s] Successfully replaced file "GAME_CODE_MODULE" with "GAME_CODE_MODULE_TMP".", __FUNCTION__);
-        }
-    }
-
-    gGameCodeModule = LoadLibraryA(ModuleFileName);
-
-    if (gGameCodeModule == NULL)
-    {
-        goto Exit;
-    }
-
-    if ((RandomMonsterEncounter = (_RandomMonsterEncounter)GetProcAddress(gGameCodeModule, "RandomMonsterEncounter")) == NULL)
-    {
-        Result = GetLastError();
-        goto Exit;
-    }
-
-Exit:
-    if (Result != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Function failed! Error 0x%08lx!", __FUNCTION__, Result);
-    }
-
     return (Result);
 }
 
@@ -530,11 +470,6 @@ BOOL GameIsAlreadyRunning(void)
 
 void ProcessPlayerInput(void)
 {
-    if ((gInputEnabled == FALSE) || (gWindowHasFocus == FALSE))
-    {
-        return;
-    }
-
 
     gGameInput.EscapeKeyPressed = GetAsyncKeyState(VK_ESCAPE);
     gGameInput.DebugKeyPressed = GetAsyncKeyState(VK_F1);                                   //F1 default debug key
@@ -550,6 +485,12 @@ void ProcessPlayerInput(void)
         gGamePerformanceData.DisplayDebugInfo = !gGamePerformanceData.DisplayDebugInfo;
     }
     
+
+    if ((gInputEnabled == FALSE) || (gWindowHasFocus == FALSE))
+    {
+        goto InputDisabled;
+    }
+
     switch (gCurrentGameState)
     {
         case GAMESTATE_OPENINGSPLASH:
@@ -603,6 +544,8 @@ void ProcessPlayerInput(void)
         }
     }
 
+InputDisabled:
+
     gGameInput.EscapeKeyAlreadyPressed = gGameInput.EscapeKeyPressed;
     gGameInput.DebugKeyAlreadyPressed = gGameInput.DebugKeyPressed;
     gGameInput.ALeftKeyAlreadyPressed = gGameInput.ALeftKeyPressed;
@@ -614,117 +557,24 @@ void ProcessPlayerInput(void)
 
 }
 
-DWORD Load32BppBitmapFromFile(_In_ char* FileName, _Inout_ GAMEBITMAP* GameBitmap)
-{
-    DWORD Error = ERROR_SUCCESS;
-
-    HANDLE FileHandle = INVALID_HANDLE_VALUE;
-
-    WORD BitmapHeader = 0;
-
-    DWORD PixelDataOffset = 0;
-
-    DWORD NumberOfBytesRead = 2;
-
-    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, &BitmapHeader, 2, &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (BitmapHeader != 0x4d42)     //0x4d42 is "BM" backwards
-    {
-        Error = ERROR_FILE_INVALID;
-        LogMessageA(LL_ERROR, "[%s] First two bytes are not 'BM'! Error 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (SetFilePointer(FileHandle, 0xA, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, &PixelDataOffset, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (SetFilePointer(FileHandle, 0xE, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, &GameBitmap->BitmapInfo.bmiHeader, sizeof(BITMAPINFOHEADER), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if ((GameBitmap->Memory = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, GameBitmap->BitmapInfo.bmiHeader.biSizeImage)) == NULL)
-    {
-        Error = ERROR_NOT_ENOUGH_MEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAlloc couldn't allocate memory! Error 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (SetFilePointer(FileHandle, PixelDataOffset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, GameBitmap->Memory, GameBitmap->BitmapInfo.bmiHeader.biSizeImage, &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-Exit:
-    if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
-    {
-        CloseHandle(FileHandle);
-    }
-
-    if (Error == ERROR_SUCCESS)
-    {
-        LogMessageA(LL_INFO, "[%s] Loading Successful: %s", __FUNCTION__, FileName);
-    }
-    else
-    {
-        LogMessageA(LL_ERROR, "[%s] Loading failed: %s! Error 0x%08lx!", __FUNCTION__, FileName, Error);
-    }
-
-    return(Error);
-}
 
 DWORD InitializePlayer(void)
 {
-    gPlayer.ScreenPos.x = 192;      //368 positions for top right corner            //192
+    gPlayer.ScreenPos.x = 192;      //368 positions for top right corner            //192 for top left corner
     gPlayer.ScreenPos.y = 32;       //0                                             //32
     gPlayer.WorldPos.x = 192;       //3824                                          //192
     gPlayer.WorldPos.y = 32;        //0                                             //32
-    gCamera.x = 0;      //3456                                                      //0
-    gCamera.y = 0;      //0                                                         //0
+    gCamera.x = 0;                  //3456                                          //0
+    gCamera.y = 0;                  //0                                             //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
-    gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
+    gPlayer.RandomEncounterPercent = 250;   //50 == a 5% chance
+
+    gPlayer.Name[0] = 'M';
+    gPlayer.Name[1] = 'a';
+    gPlayer.Name[2] = 'p';
+    gPlayer.Name[3] = 'l';
+    gPlayer.Name[4] = 'e';
 
     return(0);
 }
@@ -1454,30 +1304,26 @@ void DrawDebugInfo(void)
         PIXEL32 LimeGreen = { 0x00, 0xFF, 0x17, 0xFF };
         PIXEL32 SkyBlue = { 0xFF, 0x0F, 0x00, 0xFF };
 
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Raw: %.01f ", gGamePerformanceData.RawFPSAverage);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 0);
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Cook : %.01f ", gGamePerformanceData.CookedFPSAverage);
+        /*sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Raw: %.01f ", gGamePerformanceData.RawFPSAverage);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 0);*/
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS: %.01f (%.01f)", gGamePerformanceData.CookedFPSAverage, gGamePerformanceData.RawFPSAverage);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 0);
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Timer: %.02f/%.02f/%.02f", (gGamePerformanceData.CurrentTimerResolution / 10000.0f), (gGamePerformanceData.MinimumTimerResolution / 10000.0f), (gGamePerformanceData.MaximumTimerResolution / 10000.0f));
         BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 8);
-        /*sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Min Timer: %.03f", gGamePerformanceData.MinimumTimerResolution / 10000.0f);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 16);
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Max Timer:  %.03f", gGamePerformanceData.MaximumTimerResolution / 10000.0f);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 24);*/
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "C.Time Res:%.02f", gGamePerformanceData.CurrentTimerResolution / 10000.0f);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 16);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Memory: %llu KB ", (gGamePerformanceData.MemInfo.PrivateUsage / 1024));
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 24);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 16);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "CPU: %.03f%%", gGamePerformanceData.CPUPercent);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 32);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &LimeGreen, 0, 24);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Handles  :  %lu ", gGamePerformanceData.HandleCount);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 40);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 32);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Frames   :%llu", gGamePerformanceData.TotalFramesRendered);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 48);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 40);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Screen: (%d,%d) ", gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 56);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 48);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "World: (%d,%d) ", gPlayer.WorldPos.x, gPlayer.WorldPos.y);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 64);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 56);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Camera: (%d,%d) ", gCamera.x, gCamera.y);
-        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 72);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 64);
 }
 
 
@@ -1573,166 +1419,6 @@ Exit:
     return(Result);
 }
 
-DWORD LoadWaveFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound)
-{
-    DWORD Error = ERROR_SUCCESS;
-
-    DWORD NumberOfBytesRead = 0;
-
-    DWORD RIFF = 0;
-
-    uint16_t DataChunkOffset = 0;
-
-    DWORD DataChunkSearcher = 0;
-
-    BOOL DataChunkFound = FALSE;
-
-    DWORD DataChunkSize = 0;
-
-    HANDLE FileHandle = INVALID_HANDLE_VALUE;
-
-    void* AudioData = NULL;
-
-
-
-    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, &RIFF, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile1 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (RIFF != 0x46464952)     //0x46464952 is "RIFF" backwards
-    {
-        Error = ERROR_FILE_INVALID;
-        LogMessageA(LL_ERROR, "[%s] First four bytes of this file are not 'RIFF'! Error 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (SetFilePointer(FileHandle, 20, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer1 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, &GameSound->WaveFormat, sizeof(WAVEFORMATEX), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile2 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (GameSound->WaveFormat.nBlockAlign != (GameSound->WaveFormat.nChannels * GameSound->WaveFormat.wBitsPerSample / 8) || 
-        GameSound->WaveFormat.wFormatTag != WAVE_FORMAT_PCM ||
-        GameSound->WaveFormat.wBitsPerSample != 16)
-    {
-        Error = ERROR_DATATYPE_MISMATCH;
-        LogMessageA(LL_ERROR, "[%s] This wav file did not meet format requirements! Only PCM format, 44.1kHz, 16bits per sample wav files are supported. Error 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    while (DataChunkFound == FALSE)
-    {
-        if (SetFilePointer(FileHandle, DataChunkOffset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-        {
-            Error = GetLastError();
-            LogMessageA(LL_ERROR, "[%s] SetFilePointer2 failed with 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-
-        if (ReadFile(FileHandle, &DataChunkSearcher, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-        {
-            Error = GetLastError();
-            LogMessageA(LL_ERROR, "[%s] ReadFile3 failed with 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-
-        if (DataChunkSearcher == 0x61746164)    ////'data' backwords
-        {
-            DataChunkFound = TRUE;
-            break;
-        }
-        else
-        {
-            DataChunkOffset += 4;
-        }
-
-        if (DataChunkOffset > 256)
-        {
-            Error = ERROR_DATATYPE_MISMATCH;
-            LogMessageA(LL_ERROR, "[%s] Datachunk not found in first 256 bytes of this file! Error 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-    }
-
-    if (SetFilePointer(FileHandle, DataChunkOffset + 4, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer3 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-    
-    if (ReadFile(FileHandle, &DataChunkSize, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile4 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    AudioData = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, DataChunkSize);
-
-    if (AudioData == NULL)
-    {
-        Error = ERROR_NOT_ENOUGH_MEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAlloc failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    GameSound->Buffer.Flags = XAUDIO2_END_OF_STREAM;
-    GameSound->Buffer.AudioBytes = DataChunkSize;
-
-    if (SetFilePointer(FileHandle, DataChunkOffset + 8, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer4 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, AudioData, DataChunkSize, &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile5 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    GameSound->Buffer.pAudioData = AudioData;
-
-Exit:
-
-    if (Error == ERROR_SUCCESS)
-    {
-        LogMessageA(LL_INFO, "[%s] Loading successful: %s", __FUNCTION__, FileName);
-    }
-    else
-    {
-        LogMessageA(LL_ERROR, "[%s] Failed to load %s! Error 0x%08lx!", __FUNCTION__, FileName, Error);
-    }
-
-    if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
-    {
-        CloseHandle(FileHandle);
-    }
-
-    return(Error);
-}
 
 
 DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound)
@@ -1752,27 +1438,7 @@ DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound)
 
     DWORD DataChunkSize = 0;
 
-    //HANDLE FileHandle = INVALID_HANDLE_VALUE;
-
-    //void* AudioData = NULL;
-
-
-
-    //if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-    //{
-    //    Error = GetLastError();
-    //    LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
-    //    goto Exit;
-    //}
-
     memcpy(&RIFF, Buffer, sizeof(DWORD));
-
-    //if (ReadFile(FileHandle, &RIFF, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-    //{
-    //    Error = GetLastError();
-    //    LogMessageA(LL_ERROR, "[%s] ReadFile1 failed with 0x%08lx!", __FUNCTION__, Error);
-    //    goto Exit;
-    //}
 
     if (RIFF != 0x46464952)     //0x46464952 is "RIFF" backwards
     {
@@ -1781,21 +1447,7 @@ DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound)
         goto Exit;
     }
 
-    //if (SetFilePointer(FileHandle, 20, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    //{
-    //    Error = GetLastError();
-    //    LogMessageA(LL_ERROR, "[%s] SetFilePointer1 failed with 0x%08lx!", __FUNCTION__, Error);
-    //    goto Exit;
-    //}
-
     memcpy(&GameSound->WaveFormat, (BYTE*)Buffer + 20, sizeof(WAVEFORMATEX));
-
-    /*if (ReadFile(FileHandle, &GameSound->WaveFormat, sizeof(WAVEFORMATEX), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile2 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }*/
 
     if (GameSound->WaveFormat.nBlockAlign != (GameSound->WaveFormat.nChannels * GameSound->WaveFormat.wBitsPerSample / 8) ||
         GameSound->WaveFormat.wFormatTag != WAVE_FORMAT_PCM ||
@@ -1808,19 +1460,6 @@ DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound)
 
     while (DataChunkFound == FALSE)
     {
-        /*if (SetFilePointer(FileHandle, DataChunkOffset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-        {
-            Error = GetLastError();
-            LogMessageA(LL_ERROR, "[%s] SetFilePointer2 failed with 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-
-        if (ReadFile(FileHandle, &DataChunkSearcher, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-        {
-            Error = GetLastError();
-            LogMessageA(LL_ERROR, "[%s] ReadFile3 failed with 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }*/
 
         memcpy(&DataChunkSearcher, (BYTE*)Buffer + DataChunkOffset, sizeof(DWORD));
 
@@ -1842,48 +1481,10 @@ DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound)
         }
     }
 
-    //if (SetFilePointer(FileHandle, DataChunkOffset + 4, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    //{
-    //    Error = GetLastError();
-    //    LogMessageA(LL_ERROR, "[%s] SetFilePointer3 failed with 0x%08lx!", __FUNCTION__, Error);
-    //    goto Exit;
-    //}
-
     memcpy(&DataChunkSize, (BYTE*)Buffer + DataChunkOffset + 4, sizeof(DWORD));
-
-    /*if (ReadFile(FileHandle, &DataChunkSize, sizeof(DWORD), &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile4 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }*/
-
-    /*AudioData = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, DataChunkSize);
-
-    if (AudioData == NULL)
-    {
-        Error = ERROR_NOT_ENOUGH_MEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAlloc failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }*/
 
     GameSound->Buffer.Flags = XAUDIO2_END_OF_STREAM;
     GameSound->Buffer.AudioBytes = DataChunkSize;
-
-    /*if (SetFilePointer(FileHandle, DataChunkOffset + 8, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] SetFilePointer4 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, AudioData, DataChunkSize, &NumberOfBytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile5 failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }*/
-
     GameSound->Buffer.pAudioData = (BYTE*)Buffer + DataChunkOffset + 8;
 
 Exit:
@@ -1897,11 +1498,6 @@ Exit:
         LogMessageA(LL_ERROR, "[%s] Failed to load wav from memory! Error 0x%08lx!", __FUNCTION__, Error);
     }
 
-    /*if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
-    {
-        CloseHandle(FileHandle);
-    }*/
-
     return(Error);
 }
 
@@ -1909,14 +1505,6 @@ Exit:
 DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESOUND* GameSound)
 {
     DWORD Error = ERROR_SUCCESS;
-
-    //HANDLE FileHandle = INVALID_HANDLE_VALUE;
-
-    //LARGE_INTEGER FileSize = { 0 };
-
-    //DWORD BytesRead = 0;
-
-    //void* FileBuffer = NULL;
 
     int SamplesDecoded = 0;
 
@@ -1926,39 +1514,7 @@ DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESO
 
     short* DecodedAudio = NULL;
 
-
-   /* if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }*/
-
-    /*if (GetFileSizeEx(FileHandle, &FileSize) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }*/
-
     LogMessageA(LL_INFO, "[%s] Size of Ogg file: %lu.", __FUNCTION__, BufferSize);
-
-
-    /*FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
-
-    if (FileBuffer == NULL)
-    {
-        Error = ERROR_OUTOFMEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }*/
-
-    /*if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }*/
 
     SamplesDecoded = stb_vorbis_decode_memory(Buffer, (int)BufferSize, &Channels, &SampleRate, &DecodedAudio);
 
@@ -2351,380 +1907,380 @@ void PlayGameMusic(_In_ GAMESOUND* GameSound, _In_ BOOL Looping, _In_ BOOL Immed
     gMusicPaused = FALSE;
 }
 
-
-DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap)
-{
-    DWORD Error = ERROR_SUCCESS;
-
-    HANDLE FileHandle = INVALID_HANDLE_VALUE;
-
-    LARGE_INTEGER FileSize = { 0 };
-
-    DWORD BytesRead = 0;
-
-    void* FileBuffer = NULL;
-
-    char* Cursor = NULL;
-
-    char TempBuffer[16] = { 0 };
-
-    uint16_t Rows = 0;
-
-    uint16_t Columns = 0;
-
-
-    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
-
-    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
-
-    if (FileBuffer == NULL)
-    {
-        Error = ERROR_OUTOFMEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    ///////////width
-
-    if ((Cursor = strstr(FileBuffer, "width=")) == NULL)
-    {
-        Error = ERROR_INVALID_DATA;
-        LogMessageA(LL_ERROR, "[%s] Could not locate Width attribute! 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    BytesRead = 0;      //reset
-
-    for (;;)
-    {
-        if (BytesRead > 8)
-        {
-            ////should have found opening quotation mark ("width"=)
-            Error = ERROR_INVALID_DATA;
-            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before Width attribute! 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-        if (*Cursor == '\"')
-        {
-            Cursor++;
-            break;
-        }
-        else
-        {
-            Cursor++;
-        }
-        BytesRead++;
-    }
-
-    BytesRead = 0;      //reset
-
-    for (uint8_t Counter = 0; Counter < 6; Counter++)
-    {
-        if (*Cursor == '\"')
-        {
-            Cursor++;
-            break;
-        }
-        else
-        {
-            TempBuffer[Counter] = *Cursor;
-            Cursor++;
-        }
-    }
-
-    TileMap->Width = atoi(TempBuffer);
-    if (TileMap->Width == 0)
-    {
-        Error = ERROR_INVALID_DATA;
-        LogMessageA(LL_ERROR, "[%s] Width attribute was 0! 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-            
-    memset(TempBuffer, 0, sizeof(TempBuffer));
-
-    //////////height
-
-    if ((Cursor = strstr(FileBuffer, "height=")) == NULL)
-    {
-        Error = ERROR_INVALID_DATA;
-        LogMessageA(LL_ERROR, "[%s] Could not locate height attribute! 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    BytesRead = 0;      //reset
-
-    for (;;)
-    {
-        if (BytesRead > 8)
-        {
-            ////should have found opening quotation mark ("height"=)
-            Error = ERROR_INVALID_DATA;
-            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before height attribute! 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-        if (*Cursor == '\"')
-        {
-            Cursor++;
-            break;
-        }
-        else
-        {
-            Cursor++;
-        }
-        BytesRead++;
-    }
-
-    BytesRead = 0;      //reset
-
-    for (uint8_t Counter = 0; Counter < 6; Counter++)
-    {
-        if (*Cursor == '\"')
-        {
-            Cursor++;
-            break;
-        }
-        else
-        {
-            TempBuffer[Counter] = *Cursor;
-            Cursor++;
-        }
-    }
-
-    TileMap->Height = atoi(TempBuffer);
-    if (TileMap->Height == 0)
-    {
-        Error = ERROR_INVALID_DATA;
-        LogMessageA(LL_ERROR, "[%s] Height attribute was 0! 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    LogMessageA(LL_INFO, "[%s] %s TileMap dimensions: %dx%d.", __FUNCTION__, FileName, TileMap->Width, TileMap->Height);
-
-    Rows = TileMap->Height;
-
-    Columns = TileMap->Width;
-
-    TileMap->Map = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Rows * sizeof(void*));
-    if (TileMap->Map == NULL)
-    {
-        Error = ERROR_OUTOFMEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAlloc of height Failed with error 0x%08lx!", __FUNCTION__, Error);
-        goto Exit;
-    }
-
-    for (uint16_t Counter = 0; Counter < TileMap->Height; Counter++)
-    {
-        TileMap->Map[Counter] = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Columns * sizeof(void*));
-
-        if (TileMap->Map[Counter] == NULL)
-        {
-            Error = ERROR_OUTOFMEMORY;
-            LogMessageA(LL_ERROR, "[%s] HeapAlloc of width Failed with error 0x%08lx!", __FUNCTION__, Error);
-            goto Exit;
-        }
-    }
-
-    BytesRead = 0;
-
-    memset(TempBuffer, 0, sizeof(TempBuffer));
-
-    if ((Cursor = strstr(FileBuffer, ",")) == NULL)
-    {
-        Error = ERROR_INVALID_DATA;
-
-        LogMessageA(LL_ERROR, "[%s] Could not find a comma character in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
-
-        goto Exit;
-    }
-
-    while (*Cursor != '\r' && *Cursor != '\n')
-    {
-        if (BytesRead > 4)
-        {
-            Error = ERROR_INVALID_DATA;
-
-            LogMessageA(LL_ERROR, "[%s] Could not find a new line character at the beginning of the tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
-
-            goto Exit;
-        }
-
-        BytesRead++;
-
-        Cursor--;
-    }
-
-    Cursor++;
-
-    for (uint16_t Row = 0; Row < Rows; Row++)
-    {
-        for (uint16_t Column = 0; Column < Columns; Column++)
-        {
-            memset(TempBuffer, 0, sizeof(TempBuffer));
-
-            Skip:
-
-            if (*Cursor == '\r' || *Cursor == '\n')
-            {
-                Cursor++;
-
-                goto Skip;
-            }
-
-            for (uint8_t Counter = 0; Counter <= 10; Counter++)
-            {
-                if (*Cursor == ',' || *Cursor == '<')
-                {
-                    if (((TileMap->Map[Row][Column]) = (uint8_t)atoi(TempBuffer)) == 0)
-                    {
-                        Error = ERROR_INVALID_DATA;
-
-                        LogMessageA(LL_ERROR, "[%s] atoi failed while converting tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
-
-                        goto Exit;
-                    }
-
-                    Cursor++;
-
-                    break;
-                }
-
-                TempBuffer[Counter] = *Cursor;
-
-                Cursor++;
-            }
-        }
-    }
-
-
-
-Exit:
-    if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
-    {
-        CloseHandle(FileHandle);
-    }
-
-    if (FileBuffer)
-    {
-
-        HeapFree(GetProcessHeap(), 0, FileBuffer);
-    }
-
-    return(Error);
-}
-
-
-DWORD LoadOggFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound)
-{
-    DWORD Error = ERROR_SUCCESS;
-
-    HANDLE FileHandle = INVALID_HANDLE_VALUE;
-
-    LARGE_INTEGER FileSize = { 0 };
-
-    DWORD BytesRead = 0;
-
-    void* FileBuffer = NULL;
-
-    int SamplesDecoded = 0;
-
-    int Channels = 0;
-
-    int SampleRate = 0;
-
-    short* DecodedAudio = NULL;
-
-
-    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }
-
-    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }
-
-    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
-
-
-    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
-
-    if (FileBuffer == NULL)
-    {
-        Error = ERROR_OUTOFMEMORY;
-        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }
-
-    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
-    {
-        Error = GetLastError();
-        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }
-
-    SamplesDecoded = stb_vorbis_decode_memory(FileBuffer, FileSize.QuadPart, &Channels, &SampleRate, &DecodedAudio);
-
-    if (SamplesDecoded < 1)
-    {
-        Error = ERROR_BAD_COMPRESSION_BUFFER;
-        LogMessageA(LL_ERROR, "[%s] stb_vorbis_decode_memory failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-        goto Exit;
-    }
-
-    GameSound->WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
-
-    GameSound->WaveFormat.nChannels = Channels;
-
-    GameSound->WaveFormat.nSamplesPerSec = SampleRate;
-
-    GameSound->WaveFormat.nAvgBytesPerSec = GameSound->WaveFormat.nSamplesPerSec * GameSound->WaveFormat.nChannels * 2;
-
-    GameSound->WaveFormat.nBlockAlign = GameSound->WaveFormat.nChannels * 2;
-
-    GameSound->WaveFormat.wBitsPerSample = 16;
-
-    GameSound->Buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-    GameSound->Buffer.AudioBytes = SamplesDecoded * GameSound->WaveFormat.nChannels * 2;
-
-    GameSound->Buffer.pAudioData = DecodedAudio;
-
-
-Exit:
-
-    if (FileBuffer)
-    {
-        HeapFree(GetProcessHeap(), 0, FileBuffer);
-    }
-
-    return(Error);
-}
+//
+//DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap)
+//{
+//    DWORD Error = ERROR_SUCCESS;
+//
+//    HANDLE FileHandle = INVALID_HANDLE_VALUE;
+//
+//    LARGE_INTEGER FileSize = { 0 };
+//
+//    DWORD BytesRead = 0;
+//
+//    void* FileBuffer = NULL;
+//
+//    char* Cursor = NULL;
+//
+//    char TempBuffer[16] = { 0 };
+//
+//    uint16_t Rows = 0;
+//
+//    uint16_t Columns = 0;
+//
+//
+//    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
+//    {
+//        Error = GetLastError();
+//        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
+//    {
+//        Error = GetLastError();
+//        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
+//
+//    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
+//
+//    if (FileBuffer == NULL)
+//    {
+//        Error = ERROR_OUTOFMEMORY;
+//        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
+//    {
+//        Error = GetLastError();
+//        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    ///////////width
+//
+//    if ((Cursor = strstr(FileBuffer, "width=")) == NULL)
+//    {
+//        Error = ERROR_INVALID_DATA;
+//        LogMessageA(LL_ERROR, "[%s] Could not locate Width attribute! 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    BytesRead = 0;      //reset
+//
+//    for (;;)
+//    {
+//        if (BytesRead > 8)
+//        {
+//            ////should have found opening quotation mark ("width"=)
+//            Error = ERROR_INVALID_DATA;
+//            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before Width attribute! 0x%08lx!", __FUNCTION__, Error);
+//            goto Exit;
+//        }
+//        if (*Cursor == '\"')
+//        {
+//            Cursor++;
+//            break;
+//        }
+//        else
+//        {
+//            Cursor++;
+//        }
+//        BytesRead++;
+//    }
+//
+//    BytesRead = 0;      //reset
+//
+//    for (uint8_t Counter = 0; Counter < 6; Counter++)
+//    {
+//        if (*Cursor == '\"')
+//        {
+//            Cursor++;
+//            break;
+//        }
+//        else
+//        {
+//            TempBuffer[Counter] = *Cursor;
+//            Cursor++;
+//        }
+//    }
+//
+//    TileMap->Width = atoi(TempBuffer);
+//    if (TileMap->Width == 0)
+//    {
+//        Error = ERROR_INVALID_DATA;
+//        LogMessageA(LL_ERROR, "[%s] Width attribute was 0! 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//            
+//    memset(TempBuffer, 0, sizeof(TempBuffer));
+//
+//    //////////height
+//
+//    if ((Cursor = strstr(FileBuffer, "height=")) == NULL)
+//    {
+//        Error = ERROR_INVALID_DATA;
+//        LogMessageA(LL_ERROR, "[%s] Could not locate height attribute! 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    BytesRead = 0;      //reset
+//
+//    for (;;)
+//    {
+//        if (BytesRead > 8)
+//        {
+//            ////should have found opening quotation mark ("height"=)
+//            Error = ERROR_INVALID_DATA;
+//            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before height attribute! 0x%08lx!", __FUNCTION__, Error);
+//            goto Exit;
+//        }
+//        if (*Cursor == '\"')
+//        {
+//            Cursor++;
+//            break;
+//        }
+//        else
+//        {
+//            Cursor++;
+//        }
+//        BytesRead++;
+//    }
+//
+//    BytesRead = 0;      //reset
+//
+//    for (uint8_t Counter = 0; Counter < 6; Counter++)
+//    {
+//        if (*Cursor == '\"')
+//        {
+//            Cursor++;
+//            break;
+//        }
+//        else
+//        {
+//            TempBuffer[Counter] = *Cursor;
+//            Cursor++;
+//        }
+//    }
+//
+//    TileMap->Height = atoi(TempBuffer);
+//    if (TileMap->Height == 0)
+//    {
+//        Error = ERROR_INVALID_DATA;
+//        LogMessageA(LL_ERROR, "[%s] Height attribute was 0! 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    LogMessageA(LL_INFO, "[%s] %s TileMap dimensions: %dx%d.", __FUNCTION__, FileName, TileMap->Width, TileMap->Height);
+//
+//    Rows = TileMap->Height;
+//
+//    Columns = TileMap->Width;
+//
+//    TileMap->Map = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Rows * sizeof(void*));
+//    if (TileMap->Map == NULL)
+//    {
+//        Error = ERROR_OUTOFMEMORY;
+//        LogMessageA(LL_ERROR, "[%s] HeapAlloc of height Failed with error 0x%08lx!", __FUNCTION__, Error);
+//        goto Exit;
+//    }
+//
+//    for (uint16_t Counter = 0; Counter < TileMap->Height; Counter++)
+//    {
+//        TileMap->Map[Counter] = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Columns * sizeof(void*));
+//
+//        if (TileMap->Map[Counter] == NULL)
+//        {
+//            Error = ERROR_OUTOFMEMORY;
+//            LogMessageA(LL_ERROR, "[%s] HeapAlloc of width Failed with error 0x%08lx!", __FUNCTION__, Error);
+//            goto Exit;
+//        }
+//    }
+//
+//    BytesRead = 0;
+//
+//    memset(TempBuffer, 0, sizeof(TempBuffer));
+//
+//    if ((Cursor = strstr(FileBuffer, ",")) == NULL)
+//    {
+//        Error = ERROR_INVALID_DATA;
+//
+//        LogMessageA(LL_ERROR, "[%s] Could not find a comma character in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
+//
+//        goto Exit;
+//    }
+//
+//    while (*Cursor != '\r' && *Cursor != '\n')
+//    {
+//        if (BytesRead > 4)
+//        {
+//            Error = ERROR_INVALID_DATA;
+//
+//            LogMessageA(LL_ERROR, "[%s] Could not find a new line character at the beginning of the tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
+//
+//            goto Exit;
+//        }
+//
+//        BytesRead++;
+//
+//        Cursor--;
+//    }
+//
+//    Cursor++;
+//
+//    for (uint16_t Row = 0; Row < Rows; Row++)
+//    {
+//        for (uint16_t Column = 0; Column < Columns; Column++)
+//        {
+//            memset(TempBuffer, 0, sizeof(TempBuffer));
+//
+//            Skip:
+//
+//            if (*Cursor == '\r' || *Cursor == '\n')
+//            {
+//                Cursor++;
+//
+//                goto Skip;
+//            }
+//
+//            for (uint8_t Counter = 0; Counter <= 10; Counter++)
+//            {
+//                if (*Cursor == ',' || *Cursor == '<')
+//                {
+//                    if (((TileMap->Map[Row][Column]) = (uint8_t)atoi(TempBuffer)) == 0)
+//                    {
+//                        Error = ERROR_INVALID_DATA;
+//
+//                        LogMessageA(LL_ERROR, "[%s] atoi failed while converting tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
+//
+//                        goto Exit;
+//                    }
+//
+//                    Cursor++;
+//
+//                    break;
+//                }
+//
+//                TempBuffer[Counter] = *Cursor;
+//
+//                Cursor++;
+//            }
+//        }
+//    }
+//
+//
+//
+//Exit:
+//    if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
+//    {
+//        CloseHandle(FileHandle);
+//    }
+//
+//    if (FileBuffer)
+//    {
+//
+//        HeapFree(GetProcessHeap(), 0, FileBuffer);
+//    }
+//
+//    return(Error);
+//}
+
+//
+//DWORD LoadOggFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound)
+//{
+//    DWORD Error = ERROR_SUCCESS;
+//
+//    HANDLE FileHandle = INVALID_HANDLE_VALUE;
+//
+//    LARGE_INTEGER FileSize = { 0 };
+//
+//    DWORD BytesRead = 0;
+//
+//    void* FileBuffer = NULL;
+//
+//    int SamplesDecoded = 0;
+//
+//    int Channels = 0;
+//
+//    int SampleRate = 0;
+//
+//    short* DecodedAudio = NULL;
+//
+//
+//    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
+//    {
+//        Error = GetLastError();
+//        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
+//        goto Exit;
+//    }
+//
+//    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
+//    {
+//        Error = GetLastError();
+//        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
+//        goto Exit;
+//    }
+//
+//    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
+//
+//
+//    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
+//
+//    if (FileBuffer == NULL)
+//    {
+//        Error = ERROR_OUTOFMEMORY;
+//        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
+//        goto Exit;
+//    }
+//
+//    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
+//    {
+//        Error = GetLastError();
+//        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
+//        goto Exit;
+//    }
+//
+//    SamplesDecoded = stb_vorbis_decode_memory(FileBuffer, FileSize.QuadPart, &Channels, &SampleRate, &DecodedAudio);
+//
+//    if (SamplesDecoded < 1)
+//    {
+//        Error = ERROR_BAD_COMPRESSION_BUFFER;
+//        LogMessageA(LL_ERROR, "[%s] stb_vorbis_decode_memory failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
+//        goto Exit;
+//    }
+//
+//    GameSound->WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
+//
+//    GameSound->WaveFormat.nChannels = Channels;
+//
+//    GameSound->WaveFormat.nSamplesPerSec = SampleRate;
+//
+//    GameSound->WaveFormat.nAvgBytesPerSec = GameSound->WaveFormat.nSamplesPerSec * GameSound->WaveFormat.nChannels * 2;
+//
+//    GameSound->WaveFormat.nBlockAlign = GameSound->WaveFormat.nChannels * 2;
+//
+//    GameSound->WaveFormat.wBitsPerSample = 16;
+//
+//    GameSound->Buffer.Flags = XAUDIO2_END_OF_STREAM;
+//
+//    GameSound->Buffer.AudioBytes = SamplesDecoded * GameSound->WaveFormat.nChannels * 2;
+//
+//    GameSound->Buffer.pAudioData = DecodedAudio;
+//
+//
+//Exit:
+//
+//    if (FileBuffer)
+//    {
+//        HeapFree(GetProcessHeap(), 0, FileBuffer);
+//    }
+//
+//    return(Error);
+//}
 
 BOOL MusicIsPlaying(void)
 {
@@ -2975,6 +2531,21 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
+    /////////////////////////////////////////////battle backgrounds//////////////////////////////////
+
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "BattleBackgroundGrass01.bmpx", RESOURCE_TYPE_BMPX, &gBattleScreen_Grass01)) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive BattleBackgroundGrass01.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "BattleBackgroundStoneBricks01.bmpx", RESOURCE_TYPE_BMPX, &gBattleScreen_StoneBricks01)) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive BattleBackgroundStoneBricks01.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
 
 Exit:
     return(Error);
@@ -3025,10 +2596,23 @@ void InitializeGlobals(void)
 }
 
 
-
-void DrawWindow(_In_ int16_t x, _In_ int16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_ PIXEL32 BackgroundColor, _In_ DWORD Flags)
+// If WINDOW_FLAG_HORIZ_CENTERED is specified, the x coordinate is ignored and may be zero.
+// If WINDOW_FLAG_VERT_CENTERED is specified, the y coordinate is ignored and may be zero.
+// BackgroundColor is ignored and may be NULL if WINDOW_FLAG_OPAQUE is not set.
+// BorderColor is ignored and may be NULL if WINDOW_FLAG_BORDERED is not set.
+// Either the BORDERED or the OPAQUE flag needs to be set, or both, or else the window would just be
+// transparent and invisible. The window border will cut into the inside of the window area.
+// TODO: Implement a WINDOW_FLAG_ROUNDED?
+void DrawWindow(
+    _In_opt_ uint16_t x,
+    _In_opt_ uint16_t y,
+    _In_ int16_t Width,
+    _In_ int16_t Height,
+    _In_opt_ PIXEL32* BorderColor,
+    _In_opt_ PIXEL32* BackgroundColor,
+    _In_opt_ PIXEL32* ShadowColor,
+    _In_ DWORD Flags)
 {
-
     if (Flags & WINDOW_FLAG_HORIZ_CENTERED)
     {
         x = (GAME_RES_WIDTH / 2) - (Width / 2);
@@ -3039,65 +2623,137 @@ void DrawWindow(_In_ int16_t x, _In_ int16_t y, _In_ int16_t Width, _In_ int16_t
         y = (GAME_RES_HEIGHT / 2) - (Height / 2);
     }
 
-    ASSERT(Width % sizeof(PIXEL32) == 0, "Window must be a multiple of 4!");
-
     ASSERT((x + Width <= GAME_RES_WIDTH) && (y + Height <= GAME_RES_HEIGHT), "Window is off the screen!");
 
-    int32_t StartingScreenPixel = ((GAME_RES_HEIGHT * GAME_RES_WIDTH) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
+    ASSERT((Flags & WINDOW_FLAG_BORDERED) || (Flags & WINDOW_FLAG_OPAQUE), "Window must have either the BORDERED or the OPAQUE flags (or both) set!");
 
-    for (int Row = 0; Row < Height; Row++)
+    int32_t StartingScreenPixel = ((GAME_RES_WIDTH * GAME_RES_HEIGHT) - GAME_RES_WIDTH) - (GAME_RES_WIDTH * y) + x;
+
+    if (Flags & WINDOW_FLAG_OPAQUE)
     {
-        int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+        ASSERT(BackgroundColor != NULL, "WINDOW_FLAG_OPAQUE is set but BackgroundColor is NULL!");
 
-        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffset, BackgroundColor.Bytes, Width); 
-    }
-
-    if (Flags & WINDOW_FLAG_SHADOWED)
-    {
-        //make sure shadow isnt outside screen, shift one pixle each direction
-        if (x > 0)
+        for (int Row = 0; Row < Height; Row++)
         {
-            x -= 1;
-        }
-        if (y > 0)
-        {
-            y -= 1;
-        }
+            int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
 
-
-        int MemoryOffSet = StartingScreenPixel;
-
-        MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Height) + 1;
-
-        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFF6C6C6C, Width);
-
-        for (int Row = 1; Row < Height; Row++)  ////draw one shadow pixel on the right side for each row of a window; Row = 1 because we skip top pixel for 3d effect
-        {
-            MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Row) + Width;
-
-            __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFF6C6C6C, 1);
+            // If the user wants rounded corners, don't draw the first and last pixels on the first and last rows.
+            // Get a load of this sweet ternary action:
+            for (int Pixel = ((Flags & WINDOW_FLAG_ROUNDED) && (Row == 0 || Row == Height - 1)) ? 1 : 0;
+                Pixel < Width - ((Flags & WINDOW_FLAG_ROUNDED) && (Row == 0 || Row == Height - 1)) ? 1 : 0;
+                Pixel++)
+            {
+                memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, BackgroundColor, sizeof(PIXEL32));
+            }
         }
     }
 
     if (Flags & WINDOW_FLAG_BORDERED)
     {
-        int MemoryOffSet = StartingScreenPixel;
+        ASSERT(BorderColor != NULL, "WINDOW_FLAG_BORDERED is set but BorderColor is NULL!");
 
-        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, Width);
+        // Draw the top of the border.
+        int MemoryOffset = StartingScreenPixel;
 
-        MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * (Height - 1));
-
-        __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, Width);
-
-        for (int Row = 0; Row < Height; Row++)  ////draw one pixel on each side of the window for each row
+        for (int Pixel = ((Flags & WINDOW_FLAG_ROUNDED) ? 1 : 0);
+            Pixel < Width - ((Flags & WINDOW_FLAG_ROUNDED) ? 1 : 0);
+            Pixel++)
         {
-            MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, BorderColor, sizeof(PIXEL32));
+        }
 
-            __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, 1);
+        // Draw the bottom of the border.
+        MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * (Height - 1));
 
-            MemoryOffSet = StartingScreenPixel - (GAME_RES_WIDTH * Row) + Width - 1;
+        for (int Pixel = ((Flags & WINDOW_FLAG_ROUNDED) ? 1 : 0);
+            Pixel < Width - ((Flags & WINDOW_FLAG_ROUNDED) ? 1 : 0);
+            Pixel++)
+        {
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, BorderColor, sizeof(PIXEL32));
+        }
 
-            __stosd((PDWORD)gBackBuffer.Memory + MemoryOffSet, 0xFFFCFCFC, 1);
+        // Draw one pixel on the left side and the right for each row of the border, from the top down.
+        for (int Row = 1; Row < Height - 1; Row++)
+        {
+            MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row);
+
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset, BorderColor, sizeof(PIXEL32));
+
+            MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row) + (Width - 1);
+
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset, BorderColor, sizeof(PIXEL32));
+        }
+
+        // Recursion ahead!
+        // If the user wants a thick window, just draw a smaller concentric bordered window inside the existing window.
+        if (Flags & WINDOW_FLAG_THICK)
+        {
+            DrawWindow(x + 1, y + 1, Width - 2, Height - 2, BorderColor, NULL, NULL, WINDOW_FLAG_BORDERED);
         }
     }
+
+    // TODO: If a window was placed at the edge of the screen, the shadow effect might attempt
+    // to draw off-screen and crash! i.e. make sure there's room to draw the shadow before attempting!
+    if (Flags & WINDOW_FLAG_SHADOWED)
+    {
+        ASSERT(ShadowColor != NULL, "WINDOW_FLAG_SHADOW is set but ShadowColor is NULL!");
+
+        // Draw the bottom of the shadow.
+        int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Height);
+
+        for (int Pixel = 1;
+            Pixel < Width + ((Flags & WINDOW_FLAG_ROUNDED) ? 0 : 1);
+            Pixel++)
+        {
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, ShadowColor, sizeof(PIXEL32));
+        }
+
+        // Draw one pixel on the right side for each row of the border, from the top down.
+        for (int Row = 1; Row < Height; Row++)
+        {
+            MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * Row) + Width;
+
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset, ShadowColor, sizeof(PIXEL32));
+        }
+
+        // Draw one shadow pixel in the bottom-right corner to compensate for rounded corner.
+        if (Flags & WINDOW_FLAG_ROUNDED)
+        {
+            MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * (Height - 1)) + (Width - 1);
+
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset, ShadowColor, sizeof(PIXEL32));
+        }
+    }
+}
+
+void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Inout_ PIXEL32* TextColor, _Inout_opt_ int16_t* BrightnessAdjustment)
+{
+    ASSERT(_countof(gFadeBrightnessGradient) == FADE_DURATION_FRAMES, "gFadeBrightnessGradient has too few elements!");
+
+    int16_t LocalBrightnessAdjustment;
+
+    if (FrameCounter > FADE_DURATION_FRAMES)
+    {
+        return;
+    }
+
+    if (FrameCounter == FADE_DURATION_FRAMES)
+    {
+        gInputEnabled = TRUE;
+        LocalBrightnessAdjustment = 0;
+    }
+    else
+    {
+        gInputEnabled = FALSE;
+        LocalBrightnessAdjustment = gFadeBrightnessGradient[FrameCounter];
+    }
+
+    if (BrightnessAdjustment != NULL)
+    {
+        *BrightnessAdjustment = LocalBrightnessAdjustment;
+    }
+
+    TextColor->Colors.Red = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Red + LocalBrightnessAdjustment)));
+    TextColor->Colors.Blue = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Blue + LocalBrightnessAdjustment)));
+    TextColor->Colors.Green = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Green + LocalBrightnessAdjustment)));
 }
