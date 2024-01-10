@@ -7,25 +7,49 @@ typedef struct PORTCOORDS
 	////where is the source portal in world coordinates
 	UPOINT WorldPos;
 
-	////add this many world coords to current position
+	////add this many world coords to current world position
 	POINT WorldPosAdd;
 
-	////add this many screen coords to current position
+	////add this many screen coords to current screen position
 	POINT ScreenPosAdd;
 
-	////add this many coords to current camera position
+	////add this many world coords to current camera position
 	POINT CameraPosAdd;
 
 	////which area is the player in after teleporting to their dest
 	GAMEAREA AreaDest;
-
+	
+	//TODO: remove these bottom two and create a funtion to load/unload sprites instead
 	////sprites onscreen after teleporting
-	BOOL SpritesToLoad[NUM_CHAR_SPRITES];
+	//BOOL SpritesToLoad[NUM_CHAR_SPRITES];
 
 	////sprites onscreen before teleporting
-	BOOL SpritesToUnload[NUM_CHAR_SPRITES];
+	//BOOL SpritesToUnload[NUM_CHAR_SPRITES];
 
 } PORTCOORDS;
+
+typedef struct TransitionArea
+{
+	uint16_t TransAreaDestIndex;
+
+	//Area where player.worldpos must be standing to trigger a transition
+	RECT TilesArea;
+
+	//add this many screen coords to current screen position
+	POINT ScreenPosAdd;
+
+	//add this many world coords to the current camera postition
+	POINT CameraPosAdd;
+
+} TransitionArea;
+
+#define NUM_TRANS_AREAS 16
+#define MAX_TRANS_PERMAP 4 + 1		//4 transitions + 1 for none
+
+uint8_t gTransitionsPerMap[NUM_TRANS_AREAS];		//always between 0 - 4
+TransitionArea gTransitionAreas[NUM_TRANS_AREAS][MAX_TRANS_PERMAP];	//5 is possible number of transitions in one map 0 - 4
+
+BOOL gHasPlayerTransitioned;
 
 PORTCOORDS gPortCoords[UNIQUE_TELEPADS_COUNT];
 
@@ -34,13 +58,24 @@ PORTCOORDS gTeleport002;
 PORTCOORDS gTeleport003;
 PORTCOORDS gTeleport004;
 
+#define NUM_GAME_AREAS 6
+
 GAMEAREA gCurrentArea;
 
-GAMEAREA gOverworldArea;
+GAMEAREA gOverworldArea;	////TODO change to fit new gamemap size, used to know the size of the whole map
 
-GAMEAREA gDungeon01Area;
 
 GAMEAREA gHome01Area;
+
+GAMEAREA gStartingTownArea;
+
+GAMEAREA gRoute01Area;
+
+GAMEAREA gBattleTown01Area;
+
+GAMEAREA gGameAreas[NUM_GAME_AREAS];
+
+GAMEAREA gDungeon01Area;
 
 #define NUM_ENCOUNTER_AREAS 5
 
@@ -76,3 +111,10 @@ void TeleportPlayerBlackOut(void);
 void GivePlayerItem(uint16_t itemIndex, uint16_t amount);
 
 void ModifyCharVisibility(void);
+
+void DrawBuySellBackBox(void);
+uint8_t PPI_BuySellBackBox(void);
+
+void MapTransition(void);
+
+void LoadUnloadSpritesVIAGameArea(void);

@@ -308,7 +308,7 @@ void PPI_Overworld(void)
 
                     if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
                     {
-                        CanMoveToDesiredTile = TRUE;
+                        CanMoveToDesiredTile = TRUE;        ///TODO: prevent movement when below tile is a gCliffEdgeTile
 
                         break;
                     }
@@ -436,7 +436,7 @@ void PPI_Overworld(void)
                     {
                         if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) - 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
                         {
-                            CanMoveToDesiredTile = TRUE;
+                            CanMoveToDesiredTile = TRUE;        ////TODO: prevent moving when standing on a gCliffEdgeTile
 
                             break;
                         }
@@ -628,83 +628,89 @@ void PPI_Overworld(void)
                 {
                     gPlayer.SpriteIndex = 0;
                     // is the player on a portal
-                    if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16)][(gPlayer.WorldPos.x / 16)] == TILE_TELEPORT01)
+                    for (uint8_t telepads = 0; telepads < NUM_TELEPORT_TILES; telepads++)
                     {
-                        if (gPlayer.HasMovedSincePort == TRUE)
+                        if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16)][(gPlayer.WorldPos.x / 16)] == gTeleportTiles[telepads])
                         {
-                            TeleportHandler();
-                        }
-                    }
-                    else
-                    {
-                        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
-                        {
-                            switch (gCharacterSprite[Index].Direction)
+                            if (gPlayer.HasMovedSincePort == TRUE)
                             {
-                                case DOWN:
+                                TeleportHandler();
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
+                            {
+                                switch (gCharacterSprite[Index].Direction)
                                 {
-                                    if (((gCharacterSprite[Index].WorldPos.y + (gCharacterSprite[Index].SightRange * 16) >= gPlayer.WorldPos.y) && gCharacterSprite[Index].WorldPos.y <= gPlayer.WorldPos.y) && (gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x))
+                                    case DOWN:
                                     {
-                                        gPlayer.Direction = UP;
-                                        gCharacterSprite[Index].InteractedWith = TRUE;
-                                        EnterDialogue();
+                                        if (((gCharacterSprite[Index].WorldPos.y + (gCharacterSprite[Index].SightRange * 16) >= gPlayer.WorldPos.y) && gCharacterSprite[Index].WorldPos.y <= gPlayer.WorldPos.y) && (gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x))
+                                        {
+                                            gPlayer.Direction = UP;
+                                            gCharacterSprite[Index].InteractedWith = TRUE;
+                                            EnterDialogue();
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                                case LEFT:
-                                {
-                                    if (((gCharacterSprite[Index].WorldPos.x - (gCharacterSprite[Index].SightRange * 16) <= gPlayer.WorldPos.x) && gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x) && (gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y))
+                                    case LEFT:
                                     {
-                                        gPlayer.Direction = RIGHT;
-                                        gCharacterSprite[Index].InteractedWith = TRUE;
-                                        EnterDialogue();
+                                        if (((gCharacterSprite[Index].WorldPos.x - (gCharacterSprite[Index].SightRange * 16) <= gPlayer.WorldPos.x) && gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x) && (gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y))
+                                        {
+                                            gPlayer.Direction = RIGHT;
+                                            gCharacterSprite[Index].InteractedWith = TRUE;
+                                            EnterDialogue();
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                                case RIGHT:
-                                {
-                                    if (((gCharacterSprite[Index].WorldPos.x + (gCharacterSprite[Index].SightRange * 16) >= gPlayer.WorldPos.x) && gCharacterSprite[Index].WorldPos.x <= gPlayer.WorldPos.x) && (gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y))
+                                    case RIGHT:
                                     {
-                                        gPlayer.Direction = LEFT;
-                                        gCharacterSprite[Index].InteractedWith = TRUE;
-                                        EnterDialogue();
+                                        if (((gCharacterSprite[Index].WorldPos.x + (gCharacterSprite[Index].SightRange * 16) >= gPlayer.WorldPos.x) && gCharacterSprite[Index].WorldPos.x <= gPlayer.WorldPos.x) && (gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y))
+                                        {
+                                            gPlayer.Direction = LEFT;
+                                            gCharacterSprite[Index].InteractedWith = TRUE;
+                                            EnterDialogue();
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                                case UP:
-                                {
-                                    if (((gCharacterSprite[Index].WorldPos.y - (gCharacterSprite[Index].SightRange * 16) <= gPlayer.WorldPos.y) && gCharacterSprite[Index].WorldPos.y >= gPlayer.WorldPos.y) && (gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x))
+                                    case UP:
                                     {
-                                        gPlayer.Direction = DOWN;
-                                        gCharacterSprite[Index].InteractedWith = TRUE;
-                                        EnterDialogue();
+                                        if (((gCharacterSprite[Index].WorldPos.y - (gCharacterSprite[Index].SightRange * 16) <= gPlayer.WorldPos.y) && gCharacterSprite[Index].WorldPos.y >= gPlayer.WorldPos.y) && (gCharacterSprite[Index].WorldPos.x == gPlayer.WorldPos.x))
+                                        {
+                                            gPlayer.Direction = DOWN;
+                                            gCharacterSprite[Index].InteractedWith = TRUE;
+                                            EnterDialogue();
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                                default:
-                                {
-                                    ASSERT(FALSE, "Sprite is facing an unknown direction while looking for player!");
+                                    default:
+                                    {
+                                        ASSERT(FALSE, "Sprite is facing an unknown direction while looking for player!");
+                                    }
                                 }
                             }
-                        }
-                        for (uint8_t EncounterTile = 0; EncounterTile < _countof(gEncounterTiles); EncounterTile++)
-                        {
-                            if ((gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16)] == gEncounterTiles[EncounterTile]) && (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD))
+                            for (uint8_t EncounterTile = 0; EncounterTile < _countof(gEncounterTiles); EncounterTile++)
                             {
-                                DWORD Random = 0;
-
-                                rand_s((unsigned int*)&Random);
-
-                                Random = Random % 1000;
-
-                                if (Random > (1000 - gPlayer.RandomEncounterPercent))
+                                if ((gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16)] == gEncounterTiles[EncounterTile]) && (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD))
                                 {
-                                    gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
-                                    RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                                    DWORD Random = 0;
+
+                                    rand_s((unsigned int*)&Random);
+
+                                    Random = Random % 1000;
+
+                                    if (Random > (1000 - gPlayer.RandomEncounterPercent))
+                                    {
+                                        gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
+                                        RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                                    }
                                 }
                             }
+                            //break;
                         }
                     }
+                    MapTransition();
                     break;
                 }
                 default:
@@ -849,6 +855,7 @@ void PPI_Overworld(void)
                                     if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for stores extra dialogue while buy/sell/back
                                     {
                                         gPostDialogueMenu = TRUE;
+                                        gCharacterSprite[Index].DialogueFlag++;
                                         goto SkipExitingDialogue;
                                     }
                                     else
@@ -925,22 +932,25 @@ void TeleportHandler(void)
             gCamera.x += gPortCoords[Counter].CameraPosAdd.x;
             gCamera.y += gPortCoords[Counter].CameraPosAdd.y;
             gCurrentArea = gPortCoords[Counter].AreaDest;
-            for (uint8_t Sprite = 0; Sprite < NUM_CHAR_SPRITES; Sprite++)
-            {
-                if ((gPortCoords[Counter].SpritesToLoad[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == FALSE))             /////////TODO make so game unloads sprites and reloads them via teleport
-                {
-                    gCharacterSprite[Sprite].Loaded = TRUE;
-                    if ((gCharacterSprite[Sprite].ScreenPos.x >= 0) && (gCharacterSprite[Sprite].ScreenPos.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Sprite].ScreenPos.y >= 0) && (gCharacterSprite[Sprite].ScreenPos.y <= GAME_RES_HEIGHT - 16))
-                    {
-                        gCharacterSprite[Sprite].Visible = TRUE;
-                    }
-                }
-                if ((gPortCoords[Counter].SpritesToUnload[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == TRUE))           //////TODO FIX gCharacterSprite[1].Exists = 40???? should be boolean something is overwriting it
-                {
-                    gCharacterSprite[Sprite].Loaded = FALSE;
-                    gCharacterSprite[Sprite].Visible = FALSE;
-                }
-            }
+
+            LoadUnloadSpritesVIAGameArea();
+
+            //for (uint8_t Sprite = 0; Sprite < NUM_CHAR_SPRITES; Sprite++)
+            //{
+            //    if ((gPortCoords[Counter].SpritesToLoad[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == FALSE))             /////////TODO make so game unloads sprites and reloads them via teleport
+            //    {
+            //        gCharacterSprite[Sprite].Loaded = TRUE;
+            //        if ((gCharacterSprite[Sprite].ScreenPos.x >= 0) && (gCharacterSprite[Sprite].ScreenPos.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Sprite].ScreenPos.y >= 0) && (gCharacterSprite[Sprite].ScreenPos.y <= GAME_RES_HEIGHT - 16))
+            //        {
+            //            gCharacterSprite[Sprite].Visible = TRUE;
+            //        }
+            //    }
+            //    if ((gPortCoords[Counter].SpritesToUnload[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == TRUE))           //////TODO FIX gCharacterSprite[1].Exists = 40???? should be boolean something is overwriting it
+            //    {
+            //        gCharacterSprite[Sprite].Loaded = FALSE;
+            //        gCharacterSprite[Sprite].Visible = FALSE;
+            //    }
+            //}
             break;
         }
     }
@@ -1184,18 +1194,19 @@ void TeleportPlayerBlackOut(void)
 {
     StopGameMusic();
 
-    for (uint8_t i = 0; i < NUM_CHAR_SPRITES; i++)  //TOUSE: steal this to make a sprite resetting function???
-    {
-        gCharacterSprite[i].ScreenPos = gCharacterSprite[i].ResetOriginScreenPos;
-        gCharacterSprite[i].WorldPos = gCharacterSprite[i].ResetOriginWorldPos;
-        gCharacterSprite[i].ResetScreenPos = gCharacterSprite[i].ResetOriginScreenPos;
-        gCharacterSprite[i].ResetWorldPos = gCharacterSprite[i].ResetOriginWorldPos;
-        gCharacterSprite[i].Direction = gCharacterSprite[i].ResetDirection;
-        gCharacterSprite[i].Loaded = FALSE;
-        gCharacterSprite[i].Visible = FALSE;
-    }
+    //for (uint8_t i = 0; i < NUM_CHAR_SPRITES; i++)  //TOREMOVE: LoadUnloadSpritesVIAGameArea is its own function now, this is legacy code
+    //{
+    //    gCharacterSprite[i].ScreenPos = gCharacterSprite[i].ResetOriginScreenPos;
+    //    gCharacterSprite[i].WorldPos = gCharacterSprite[i].ResetOriginWorldPos;
+    //    gCharacterSprite[i].ResetScreenPos = gCharacterSprite[i].ResetOriginScreenPos;
+    //    gCharacterSprite[i].ResetWorldPos = gCharacterSprite[i].ResetOriginWorldPos;
+    //    gCharacterSprite[i].Direction = gCharacterSprite[i].ResetDirection;
+    //    gCharacterSprite[i].Loaded = FALSE;
+    //    gCharacterSprite[i].Visible = FALSE;
+    //}
 
     gCurrentArea = gHome01Area;
+    LoadUnloadSpritesVIAGameArea();
 
     gPlayer.ScreenPos.x = 192; 
     gPlayer.ScreenPos.y = 96;  
@@ -1236,6 +1247,176 @@ void ModifyCharVisibility(void)
                 {
                     gCharacterSprite[Index].Visible = TRUE;
                 }
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////
+                //buy sell back buttons
+///////////////////////////////////////////////////////////
+
+MENUITEM gBuyButton = { "BUY", 90, 104, TRUE, 1 };
+
+MENUITEM gSellButton = { "SELL", 90, 124, TRUE, 2 };
+
+MENUITEM gBackButton = { "BACK", 90, 144, TRUE, 3 };
+
+MENUITEM* gBuySellBackItems[] = { &gBuyButton, &gSellButton, &gBackButton };
+
+MENU gButtonMenu = { "Selected button", 0, _countof(gBuySellBackItems), gBuySellBackItems };
+
+///////////////////////////////////////////////////////////
+
+void DrawBuySellBackBox(void)
+{
+    DrawWindow(80, 100, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+    DrawWindow(80, 120, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+    DrawWindow(80, 140, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+    BlitStringToBuffer(gBuyButton.Name, &g6x7Font, &COLOR_BLACK, gBuyButton.x, gBuyButton.y);
+
+    BlitStringToBuffer(gSellButton.Name, &g6x7Font, &COLOR_BLACK, gSellButton.x, gSellButton.y);
+
+    BlitStringToBuffer(gBackButton.Name, &g6x7Font, &COLOR_BLACK, gBackButton.x, gBackButton.y);
+
+    BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gBuySellBackItems[gButtonMenu.SelectedItem]->x - 6, gBuySellBackItems[gButtonMenu.SelectedItem]->y);
+
+}
+
+uint8_t PPI_BuySellBackBox(void)
+{
+    if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+    {
+        if (gButtonMenu.SelectedItem == 2)
+        {
+            PlayGameSound(&gSoundMenuChoose);
+            return(3);
+        }
+        else
+        {
+            gButtonMenu.SelectedItem = 2;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+    }
+    else if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
+    {
+        if (gButtonMenu.SelectedItem > 0)
+        {
+            gButtonMenu.SelectedItem--;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+        else
+        {
+            gButtonMenu.SelectedItem = 2;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+    }
+    else if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+    {
+        if (gButtonMenu.SelectedItem < 2)
+        {
+            gButtonMenu.SelectedItem++;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+        else
+        {
+            gButtonMenu.SelectedItem = 0;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+    }
+    else if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+    {
+        PlayGameSound(&gSoundMenuChoose);
+        return(gBuySellBackItems[gButtonMenu.SelectedItem]->Action);
+    }
+    else
+    {
+        return(0);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MapTransition(void)
+{
+    uint8_t TransitionAreaIndex = gCurrentArea.Index;
+    uint8_t TransitionsPerMap = gTransitionsPerMap[TransitionAreaIndex];
+
+    switch (TransitionsPerMap)
+    {
+        case 0:
+        {
+            goto End;
+        }
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        {
+            for (uint8_t TransPerMapTemp = TransitionsPerMap; TransPerMapTemp > 0; TransPerMapTemp--)
+            {
+                if ((gPlayer.WorldPos.x >= gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].TilesArea.left && gPlayer.WorldPos.x < gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].TilesArea.right) && (gPlayer.WorldPos.y >= gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].TilesArea.top && gPlayer.WorldPos.y < gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].TilesArea.bottom))
+                {
+                    for (uint16_t Index = 0; Index < NUM_GAME_AREAS; Index++)
+                    {
+                        if (gGameAreas[Index].Index == gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].TransAreaDestIndex)
+                        {
+                            gCurrentArea = gGameAreas[Index];
+                            LoadUnloadSpritesVIAGameArea();
+                            break;
+                        }
+                    }
+
+                    gCamera.x += gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].CameraPosAdd.x;
+                    gCamera.y += gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].CameraPosAdd.y;
+
+                    gPlayer.ScreenPos.x += gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].ScreenPosAdd.x;
+                    gPlayer.ScreenPos.y += gTransitionAreas[TransitionAreaIndex][TransPerMapTemp].ScreenPosAdd.y;
+
+                    ////TODO: Function for loading/unloading sprites
+
+                    goto End;
+                }
+            }
+            break;
+        }
+        default:
+        {
+            ASSERT(FALSE, "[%s] Error! GameArea has an unexpected number of transitions! (%d)", __FUNCTION__, TransitionsPerMap);
+        }
+    }
+End:
+    return(0);
+
+}
+
+////Function must be called immediately after gCurrentArea is updated in any way (teleport, transition, KO, etc...)
+void LoadUnloadSpritesVIAGameArea(void)
+{
+    const uint16_t gameareaindex = gCurrentArea.Index;
+
+    for (uint16_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
+    {
+        if (gameareaindex == gHome01Area.Index)
+        {
+            gCharacterSprite[sprite].ResetScreenPos = gCharacterSprite[sprite].ResetOriginScreenPos;
+        }
+        gCharacterSprite[sprite].ScreenPos = gCharacterSprite[sprite].ResetScreenPos;
+        gCharacterSprite[sprite].WorldPos = gCharacterSprite[sprite].ResetOriginWorldPos;
+        gCharacterSprite[sprite].ResetWorldPos = gCharacterSprite[sprite].ResetOriginWorldPos;
+        gCharacterSprite[sprite].Direction = gCharacterSprite[sprite].ResetDirection;
+        gCharacterSprite[sprite].Loaded = FALSE;
+        gCharacterSprite[sprite].Visible = FALSE;
+
+        if (gameareaindex == gCharacterSprite[sprite].GameAreaIndex)
+        {
+            gCharacterSprite[sprite].Loaded = TRUE;
+            if ((gCharacterSprite[sprite].ScreenPos.x >= 0) && (gCharacterSprite[sprite].ScreenPos.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[sprite].ScreenPos.y >= 0) && (gCharacterSprite[sprite].ScreenPos.y <= GAME_RES_HEIGHT - 16))
+            {
+                gCharacterSprite[sprite].Visible = TRUE;
             }
         }
     }

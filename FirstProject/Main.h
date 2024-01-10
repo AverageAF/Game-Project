@@ -758,6 +758,7 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	BOOL Visible;
 	BOOL Exists;
 	BOOL Loaded;
+	uint16_t GameAreaIndex;
 	UPOINT ResetWorldPos;
 	POINT ResetScreenPos;
 	DIRECTION ResetDirection;
@@ -832,6 +833,8 @@ IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
 uint8_t gPassableTiles[NUM_PASSABLE_TILES];
 uint8_t gEncounterTiles[NUM_ENCOUNTER_TILES];
+uint8_t gCliffEdgeTiles[NUM_CLIFF_TILES];
+uint8_t gTeleportTiles[NUM_TELEPORT_TILES];
 
 REGISTRYPARAMS gRegistryParams;
 
@@ -999,9 +1002,5 @@ void ClearGameFlag(uint8_t flag);
 void ClearTempGameFlags(void);
 
 void BlitItemDescription(char* description);
-
-void DrawBuySellBackBox(void);
-
-uint8_t PPI_BuySellBackBox(void);
 
 BOOL CanPlayerAffordCurrencyCost(uint32_t currencycost);
