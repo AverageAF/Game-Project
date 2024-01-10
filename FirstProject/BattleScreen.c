@@ -14,6 +14,21 @@ void DrawBattleScreen(void)
 
     GAMEBITMAP* BattleScene = NULL;
 
+    GAMEBITMAP* PlayerMonsterSprite = NULL;
+
+    GAMEBITMAP* OpponentMonsterSprite = NULL;
+
+    uint8_t Opponent = 0;
+
+    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+    {
+        if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].WantsToBattle == TRUE))
+        {
+            Opponent = Index;
+            break;
+        }
+    }
+
     if ((gGamePerformanceData.TotalFramesRendered > (LastFrameSeen + 1)))
     {
         LocalFrameCounter = 0;
@@ -25,11 +40,24 @@ void DrawBattleScreen(void)
     //////TODO: Add battle intro and battle music/////////////
     //if (LocalFrameCounter == 0)
     //{
-    //    StopMusic();
-    //    PlayGameMusic(&MusicBattleInto01, FALSE, TRUE);
-    //    PlayGameMusic(&MusicBattle01, TRUE, FALSE);       ////queue full loop behind intro
+    //    StopGameMusic();
+    //    /*PlayGameMusic(&MusicBattleInto01, FALSE, TRUE);
+    //    PlayGameMusic(&MusicBattle01, TRUE, FALSE);*/       ////queue full loop behind intro
     //}
 
+    for (uint8_t Counter = 0; Counter < TOTAL_MONSTERS; Counter++)
+    {
+        if (gPlayer.Party[0] == Counter)
+        {
+            PlayerMonsterSprite = &gBattleSpriteBack[Counter];
+        }
+
+        if (gCharacterSprite[Opponent].Party[0] == Counter)
+        {
+            //////////TODO obviously make front facing sprites
+            OpponentMonsterSprite = &gBattleSpriteFront[Counter];
+        }
+    }
 
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
@@ -41,6 +69,7 @@ void DrawBattleScreen(void)
     {
         case TILE_GRASS_01:
         {
+            /////////TODO make battlescene floor higher for sprites to stand on
             BattleScene = &gBattleScreen_Grass01;
             break;
         }
@@ -69,6 +98,24 @@ void DrawBattleScreen(void)
         ASSERT(FALSE, "BattleScene is NULL!");
     }
 
+    if (PlayerMonsterSprite != 0)
+    {
+        Blit32BppBitmapToBuffer(PlayerMonsterSprite, (65), (119), BrightnessAdjustment);
+    }
+    else
+    {
+        ASSERT(FALSE, "Battle monster is NULL!");
+    }
+
+    if (OpponentMonsterSprite != 0)
+    {
+        Blit32BppBitmapToBuffer(OpponentMonsterSprite, (255), (87), BrightnessAdjustment);
+    }
+    else
+    {
+        ASSERT(FALSE, "Battle monster is NULL!");
+    }
+
     LocalFrameCounter++;
 
     LastFrameSeen = gGamePerformanceData.TotalFramesRendered;
@@ -83,5 +130,16 @@ void PPI_BattleScreen(void)
 		gCurrentGameState = GAMESTATE_OVERWORLD;
 		gInputEnabled = FALSE;
         StopGameMusic();
+
+        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+        {
+            if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].WantsToBattle == TRUE))
+            {
+                gCharacterSprite[Index].InteractedWith = FALSE;
+                gCharacterSprite[Index].WantsToBattle = FALSE;
+                gCharacterSprite[Index].SightRange = 0;
+                break;
+            }
+        }
 	}
 }

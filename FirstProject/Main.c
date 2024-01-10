@@ -605,6 +605,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[1].Loaded = FALSE;
     gCharacterSprite[1].Dialogue[0] = "Wow!\nThis place is dark!";
 
+    //////////////////////////////////////////////////////////////
 
     gCharacterSprite[2].ScreenPos.x = 224;
     gCharacterSprite[2].ScreenPos.y = 32;
@@ -624,6 +625,9 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].Exists = TRUE;
     gCharacterSprite[2].Loaded = TRUE;
     gCharacterSprite[2].Dialogue[0] = "Lets have a battle!";
+    gCharacterSprite[2].Party[0] = 1;
+
+    //////////////////////////////////////////////////////////////
 
     return (0);
 }
@@ -639,6 +643,8 @@ DWORD InitializePlayer(void)
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
     gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
+
+    gPlayer.Party[0] = 1;
 
     gPlayer.Name[0] = 'M';
     gPlayer.Name[1] = 'a';
@@ -2161,7 +2167,7 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
-    ////////////////////////////////////////////////////////// loading sprites///////////////////////////////////////////////
+    ////////////////////////////////////////////////////////// loading player sprites///////////////////////////////////////////////
 
     if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingDown0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
     {
@@ -2319,6 +2325,23 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive BattleBackgroundStoneBricks01.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
+
+    //////////////////////////////////////////////////////monster battle sprites /////////////////////////////////////////////////
+
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Wolf64Back01.bmpx", RESOURCE_TYPE_BMPX, &gBattleSpriteBack[1])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Wolf64Back01.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Wolf64Front01.bmpx", RESOURCE_TYPE_BMPX, &gBattleSpriteFront[1])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Wolf64Front01.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+
 
 
 Exit:

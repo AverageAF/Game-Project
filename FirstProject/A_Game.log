@@ -24566,3 +24566,1890 @@
 [08/01/2023 16:07:12.346][INFO][Load32BppBitmapFromMem] Loading Successful
 [08/01/2023 16:07:12.347][INFO][Load32BppBitmapFromMem] Loading Successful
 [08/01/2023 16:07:12.349][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.436][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 16:35:03.437][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 16:35:03.437][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 16:35:03.437][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 16:35:03.437][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 16:35:03.438][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 16:35:03.438][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 16:35:03.438][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 16:35:03.474][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 16:35:03.475][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 16:35:03.479][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.480][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:35:03.631][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.632][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 16:35:03.633][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:35:03.634][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:35:03.641][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 16:35:03.763][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 16:35:03.878][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.879][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.879][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.880][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.880][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.881][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.881][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.881][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.882][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.882][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.882][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.883][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.883][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.884][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.884][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.884][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.885][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.885][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.885][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.886][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.886][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.887][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.887][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.887][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.888][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:35:03.889][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:01.506][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 16:40:01.506][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 16:40:01.507][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 16:40:01.507][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 16:40:01.507][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 16:40:01.507][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 16:40:01.508][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 16:40:01.508][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 16:40:01.545][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 16:40:01.545][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 16:40:01.549][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:01.549][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:40:01.698][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:01.699][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 16:40:01.702][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:40:01.702][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:40:01.711][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 16:40:01.865][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 16:40:02.005][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.006][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.006][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.007][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.007][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.008][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.008][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.008][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.009][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.009][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.009][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.010][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.010][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.011][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.011][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.011][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.012][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.012][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.012][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.013][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.013][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.013][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.014][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.014][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.015][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:40:02.016][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.489][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 16:41:01.489][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 16:41:01.490][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 16:41:01.490][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 16:41:01.490][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 16:41:01.491][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 16:41:01.491][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 16:41:01.491][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 16:41:01.532][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 16:41:01.532][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 16:41:01.538][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.539][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:41:01.688][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.689][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 16:41:01.691][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:41:01.691][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:41:01.699][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 16:41:01.824][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 16:41:01.929][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.929][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.931][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.931][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.931][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.932][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.932][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.933][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.933][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.933][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.934][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.934][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.934][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.935][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.935][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.936][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.936][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.937][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.937][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.938][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.938][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.939][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.940][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:41:01.941][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:27.427][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 16:46:27.427][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 16:46:27.428][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 16:46:27.428][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 16:46:27.428][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 16:46:27.429][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 16:46:27.429][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 16:46:27.429][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 16:46:27.469][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 16:46:27.470][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 16:46:27.475][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:27.476][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:46:27.758][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:27.760][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 16:46:27.765][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:46:27.766][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 16:46:27.785][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 16:46:28.166][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 16:46:28.507][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.508][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.508][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.509][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.509][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.510][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.510][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.511][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.511][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.512][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.513][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.513][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.514][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.514][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.515][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.515][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.516][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.517][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.517][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.518][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.518][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.519][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.519][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.520][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.521][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 16:46:28.523][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:52.423][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 17:55:52.424][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 17:55:52.424][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 17:55:52.424][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 17:55:52.425][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 17:55:52.442][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 17:55:52.442][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 17:55:52.442][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 17:55:52.480][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 17:55:52.481][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 17:55:52.485][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:52.490][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:55:52.784][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:52.786][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 17:55:52.792][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:55:52.792][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:55:52.813][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 17:55:53.229][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 17:55:53.602][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.603][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.603][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.604][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.604][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.605][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.605][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.606][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.606][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.607][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.607][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.608][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.608][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.609][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.609][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.610][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.611][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.612][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.613][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.614][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.615][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.615][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.616][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.617][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.618][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.620][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:55:53.620][ERROR][LoadAssetFromArchive] File Wolf64Back01.bmpx was not found in archive C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets.dat! 0x00000002!
+[08/01/2023 17:55:53.647][ERROR][AssetLoadingThreadProc] LoadAssetFromArchive Wolf64Back01.bmpx failed!
+[08/01/2023 17:56:16.880][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 17:56:16.881][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 17:56:16.881][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 17:56:16.907][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 17:56:16.907][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 17:56:16.907][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 17:56:16.908][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 17:56:16.908][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 17:56:16.947][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 17:56:16.947][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 17:56:16.952][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:16.953][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:56:17.232][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:17.233][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 17:56:17.239][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:56:17.240][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:56:17.259][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 17:56:17.644][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 17:56:18.041][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.042][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.043][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.052][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.053][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.054][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.054][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.056][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.056][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.057][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.057][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.058][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.058][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.059][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.059][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.060][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.060][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.061][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.081][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.082][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.082][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.083][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.083][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.084][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.085][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.087][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:56:18.087][ERROR][LoadAssetFromArchive] File Wolf64Back01.bmpx was not found in archive C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets.dat! 0x00000002!
+[08/01/2023 17:56:18.088][ERROR][AssetLoadingThreadProc] LoadAssetFromArchive Wolf64Back01.bmpx failed!
+[08/01/2023 17:57:05.323][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 17:57:05.323][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 17:57:05.324][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 17:57:05.345][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 17:57:05.346][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 17:57:05.346][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 17:57:05.346][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 17:57:05.347][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 17:57:05.386][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 17:57:05.387][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 17:57:05.391][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:05.393][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:05.678][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:05.680][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 17:57:05.685][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:05.686][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:05.704][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 17:57:06.098][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 17:57:15.310][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 17:57:15.323][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 17:57:15.323][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 17:57:15.324][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 17:57:15.324][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 17:57:15.324][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 17:57:15.325][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 17:57:15.325][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 17:57:15.369][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 17:57:15.369][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 17:57:15.413][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:15.425][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:15.685][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:15.686][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 17:57:15.692][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:15.693][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:15.712][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 17:57:16.245][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 17:57:16.643][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.644][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.644][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.728][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.728][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.729][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.729][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.730][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.730][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.730][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.731][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.731][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.732][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.732][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.733][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.733][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.734][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.734][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.735][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.735][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.819][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.819][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.819][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.820][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.821][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.822][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:16.823][ERROR][LoadAssetFromArchive] File Wolf64Back01.bmpx was not found in archive C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets.dat! 0x00000002!
+[08/01/2023 17:57:16.823][ERROR][AssetLoadingThreadProc] LoadAssetFromArchive Wolf64Back01.bmpx failed!
+[08/01/2023 17:57:18.108][ERROR][DrawOpeningSplashScreen] Asset loading thread failed with 0x00000002!
+[08/01/2023 17:57:45.099][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 17:57:45.099][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 17:57:45.100][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 17:57:45.100][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 17:57:45.227][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 17:57:45.228][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 17:57:45.228][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 17:57:45.228][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 17:57:45.270][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 17:57:45.294][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 17:57:45.309][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:45.310][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:45.578][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:45.579][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 17:57:45.584][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:45.585][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 17:57:45.602][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 17:57:45.991][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 17:57:46.371][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.371][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.372][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.372][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.373][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.373][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.374][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.378][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.378][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.380][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.382][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.382][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.383][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.384][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.384][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.386][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.387][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 17:57:46.387][ERROR][LoadAssetFromArchive] File Wolf64Back01.bmpx was not found in archive C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets.dat! 0x00000002!
+[08/01/2023 17:57:46.388][ERROR][AssetLoadingThreadProc] LoadAssetFromArchive Wolf64Back01.bmpx failed!
+[08/01/2023 18:00:35.428][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:00:35.429][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:00:35.429][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:00:35.429][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:00:35.457][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:00:35.457][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:00:35.457][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:00:35.458][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:00:35.499][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:00:35.500][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:00:35.504][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:35.506][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:00:35.794][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:35.795][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:00:35.801][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:00:35.867][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:00:35.887][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:00:36.281][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:00:36.669][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.669][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.670][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.670][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.671][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.671][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.672][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.672][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.673][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.673][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.674][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.675][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.675][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.676][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.677][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.677][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.678][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.678][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.679][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.680][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.680][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.681][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.682][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.682][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.684][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.686][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:00:36.686][ERROR][LoadAssetFromArchive] File Wolf64Back01.bmpx was not found in archive C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets.dat! 0x00000002!
+[08/01/2023 18:00:36.687][ERROR][AssetLoadingThreadProc] LoadAssetFromArchive Wolf64Back01.bmpx failed!
+[08/01/2023 18:02:48.120][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:02:48.130][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:02:48.130][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:02:48.131][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:02:48.131][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:02:48.132][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:02:48.133][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:02:48.133][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:02:48.172][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:02:48.172][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:02:48.227][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:48.228][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:02:48.487][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:48.488][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:02:48.493][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:02:48.494][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:02:48.513][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:02:49.020][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:02:49.421][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.421][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.422][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.422][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.423][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.423][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.424][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.424][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.425][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.425][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.426][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.426][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.427][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.427][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.428][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.428][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.429][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.429][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.430][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.430][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.430][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.431][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.431][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.432][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.433][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.435][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:02:49.435][ERROR][LoadAssetFromArchive] File Wolf64Back01.bmpx was not found in archive C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets.dat! 0x00000002!
+[08/01/2023 18:02:49.436][ERROR][AssetLoadingThreadProc] LoadAssetFromArchive Wolf64Back01.bmpx failed!
+[08/01/2023 18:07:07.194][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:07:07.194][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:07:07.195][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:07:07.195][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:07:07.195][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:07:07.195][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:07:07.196][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:07:07.196][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:07:07.240][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:07:07.241][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:07:07.256][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:07.258][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:07:07.535][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:07.537][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:07:07.542][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:07:07.543][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:07:07.563][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:07:07.987][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:07:08.370][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.370][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.371][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.371][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.372][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.372][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.373][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.373][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.374][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.374][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.378][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.378][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.380][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.380][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.383][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.384][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:07:08.385][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:03.266][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:08:03.266][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:08:03.267][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:08:03.267][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:08:03.267][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:08:03.268][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:08:03.268][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:08:03.268][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:08:03.318][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:08:03.318][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:08:03.325][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:03.326][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:08:03.605][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:03.630][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:08:03.635][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:08:03.636][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:08:03.655][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:08:04.087][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:08:04.451][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.452][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.452][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.453][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.453][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.453][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.454][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.454][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.455][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.455][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.456][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.456][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.457][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.457][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.458][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.458][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.459][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.459][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.460][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.460][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.461][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.461][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.462][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.462][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.464][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.465][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:08:04.466][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:21.009][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:10:21.016][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:10:21.017][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:10:21.017][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:10:21.018][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:10:21.018][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:10:21.019][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:10:21.020][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:10:21.064][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:10:21.064][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:10:21.187][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:21.188][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:10:21.450][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:21.451][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:10:21.457][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:10:21.496][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:10:21.516][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:10:22.035][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:10:22.390][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.390][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.391][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.391][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.393][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.393][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.394][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.394][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.395][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.396][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.397][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.398][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.399][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.399][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.400][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.401][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.402][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.402][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.404][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.404][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.405][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.405][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.407][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.408][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:10:22.409][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:31.695][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:12:31.708][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:12:31.709][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:12:31.709][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:12:31.710][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:12:31.710][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:12:31.711][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:12:31.711][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:12:31.757][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:12:31.757][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:12:31.821][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:31.823][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:12:32.086][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:32.088][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:12:32.093][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:12:32.094][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:12:32.113][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:12:32.711][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:12:33.082][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.083][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.083][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.084][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.084][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.085][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.085][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.086][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.086][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.087][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.088][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.088][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.089][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.089][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.090][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.090][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.091][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.091][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.092][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.092][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.093][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.093][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.094][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.094][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.096][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:12:33.097][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:13:09.879][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:46.168][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:16:46.209][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:16:46.209][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:16:46.209][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:16:46.210][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:16:46.210][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:16:46.210][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:16:46.211][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:16:46.251][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:16:46.251][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:16:46.314][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:46.316][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:16:46.575][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:46.597][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:16:46.602][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:16:46.603][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:16:46.622][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:16:47.256][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:16:47.633][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.634][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.634][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.635][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.635][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.636][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.636][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.636][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.637][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.637][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.638][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.638][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.639][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.640][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.640][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.641][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.641][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.642][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.642][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.643][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.644][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.644][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.645][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.646][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.647][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:16:47.649][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:17:06.235][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:49.540][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:19:49.548][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:19:49.549][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:19:49.549][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:19:49.549][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:19:49.550][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:19:49.550][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:19:49.550][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:19:49.591][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:19:49.592][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:19:49.654][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:49.656][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:19:49.921][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:49.923][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:19:49.928][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:19:49.929][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:19:49.948][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:19:50.641][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:19:51.036][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.037][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.037][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.038][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.039][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.039][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.040][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.040][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.041][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.041][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.042][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.042][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.043][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.043][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.044][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.045][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.045][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.045][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.046][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.046][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.047][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.047][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.048][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.048][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.050][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:51.052][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:19:55.590][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:16.202][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:21:16.202][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:21:16.203][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:21:16.203][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:21:16.203][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:21:16.204][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:21:16.204][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:21:16.204][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:21:16.242][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:21:16.244][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:21:16.262][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:16.263][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:21:16.535][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:16.537][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:21:16.542][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:21:16.543][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:21:16.562][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:21:16.970][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:21:17.354][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.355][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.355][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.356][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.356][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.357][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.357][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.358][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.358][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.359][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.360][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.360][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.361][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.362][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.362][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.363][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.363][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.364][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.364][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.365][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.365][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.366][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.366][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.367][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.368][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.369][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:17.370][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:50.124][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:21:50.131][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:21:50.132][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:21:50.132][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:21:50.132][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:21:50.133][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:21:50.133][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:21:50.133][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:21:50.223][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:21:50.224][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:21:50.512][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:50.513][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:21:50.743][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:50.744][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:21:50.752][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:21:50.752][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:21:50.774][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:21:51.194][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:21:51.561][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.562][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.562][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.563][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.563][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.563][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.564][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.564][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.565][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.565][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.566][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.566][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.567][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.567][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.568][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.568][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.569][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.569][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.570][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.570][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.571][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.571][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.572][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.572][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.573][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.575][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:21:51.576][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:28.963][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:22:28.979][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:22:28.979][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:22:28.980][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:22:28.980][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:22:28.980][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:22:28.981][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:22:28.981][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:22:29.054][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:22:29.054][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:22:29.087][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:29.088][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:22:29.361][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:29.362][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:22:29.368][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:22:29.369][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:22:29.387][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:22:29.840][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:22:30.256][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.257][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.257][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.257][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.258][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.258][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.259][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.259][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.260][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.260][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.261][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.261][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.262][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.262][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.263][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.263][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.264][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.264][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.265][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.265][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.265][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.266][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.266][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.267][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.268][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.270][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:30.271][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:58.095][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 18:22:58.110][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 18:22:58.111][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 18:22:58.111][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 18:22:58.111][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 18:22:58.111][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 18:22:58.112][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 18:22:58.112][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 18:22:58.289][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 18:22:58.289][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 18:22:58.524][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:58.525][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:22:58.763][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:58.764][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 18:22:58.769][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:22:58.770][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 18:22:58.789][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 18:22:59.252][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 18:22:59.632][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.632][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.633][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.633][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.634][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.634][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.635][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.635][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.636][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.636][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.636][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.637][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.637][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.638][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.638][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.639][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.639][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.640][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.640][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.641][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.641][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.641][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.642][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.642][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.644][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.645][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 18:22:59.646][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:23.987][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:09:23.988][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:09:23.988][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:09:23.988][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:09:23.989][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:09:23.989][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:09:23.989][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:09:23.990][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:09:24.033][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:09:24.061][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:09:24.068][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:24.070][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:09:24.344][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:24.345][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:09:24.351][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:09:24.351][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:09:24.370][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:09:24.802][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:09:25.216][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.217][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.218][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.218][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.219][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.219][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.220][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.220][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.221][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.221][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.222][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.222][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.223][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.223][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.224][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.224][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.224][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.225][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.225][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.226][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.227][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.227][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.228][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.229][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.230][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.231][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:09:25.232][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:03.320][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:12:03.321][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:12:03.321][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:12:03.321][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:12:03.322][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:12:03.322][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:12:03.323][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:12:03.323][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:12:03.369][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:12:03.369][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:12:03.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:03.376][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:12:03.657][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:03.658][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:12:03.664][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:12:03.664][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:12:03.683][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:12:04.081][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:12:04.468][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.469][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.470][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.471][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.472][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.472][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.473][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.473][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.474][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.474][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.475][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.475][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.476][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.476][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.477][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.477][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.478][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.478][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.479][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.479][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.480][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.481][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.481][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.482][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.483][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.485][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:04.486][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:50.364][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:12:50.448][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:12:50.448][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:12:50.449][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:12:50.449][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:12:50.450][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:12:50.450][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:12:50.450][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:12:50.494][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:12:50.494][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:12:50.498][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:50.499][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:12:50.778][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:50.779][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:12:50.785][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:12:50.786][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:12:50.805][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:12:51.219][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:12:51.586][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.587][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.587][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.588][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.588][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.588][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.589][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.589][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.590][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.590][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.591][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.591][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.592][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.592][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.593][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.593][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.594][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.594][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.595][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.595][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.596][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.596][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.597][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.597][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.598][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.600][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:12:51.601][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:43.366][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:13:43.367][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:13:43.367][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:13:43.367][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:13:43.367][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:13:43.368][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:13:43.368][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:13:43.368][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:13:43.410][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:13:43.411][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:13:43.416][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:43.417][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:13:43.699][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:43.700][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:13:43.706][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:13:43.707][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:13:43.726][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:13:44.102][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:13:44.458][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.459][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.460][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.460][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.461][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.462][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.462][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.463][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.463][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.464][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.464][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.465][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.466][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.466][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.467][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.467][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.468][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.468][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.469][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.469][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.470][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.471][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.471][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.472][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.473][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.475][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:13:44.476][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:00.442][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:14:00.442][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:14:00.443][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:14:00.443][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:14:00.443][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:14:00.444][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:14:00.444][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:14:00.444][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:14:00.490][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:14:00.491][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:14:00.495][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:00.496][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:14:00.771][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:00.772][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:14:00.778][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:14:00.779][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:14:00.798][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:14:01.211][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:14:01.589][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.590][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.590][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.591][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.591][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.592][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.592][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.593][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.593][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.594][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.594][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.595][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.595][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.596][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.596][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.597][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.598][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.598][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.599][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.599][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.600][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.600][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.601][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.601][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.603][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.604][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:14:01.605][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:28.363][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:15:28.364][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:15:28.364][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:15:28.364][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:15:28.365][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:15:28.365][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:15:28.365][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:15:28.366][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:15:28.408][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:15:28.408][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:15:28.413][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:28.414][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:15:28.693][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:28.695][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:15:28.700][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:15:28.701][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:15:28.720][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:15:29.116][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:15:29.522][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.523][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.523][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.524][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.525][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.525][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.526][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.526][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.527][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.527][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.528][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.528][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.529][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.529][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.530][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.530][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.531][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.531][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.532][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.533][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.533][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.534][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.535][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.535][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.537][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.538][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:29.539][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:15:44.654][INFO][SaveRegistryParameters] Saved 'SFXVolume' in registry: 60. 
+[08/01/2023 19:15:44.654][INFO][SaveRegistryParameters] Saved 'MusicVolume' in registry: 10. 
+[08/01/2023 19:15:44.654][INFO][SaveRegistryParameters] Saved 'ScaleFactor' in registry: 4. 
+[08/01/2023 19:15:44.655][INFO][SaveRegistryParameters] Saved 'FullScreen' in registry: 0. 
+[08/01/2023 19:16:08.251][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:16:08.251][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:16:08.252][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:16:08.252][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:16:08.252][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:16:08.253][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:16:08.253][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:16:08.253][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:16:08.291][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:16:08.291][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:16:08.296][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:08.298][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:16:08.575][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:08.576][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:16:08.582][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:16:08.582][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:16:08.601][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:16:09.006][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:16:09.400][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.400][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.401][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.402][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.402][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.403][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.404][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.404][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.405][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.405][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.406][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.406][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.407][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.407][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.408][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.408][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.409][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.409][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.410][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.410][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.411][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.411][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.412][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.412][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.414][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.415][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:16:09.416][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:36.040][INFO][LoadRegistryParameters] LogLevel is 4
+[08/01/2023 19:21:36.041][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/01/2023 19:21:36.041][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/01/2023 19:21:36.041][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/01/2023 19:21:36.042][INFO][LoadRegistryParameters] FullScreen is 0
+[08/01/2023 19:21:36.042][INFO][WinMain] Starting A_Game version 0.9a
+[08/01/2023 19:21:36.043][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/01/2023 19:21:36.043][INFO][WinMain] CPU Architecture: x64
+[08/01/2023 19:21:36.084][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/01/2023 19:21:36.084][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/01/2023 19:21:36.090][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:36.091][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:21:36.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:36.394][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/01/2023 19:21:36.399][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:21:36.400][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/01/2023 19:21:36.419][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/01/2023 19:21:36.802][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/01/2023 19:21:37.189][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.189][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.190][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.190][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.191][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.192][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.192][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.193][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.193][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.194][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.194][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.195][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.195][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.196][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.196][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.197][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.198][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.198][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.199][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.199][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.200][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.200][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.201][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.201][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.203][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.204][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/01/2023 19:21:37.205][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:58.408][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:39:58.409][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:39:58.410][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:39:58.410][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:39:58.410][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:39:58.411][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:39:58.411][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:39:58.411][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:39:58.446][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:39:58.447][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:39:58.690][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:58.782][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:39:59.048][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.049][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:39:59.055][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:39:59.055][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:39:59.074][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:39:59.472][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:39:59.841][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.842][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.842][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.843][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.843][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.844][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.844][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.845][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.845][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.846][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.846][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.847][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.847][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.848][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.848][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.849][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.849][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.850][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.850][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.851][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.851][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.852][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.852][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.853][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.854][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.856][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.857][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:39:59.857][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:02.733][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:44:02.734][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:44:02.734][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:44:02.734][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:44:02.735][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:44:02.735][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:44:02.735][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:44:02.735][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:44:02.780][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:44:02.780][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:44:02.796][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:02.797][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:44:03.074][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.079][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:44:03.084][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:44:03.085][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:44:03.103][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:44:03.525][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:44:03.919][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.919][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.920][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.920][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.920][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.921][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.921][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.922][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.922][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.923][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.923][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.924][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.924][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.925][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.925][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.926][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.926][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.927][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.927][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.928][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.928][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.929][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.932][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.933][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.934][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:44:03.935][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:22.811][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:45:22.812][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:45:22.813][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:45:22.813][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:45:22.814][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:45:22.814][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:45:22.815][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:45:22.815][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:45:22.858][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:45:22.859][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:45:22.864][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:22.865][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:45:23.141][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.145][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:45:23.151][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:45:23.152][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:45:23.171][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:45:23.548][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:45:23.952][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.953][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.953][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.954][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.955][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.955][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.956][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.957][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.957][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.958][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.959][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.959][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.960][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.961][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.961][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.962][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.962][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.963][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.963][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.964][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.964][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.965][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.965][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.966][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.967][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.969][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.970][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:45:23.971][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:34.033][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:46:34.047][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:46:34.048][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:46:34.048][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:46:34.048][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:46:34.049][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:46:34.049][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:46:34.049][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:46:34.092][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:46:34.092][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:46:34.109][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:34.110][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:46:34.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:34.382][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:46:34.387][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:46:34.388][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:46:34.407][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:46:34.826][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:46:35.198][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.199][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.200][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.200][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.201][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.201][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.202][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.202][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.203][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.203][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.204][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.204][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.205][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.205][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.206][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.207][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.207][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.208][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.209][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.209][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.210][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.210][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.211][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.211][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.213][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.214][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.215][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:46:35.216][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:06.777][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:47:06.778][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:47:06.778][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:47:06.778][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:47:06.778][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:47:06.778][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:47:06.778][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:47:06.780][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:47:06.819][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:47:06.819][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:47:06.825][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:06.826][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:47:07.131][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:07.132][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:47:07.138][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:47:07.139][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:47:07.158][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:47:07.555][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:47:08.069][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.069][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.070][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.071][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.071][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.072][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.073][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.074][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.074][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.075][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.076][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.076][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.077][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.077][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.078][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.079][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.079][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.080][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.080][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.081][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.081][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.082][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.082][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.083][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.084][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.086][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.086][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:08.087][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:32.676][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:47:32.677][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:47:32.677][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:47:32.677][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:47:32.677][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:47:32.678][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:47:32.678][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:47:32.678][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:47:32.716][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:47:32.716][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:47:32.722][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:32.723][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:47:33.002][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.003][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:47:33.008][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:47:33.009][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:47:33.028][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:47:33.414][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:47:33.786][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.786][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.787][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.787][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.788][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.788][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.789][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.789][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.790][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.790][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.791][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.791][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.792][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.792][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.793][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.794][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.794][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.795][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.796][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.797][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.797][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.798][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.799][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.799][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.801][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.802][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.803][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:47:33.804][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:33.081][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:48:33.081][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:48:33.082][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:48:33.082][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:48:33.082][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:48:33.083][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:48:33.083][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:48:33.083][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:48:33.126][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:48:33.126][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:48:33.143][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:33.144][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:48:33.415][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:33.416][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:48:33.422][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:48:33.423][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:48:33.441][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:48:33.853][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:48:34.251][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.252][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.252][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.253][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.253][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.254][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.254][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.255][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.256][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.256][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.257][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.257][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.258][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.258][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.259][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.259][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.260][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.260][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.260][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.261][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.261][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.262][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.262][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.263][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.264][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.266][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.266][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:48:34.267][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:37.487][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:49:37.559][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:49:37.560][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:49:37.561][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:49:37.561][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:49:37.562][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:49:37.562][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:49:37.563][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:49:37.717][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:49:37.735][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:49:37.741][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:37.742][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:49:38.022][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.023][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:49:38.029][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:49:38.030][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:49:38.051][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:49:38.557][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:49:38.921][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.922][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.922][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.923][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.923][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.924][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.924][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.925][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.925][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.925][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.926][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.926][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.927][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.927][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.928][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.928][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.929][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.929][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.930][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.931][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.931][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.932][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.933][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.935][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.935][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:49:38.936][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:50:21.470][INFO][SaveRegistryParameters] Saved 'SFXVolume' in registry: 60. 
+[08/02/2023 13:50:21.471][INFO][SaveRegistryParameters] Saved 'MusicVolume' in registry: 10. 
+[08/02/2023 13:50:21.471][INFO][SaveRegistryParameters] Saved 'ScaleFactor' in registry: 4. 
+[08/02/2023 13:50:21.471][INFO][SaveRegistryParameters] Saved 'FullScreen' in registry: 0. 
+[08/02/2023 13:51:01.885][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 13:51:01.885][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 13:51:01.886][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 13:51:01.886][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 13:51:01.886][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 13:51:01.887][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 13:51:01.887][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 13:51:01.888][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 13:51:01.994][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 13:51:02.025][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 13:51:02.030][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:02.031][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:51:02.307][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:02.308][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 13:51:02.314][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:51:02.314][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 13:51:02.334][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 13:51:02.742][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 13:51:03.108][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.109][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.109][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.110][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.110][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.110][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.111][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.111][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.112][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.112][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.113][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.113][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.114][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.114][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.115][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.115][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.116][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.116][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.117][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.117][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.118][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.118][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.119][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.119][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.121][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.122][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.123][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 13:51:03.124][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:36.086][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 14:00:36.087][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 14:00:36.087][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 14:00:36.087][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 14:00:36.088][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 14:00:36.088][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 14:00:36.088][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 14:00:36.088][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 14:00:36.134][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 14:00:36.135][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 14:00:36.139][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:36.149][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:00:36.446][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:36.448][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 14:00:36.454][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:00:36.455][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:00:36.474][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 14:00:36.930][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 14:00:37.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.380][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.380][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.382][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.382][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.383][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.383][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.384][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.384][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.385][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.385][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.386][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.386][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.387][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.387][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.388][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.388][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.389][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.390][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:37.393][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:59.123][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 14:00:59.124][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 14:00:59.124][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 14:00:59.124][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 14:00:59.125][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 14:00:59.125][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 14:00:59.125][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 14:00:59.125][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 14:00:59.169][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 14:00:59.169][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 14:00:59.176][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:59.177][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:00:59.467][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:00:59.468][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 14:00:59.474][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:00:59.474][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:00:59.493][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 14:00:59.938][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 14:01:00.368][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.369][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.369][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.370][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.370][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.371][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.371][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.372][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.372][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.373][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.373][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.374][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.374][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.374][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.375][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.376][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.377][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.378][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.378][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.379][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.381][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.382][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.383][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:01:00.384][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:16.344][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 14:02:16.345][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 14:02:16.345][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 14:02:16.345][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 14:02:16.346][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 14:02:16.346][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 14:02:16.346][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 14:02:16.346][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 14:02:16.417][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 14:02:16.418][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 14:02:16.422][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:16.423][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:02:16.704][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:16.706][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 14:02:16.711][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:02:16.712][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 14:02:16.731][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 14:02:17.163][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 14:02:17.577][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.578][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.578][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.579][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.579][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.580][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.580][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.581][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.581][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.582][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.583][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.583][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.584][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.584][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.585][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.585][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.586][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.586][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.587][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.587][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.588][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.588][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.589][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.590][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.591][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.593][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.594][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 14:02:17.594][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:51.069][INFO][LoadRegistryParameters] LogLevel is 4
+[08/02/2023 16:42:51.070][INFO][LoadRegistryParameters] ScaleFactor is 4
+[08/02/2023 16:42:51.070][INFO][LoadRegistryParameters] SFXVolume is 60
+[08/02/2023 16:42:51.071][INFO][LoadRegistryParameters] MusicVolume is 10
+[08/02/2023 16:42:51.071][INFO][LoadRegistryParameters] FullScreen is 0
+[08/02/2023 16:42:51.071][INFO][WinMain] Starting A_Game version 0.9a
+[08/02/2023 16:42:51.072][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[08/02/2023 16:42:51.072][INFO][WinMain] CPU Architecture: x64
+[08/02/2023 16:42:51.142][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[08/02/2023 16:42:51.142][INFO][CreateMainGameWindow] Will draw at 1536x960
+[08/02/2023 16:42:51.205][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:51.206][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 16:42:51.486][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:51.590][INFO][LoadTileMapFromMem] TileMap dimensions: 265x150.
+[08/02/2023 16:42:51.595][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 16:42:51.596][INFO][LoadWaveFromMem] Successfully loaded wav from memory!
+[08/02/2023 16:42:51.615][INFO][LoadOggFromMem] Size of Ogg file: 1059870.
+[08/02/2023 16:42:51.998][INFO][LoadOggFromMem] Size of Ogg file: 791567.
+[08/02/2023 16:42:52.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.392][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.393][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.393][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.394][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.395][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.395][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.396][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.396][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.397][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.397][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.398][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.398][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.399][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.399][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.400][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.400][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.401][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.402][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.402][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.403][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.403][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.404][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.404][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.406][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.407][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.408][INFO][Load32BppBitmapFromMem] Loading Successful
+[08/02/2023 16:42:52.409][INFO][Load32BppBitmapFromMem] Loading Successful

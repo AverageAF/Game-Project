@@ -4,7 +4,7 @@ del CopyAssets.log
 
 REM  --bitmaps--
 
-REM   -sprites-
+REM   -player sprites-
 MyMiniz.exe Assets.dat + .\Assets\PixelFont(6x7).bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingDown0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingDown1.bmpx >> CopyAssets.log
@@ -19,10 +19,17 @@ MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp1.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp2.bmpx >> CopyAssets.log
 
+REM 	-npc sprites-
+
 MyMiniz.exe Assets.dat + .\Assets\ManFacingDown.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingLeft.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingRight.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp.bmpx >> CopyAssets.log
+
+REM 	-monster sprites-
+
+MyMiniz.exe Assets.dat + .\Assets\Wolf64Back01.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Wolf64Front01.bmpx >> CopyAssets.log
 
 REM   -worldmap-
 

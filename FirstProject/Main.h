@@ -6,6 +6,7 @@
 #ifdef _DEBUG
 	#define ASSERT(Expression, Message) if (!(Expression)) { __ud2(); }
 #else
+	//#define ASSERT(Expression, Message) if (!(Expression)) { __ud2(); }
 	#define ASSERT(Expression, Message) ((void),0);
 #endif
 
@@ -20,7 +21,7 @@
 #define GAME_BPP 32
 #define GAME_DRAWING_AREA_MEMORY_SIZE (GAME_RES_WIDTH * GAME_RES_HEIGHT * (GAME_BPP/8))
 
-#define CALCULATE_AVG_FPS_EVERY_X_FRAMES 25			//goal of 120fps
+#define CALCULATE_AVG_FPS_EVERY_X_FRAMES 30			//goal of 120fps
 #define GOAL_MICROSECONDS_PER_FRAME 16667ULL		//16667 = 60fps <8000 for 120fps
 
 
@@ -71,6 +72,8 @@
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
 #define MAX_SPRITE_LOAD 10
 #define MAX_DIALOGUE_BOXES 10
+#define MAX_PARTY_SIZE 6
+#define TOTAL_MONSTERS 10
 
 #define SUIT_0 0
 #define SUIT_1 1
@@ -145,6 +148,8 @@ typedef enum WINDOW_FLAGS
 
 } WINDOW_FLAGS;
 
+
+///////////////////TODO maybe remove?
 typedef enum DIALOGUE_FLAGS
 {
 	DIALOGUE_FLAG_BRIEF = 1
@@ -161,6 +166,21 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 	MOVEMENT_WALK_LEFT_RIGHT
 
 } MOVEMENTTYPE;
+
+typedef enum MONSTER_ELEMENTS
+{
+	ELEMENT_NONE = 0,
+	ELEMENT_EARTH = 1,
+	ELEMENT_AIR = 2,
+	ELEMENT_FIRE = 4,
+	ELEMENT_WATER = 8,
+	ELEMENT_METAL = 16,
+	ELEMENT_ELECTRIC = 32,
+	ELEMENT_SPIRIT = 64,
+	ELEMENT_LIFE = 128,
+	ELEMENT_DEATH = 256
+
+} MONSTER_ELEMENTS;
 
 typedef struct UPOINT		//used for character screen position
 {
@@ -295,10 +315,11 @@ typedef struct PLAYER
 
 	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
 	uint16_t RandomEncounterPercent;
+	uint8_t Party[MAX_PARTY_SIZE];
 
 } PLAYER;
 
-typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs"
+typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Sprites"
 {
 	char Name[MAX_NAME_LENGTH + 1];
 	UPOINT WorldPos;
@@ -319,8 +340,68 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs"
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
 	BOOL WantsToBattle;
+	uint8_t Party[MAX_PARTY_SIZE];
 
 } INGAMESPRITE;
+
+
+typedef struct MONSTERINFO			/////this structure will contain all info for all monsters from a general POV, including sprites and base-stats
+{
+	uint8_t MonsterIndex;
+	char Name[MAX_MONSTER_NAME_LENGTH + 1];
+	GAMEBITMAP MonsterBattleSpriteFront;
+	GAMEBITMAP MonsterBattleSpriteBack;
+
+	uint8_t MonsterBaseHealthStat;
+	uint8_t MonsterBaseAttackStat;
+	uint8_t MonsterBasePsiStat;
+	uint8_t MonsterBaseDefenseStat;
+	uint8_t MonsterBaseResolveStat;
+	uint8_t MonsterBaseSpeedStat;
+	uint16_t MonsterBaseStatTotal;
+	
+	MONSTER_ELEMENTS MonsterElement1;
+	MONSTER_ELEMENTS MonsterElement2;
+
+} MONSTERINFO;
+
+
+typedef struct UNIQUEMONSTER
+{
+	MONSTERINFO MonsterBaseInfo;
+
+	uint8_t MonsterCurrentLevel;
+	uint8_t MonsterCurrentXp;
+
+	///////EQUIPPED_ITEM MonsterEquippedItem; ????
+
+	uint16_t MonsterCurrentHealth;
+	uint16_t MonsterMaxHealth;
+	float MonsterPercetHealth;
+
+	uint8_t MonsterHealthStat;
+	uint8_t MonsterAttackStat;
+	uint8_t MonsterPsiStat;
+	uint8_t MonsterDefenseStat;
+	uint8_t MonsterResolveStat;
+	uint8_t MonsterSpeedStat;
+
+	uint8_t HealthTrained;
+	uint8_t AttackTrained;
+	uint8_t PsiTrained;
+	uint8_t DefenseTrained;
+	uint8_t ResolveTrained;
+	uint8_t SpeedTrained;
+
+	uint8_t GeneticHealth;
+	uint8_t GeneticAttack;
+	uint8_t GeneticPsi;
+	uint8_t GeneticDefense;
+	uint8_t GeneticResolve;
+	uint8_t GeneticSpeed;
+
+} UNIQUEMONSTER;
+
 
 typedef struct REGISTRYPARAMS
 {
@@ -376,6 +457,10 @@ GAMEBITMAP gBackBuffer;
 GAMEBITMAP g6x7Font;
 GAMEBITMAP gBattleScreen_Grass01;
 GAMEBITMAP gBattleScreen_StoneBricks01;
+
+GAMEBITMAP gBattleSpriteBack[TOTAL_MONSTERS];	//////temp while still working on MONSTERINFO struct
+GAMEBITMAP gBattleSpriteFront[TOTAL_MONSTERS];
+
 GAMEMAP gOverWorld01;
 
 HWND gGameWindow;

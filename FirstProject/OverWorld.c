@@ -55,7 +55,7 @@ void DrawOverworldScreen(void)
             gCharacterSprite[Index].ScreenPos = gCharacterSprite[Index].ResetScreenPos;
             gCharacterSprite[Index].WorldPos = gCharacterSprite[Index].ResetWorldPos;
             gCharacterSprite[Index].Direction = gCharacterSprite[Index].ResetDirection;
-            //gCharacterSprite[Index].SightRange = gCharacterSprite[Index].ResetSightRange;
+            //gCharacterSprite[Index].SightRange = gCharacterSprite[Index].ResetSightRange;             ////only for debugging (will reset with an item?)
         }
     }
 
@@ -208,7 +208,7 @@ void PPI_Overworld(void)
                         }
                         case (DOWN):
                         {
-                            if ((gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y + 16) && (gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x - 4) && (gCharacterSprite[Index].WorldPos.x <= gPlayer.WorldPos.x + 4))
+                           if ((gCharacterSprite[Index].WorldPos.y == gPlayer.WorldPos.y + 16) && (gCharacterSprite[Index].WorldPos.x >= gPlayer.WorldPos.x - 4) && (gCharacterSprite[Index].WorldPos.x <= gPlayer.WorldPos.x + 4))
                             {
                                 gCharacterSprite[Index].WorldPos.y = gPlayer.WorldPos.y + 16;
                                 gCharacterSprite[Index].WorldPos.x = gPlayer.WorldPos.x;
@@ -688,12 +688,11 @@ void PPI_Overworld(void)
                             }
                         }
                     }
-
                     break;
                 }
                 default:
                 {
-
+                    //ASSERT(FALSE, "Player landed on an uneven pixel!");                       ////seems to still happen at 0???
                 }
             }
         }
@@ -706,17 +705,17 @@ void PPI_Overworld(void)
             {
                 if (gCharacterSprite[Index].InteractedWith == TRUE)
                 {
-                    gCharacterSprite[Index].InteractedWith = FALSE;
-
                     if (gCharacterSprite[Index].WantsToBattle == TRUE)
                     {
                         RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
-                        gCharacterSprite[Index].WantsToBattle = FALSE;
-                        gCharacterSprite[Index].SightRange = 0;
+                        break;
                     }
-                    break;
+                    else
+                    {
+                        gCharacterSprite[Index].InteractedWith = FALSE;
+                        break;
+                    }
                 }
-
             }
             gGamePaused = FALSE;
             gDialogueControls = FALSE;
@@ -749,7 +748,6 @@ void TeleportHandler(void)
                 if ((gPortCoords[Counter].SpritesToLoad[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == FALSE))             /////////TODO make so game unloads sprites and reloads them via teleport
                 {
                     gCharacterSprite[Sprite].Loaded = TRUE;
-                    //gCharacterSprite[Sprite].Exists = TRUE;
                     if ((gCharacterSprite[Sprite].ScreenPos.x >= 0) && (gCharacterSprite[Sprite].ScreenPos.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Sprite].ScreenPos.y >= 0) && (gCharacterSprite[Sprite].ScreenPos.y <= GAME_RES_HEIGHT - 16))
                     {
                         gCharacterSprite[Sprite].Visible = TRUE;
@@ -758,7 +756,6 @@ void TeleportHandler(void)
                 if ((gPortCoords[Counter].SpritesToUnload[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == TRUE))           //////TODO FIX gCharacterSprite[1].Exists = 40???? should be boolean something is overwriting it
                 {
                     gCharacterSprite[Sprite].Loaded = FALSE;
-                    //gCharacterSprite[Sprite].Exists = FALSE;
                     gCharacterSprite[Sprite].Visible = FALSE;
                 }
             }
@@ -926,10 +923,3 @@ void TriggerNPCMovement(_In_ uint64_t Counter)
         }
     }
 }
-
-//void ResetNPC(_In_ INGAMESPRITE CharacterSprite)
-//{
-//    CharacterSprite.WorldPos = CharacterSprite.ResetWorldPos;
-//    CharacterSprite.ScreenPos = CharacterSprite.ResetScreenPos;
-//    CharacterSprite.Direction = CharacterSprite.ResetDirection;
-//}
