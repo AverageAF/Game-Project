@@ -20,23 +20,27 @@ typedef struct PORTCOORDS
 	GAMEAREA AreaDest;
 
 	////sprites onscreen after teleporting
-	BOOL SpritesToLoad[MAX_SPRITE_LOAD];
+	BOOL SpritesToLoad[NUM_CHAR_SPRITES];
 
 	////sprites onscreen before teleporting
-	BOOL SpritesToUnload[MAX_SPRITE_LOAD];
+	BOOL SpritesToUnload[NUM_CHAR_SPRITES];
 
 } PORTCOORDS;
 
-PORTCOORDS gPortCoords[2];
+PORTCOORDS gPortCoords[UNIQUE_TELEPADS_COUNT];
 
 PORTCOORDS gTeleport001;
 PORTCOORDS gTeleport002;
+PORTCOORDS gTeleport003;
+PORTCOORDS gTeleport004;
 
 GAMEAREA gCurrentArea;
 
 GAMEAREA gOverworldArea;
 
 GAMEAREA gDungeon01Area;
+
+GAMEAREA gHome01Area;
 
 void DrawOverworldScreen(void);
 
@@ -49,4 +53,6 @@ void TriggerNPCMovement(_In_ uint64_t Counter);
 uint8_t ScriptGiveMonster(uint8_t index, uint8_t level, uint16_t item);
 
 void HealPlayerParty(void);
+
+void TeleportPlayerBlackOut(void);
 

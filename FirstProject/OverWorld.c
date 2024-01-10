@@ -25,6 +25,11 @@ void DrawOverworldScreen(void)
         gOverWorldControls = TRUE;
     }
 
+    if (gPlayerParty[0].DriveMonster.hasIndex == TRUE && gPlayerParty[0].Health == 0 && gPlayerParty[1].Health == 0 && gPlayerParty[2].Health == 0 && gPlayerParty[3].Health == 0 && gPlayerParty[4].Health == 0 && gPlayerParty[5].Health == 0)
+    {
+        TeleportPlayerBlackOut();
+    }
+
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
     if (LocalFrameCounter == 30)
@@ -47,7 +52,7 @@ void DrawOverworldScreen(void)
 
 
 
-    for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
+    for (uint8_t Index = 0; Index <= NUM_CHAR_SPRITES; Index++)
     {
         if (gCharacterSprite[Index].Visible == TRUE)
         {
@@ -68,7 +73,7 @@ void DrawOverworldScreen(void)
 
     if (gOverWorldControls == FALSE)
     {
-        for (uint8_t Counter = 0; Counter <= MAX_SPRITE_LOAD; Counter++)
+        for (uint8_t Counter = 0; Counter <= NUM_CHAR_SPRITES; Counter++)
         {
             if (gCharacterSprite[Counter].InteractedWith == TRUE) 
             {
@@ -150,7 +155,7 @@ void PPI_Overworld(void)
 
         if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
         {
-            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+            for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
             {
                 if (gCharacterSprite[Index].Visible == TRUE)
                 {
@@ -242,7 +247,7 @@ void PPI_Overworld(void)
                         break;
                     }
                 }
-                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                 {
                     if (gCharacterSprite[Index].Visible == TRUE)
                     {
@@ -284,7 +289,7 @@ void PPI_Overworld(void)
                         break;
                     }
                 }
-                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                 {
                     if (gCharacterSprite[Index].Visible == TRUE)
                     {
@@ -326,7 +331,7 @@ void PPI_Overworld(void)
                         break;
                     }
                 }
-                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                 {
                     //////this big line of code means: if any pixel of 16x16 sprite is in the way of moving
                     if (gCharacterSprite[Index].Visible == TRUE)
@@ -370,7 +375,7 @@ void PPI_Overworld(void)
                             break;
                         }
                     }
-                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                    for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                     {
                         if (gCharacterSprite[Index].Visible == TRUE)
                         {
@@ -416,7 +421,7 @@ void PPI_Overworld(void)
                 {
                     if (gCamera.y < gCurrentArea.Area.bottom - GAME_RES_HEIGHT)
                     {
-                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                         {
                             if (gCharacterSprite[Index].Exists == TRUE && gCharacterSprite[Index].Loaded == TRUE)
                             {
@@ -459,7 +464,7 @@ void PPI_Overworld(void)
                 {
                     if (gCamera.x > gCurrentArea.Area.left)
                     {
-                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                         {
                             if (gCharacterSprite[Index].Exists == TRUE && gCharacterSprite[Index].Loaded == TRUE)
                             {
@@ -501,7 +506,7 @@ void PPI_Overworld(void)
                 {
                     if (gCamera.x < gCurrentArea.Area.right - GAME_RES_WIDTH)
                     {
-                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                         {
                             if (gCharacterSprite[Index].Exists == TRUE && gCharacterSprite[Index].Loaded == TRUE)
                             {
@@ -543,7 +548,7 @@ void PPI_Overworld(void)
                 {
                     if (gCamera.y > gCurrentArea.Area.top)
                     {
-                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                         {
                             if (gCharacterSprite[Index].Exists == TRUE && gCharacterSprite[Index].Loaded == TRUE)
                             {
@@ -612,7 +617,7 @@ void PPI_Overworld(void)
                     }
                     else
                     {
-                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                         {
                             switch (gCharacterSprite[Index].Direction)
                             {
@@ -695,7 +700,7 @@ void PPI_Overworld(void)
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
                 {
                     if (gCharacterSprite[Index].InteractedWith == TRUE)
                     {
@@ -763,7 +768,7 @@ void TeleportHandler(void)
             gCamera.x += gPortCoords[Counter].CameraPosAdd.x;
             gCamera.y += gPortCoords[Counter].CameraPosAdd.y;
             gCurrentArea = gPortCoords[Counter].AreaDest;
-            for (uint8_t Sprite = 0; Sprite < MAX_SPRITE_LOAD; Sprite++)
+            for (uint8_t Sprite = 0; Sprite < NUM_CHAR_SPRITES; Sprite++)
             {
                 if ((gPortCoords[Counter].SpritesToLoad[Sprite] == TRUE) && (gCharacterSprite[Sprite].Loaded == FALSE))             /////////TODO make so game unloads sprites and reloads them via teleport
                 {
@@ -798,7 +803,7 @@ void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE
 
 void TriggerNPCMovement(_In_ uint64_t Counter)
 {
-    for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
+    for (uint8_t Index = 0; Index <= NUM_CHAR_SPRITES; Index++)
     {
         if (gCharacterSprite[Index].Loaded == TRUE)
         {
@@ -978,4 +983,32 @@ void HealPlayerParty(void)
         arg[3] = 0;
         SetMonsterData(&gPlayerParty[i], MONSTER_DATA_STATUS, arg);
     }
+}
+
+void TeleportPlayerBlackOut(void)
+{
+    StopGameMusic();
+
+    for (uint8_t i = 0; i < NUM_CHAR_SPRITES; i++)  //TOUSE: steal this to make a sprite resetting function???
+    {
+        gCharacterSprite[i].ScreenPos = gCharacterSprite[i].ResetOriginScreenPos;
+        gCharacterSprite[i].WorldPos = gCharacterSprite[i].ResetOriginWorldPos;
+        gCharacterSprite[i].ResetScreenPos = gCharacterSprite[i].ResetOriginScreenPos;
+        gCharacterSprite[i].ResetWorldPos = gCharacterSprite[i].ResetOriginWorldPos;
+        gCharacterSprite[i].Direction = gCharacterSprite[i].ResetDirection;
+        gCharacterSprite[i].Loaded = FALSE;
+        gCharacterSprite[i].Visible = FALSE;
+    }
+
+    gCurrentArea = gHome01Area;
+
+    gPlayer.ScreenPos.x = 192; 
+    gPlayer.ScreenPos.y = 96;  
+    gPlayer.WorldPos.x = 4048; 
+    gPlayer.WorldPos.y = 352;  
+    gCamera.x = 3856;          
+    gCamera.y = 256;           
+    gPlayer.Direction = DOWN;
+
+    HealPlayerParty();
 }

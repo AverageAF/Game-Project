@@ -103,7 +103,7 @@ void DrawBattleScreen(void)
 
     char BattleTextLineScratch[40] = { 0 };
 
-    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+    for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
     {
         if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].Event == EVENT_FLAG_BATLLE))
         {
@@ -201,6 +201,13 @@ void DrawBattleScreen(void)
     {
         case BATTLESTATE_OPENING_TEXT:
         {
+            if (gPlayerParty[gCurrentPartyMember].Health == 0)
+            {
+                gCurrentBattleState = BATTLESTATE_KO;
+
+                goto PlayerNoHP;
+            }
+
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
                 gPreviousBattleState = gCurrentBattleState;
@@ -810,7 +817,10 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_KO:
         {
+
             BOOL IsPlayerMonsterKOed = FALSE;
+
+        PlayerNoHP:
 
             if (gPlayerParty[gCurrentPartyMember].Health == 0)
             {
@@ -1440,7 +1450,7 @@ void MenuItem_BattleScreen_FightButton(void)
 
 void MenuItem_BattleScreen_EscapeButton(void)
 {
-    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+    for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
     {
         if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].Event == EVENT_FLAG_BATLLE))
         {

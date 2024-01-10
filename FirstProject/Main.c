@@ -565,16 +565,20 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].ResetScreenPos.x = 96;
     gCharacterSprite[0].ResetScreenPos.y = 192;
     gCharacterSprite[0].ResetWorldPos.x = 96;
-    gCharacterSprite[0].ResetWorldPos.y = 192;
+    gCharacterSprite[0].ResetOriginScreenPos.y = 192;
+    gCharacterSprite[0].ResetOriginScreenPos.x = 96;
+    gCharacterSprite[0].ResetOriginScreenPos.y = 192;
+    gCharacterSprite[0].ResetOriginWorldPos.x = 96;
+    gCharacterSprite[0].ResetOriginWorldPos.y = 192;
     gCharacterSprite[0].Direction = LEFT;
     gCharacterSprite[0].ResetDirection = LEFT;
     gCharacterSprite[0].Event = EVENT_FLAG_MONSTER;
     gCharacterSprite[0].Movement = MOVEMENT_WALK_LEFT_RIGHT;
     gCharacterSprite[0].MovementRange.y = 5;
     gCharacterSprite[0].MovementRange.x = 5;
-    gCharacterSprite[0].Visible = TRUE;
+    gCharacterSprite[0].Visible = FALSE;
     gCharacterSprite[0].Exists = TRUE;
-    gCharacterSprite[0].Loaded = TRUE;
+    gCharacterSprite[0].Loaded = FALSE;
     gCharacterSprite[0].Dialogue[0] = "Here have a Monster!\nI don't really need one";
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
@@ -587,6 +591,10 @@ DWORD InitializeSprites(void)
     gCharacterSprite[1].ResetScreenPos.y = 16;
     gCharacterSprite[1].ResetWorldPos.x = 3872;
     gCharacterSprite[1].ResetWorldPos.y = 16;
+    gCharacterSprite[1].ResetOriginScreenPos.x = 16;
+    gCharacterSprite[1].ResetOriginScreenPos.y = 16;
+    gCharacterSprite[1].ResetOriginWorldPos.x = 3872;
+    gCharacterSprite[1].ResetOriginWorldPos.y = 16;
     gCharacterSprite[1].Direction = DOWN;
     gCharacterSprite[1].ResetDirection = DOWN;
     gCharacterSprite[1].Movement = MOVEMENT_SPIN;
@@ -605,15 +613,19 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].ResetScreenPos.y = 32;
     gCharacterSprite[2].ResetWorldPos.x = 224;
     gCharacterSprite[2].ResetWorldPos.y = 32;
+    gCharacterSprite[2].ResetOriginScreenPos.x = 224;
+    gCharacterSprite[2].ResetOriginScreenPos.y = 32;
+    gCharacterSprite[2].ResetOriginWorldPos.x = 224;
+    gCharacterSprite[2].ResetOriginWorldPos.y = 32;
     gCharacterSprite[2].Direction = DOWN;
     gCharacterSprite[2].ResetDirection = DOWN;
     gCharacterSprite[2].SightRange = 3;
     gCharacterSprite[2].ResetSightRange = 3;
     gCharacterSprite[2].Event = EVENT_FLAG_BATLLE;
     gCharacterSprite[2].Movement = MOVEMENT_STILL;
-    gCharacterSprite[2].Visible = TRUE;
+    gCharacterSprite[2].Visible = FALSE;
     gCharacterSprite[2].Exists = TRUE;
-    gCharacterSprite[2].Loaded = TRUE;
+    gCharacterSprite[2].Loaded = FALSE;
     gCharacterSprite[2].Dialogue[0] = "Lets have a battle!";
     gCharacterSprite[2].BattleAiFlag = FLAG_NPCAI_HIGHESTPOWER;
 
@@ -631,13 +643,17 @@ DWORD InitializeSprites(void)
     gCharacterSprite[3].ResetScreenPos.y = 16;
     gCharacterSprite[3].ResetWorldPos.x = 256;
     gCharacterSprite[3].ResetWorldPos.y = 16;
+    gCharacterSprite[3].ResetOriginScreenPos.x = 256;
+    gCharacterSprite[3].ResetOriginScreenPos.y = 16;
+    gCharacterSprite[3].ResetOriginWorldPos.x = 256;
+    gCharacterSprite[3].ResetOriginWorldPos.y = 16;
     gCharacterSprite[3].Direction = DOWN;
     gCharacterSprite[3].ResetDirection = DOWN;
     gCharacterSprite[3].Event = EVENT_FLAG_HEAL;
     gCharacterSprite[3].Movement = MOVEMENT_STILL;
-    gCharacterSprite[3].Visible = TRUE;
+    gCharacterSprite[3].Visible = FALSE;
     gCharacterSprite[3].Exists = TRUE;
-    gCharacterSprite[3].Loaded = TRUE;
+    gCharacterSprite[3].Loaded = FALSE;
     gCharacterSprite[3].Dialogue[0] = "Let me heal your monster!\n...\n...\n...\nThere! They seem much better!";
 
     //////////////////////////////////////////////////////////////
@@ -647,12 +663,12 @@ DWORD InitializeSprites(void)
 
 DWORD InitializePlayer(void)
 {
-    gPlayer.ScreenPos.x = 192;      //368 positions for top right corner            //192 for top left corner
-    gPlayer.ScreenPos.y = 32;       //0                                             //32
-    gPlayer.WorldPos.x = 192;       //3824                                          //192
-    gPlayer.WorldPos.y = 32;        //0                                             //32
-    gCamera.x = 0;                  //3456                                          //0
-    gCamera.y = 0;                  //0                                             //0
+    gPlayer.ScreenPos.x = 192;      //368 positions for top right corner            //192 for top left corner                   x192 y69
+    gPlayer.ScreenPos.y = 96;       //0                                             //32
+    gPlayer.WorldPos.x = 4048;       //3824                                          //192                                      x4048 y352 new spawn
+    gPlayer.WorldPos.y = 352;        //0                                             //32
+    gCamera.x = 3856;                  //3456                                          //0                                         x3856 y256 camera pos new spawn
+    gCamera.y = 256;                  //0                                             //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
     gPlayer.RandomEncounterPercent = 500;   //50 == a 5% chance
@@ -2278,13 +2294,19 @@ Exit:
 
 void InitializeGlobals(void)
 {
-    ASSERT(_countof(gPassableTiles) == 4, "The gPassableTiles array is the wrong size!");
+    ASSERT(_countof(gPassableTiles) == NUM_PASSABLE_TILES, "The gPassableTiles array is the wrong size!");
+
+    ASSERT(_countof(gEncounterTiles) == NUM_ENCOUNTER_TILES, "The gEncounterTiles array is the wrong size!");
 
     ////make sure gPassableTiles array is large enough to fit all tiles (declared in main.h)
     gPassableTiles[0] = TILE_GRASS_01;
     gPassableTiles[1] = TILE_STONEBRICKS_FLOOR_01;
     gPassableTiles[2] = TILE_TELEPORT01;
     gPassableTiles[3] = TILE_TALLGRASS_01;
+    gPassableTiles[4] = TILE_WOODFLOOR_01;
+    gPassableTiles[5] = TILE_WOODFLOOR_04;
+    gPassableTiles[6] = TILE_WOODFLOOR_05;
+    gPassableTiles[7] = TILE_WOODFLOOR_06;
 
     gEncounterTiles[0] = TILE_TALLGRASS_01;
     gEncounterTiles[1] = TILE_STONEBRICKS_FLOOR_01;
@@ -2297,13 +2319,19 @@ void InitializeGlobals(void)
 
     gDungeon01Area = (GAMEAREA){ .Name = "Dungeon 01",
                                  .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
-                                 .Music = &gMusicDungeon01 };     
+                                 .Music = &gMusicDungeon01 };   
 
-    gCurrentArea = gOverworldArea;
+
+
+    gHome01Area     = (GAMEAREA){ .Name = "Home",
+                                 .Area = (RECT){.left = 3856, .top = 256, .right = 4240, .bottom = 496 },
+                                 .Music = &gMusicOverWorld01 };
+
+    gCurrentArea = gHome01Area;
 
     gGameIsRunning = TRUE;
 
-    ASSERT(_countof(gPortCoords) == 2, "The gTeleportCoords array is the wrong size!");
+    ASSERT(_countof(gPortCoords) == UNIQUE_TELEPADS_COUNT, "The gTeleportCoords array is the wrong size!");
 
     gTeleport001 = (PORTCOORDS){    .AreaDest      =       gDungeon01Area,
                                     .CameraPosAdd  =    (POINT)  { .x = 3584, .y = -272 },   //3856 0 dest
@@ -2321,9 +2349,31 @@ void InitializeGlobals(void)
                                     .SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE,
                                     .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = TRUE };          ////load/unload sprites when teleporting
 
+    gTeleport003 = (PORTCOORDS){ .AreaDest = gHome01Area,
+                                    .CameraPosAdd = (POINT)  {.x = 3856, .y = 256 },    //3856 256 dest
+                                    .ScreenPosAdd = (POINT)  {.x = 0,     .y = 144 },         //192 176 dest
+                                    .WorldPosAdd = (POINT)  {.x = 3856, .y = 400 },
+                                    .WorldPos = (UPOINT) {.x = 192,  .y = 32 },
+                                    .SpritesToLoad[0] = FALSE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = FALSE, .SpritesToLoad[3] = FALSE,
+                                    .SpritesToUnload[0] = TRUE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = TRUE, .SpritesToUnload[3] = TRUE };          ////load/unload sprites when teleporting
+
+
+
+    gTeleport004 = (PORTCOORDS){ .AreaDest = gOverworldArea,
+                                    .CameraPosAdd = (POINT)  {.x = -3856, .y = -256 },    //0 0 dest
+                                    .ScreenPosAdd = (POINT)  {.x = 0,     .y = -144 },         //192 32 dest
+                                    .WorldPosAdd = (POINT)  {.x = -3856, .y = -400 },
+                                    .WorldPos = (UPOINT) {.x = 4048,  .y = 432 },
+                                    .SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = TRUE, .SpritesToLoad[3] = TRUE,
+                                    .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = FALSE, .SpritesToUnload[3] = FALSE };          ////load/unload sprites when teleporting
+
     gPortCoords[0] = gTeleport001;
 
     gPortCoords[1] = gTeleport002;
+
+    gPortCoords[2] = gTeleport003;
+
+    gPortCoords[3] = gTeleport004;
 
 }
 

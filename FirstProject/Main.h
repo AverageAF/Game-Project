@@ -86,7 +86,7 @@
 #define MAX_NAME_LENGTH 8							//8 characters + 1 null
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
 #define MAX_MOVE_NAME_LENGTH 23					//23 characters + 1 null
-#define MAX_SPRITE_LOAD 10
+#define NUM_CHAR_SPRITES 16						//total sprites
 #define MAX_DIALOGUE_BOXES 10
 #define MAX_PARTY_SIZE 6
 #define MAX_NONSIGNATURE_MOVES 4
@@ -562,6 +562,9 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	UPOINT ResetWorldPos;
 	POINT ResetScreenPos;
 	DIRECTION ResetDirection;
+	UPOINT ResetOriginWorldPos;
+	POINT ResetOriginScreenPos;
+	DIRECTION ResetOriginDirection;
 	uint8_t ResetSightRange;
 	uint8_t SightRange;
 	UPOINT MovementRange;
@@ -619,8 +622,8 @@ typedef struct MENU
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
-uint8_t gPassableTiles[4];
-uint8_t gEncounterTiles[2];
+uint8_t gPassableTiles[NUM_PASSABLE_TILES];
+uint8_t gEncounterTiles[NUM_ENCOUNTER_TILES];
 
 REGISTRYPARAMS gRegistryParams;
 
@@ -653,7 +656,7 @@ BOOL gOverWorldControls;					//enables overworld controls
 BOOL gFinishedDialogueTextAnimation;		//allows for dialogue text animation to reset between boxes
 BOOL gFinishedBattleTextAnimation;			//same as above but for battles
 
-INGAMESPRITE gCharacterSprite[MAX_SPRITE_LOAD];
+INGAMESPRITE gCharacterSprite[NUM_CHAR_SPRITES];
 
 PLAYER gPlayer;
 UPOINT gCamera;
