@@ -3,6 +3,7 @@
 
 #include "Inventory.h"
 #include "InventoryItems.h"
+#include "MonsterStatsScreen.h"
 
 
 //// SELECTEDSLOT MENU VARIABLES ////
@@ -464,9 +465,8 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
                 {
-                    gDesiredGameState = gPreviousGameState;
-                    gPreviousGameState = gCurrentGameState;
-                    gCurrentGameState = gDesiredGameState;
+                    gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
+                    gCurrentGameState = GAMESTATE_OVERWORLD;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -572,9 +572,8 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
                 {
-                    gDesiredGameState = gPreviousGameState;
-                    gPreviousGameState = gCurrentGameState;
-                    gCurrentGameState = gDesiredGameState;
+                    gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
+                    gCurrentGameState = GAMESTATE_OVERWORLD;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -670,9 +669,8 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
                 {
-                    gDesiredGameState = gPreviousGameState;
-                    gPreviousGameState = gCurrentGameState;
-                    gCurrentGameState = gDesiredGameState;
+                    gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
+                    gCurrentGameState = GAMESTATE_OVERWORLD;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -861,9 +859,8 @@ void PPI_InventoryScreen(void)
             {
                 if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
                 {
-                    gDesiredGameState = gPreviousGameState;
-                    gPreviousGameState = gCurrentGameState;
-                    gCurrentGameState = gDesiredGameState;
+                    gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
+                    gCurrentGameState = GAMESTATE_OVERWORLD;
                 }
 
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
@@ -1534,7 +1531,9 @@ void MenuItem_Inventory_SelectedItem_Equip(void)
 
 void MenuItem_Inventory_SelectedItem_Inspect(void)
 {
-
+    gMonsterToViewStats = gMenu_InventoryMonster.SelectedItem;
+    gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
+    gCurrentGameState = GAMESTATE_MONSTERSTATS;
 }
 
 void MenuItem_Inventory_SelectedItem_Give(void)

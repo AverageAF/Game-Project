@@ -67,6 +67,7 @@
 #define COLOR_BLACK (PIXEL32){ .Bytes = 0xFF000000 }
 #define COLOR_NES_TAN (PIXEL32){ .Bytes = 0xFFfca044 }
 #define COLOR_DARK_RED (PIXEL32){ .Bytes = 0xFFa81000 }
+#define COLOR_NES_RED (PIXEL32){ .Bytes = 0xFFB80020 }
 #define COLOR_FORREST_GREEN (PIXEL32) { .Bytes = 0xFF007800 }
 #define COLOR_DARK_BLUE (PIXEL32){ .Bytes = 0xFF0000bc }
 #define COLOR_LIGHT_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
@@ -159,7 +160,8 @@ typedef enum GAMESTATE
 	GAMESTATE_CHARACTERNAME,
 	GAMESTATE_LOADGAMESAVE,
 	GAMESTATE_DELETESAVEYESNO,
-	GAMESTATE_INVENTORYSCREEN
+	GAMESTATE_INVENTORYSCREEN,
+	GAMESTATE_MONSTERSTATS,
 
 } GAMESTATE;
 
@@ -782,4 +784,6 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
 
 void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar);
 
+BOOL BlitBattleStateTextBox_Text(enum BATTLESTATE battlestate_wait, uint8_t battleTextLineCount, uint64_t frameCounter);
 
+void BlitBattleStateTextBox_Wait(uint8_t battleTextLineCount);

@@ -689,11 +689,12 @@ uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove)
 
     if (firstMove)
     {
+
         sLearningMoveTableID = 0;
         while (gLevelUpMoves[monsterIndex][sLearningMoveTableID].level != level)
         {
             sLearningMoveTableID++;
-            if (gLevelUpMoves[monsterIndex][sLearningMoveTableID].move == LEVEL_UP_END);
+            if (gLevelUpMoves[monsterIndex][sLearningMoveTableID].move == LEVEL_UP_END)
             {
                 return (MONSTER_MOVE_NONE);
             }

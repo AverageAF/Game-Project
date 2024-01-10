@@ -42,6 +42,8 @@ uint8_t gCurrentPartyMember;
 uint8_t gCurrentOpponentPartyMember;
 uint8_t gSelectedPlayerMove;
 
+char gBattleTextLine[MAX_DIALOGUE_ROWS + 1][MAX_BATTLECHAR_PER_ROW];      //first line of dialogue in combat text
+
 void PPI_BattleScreen(void);
 
 void DrawBattleScreen(void);

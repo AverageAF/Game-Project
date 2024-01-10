@@ -67,8 +67,6 @@ MENU gMenu_MoveScreen = { "Move Menu", 0, _countof(gMI_MoveScreen_Items), gMI_Mo
 
 char gBattleTextLine[MAX_DIALOGUE_ROWS + 1][MAX_BATTLECHAR_PER_ROW];      //first line of dialogue in combat text
 
-BOOL gSkipToNextText;
-
 GAMEBITMAP* gBattleScene = NULL;
 
 GAMEBITMAP* gPlayerMonsterSprite = NULL;
@@ -92,12 +90,14 @@ void DrawBattleScreen(void)
     static uint8_t BattleTextLineCount = 0;
     static uint16_t DamageToPlayer = 0;
     static uint16_t DamageToOpponent = 0;
-    static int32_t CalculatedExpReward = 0;
+    static uint32_t CalculatedExpReward = 0;
     static uint8_t OpponentMove = 0;
     static BOOL IsPlayerMovingFirst = FALSE;
     static BOOL MonsterHasKOed = FALSE;
 
     uint8_t Opponent = NULL;
+
+    BOOL TextHasFinished = FALSE;
 
 
 
@@ -218,109 +218,11 @@ void DrawBattleScreen(void)
                 goto PlayerNoHP;
             }
 
-            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_OPENING_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
             {
-                gCurrentBattleState = BATTLESTATE_OPENING_WAIT;
-                gSkipToNextText = FALSE;
-            }
-            else
-            {
-                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
-                {
-                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
-                    {
-                        BattleTextLineCharactersToShow++;
-                        BattleTextLineCharactersWritten++;
-                    }
-                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextRowsToShow++;
-                    }
-                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextLineCharactersWritten = 0;
-                        BattleTextRowsToShow = 0;
-                        gCurrentBattleState = BATTLESTATE_OPENING_WAIT;
-                        gFinishedBattleTextAnimation = TRUE;
-
-                        goto WaitOpening;
-                    }
-                }
-
-                if (!gFinishedBattleTextAnimation)
-                {
-                    switch (BattleTextRowsToShow)
-                    {
-                        case 0:
-                        {
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-                            break;
-                        }
-                        case 1:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            break;
-                        }
-                        case 2:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            break;
-                        }
-                        case 3:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            break;
-                        }
-                        case 4:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            break;
-                        }
-                        case 5:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            break;
-                        }
-                        case 6:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-                            break;
-                        }
-                    }
-                }
-                
+                goto WaitOpening;
             }
 
             break;
@@ -329,36 +231,7 @@ void DrawBattleScreen(void)
         {
     WaitOpening:
 
-            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-
-            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-            if (BattleTextLineCount > 1)
-            {
-                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-            }
-            if (BattleTextLineCount > 2)
-            {
-                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-            }
-            if (BattleTextLineCount > 3)
-            {
-                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-            }
-            if (BattleTextLineCount > 4)
-            {
-                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-            }
-            if (BattleTextLineCount > 5)
-            {
-                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-            }
-            if (BattleTextLineCount > 6)
-            {
-                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-            }
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, 312, 228);
-            gFinishedBattleTextAnimation = TRUE;
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -411,109 +284,11 @@ void DrawBattleScreen(void)
             BattleTextLineCount++;*/
 
 
-            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_FIRSTMOVE_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
             {
-                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_WAIT;
-                gSkipToNextText = FALSE;
-            }
-            else
-            {
-                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
-                {
-                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
-                    {
-                        BattleTextLineCharactersToShow++;
-                        BattleTextLineCharactersWritten++;
-                    }
-                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextRowsToShow++;
-                    }
-                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextLineCharactersWritten = 0;
-                        BattleTextRowsToShow = 0;
-                        gCurrentBattleState = BATTLESTATE_FIRSTMOVE_WAIT;
-                        gFinishedBattleTextAnimation = TRUE;
-
-                        goto WaitFirstMove;
-                    }
-                }
-
-                if (!gFinishedBattleTextAnimation)
-                {
-                    switch (BattleTextRowsToShow)
-                    {
-                        case 0:
-                        {
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-                            break;
-                        }
-                        case 1:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            break;
-                        }
-                        case 2:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            break;
-                        }
-                        case 3:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            break;
-                        }
-                        case 4:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            break;
-                        }
-                        case 5:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            break;
-                        }
-                        case 6:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-                            break;
-                        }
-                    }
-                }
-
+                goto WaitFirstMove;
             }
 
             break;
@@ -522,36 +297,7 @@ void DrawBattleScreen(void)
         {
         WaitFirstMove:
 
-            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-
-            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-            if (BattleTextLineCount > 1)
-            {
-                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-            }
-            if (BattleTextLineCount > 2)
-            {
-                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-            }
-            if (BattleTextLineCount > 3)
-            {
-                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-            }
-            if (BattleTextLineCount > 4)
-            {
-                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-            }
-            if (BattleTextLineCount > 5)
-            {
-                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-            }
-            if (BattleTextLineCount > 6)
-            {
-                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-            }
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, 312, 228);
-            gFinishedBattleTextAnimation = TRUE;
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -629,109 +375,11 @@ void DrawBattleScreen(void)
             BattleTextLineCount++;*/
 
 
-            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SWITCHING_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
             {
-                gCurrentBattleState = BATTLESTATE_SWITCHING_WAIT;
-                gSkipToNextText = FALSE;
-            }
-            else
-            {
-                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
-                {
-                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
-                    {
-                        BattleTextLineCharactersToShow++;
-                        BattleTextLineCharactersWritten++;
-                    }
-                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextRowsToShow++;
-                    }
-                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextLineCharactersWritten = 0;
-                        BattleTextRowsToShow = 0;
-                        gCurrentBattleState = BATTLESTATE_SWITCHING_WAIT;
-                        gFinishedBattleTextAnimation = TRUE;
-
-                        goto WaitSwitching;
-                    }
-                }
-
-                if (!gFinishedBattleTextAnimation)
-                {
-                    switch (BattleTextRowsToShow)
-                    {
-                        case 0:
-                        {
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-                            break;
-                        }
-                        case 1:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            break;
-                        }
-                        case 2:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            break;
-                        }
-                        case 3:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            break;
-                        }
-                        case 4:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            break;
-                        }
-                        case 5:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            break;
-                        }
-                        case 6:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-                            break;
-                        }
-                    }
-                }
-
+                goto WaitSwitching;
             }
 
             break;
@@ -741,36 +389,7 @@ void DrawBattleScreen(void)
 
         WaitSwitching:
 
-            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-
-            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-            if (BattleTextLineCount > 1)
-            {
-                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-            }
-            if (BattleTextLineCount > 2)
-            {
-                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-            }
-            if (BattleTextLineCount > 3)
-            {
-                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-            }
-            if (BattleTextLineCount > 4)
-            {
-                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-            }
-            if (BattleTextLineCount > 5)
-            {
-                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-            }
-            if (BattleTextLineCount > 6)
-            {
-                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-            }
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, 312, 228);
-            gFinishedBattleTextAnimation = TRUE;
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             gCurrentPartyMember = gPartyMemberToSwitchIn;                                               ////instant monsters are swapped
 
@@ -781,6 +400,11 @@ void DrawBattleScreen(void)
                     gPlayerMonsterSprite = &gBattleSpriteBack[Counter];
                 }
             }
+
+            gMI_MoveScreen_MoveSlot0.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0]];
+            gMI_MoveScreen_MoveSlot1.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1]];
+            gMI_MoveScreen_MoveSlot2.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[2]];
+            gMI_MoveScreen_MoveSlot3.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[3]];
 
             break;
         }
@@ -818,109 +442,12 @@ void DrawBattleScreen(void)
             BattleTextLineCount++;*/
 
 
-            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SECONDMOVE_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
             {
-                gCurrentBattleState = BATTLESTATE_SECONDMOVE_WAIT;
-                gSkipToNextText = FALSE;
-            }
-            else
-            {
-                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
-                {
-                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
-                    {
-                        BattleTextLineCharactersToShow++;
-                        BattleTextLineCharactersWritten++;
-                    }
-                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextRowsToShow++;
-                    }
-                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextLineCharactersWritten = 0;
-                        BattleTextRowsToShow = 0;
-                        gCurrentBattleState = BATTLESTATE_SECONDMOVE_WAIT;
-                        gFinishedBattleTextAnimation = TRUE;
-
-                        goto WaitSecondMove;
-                    }
-                }
-
-                if (!gFinishedBattleTextAnimation)
-                {
-                    switch (BattleTextRowsToShow)
-                    {
-                        case 0:
-                        {
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-                            break;
-                        }
-                        case 1:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            break;
-                        }
-                        case 2:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            break;
-                        }
-                        case 3:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            break;
-                        }
-                        case 4:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            break;
-                        }
-                        case 5:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            break;
-                        }
-                        case 6:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-                            break;
-                        }
-                    }
-                }
-
+                goto WaitOpening;
             }
 
             break;
@@ -929,36 +456,7 @@ void DrawBattleScreen(void)
         {
         WaitSecondMove:
 
-            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-
-            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-            if (BattleTextLineCount > 1)
-            {
-                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-            }
-            if (BattleTextLineCount > 2)
-            {
-                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-            }
-            if (BattleTextLineCount > 3)
-            {
-                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-            }
-            if (BattleTextLineCount > 4)
-            {
-                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-            }
-            if (BattleTextLineCount > 5)
-            {
-                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-            }
-            if (BattleTextLineCount > 6)
-            {
-                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-            }
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, 312, 228);
-            gFinishedBattleTextAnimation = TRUE;
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -1076,109 +574,12 @@ void DrawBattleScreen(void)
                 BattleTextLineCount++;
             }
 
-            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_KO_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
             {
-                gCurrentBattleState = BATTLESTATE_KO_WAIT;
-                gSkipToNextText = FALSE;
-            }
-            else
-            {
-                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
-                {
-                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
-                    {
-                        BattleTextLineCharactersToShow++;
-                        BattleTextLineCharactersWritten++;
-                    }
-                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextRowsToShow++;
-                    }
-                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
-                    {
-                        BattleTextLineCharactersToShow = 0;
-                        BattleTextLineCharactersWritten = 0;
-                        BattleTextRowsToShow = 0;
-                        gCurrentBattleState = BATTLESTATE_KO_WAIT;
-                        gFinishedBattleTextAnimation = TRUE;
-
-                        goto WaitKO;
-                    }
-                }
-
-                if (!gFinishedBattleTextAnimation)
-                {
-                    switch (BattleTextRowsToShow)
-                    {
-                        case 0:
-                        {
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
-                            break;
-                        }
-                        case 1:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            break;
-                        }
-                        case 2:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            break;
-                        }
-                        case 3:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            break;
-                        }
-                        case 4:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            break;
-                        }
-                        case 5:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            break;
-                        }
-                        case 6:
-                        {
-                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
-                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-                            break;
-                        }
-                    }
-                }
-
+                goto WaitKO;
             }
 
             break;
@@ -1201,40 +602,11 @@ void DrawBattleScreen(void)
                 {
                     CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
 
-
-                    MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);        ///////////TODO:FIX not working doesnt give moves when leveling
+                    MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);
                 }
             }
 
-            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-
-            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
-            if (BattleTextLineCount > 1)
-            {
-                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
-            }
-            if (BattleTextLineCount > 2)
-            {
-                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
-            }
-            if (BattleTextLineCount > 3)
-            {
-                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
-            }
-            if (BattleTextLineCount > 4)
-            {
-                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
-            }
-            if (BattleTextLineCount > 5)
-            {
-                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
-            }
-            if (BattleTextLineCount > 6)
-            {
-                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
-            }
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, 312, 228);
-            gFinishedBattleTextAnimation = TRUE;
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -1507,7 +879,10 @@ void PPI_BattleScreen(void)
                 }
                 else
                 {
-                    ASSERT(FALSE, "PPI case BATTLESTATE_KO_WAIT reached while both battlemonsters are at non-zero HP!");
+                    if (gPlayerParty[gCurrentPartyMember].Health != 0)
+                    {
+                        ASSERT(FALSE, "PPI case BATTLESTATE_KO_WAIT reached while both battlemonsters are at non-zero HP!");
+                    }
                 }
             }
             break;
@@ -1930,7 +1305,7 @@ void MenuItem_MoveScreen_MoveSlot1(void)
 void MenuItem_MoveScreen_MoveSlot2(void)
 {
 
-    if (gMI_MoveScreen_MoveSlot1.Name == gBattleMoveNames[BATTLEMOVE_NULL])
+    if (gMI_MoveScreen_MoveSlot2.Name == gBattleMoveNames[BATTLEMOVE_NULL])
     {
 
     }
@@ -1944,7 +1319,7 @@ void MenuItem_MoveScreen_MoveSlot2(void)
 void MenuItem_MoveScreen_MoveSlot3(void)
 {
 
-    if (gMI_MoveScreen_MoveSlot1.Name == gBattleMoveNames[BATTLEMOVE_NULL])
+    if (gMI_MoveScreen_MoveSlot3.Name == gBattleMoveNames[BATTLEMOVE_NULL])
     {
 
     }
