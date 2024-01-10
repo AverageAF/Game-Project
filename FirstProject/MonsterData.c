@@ -1140,8 +1140,8 @@ struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t le
     return(monster);
 }
 
-////TEMPORARY WILL BE BASED ON MAP LATER
-struct Monster GenerateRandMonsterForWildEncounter(uint8_t level, uint16_t item)
+////TODO: TEMPORARY WILL BE BASED ON MAP LATER
+struct Monster GenerateRandMonsterForWildEncounter(uint8_t maxLevel, uint8_t minLevel, uint16_t item)
 {
     uint8_t heldItem[2];
     struct Monster monster;
@@ -1149,11 +1149,15 @@ struct Monster GenerateRandMonsterForWildEncounter(uint8_t level, uint16_t item)
 
     DWORD Random;
     uint8_t randIndex;
+    uint8_t randLevel;
     rand_s((unsigned int*)&Random);
-    Random = Random % (NUM_MONSTERS - 1);
     randIndex = (uint8_t*)Random;
+    randIndex %= (NUM_MONSTERS - 1);
+    rand_s((unsigned int*)&Random);
+    randLevel = (uint8_t*)Random;
+    randLevel = ((randLevel % (maxLevel - minLevel + 1)) + minLevel);
 
-    CreateMonster(&monster, randIndex + 1, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    CreateMonster(&monster, randIndex + 1, randLevel, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);

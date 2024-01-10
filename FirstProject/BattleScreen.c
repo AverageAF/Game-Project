@@ -28,8 +28,10 @@ uint8_t gLastMoveElementalBonus = 0;
 uint8_t gPartyMemberToSwitchIn = 0;
 uint8_t gCurrentPartyMember = 0;
 uint8_t gCurrentOpponentPartyMember = 0;
-uint8_t gSelectedPlayerMove = 0;
-uint8_t gSelectedOpponentMove = 0;
+uint16_t gSelectedPlayerMove = 0;
+uint8_t gSelectedPlayerMoveSlot = 0;
+uint16_t gSelectedOpponentMove = 0;
+uint8_t gSelectedOpponentMoveSlot = 0;
 
 ////////Initial starting choices at the start of battle
 
@@ -177,7 +179,7 @@ void DrawBattleScreen(void)
         {
             BattleTextLineCount = 0;
             //CopyMonsterToOpponentParty(0, GenerateScriptedMonsterForWildEncounter(3, 5, 0));
-            CopyMonsterToOpponentParty(0, GenerateRandMonsterForWildEncounter(5, 0));
+            CopyMonsterToOpponentParty(0, GenerateRandMonsterForWildEncounter(6, 4, 0));
             sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s encountered a %s!", gPlayer.Name, &gMonsterNames[gOpponentParty[0].DriveMonster.Index]);
             BattleTextLineCount++;
             sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s Sent out %s!", gPlayer.Name, &gPlayerParty[0].DriveMonster.nickname);
@@ -275,11 +277,13 @@ void DrawBattleScreen(void)
         {
             if (Opponent == NULL)
             {
-                gSelectedOpponentMove = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
+                gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
+                gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
             }
             else
             {
-                gSelectedOpponentMove = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
+                gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
+                gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
             }
 
             IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
@@ -306,7 +310,7 @@ void DrawBattleScreen(void)
             }
             else
             {
-                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]]);
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedOpponentMove]);
                 BattleTextLineCount++;
             }
             /*
@@ -372,13 +376,13 @@ void DrawBattleScreen(void)
                     gPlayerParty[gCurrentPartyMember].Defense,
                     gOpponentParty[gCurrentOpponentPartyMember].Psi,
                     gPlayerParty[gCurrentPartyMember].Resolve,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power1,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power2,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power3,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split
+                    gBattleMoves[gSelectedOpponentMove].power1,
+                    gBattleMoves[gSelectedOpponentMove].power2,
+                    gBattleMoves[gSelectedOpponentMove].power3,
+                    gBattleMoves[gSelectedOpponentMove].split
                 );
 
-                if (gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split != SPLIT_STATUS)
+                if (gBattleMoves[gSelectedOpponentMove].split != SPLIT_STATUS)
                 {
                     DamageToPlayer = GetElementaBonusDamage(DamageToPlayer, TRUE);
                 }
@@ -821,7 +825,7 @@ void DrawBattleScreen(void)
             }
             else
             {
-                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]]);
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedOpponentMove]);
                 BattleTextLineCount++;
             }
             /*
@@ -888,13 +892,13 @@ void DrawBattleScreen(void)
                         gPlayerParty[gCurrentPartyMember].Defense,
                         gOpponentParty[gCurrentOpponentPartyMember].Psi,
                         gPlayerParty[gCurrentPartyMember].Resolve,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power1,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power2,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power3,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split
+                        gBattleMoves[gSelectedOpponentMove].power1,
+                        gBattleMoves[gSelectedOpponentMove].power2,
+                        gBattleMoves[gSelectedOpponentMove].power3,
+                        gBattleMoves[gSelectedOpponentMove].split
                     );
 
-                if (gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split != SPLIT_STATUS)
+                if (gBattleMoves[gSelectedOpponentMove].split != SPLIT_STATUS)
                 {
                     DamageToPlayer = GetElementaBonusDamage(DamageToPlayer, TRUE);
                 }
@@ -2022,6 +2026,7 @@ void MenuItem_MoveScreen_MoveSlot0(void)
     else          //end player turn start calculating
     {
         gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0];
+        gSelectedPlayerMoveSlot = 0;
         gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
     }
 }
@@ -2035,6 +2040,7 @@ void MenuItem_MoveScreen_MoveSlot1(void)
     else          //end player turn start calculating
     {
         gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1];
+        gSelectedPlayerMoveSlot = 1;
         gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
     }
 }
@@ -2049,6 +2055,7 @@ void MenuItem_MoveScreen_MoveSlot2(void)
     else          //end player turn start calculating
     {
         gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[2];
+        gSelectedPlayerMoveSlot = 2;
         gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
     }
 }
@@ -2063,6 +2070,7 @@ void MenuItem_MoveScreen_MoveSlot3(void)
     else          //end player turn start calculating
     {
         gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[3];
+        gSelectedPlayerMoveSlot = 3;
         gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
     }
 }
@@ -2667,7 +2675,7 @@ uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonst
 
     if (isPlayerMonsterMoveTarget == TRUE)
     {
-        AttackingElement = gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].element;
+        AttackingElement = gBattleMoves[gSelectedOpponentMove].element;
 
         DefendingElement_1 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1;
         DefendingElement_2 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2;
@@ -2678,7 +2686,7 @@ uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonst
     }
     else
     {
-        AttackingElement = gBattleMoves[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[gSelectedPlayerMove]].element;
+        AttackingElement = gBattleMoves[gSelectedPlayerMove].element;
 
         DefendingElement_1 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1;
         DefendingElement_2 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2;

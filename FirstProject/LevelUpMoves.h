@@ -4,7 +4,6 @@
 #include "SimpleConstants.h"
 
 #define LEVEL_UP_MOVE(lvl, moveLearned) {.move = moveLearned, .level = lvl}
-#define LEVEL_UP_END 0xFFFF
 
 /////////////////////////////////////////////////monsterlearnsets
 

@@ -616,20 +616,8 @@ DWORD InitializeSprites(void)
 
 
     gCharacterSprite[1].Event = EVENT_FLAG_MONSTER;
-    gCharacterSprite[1].EventMonsterIndex = MONSTER_WOLF;
+    gCharacterSprite[1].EventMonsterIndex = MONSTER_EARTHWOLF;
     gCharacterSprite[1].EventMonsterLevel = 5;
-
-    /*gCharacterSprite[1].Event = EVENT_FLAG_ITEM_ONCE;
-
-    gCharacterSprite[1].EventItemsIndex[1] = 1;
-    gCharacterSprite[1].EventItemsIndex[2] = 2;
-    gCharacterSprite[1].EventItemsIndex[3] = 4;
-    gCharacterSprite[1].EventItemsIndex[4] = 8;
-
-    gCharacterSprite[1].EventItemsCount[1] = 8;
-    gCharacterSprite[1].EventItemsCount[2] = 4;
-    gCharacterSprite[1].EventItemsCount[3] = 2;
-    gCharacterSprite[1].EventItemsCount[4] = 1;*/
 
     //////////////////////////////////////////////////////////////
 
@@ -2979,7 +2967,7 @@ void BlitBattleStateTextBox_Wait(uint8_t battleTextLineCount)
 
 void ReSortUsableitems(void)
 {
-    uint8_t ItemCount = 0;
+    uint16_t ItemCount = 0;
     for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
     {
         if (gUseableItems[i].Count > 0)
@@ -2998,7 +2986,7 @@ void ReSortUsableitems(void)
         if (i == NUM_USABLE_ITEMS - 1)
         {
             gUseableItemCount = ItemCount;
-            for (uint8_t j = 0; j < NUM_USABLE_ITEMS - ItemCount; j++)
+            for (uint16_t j = 0; j < NUM_USABLE_ITEMS - ItemCount; j++)
             {
                 gUseableHasItemSort[ItemCount + j] = 0xFFFF;
             }
@@ -3009,7 +2997,7 @@ void ReSortUsableitems(void)
 
 void ReSortEquipableitems(void)
 {
-    uint8_t ItemCount = 0;
+    uint16_t ItemCount = 0;
     for (uint16_t i = 0; i < NUM_EQUIP_ITEMS; i++)
     {
         if (gEquipableItems[i].Count > 0)
@@ -3028,7 +3016,7 @@ void ReSortEquipableitems(void)
         if (i == NUM_EQUIP_ITEMS - 1)
         {
             gEquipItemCount = ItemCount;
-            for (uint8_t j = 0; j < NUM_EQUIP_ITEMS - ItemCount; j++)
+            for (uint16_t j = 0; j < NUM_EQUIP_ITEMS - ItemCount; j++)
             {
                 gEquipHasItemSort[ItemCount + j] = 0xFFFF;
             }
@@ -3039,7 +3027,7 @@ void ReSortEquipableitems(void)
 
 void ReSortValuableitems(void)
 {
-    uint8_t ItemCount = 0;
+    uint16_t ItemCount = 0;
     for (uint16_t i = 0; i < NUM_VALUABLE_ITEMS; i++)
     {
         if (gValuableItems[i].Count > 0)
@@ -3058,7 +3046,7 @@ void ReSortValuableitems(void)
         if (i == NUM_VALUABLE_ITEMS - 1)
         {
             gValuableItemCount = ItemCount;
-            for (uint8_t j = 0; j < NUM_VALUABLE_ITEMS - ItemCount; j++)
+            for (uint16_t j = 0; j < NUM_VALUABLE_ITEMS - ItemCount; j++)
             {
                 gValuableHasItemSort[ItemCount + j] = 0xFFFF;
             }
@@ -3069,7 +3057,7 @@ void ReSortValuableitems(void)
 
 void ReSortAdventureitems(void)
 {
-    uint8_t ItemCount = 0;
+    uint16_t ItemCount = 0;
     for (uint16_t i = 0; i < NUM_ADVENTURE_ITEMS; i++)
     {
         if (gAdventureItems[i].Count > 0)
@@ -3088,7 +3076,7 @@ void ReSortAdventureitems(void)
         if (i == NUM_ADVENTURE_ITEMS - 1)
         {
             gAdventureItemCount = ItemCount;
-            for (uint8_t j = 0; j < NUM_ADVENTURE_ITEMS - ItemCount; j++)
+            for (uint16_t j = 0; j < NUM_ADVENTURE_ITEMS - ItemCount; j++)
             {
                 gAdventureHasItemSort[ItemCount + j] = 0xFFFF;
             }
@@ -3097,4 +3085,32 @@ void ReSortAdventureitems(void)
     }
 }
 
+void ReSortLearnableMovesFromMonster(struct DriveMonster* driveMonster)
+{
+    uint16_t LearnableCount = 0;
+    uint16_t index = GetMonsterData(driveMonster, MONSTER_DATA_INDEX, NULL);
+    uint16_t level = GetLevelFromDriveMonsterExp(driveMonster);
 
+    for (uint16_t i = 0; gLevelUpMoves[index][i].move != LEVEL_UP_END; i++)
+    {
+        if (gLevelUpMoves[index][i].level > level)
+        {
+            break;
+        }
+        if (gLevelUpMoves[index][i].level == 0)
+        {
+            continue;
+        }
+        if (gLevelUpMoves[index][i].move != driveMonster->Moves[0] && gLevelUpMoves[index][i].move != driveMonster->Moves[1] && gLevelUpMoves[index][i].move != driveMonster->Moves[2] && gLevelUpMoves[index][i].move != driveMonster->Moves[3])
+        {
+            gLearnableMoveSort[LearnableCount] = gLevelUpMoves[index][i].move;
+            LearnableCount++;
+        }
+    }
+    gLearnableMoveCount = LearnableCount;
+
+    for (uint16_t j = 0; j < NUM_BATTLEMOVES - LearnableCount; j++)
+    {
+        gLearnableMoveSort[LearnableCount + j] = 0xFFFF;
+    }
+}

@@ -66,7 +66,7 @@ uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterS
 
 struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t level, uint16_t item);
 
-struct Monster GenerateRandMonsterForWildEncounter(uint8_t level, uint16_t item);
+struct Monster GenerateRandMonsterForWildEncounter(uint8_t maxLevel, uint8_t minLevel, uint16_t item);
 
 struct Monster GenerateMonsterForCharacterSpriteBattle(uint8_t index, uint8_t level, uint16_t item);
 

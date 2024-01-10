@@ -97,6 +97,8 @@
 
 #define BATTLE_ENCOUNTER_GRACE_PERIOD 4				////grace period before triggering a battle
 
+#define LEVEL_UP_END 0xFFFF
+
 #define MAX_NAME_LENGTH 8							//8 characters + 1 null
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
 #define MAX_MOVE_NAME_LENGTH 23					//23 characters + 1 null
@@ -716,6 +718,7 @@ const uint8_t* const gMoveDescriptionPointers[NUM_BATTLEMOVES];
 const struct BattleMove gBattleMoves[NUM_BATTLEMOVES];
 const struct BaseStats gBaseStats[];
 const uint32_t gExperienceTables[][MAX_LEVEL + 1];
+const struct LevelUpMove* const gLevelUpMoves[NUM_MONSTERS];
 
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);
@@ -804,3 +807,5 @@ void ReSortEquipableitems(void);
 void ReSortValuableitems(void);
 
 void ReSortAdventureitems(void);
+
+void ReSortLearnableMovesFromMonster(struct DriveMonster* driveMonster);

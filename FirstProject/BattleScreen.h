@@ -50,7 +50,8 @@ BATTLESTATE gCurrentBattleState;
 uint8_t gPartyMemberToSwitchIn;
 uint8_t gCurrentPartyMember;
 uint8_t gCurrentOpponentPartyMember;
-uint8_t gSelectedPlayerMove;
+uint16_t gSelectedPlayerMove;
+uint16_t gSelectedOpponentMove;
 
 char gBattleTextLine[MAX_DIALOGUE_ROWS + 1][MAX_BATTLECHAR_PER_ROW];      //first line of dialogue in combat text
 
