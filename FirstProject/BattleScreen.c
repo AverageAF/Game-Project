@@ -10,11 +10,15 @@
 
 
 ///////// load starting monster
+BOOL gWasMonsterKOed = FALSE;
+BOOL gWasLastMoveCriticalHit = FALSE;
+uint8_t gLastMoveElementalBonus = 0;
 
 uint8_t gPartyMemberToSwitchIn = 0;
 uint8_t gCurrentPartyMember = 0;
 uint8_t gCurrentOpponentPartyMember = 0;
 uint8_t gSelectedPlayerMove = 0;
+uint8_t gSelectedOpponentMove = 0;
 
 ////////Initial starting choices at the start of battle
 
@@ -91,7 +95,6 @@ void DrawBattleScreen(void)
     static uint16_t DamageToPlayer = 0;
     static uint16_t DamageToOpponent = 0;
     static uint32_t CalculatedExpReward = 0;
-    static uint8_t OpponentMove = 0;
     static BOOL IsPlayerMovingFirst = FALSE;
     static BOOL MonsterHasKOed = FALSE;
 
@@ -239,11 +242,11 @@ void DrawBattleScreen(void)
         {
             if (Opponent == NULL)
             {
-                OpponentMove = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
+                gSelectedOpponentMove = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
             }
             else
             {
-                OpponentMove = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
+                gSelectedOpponentMove = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
             }
 
             IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
@@ -270,7 +273,7 @@ void DrawBattleScreen(void)
             }
             else
             {
-                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]]);
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]]);
                 BattleTextLineCount++;
             }
             /*
@@ -303,6 +306,8 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_FIRSTMOVE_CALC:
         {
+            gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+
             if (IsPlayerMovingFirst == TRUE)
             {
                 DamageToOpponent = 
@@ -318,7 +323,12 @@ void DrawBattleScreen(void)
                     gBattleMoves[gSelectedPlayerMove].split
                 );
 
-                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE);
+                if (gBattleMoves[gSelectedPlayerMove].split != SPLIT_STATUS)
+                {
+                    DamageToOpponent = GetElementaBonusDamage(DamageToOpponent, FALSE);
+                }
+
+                ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE, gWasLastMoveCriticalHit);
             }
             else
             {
@@ -329,19 +339,95 @@ void DrawBattleScreen(void)
                     gPlayerParty[gCurrentPartyMember].Defense,
                     gOpponentParty[gCurrentOpponentPartyMember].Psi,
                     gPlayerParty[gCurrentPartyMember].Resolve,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power1,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power2,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power3,
-                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].split
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power1,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power2,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power3,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split
                 );
 
-                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE);
+                if (gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split != SPLIT_STATUS)
+                {
+                    DamageToPlayer = GetElementaBonusDamage(DamageToPlayer, TRUE);
+                }
+
+                ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE, gWasLastMoveCriticalHit);
             }
 
-            if (MonsterHasKOed == TRUE)
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_POSTTEXT:
+        {
+
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
             {
-                gCurrentBattleState = BATTLESTATE_KO;
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
             }
+
+            BattleTextLineCount = 0;
+            if (IsPlayerMovingFirst == TRUE)
+            {
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                    sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
+                    BattleTextLineCount++;
+                }
+                else if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
+
+                if (gWasLastMoveCriticalHit == TRUE)
+                {
+                    sprintf_s((char*)gBattleTextLine[BattleTextLineCount + 1], sizeof(gBattleTextLine[BattleTextLineCount + 1]), "It dealt extra devastating damage!");
+                    BattleTextLineCount++;
+                }
+            }
+            else
+            {
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                    sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
+                    BattleTextLineCount++;
+                }
+                else if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
+
+                if (gWasLastMoveCriticalHit == TRUE)
+                {
+                    sprintf_s((char*)gBattleTextLine[BattleTextLineCount + 1], sizeof(gBattleTextLine[BattleTextLineCount + 1]), "It dealt extra devastating damage!");
+                    BattleTextLineCount++;
+                }
+            }
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_FIRSTMOVE_POSTWAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitPostFirstMove;
+            }
+
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_POSTWAIT:
+        {
+
+        WaitPostFirstMove:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -420,6 +506,7 @@ void DrawBattleScreen(void)
             }
 
             BattleTextLineCount = 0;
+            
             if (IsPlayerMovingFirst == FALSE)
             {   
                 //player moving second bc FALSE
@@ -428,7 +515,7 @@ void DrawBattleScreen(void)
             }
             else
             {
-                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]]);
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]]);
                 BattleTextLineCount++;
             }
             /*
@@ -447,7 +534,7 @@ void DrawBattleScreen(void)
 
             if (TextHasFinished == TRUE)
             {
-                goto WaitOpening;
+                goto WaitSecondMove;
             }
 
             break;
@@ -461,10 +548,12 @@ void DrawBattleScreen(void)
             break;
         }
         case BATTLESTATE_SECONDMOVE_CALC:
-        { 
+        {
+            gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+
             if (IsPlayerMovingFirst == FALSE)
             {
-                //player is dealing dmg to opponent on second move bc FALSE
+                //player is dealing dmg to opponent on second move bc above is FALSE
                 DamageToOpponent =
                     CalcPotentialDamageToPlayerMonster(
                         gPlayerParty[gCurrentPartyMember].Level,
@@ -477,8 +566,12 @@ void DrawBattleScreen(void)
                         gBattleMoves[gSelectedPlayerMove].power3,
                         gBattleMoves[gSelectedPlayerMove].split
                     );
+                if (gBattleMoves[gSelectedPlayerMove].split != SPLIT_STATUS)
+                {
+                    DamageToOpponent = GetElementaBonusDamage(DamageToOpponent, FALSE);
+                }
 
-                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE);
+                ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE, gWasLastMoveCriticalHit);
             }
             else
             {
@@ -489,19 +582,99 @@ void DrawBattleScreen(void)
                         gPlayerParty[gCurrentPartyMember].Defense,
                         gOpponentParty[gCurrentOpponentPartyMember].Psi,
                         gPlayerParty[gCurrentPartyMember].Resolve,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power1,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power2,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power3,
-                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].split
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power1,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power2,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].power3,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split
                     );
 
-                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE);
+                if (gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].split != SPLIT_STATUS)
+                {
+                    DamageToPlayer = GetElementaBonusDamage(DamageToPlayer, TRUE);
+                }
+
+                ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE, gWasLastMoveCriticalHit);
             }
 
-            if (MonsterHasKOed == TRUE)
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_POSTTEXT:
+        {
+
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
             {
-                gCurrentBattleState = BATTLESTATE_KO;
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
             }
+
+            BattleTextLineCount = 0;
+            if (IsPlayerMovingFirst == FALSE)
+            {
+                //player moving second bc above FALSE
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                    sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
+                    BattleTextLineCount++;
+                }
+                else if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
+
+                if (gWasLastMoveCriticalHit == TRUE)
+                {
+                    sprintf_s((char*)gBattleTextLine[BattleTextLineCount + 1], sizeof(gBattleTextLine[BattleTextLineCount + 1]), "It dealt extra devastating damage!");
+                    BattleTextLineCount++;
+                }
+            }
+            else
+            {
+
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                    sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
+                    BattleTextLineCount++;
+                }
+                else if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
+
+                if (gWasLastMoveCriticalHit == TRUE)
+                {
+                    sprintf_s((char*)gBattleTextLine[BattleTextLineCount + 1], sizeof(gBattleTextLine[BattleTextLineCount + 1]), "It dealt extra devastating damage!");
+                    BattleTextLineCount++;
+                }
+            }
+
+
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SECONDMOVE_POSTWAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitPostSecondMove;
+            }
+
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_POSTWAIT:
+        {
+
+        WaitPostSecondMove:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
             break;
         }
@@ -607,6 +780,8 @@ void DrawBattleScreen(void)
             }
 
             BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
+            gWasMonsterKOed = FALSE;
 
             break;
         }
@@ -753,6 +928,30 @@ void PPI_BattleScreen(void)
         {
             break;
         }
+        case BATTLESTATE_FIRSTMOVE_POSTTEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_POSTWAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_POSTWAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gFinishedBattleTextAnimation = FALSE;
+                if (gWasMonsterKOed == TRUE)
+                {
+                    gCurrentBattleState = BATTLESTATE_KO;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                }
+            }
+            break;
+        }
         case BATTLESTATE_SWITCHING_TEXT:
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
@@ -797,6 +996,31 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_SECONDMOVE_CALC:
         {
+            break;
+        }
+
+        case BATTLESTATE_SECONDMOVE_POSTTEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_POSTWAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_POSTWAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gFinishedBattleTextAnimation = FALSE;
+                if (gWasMonsterKOed == TRUE)
+                {
+                    gCurrentBattleState = BATTLESTATE_KO;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+                }
+            }
             break;
         }
         case BATTLESTATE_KO:
@@ -1606,8 +1830,10 @@ uint16_t CalcPotentialDamageToPlayerMonster(uint8_t oppLevel, uint16_t oppMonAtk
 
     PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
 
-    if (Random16 % 16 == 0)     //TODO:BATTLE_TEXT_FLAG for crits, element effectiveness, ect..
+    gWasLastMoveCriticalHit = FALSE;
+    if (Random16 % 16 == 0 && split != SPLIT_STATUS)
     {
+        gWasLastMoveCriticalHit = TRUE;
         PotentialDmg += (PotentialDmg * 1.5);
     }
     return (PotentialDmg);
@@ -1795,15 +2021,18 @@ uint16_t CalcPotentialDamageToOpponentMonster(uint8_t playerLevel, uint16_t play
 
     PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
 
-    if (Random16 % 16 == 0)     //TODO:BATTLE_TEXT_FLAG for crits, element effectiveness, ect..
+    gWasLastMoveCriticalHit = FALSE;
+    if (Random16 % 16 == 0 && split != SPLIT_STATUS)
     {
-        PotentialDmg = +(PotentialDmg * 1.5);
+        gWasLastMoveCriticalHit = TRUE;
+        PotentialDmg *= 1.5;
     }
     return (PotentialDmg);
 }
 
-BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster)
+void ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster, BOOL wasLastMoveCrit)
 {
+    
     if ((gOpponentParty[gCurrentOpponentPartyMember].Health != 0) && (gPlayerParty[gCurrentPartyMember].Health != 0))
     {
         if (isPlayerSideMonster == TRUE)
@@ -1813,7 +2042,8 @@ BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMo
                 gPlayerParty[gCurrentPartyMember].Health--;
                 if (gPlayerParty[gCurrentPartyMember].Health == 0)
                 {
-                    return(TRUE);
+                    gWasMonsterKOed = TRUE;
+                    goto FinishedDealingDamage;
                 }
             }
         }
@@ -1824,26 +2054,57 @@ BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMo
                 gOpponentParty[gCurrentOpponentPartyMember].Health--;
                 if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
                 {
-                    return(TRUE);
+                    gWasMonsterKOed = TRUE;
+                    goto FinishedDealingDamage;
                 }
             }
         }
     }
     else if ((gOpponentParty[gCurrentOpponentPartyMember].Health != 0) || (gPlayerParty[gCurrentPartyMember].Health != 0))
     {
-        return(TRUE);
+        gWasMonsterKOed = TRUE;
     }
+
+FinishedDealingDamage:
 
     switch (gCurrentBattleState)
     {
         case BATTLESTATE_FIRSTMOVE_CALC:
         {
-            gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+            if (wasLastMoveCrit == TRUE || gLastMoveElementalBonus != ELEMENT_NEUTRAL)
+            {
+                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_POSTTEXT;
+            }
+            else
+            {
+                if (gWasMonsterKOed == TRUE)
+                {
+                    gCurrentBattleState = BATTLESTATE_KO;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                }
+            }
             break;
         }
         case BATTLESTATE_SECONDMOVE_CALC:
         {
-            gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+            if (wasLastMoveCrit == TRUE || gLastMoveElementalBonus != ELEMENT_NEUTRAL)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_POSTTEXT;
+            }
+            else
+            {
+                if (gWasMonsterKOed == TRUE)
+                {
+                    gCurrentBattleState = BATTLESTATE_KO;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+                }
+            }
             break;
         }
     }
@@ -1851,4 +2112,621 @@ BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMo
     return(FALSE);
 }
 
+uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonsterMoveTarget)
+{
+    uint16_t DamageAfterElement;
 
+    uint8_t DefendingElement_1;
+    uint8_t DefendingElement_2;
+
+    uint8_t AttackingElement;
+
+    if (isPlayerMonsterMoveTarget == TRUE)
+    {
+        AttackingElement = gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMove]].element;
+
+        DefendingElement_1 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1;
+        DefendingElement_2 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2;
+        if (DefendingElement_1 == DefendingElement_2)
+        {
+            DefendingElement_2 = ELEMENT_NULL;
+        }
+    }
+    else
+    {
+        AttackingElement = gBattleMoves[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[gSelectedPlayerMove]].element;
+
+        DefendingElement_1 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1;
+        DefendingElement_2 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2;
+        if (DefendingElement_1 == DefendingElement_2)
+        {
+            DefendingElement_2 = ELEMENT_NULL;
+        }
+    }
+
+    switch (AttackingElement)
+    {
+        case ELEMENT_NONE:
+        {
+            if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_DEATH)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_SOUL)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_EARTH:
+        {
+            if (DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_ELECTRIC || DefendingElement_1 == ELEMENT_METAL)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_LIFE)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_AIR)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_AIR:
+        {
+            if (DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_LIFE)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_ELECTRIC || DefendingElement_1 == ELEMENT_METAL)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_FIRE:
+        {
+            if (DefendingElement_1 == ELEMENT_NONE || DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_LIFE || DefendingElement_1 == ELEMENT_DEATH)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_WATER)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_WATER:
+        {
+            if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_DEATH)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_LIFE)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_ELECTRIC:
+        {
+            if (DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_METAL)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_DEATH)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_EARTH)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_METAL:
+        {
+            if (DefendingElement_1 == ELEMENT_DEATH)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_ELECTRIC || DefendingElement_1 == ELEMENT_METAL)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_SOUL:
+        {
+            if (DefendingElement_1 == ELEMENT_DEATH || DefendingElement_1 == ELEMENT_SOUL)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_LIFE)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_LIFE:
+        {
+            if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_SOUL)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_LIFE)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+        case ELEMENT_DEATH:
+        {
+            if (DefendingElement_1 == ELEMENT_NONE || DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_LIFE)
+            {
+                DamageAfterElement = damageBeforeElement * 2;
+                gLastMoveElementalBonus = ELEMENT_BONUS;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_DEATH)
+            {
+                DamageAfterElement = damageBeforeElement / 2;
+                gLastMoveElementalBonus = ELEMENT_RESIST;
+                break;
+            }
+            else if (DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_SOUL)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                DamageAfterElement = damageBeforeElement;
+                break;
+            }
+        }
+    }
+
+    //////found multipliers for first defensive element now repeat process
+
+    switch (AttackingElement)
+    {
+        case ELEMENT_NONE:
+        {
+            if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_DEATH)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_SOUL)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_EARTH:
+        {
+            if (DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_ELECTRIC || DefendingElement_2 == ELEMENT_METAL)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_LIFE)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_AIR)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_AIR:
+        {
+            if (DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_LIFE)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_ELECTRIC || DefendingElement_2 == ELEMENT_METAL)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_FIRE:
+        {
+            if (DefendingElement_2 == ELEMENT_NONE || DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_LIFE || DefendingElement_2 == ELEMENT_DEATH)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_WATER)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_WATER:
+        {
+            if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_DEATH)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_LIFE)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_ELECTRIC:
+        {
+            if (DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_METAL)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_DEATH)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_EARTH)
+            {
+                DamageAfterElement = 0;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_METAL:
+        {
+            if (DefendingElement_2 == ELEMENT_DEATH)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_ELECTRIC || DefendingElement_2 == ELEMENT_METAL)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_SOUL:
+        {
+            if (DefendingElement_2 == ELEMENT_DEATH || DefendingElement_2 == ELEMENT_SOUL)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_LIFE)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_LIFE:
+        {
+            if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_SOUL)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_LIFE)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else
+            {
+                break;
+            }
+        }
+        case ELEMENT_DEATH:
+        {
+            if (DefendingElement_2 == ELEMENT_NONE || DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_LIFE)
+            {
+                DamageAfterElement *= 2;
+                if (gLastMoveElementalBonus == ELEMENT_RESIST)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_BONUS;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_DEATH)
+            {
+                DamageAfterElement /= 2;
+                if (gLastMoveElementalBonus == ELEMENT_BONUS)
+                {
+                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
+                }
+                else
+                {
+                    gLastMoveElementalBonus = ELEMENT_RESIST;
+                }
+                break;
+            }
+            else if (DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_SOUL)
+            {
+                DamageAfterElement = 0;
+                gLastMoveElementalBonus = ELEMENT_IMMUNE;
+                return(DamageAfterElement);
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    if (isPlayerMonsterMoveTarget == TRUE)
+    {
+        if (AttackingElement == (gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1 || gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2))
+        {
+            DamageAfterElement *= 1.5;
+        }
+    }
+    else
+    {
+        if (AttackingElement == (gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1 || gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2))
+        {
+            DamageAfterElement *= 1.5;
+        }
+    }
+
+    return(DamageAfterElement);
+
+}

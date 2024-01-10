@@ -18,12 +18,16 @@ typedef enum BATTLESTATE
 	BATTLESTATE_KO_WAIT,
 	BATTLESTATE_REWARD,
 	BATTLESTATE_RUN_FIGHT,
-	BATTLESTATE_SWITCH_FIGHT,				///////TODO harder difficulties where there is no running or item bag
+	BATTLESTATE_SWITCH_FIGHT,				///////TOUSE: harder difficulties where there is no running or item bag
 	BATTLESTATE_CHOOSE_MOVE,
 	BATTLESTATE_CHOOSE_MONSTER,
 	BATTLESTATE_CHOOSE_ITEM,
 	BATTLESTATE_SWITCHING_TEXT,
 	BATTLESTATE_SWITCHING_WAIT,
+	BATTLESTATE_FIRSTMOVE_POSTTEXT,
+	BATTLESTATE_FIRSTMOVE_POSTWAIT,
+	BATTLESTATE_SECONDMOVE_POSTTEXT,
+	BATTLESTATE_SECONDMOVE_POSTWAIT,
 
 } BATTLESTATE;
 
@@ -103,4 +107,6 @@ uint16_t CalcPotentialDamageToPlayerMonster(uint8_t oppLevel, uint16_t oppMonAtk
 
 uint16_t CalcPotentialDamageToOpponentMonster(uint8_t playerLevel, uint16_t playerMonAtk, uint16_t oppMonDef, uint16_t playerMonPsi, uint16_t oppMonRes, uint8_t movePower1, uint8_t movePower2, uint8_t movePower3, uint8_t split);
 
-BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster);
+void ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster, BOOL wasLastMoveCrit);
+
+uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonsterMoveTarget);
