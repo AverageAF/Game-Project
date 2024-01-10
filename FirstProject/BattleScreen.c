@@ -64,7 +64,7 @@ MENU gMenu_MoveScreen = { "Move Menu", 0, _countof(gMI_MoveScreen_Items), gMI_Mo
 
 //////////
 
-char gBattleTextLine[MAX_DIALOGUE_ROWS + 1][40];      //first line of dialogue in combat text
+char gBattleTextLine[MAX_DIALOGUE_ROWS + 1][MAX_BATTLECHAR_PER_ROW];      //first line of dialogue in combat text
 
 BOOL gSkipToNextText;
 
@@ -84,6 +84,12 @@ void DrawBattleScreen(void)
     static uint16_t BattleTextLineCharactersWritten = 0;
     static uint8_t BattleTextRowsToShow = 0;
     static uint8_t BattleTextLineCount = 0;
+    static uint16_t DamageToPlayer = 0;
+    static uint16_t DamageToOpponent = 0;
+    static int32_t CalculatedExpReward = 0;
+    static uint8_t OpponentMove = 0;
+    static BOOL IsPlayerMovingFirst = FALSE;
+    static BOOL MonsterHasKOed = FALSE;
 
     GAMEBITMAP* BattleScene = NULL;
 
@@ -92,6 +98,8 @@ void DrawBattleScreen(void)
     GAMEBITMAP* OpponentMonsterSprite = NULL;
 
     uint8_t Opponent = NULL;
+
+
 
     char BattleTextLineScratch[40] = { 0 };
 
@@ -113,11 +121,20 @@ void DrawBattleScreen(void)
         BattleTextLineCharactersToShow = 0;
         BattleTextLineCharactersWritten = 0;
         BattleTextRowsToShow = 0;
+        CalculatedExpReward = 0;
 
         gMI_MoveScreen_MoveSlot0.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0]];
         gMI_MoveScreen_MoveSlot1.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1]];
         gMI_MoveScreen_MoveSlot2.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[2]];
         gMI_MoveScreen_MoveSlot3.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[3]];
+
+        for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+        {
+            for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+            {
+                gBattleTextLine[i][j] = 0;
+            }
+        }
 
         if (Opponent == NULL)
         {
@@ -162,7 +179,7 @@ void DrawBattleScreen(void)
     //    PlayGameMusic(&MusicBattle01, TRUE, FALSE);*/       ////queue full loop behind intro
     //}
 
-    for (uint8_t Counter = 0; Counter < TOTAL_MONSTERS; Counter++)
+    for (uint8_t Counter = 0; Counter < NUM_MONSTERS; Counter++)
     {
         if (gPlayerParty[0].DriveMonster.Index == Counter)
         {
@@ -187,7 +204,7 @@ void DrawBattleScreen(void)
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
                 gPreviousBattleState = gCurrentBattleState;
-                gCurrentBattleState = BATTLESTATE_WAIT_INPUT1;
+                gCurrentBattleState = BATTLESTATE_OPENING_WAIT;
                 gSkipToNextText = FALSE;
             }
             else
@@ -211,10 +228,10 @@ void DrawBattleScreen(void)
                         BattleTextLineCharactersToShow = 0;
                         BattleTextLineCharactersWritten = 0;
                         BattleTextRowsToShow = 0;
-                        gCurrentBattleState = BATTLESTATE_WAIT_INPUT1;
+                        gCurrentBattleState = BATTLESTATE_OPENING_WAIT;
                         gFinishedBattleTextAnimation = TRUE;
 
-                        goto WaitText;
+                        goto WaitOpening;
                     }
                 }
 
@@ -292,9 +309,9 @@ void DrawBattleScreen(void)
 
             break;
         }
-        case BATTLESTATE_WAIT_INPUT1:
+        case BATTLESTATE_OPENING_WAIT:
         {
-    WaitText:
+    WaitOpening:
 
             DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
 
@@ -329,10 +346,8 @@ void DrawBattleScreen(void)
 
             break;
         }
-        case BATTLESTATE_CALCULATE:
+        case BATTLESTATE_TURNORDER_CALC:
         {
-            uint8_t OpponentMove = 0;
-
             if (Opponent == NULL)
             {
                 OpponentMove = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
@@ -342,31 +357,664 @@ void DrawBattleScreen(void)
                 OpponentMove = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
             }
 
-            BOOL IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
+            IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
 
-            uint16_t DamageToPlayer = CalcPotentialDamageToPlayerMonster(
-                                                                        gOpponentParty[gCurrentOpponentPartyMember].Level, 
-                                                                        gOpponentParty[gCurrentOpponentPartyMember].Attack, 
-                                                                        gPlayerParty[gCurrentPartyMember].Defense,
-                                                                        gOpponentParty[gCurrentOpponentPartyMember].Psi,
-                                                                        gPlayerParty[gCurrentPartyMember].Resolve,
-                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power1,
-                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power2,
-                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power3,
-                                                                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].split);
+            gCurrentBattleState = BATTLESTATE_FIRSTMOVE_TEXT;
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_TEXT:
+        {
 
-            uint16_t DamageToOpponent = CalcPotentialDamageToPlayerMonster(
-                                                                        gPlayerParty[gCurrentPartyMember].Level,
-                                                                        gPlayerParty[gCurrentPartyMember].Attack,
-                                                                        gOpponentParty[gCurrentOpponentPartyMember].Defense,
-                                                                        gPlayerParty[gCurrentPartyMember].Psi,
-                                                                        gOpponentParty[gCurrentOpponentPartyMember].Resolve,
-                                                                        gBattleMoves[gSelectedPlayerMove].power1,
-                                                                        gBattleMoves[gSelectedPlayerMove].power2,
-                                                                        gBattleMoves[gSelectedPlayerMove].power3,
-                                                                        gBattleMoves[gSelectedPlayerMove].split);
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
 
-            ModiftyMonsterHealthValuesThisTurn(DamageToPlayer, DamageToOpponent, IsPlayerMovingFirst);
+            BattleTextLineCount = 0;
+            if (IsPlayerMovingFirst == TRUE)
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedPlayerMove]);
+                BattleTextLineCount++;
+            }
+            else
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]]);
+                BattleTextLineCount++;
+            }
+            /*
+            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
+            BattleTextLineCount++;*/
+
+
+            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_WAIT;
+                gSkipToNextText = FALSE;
+            }
+            else
+            {
+                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
+                {
+                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
+                    {
+                        BattleTextLineCharactersToShow++;
+                        BattleTextLineCharactersWritten++;
+                    }
+                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextRowsToShow++;
+                    }
+                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextLineCharactersWritten = 0;
+                        BattleTextRowsToShow = 0;
+                        gCurrentBattleState = BATTLESTATE_FIRSTMOVE_WAIT;
+                        gFinishedBattleTextAnimation = TRUE;
+
+                        goto WaitFirstMove;
+                    }
+                }
+
+                if (!gFinishedBattleTextAnimation)
+                {
+                    switch (BattleTextRowsToShow)
+                    {
+                        case 0:
+                        {
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+                            break;
+                        }
+                        case 1:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            break;
+                        }
+                        case 2:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            break;
+                        }
+                        case 3:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            break;
+                        }
+                        case 4:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            break;
+                        }
+                        case 5:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            break;
+                        }
+                        case 6:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_WAIT:
+        {
+        WaitFirstMove:
+
+            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+
+            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+            if (BattleTextLineCount > 1)
+            {
+                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+            }
+            if (BattleTextLineCount > 2)
+            {
+                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+            }
+            if (BattleTextLineCount > 3)
+            {
+                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+            }
+            if (BattleTextLineCount > 4)
+            {
+                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+            }
+            if (BattleTextLineCount > 5)
+            {
+                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+            }
+            if (BattleTextLineCount > 6)
+            {
+                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+            }
+            BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 312, 228);
+            gFinishedBattleTextAnimation = TRUE;
+
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_CALC:
+        {
+            if (IsPlayerMovingFirst == TRUE)
+            {
+                DamageToOpponent = 
+                    CalcPotentialDamageToPlayerMonster (
+                    gPlayerParty[gCurrentPartyMember].Level,
+                    gPlayerParty[gCurrentPartyMember].Attack,
+                    gOpponentParty[gCurrentOpponentPartyMember].Defense,
+                    gPlayerParty[gCurrentPartyMember].Psi,
+                    gOpponentParty[gCurrentOpponentPartyMember].Resolve,
+                    gBattleMoves[gSelectedPlayerMove].power1,
+                    gBattleMoves[gSelectedPlayerMove].power2,
+                    gBattleMoves[gSelectedPlayerMove].power3,
+                    gBattleMoves[gSelectedPlayerMove].split
+                );
+
+                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE);
+            }
+            else
+            {
+                DamageToPlayer = 
+                    CalcPotentialDamageToPlayerMonster (
+                    gOpponentParty[gCurrentOpponentPartyMember].Level,
+                    gOpponentParty[gCurrentOpponentPartyMember].Attack,
+                    gPlayerParty[gCurrentPartyMember].Defense,
+                    gOpponentParty[gCurrentOpponentPartyMember].Psi,
+                    gPlayerParty[gCurrentPartyMember].Resolve,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power1,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power2,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power3,
+                    gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].split
+                );
+
+                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE);
+            }
+
+            if (MonsterHasKOed == TRUE)
+            {
+                gCurrentBattleState = BATTLESTATE_KO;
+            }
+
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_TEXT:
+        {
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+            if (IsPlayerMovingFirst == FALSE)
+            {   
+                //player moving second bc FALSE
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedPlayerMove]);
+                BattleTextLineCount++;
+            }
+            else
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]]);
+                BattleTextLineCount++;
+            }
+            /*
+            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
+            BattleTextLineCount++;*/
+
+
+            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_WAIT;
+                gSkipToNextText = FALSE;
+            }
+            else
+            {
+                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
+                {
+                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
+                    {
+                        BattleTextLineCharactersToShow++;
+                        BattleTextLineCharactersWritten++;
+                    }
+                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextRowsToShow++;
+                    }
+                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextLineCharactersWritten = 0;
+                        BattleTextRowsToShow = 0;
+                        gCurrentBattleState = BATTLESTATE_SECONDMOVE_WAIT;
+                        gFinishedBattleTextAnimation = TRUE;
+
+                        goto WaitSecondMove;
+                    }
+                }
+
+                if (!gFinishedBattleTextAnimation)
+                {
+                    switch (BattleTextRowsToShow)
+                    {
+                        case 0:
+                        {
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+                            break;
+                        }
+                        case 1:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            break;
+                        }
+                        case 2:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            break;
+                        }
+                        case 3:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            break;
+                        }
+                        case 4:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            break;
+                        }
+                        case 5:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            break;
+                        }
+                        case 6:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_WAIT:
+        {
+        WaitSecondMove:
+
+            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+
+            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+            if (BattleTextLineCount > 1)
+            {
+                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+            }
+            if (BattleTextLineCount > 2)
+            {
+                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+            }
+            if (BattleTextLineCount > 3)
+            {
+                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+            }
+            if (BattleTextLineCount > 4)
+            {
+                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+            }
+            if (BattleTextLineCount > 5)
+            {
+                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+            }
+            if (BattleTextLineCount > 6)
+            {
+                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+            }
+            BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 312, 228);
+            gFinishedBattleTextAnimation = TRUE;
+
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_CALC:
+        { 
+            if (IsPlayerMovingFirst == FALSE)
+            {
+                //player is dealing dmg to opponent on second move bc FALSE
+                DamageToOpponent =
+                    CalcPotentialDamageToPlayerMonster(
+                        gPlayerParty[gCurrentPartyMember].Level,
+                        gPlayerParty[gCurrentPartyMember].Attack,
+                        gOpponentParty[gCurrentOpponentPartyMember].Defense,
+                        gPlayerParty[gCurrentPartyMember].Psi,
+                        gOpponentParty[gCurrentOpponentPartyMember].Resolve,
+                        gBattleMoves[gSelectedPlayerMove].power1,
+                        gBattleMoves[gSelectedPlayerMove].power2,
+                        gBattleMoves[gSelectedPlayerMove].power3,
+                        gBattleMoves[gSelectedPlayerMove].split
+                    );
+
+                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE);
+            }
+            else
+            {
+                DamageToPlayer =
+                    CalcPotentialDamageToPlayerMonster(
+                        gOpponentParty[gCurrentOpponentPartyMember].Level,
+                        gOpponentParty[gCurrentOpponentPartyMember].Attack,
+                        gPlayerParty[gCurrentPartyMember].Defense,
+                        gOpponentParty[gCurrentOpponentPartyMember].Psi,
+                        gPlayerParty[gCurrentPartyMember].Resolve,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power1,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power2,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].power3,
+                        gBattleMoves[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[OpponentMove]].split
+                    );
+
+                MonsterHasKOed = ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE);
+            }
+
+            if (MonsterHasKOed == TRUE)
+            {
+                gCurrentBattleState = BATTLESTATE_KO;
+            }
+
+            break;
+        }
+        case BATTLESTATE_KO:
+        {
+            BOOL IsPlayerMonsterKOed = FALSE;
+
+            if (gPlayerParty[gCurrentPartyMember].Health == 0)
+            {
+                IsPlayerMonsterKOed = TRUE;
+            }
+            else if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
+            {
+                IsPlayerMonsterKOed = FALSE;
+            }
+            else
+            {
+                ASSERT(FALSE, "BATTLESTATE_KO reached while both in-battle monsters have non-zero HP!");
+            }
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            if (IsPlayerMonsterKOed == FALSE)
+            {
+                CalculatedExpReward = (gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].expYield * gOpponentParty[gCurrentOpponentPartyMember].Level) / 4;
+            }
+
+            BattleTextLineCount = 0;
+            if (IsPlayerMonsterKOed == TRUE)
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s was KO'ed!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                BattleTextLineCount++;
+                sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s blacked out!", &gPlayer.Name);
+                BattleTextLineCount++;
+            }
+            else
+            {
+                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s was KO'ed!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                BattleTextLineCount++;
+                sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s gained %d Exp!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, CalculatedExpReward);
+                BattleTextLineCount++;
+            }
+
+            if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_KO_WAIT;
+                gSkipToNextText = FALSE;
+            }
+            else
+            {
+                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+                if ((LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0) && (gFinishedBattleTextAnimation == FALSE))
+                {
+                    if (BattleTextLineCharactersToShow <= strlen(gBattleTextLine[BattleTextRowsToShow + 1]))
+                    {
+                        BattleTextLineCharactersToShow++;
+                        BattleTextLineCharactersWritten++;
+                    }
+                    else if ((BattleTextLineCharactersToShow > strlen(gBattleTextLine[BattleTextRowsToShow + 1])) && (BattleTextRowsToShow + 1 <= (BattleTextLineCount)))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextRowsToShow++;
+                    }
+                    else if (BattleTextRowsToShow + 1 > (BattleTextLineCount))
+                    {
+                        BattleTextLineCharactersToShow = 0;
+                        BattleTextLineCharactersWritten = 0;
+                        BattleTextRowsToShow = 0;
+                        gCurrentBattleState = BATTLESTATE_KO_WAIT;
+                        gFinishedBattleTextAnimation = TRUE;
+
+                        goto WaitKO;
+                    }
+                }
+
+                if (!gFinishedBattleTextAnimation)
+                {
+                    switch (BattleTextRowsToShow)
+                    {
+                        case 0:
+                        {
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[1]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));                 //////every time \n is called add a row to the dialogue box
+                            break;
+                        }
+                        case 1:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[2]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            break;
+                        }
+                        case 2:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[3]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            break;
+                        }
+                        case 3:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[4]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            break;
+                        }
+                        case 4:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[5]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            break;
+                        }
+                        case 5:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[6]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            break;
+                        }
+                        case 6:
+                        {
+                            BlitStringToBuffer((char*)gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+                            BlitStringToBuffer((char*)gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+                            snprintf(BattleTextLineScratch, BattleTextLineCharactersToShow, "%s", (char*)gBattleTextLine[7]);
+                            BlitStringToBuffer(BattleTextLineScratch, &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            break;
+        }
+        case BATTLESTATE_KO_WAIT:
+        {
+
+        WaitKO:
+                
+            if (CalculatedExpReward != 0)
+            {
+                BOOL DidMonsterLevelUp = 0;
+
+                gPlayerParty[gCurrentPartyMember].DriveMonster.Experience = gPlayerParty[gCurrentPartyMember].DriveMonster.Experience + CalculatedExpReward;
+                CalculatedExpReward = 0;
+
+                DidMonsterLevelUp = TryIncrementMonsterLevel(&gPlayerParty[gCurrentPartyMember]);
+
+                if (DidMonsterLevelUp == TRUE)
+                {
+                    CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
+
+
+                    MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);        ///////////TODO:FIX not working doesnt give moves when leveling
+                }
+            }
+
+            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+
+            BlitStringToBuffer(gBattleTextLine[1], &g6x7Font, &COLOR_BLACK, 66, 174 + ((1) * 8));
+            if (BattleTextLineCount > 1)
+            {
+                BlitStringToBuffer(gBattleTextLine[2], &g6x7Font, &COLOR_BLACK, 66, 174 + ((2) * 8));
+            }
+            if (BattleTextLineCount > 2)
+            {
+                BlitStringToBuffer(gBattleTextLine[3], &g6x7Font, &COLOR_BLACK, 66, 174 + ((3) * 8));
+            }
+            if (BattleTextLineCount > 3)
+            {
+                BlitStringToBuffer(gBattleTextLine[4], &g6x7Font, &COLOR_BLACK, 66, 174 + ((4) * 8));
+            }
+            if (BattleTextLineCount > 4)
+            {
+                BlitStringToBuffer(gBattleTextLine[5], &g6x7Font, &COLOR_BLACK, 66, 174 + ((5) * 8));
+            }
+            if (BattleTextLineCount > 5)
+            {
+                BlitStringToBuffer(gBattleTextLine[6], &g6x7Font, &COLOR_BLACK, 66, 174 + ((6) * 8));
+            }
+            if (BattleTextLineCount > 6)
+            {
+                BlitStringToBuffer(gBattleTextLine[7], &g6x7Font, &COLOR_BLACK, 66, 174 + ((7) * 8));
+            }
+            BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 312, 228);
+            gFinishedBattleTextAnimation = TRUE;
 
             break;
         }
@@ -483,18 +1131,79 @@ void PPI_BattleScreen(void)
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                gPreviousBattleState = gCurrentBattleState;
-                gCurrentBattleState = BATTLESTATE_WAIT_INPUT1;
+                gCurrentBattleState = BATTLESTATE_OPENING_WAIT;
             }
             break;
         }
-        case BATTLESTATE_WAIT_INPUT1:
+        case BATTLESTATE_OPENING_WAIT:
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                gPreviousBattleState = gCurrentBattleState;
                 gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
                 gFinishedBattleTextAnimation = FALSE;
+            }
+            break;
+        }
+        case BATTLESTATE_TURNORDER_CALC:
+        {
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_CALC;
+                gFinishedBattleTextAnimation = FALSE;
+            }
+            break;
+        }
+        case BATTLESTATE_FIRSTMOVE_CALC:
+        {
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_CALC;
+                gFinishedBattleTextAnimation = FALSE;
+            }
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_CALC:
+        {
+            break;
+        }
+        case BATTLESTATE_KO:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_KO_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_KO_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gFinishedBattleTextAnimation = FALSE;
+                MenuItem_BattleScreen_EscapeButton();
             }
             break;
         }
@@ -623,7 +1332,6 @@ void PPI_BattleScreen(void)
 
         }
     }
-
 }
 
 void DrawBattleButtons(void)
@@ -704,7 +1412,7 @@ void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t perc
         for (int Pixel = 0; Pixel < 100; Pixel++)
         {
             int MemoryOffset = StartingScreenPixel - (GAME_RES_WIDTH * 3) + 8;
-            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_LIGHT_BLUE, sizeof(PIXEL32));
+            memcpy((PIXEL32*)gBackBuffer.Memory + MemoryOffset + Pixel, &COLOR_DARK_BLUE, sizeof(PIXEL32));
         }
 
         for (int Pixel = 0; Pixel < 100 - percentExp100; Pixel++)
@@ -807,7 +1515,7 @@ void MenuItem_MoveScreen_MoveSlot0(void)
     else          //end player turn start calculating
     {
         gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0];
-        gCurrentBattleState = BATTLESTATE_CALCULATE;
+        gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
     }
 }
 
@@ -820,7 +1528,7 @@ void MenuItem_MoveScreen_MoveSlot1(void)
     else          //end player turn start calculating
     {
         gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1];
-        gCurrentBattleState = BATTLESTATE_CALCULATE;
+        gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
     }
 }
 
@@ -1306,73 +2014,53 @@ uint16_t CalcPotentialDamageToOpponentMonster(uint8_t playerLevel, uint16_t play
     return (PotentialDmg);
 }
 
-void ModiftyMonsterHealthValuesThisTurn(uint16_t damageToPlayer, uint16_t damageToOpponent, BOOL isPlayerGoingFirst)
+BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster)
 {
-    /*static BOOL FirstMoveFinished = 0;                ////for BATTLE_STATE_ANIMATE so i can come back and start on second move
-    static BOOL SecondMoveFinished = 0;*/
-
-    if (isPlayerGoingFirst && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0) && (gPlayerParty[gCurrentPartyMember].Health != 0))
+    if ((gOpponentParty[gCurrentOpponentPartyMember].Health != 0) && (gPlayerParty[gCurrentPartyMember].Health != 0))
     {
-        for (uint16_t i = damageToOpponent; i > 0; i--)
+        if (isPlayerSideMonster == TRUE)
         {
-            gOpponentParty[gCurrentOpponentPartyMember].Health--;
-            if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
-            {
-                //FirstMoveFinished = TRUE;
-                goto SecondMove;
-            }
-        }
-    }
-    else if (!isPlayerGoingFirst && (gPlayerParty[gCurrentPartyMember].Health != 0) && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0))
-    {
-
-        for (uint16_t i = damageToPlayer; i > 0; i--)
-        {
-            gPlayerParty[gCurrentPartyMember].Health--;
-            if (gPlayerParty[gCurrentPartyMember].Health == 0)
-            {
-                //FirstMoveFinished = TRUE;
-                goto SecondMove;
-            }
-        }
-    }
-    //FirstMoveFinished = TRUE;
-SecondMove:
-
-    //if (FirstMoveFinished == TRUE)
-    {
-        if (isPlayerGoingFirst && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0) && (gPlayerParty[gCurrentPartyMember].Health != 0))
-        {
-            for (uint16_t i = damageToPlayer; i > 0; i--)
+            for (uint16_t i = damageToMonster; i > 0; i--)
             {
                 gPlayerParty[gCurrentPartyMember].Health--;
                 if (gPlayerParty[gCurrentPartyMember].Health == 0)
                 {
-                    //SecondMoveFinished = TRUE;
-                    goto CalcEnd;
+                    return(TRUE);
                 }
             }
         }
-        else if (!isPlayerGoingFirst && (gPlayerParty[gCurrentPartyMember].Health != 0) && (gOpponentParty[gCurrentOpponentPartyMember].Health != 0))
+        else
         {
-            for (uint16_t i = damageToOpponent; i > 0; i--)
+            for (uint16_t i = damageToMonster; i > 0; i--)
             {
                 gOpponentParty[gCurrentOpponentPartyMember].Health--;
                 if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
                 {
-                    //SecondMoveFinished = TRUE;
-                    goto CalcEnd;
+                    return(TRUE);
                 }
             }
         }
     }
-    //SecondMoveFinished = TRUE;
-CalcEnd:
-
-    //if (SecondMoveFinished == TRUE)
+    else if ((gOpponentParty[gCurrentOpponentPartyMember].Health != 0) || (gPlayerParty[gCurrentPartyMember].Health != 0))
     {
-        gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+        return(TRUE);
     }
+
+    switch (gCurrentBattleState)
+    {
+        case BATTLESTATE_FIRSTMOVE_CALC:
+        {
+            gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+            break;
+        }
+        case BATTLESTATE_SECONDMOVE_CALC:
+        {
+            gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+            break;
+        }
+    }
+
+    return(FALSE);
 }
 
 

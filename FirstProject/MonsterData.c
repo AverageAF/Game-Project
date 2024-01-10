@@ -1326,3 +1326,25 @@ uint8_t* StringCopy_NickName(uint8_t* dest, const uint8_t* source)
     dest[i] = END_OF_STRING;
     return(&dest[i]);
 }
+
+BOOL TryIncrementMonsterLevel(struct Monster* monster)
+{
+    uint8_t Index = GetMonsterData(monster, MONSTER_DATA_INDEX, NULL);
+    uint8_t NextLevel = GetMonsterData(monster, MONSTER_DATA_LEVEL, NULL) + 1;
+    uint32_t ExpPoints = GetMonsterData(monster, MONSTER_DATA_EXPERIENCE, NULL);
+
+    //if (ExpPoints > gExperienceTables[gBaseStats[Index].growthRate][GetPartyLevelCap()])      //TODO: levelcap function for harder difficulties
+    //{
+    //    ExpPoints = gExperienceTables[gBaseStats[Index].growthRate][GetPartyLevelCap()];
+    //    SetMonsterData(monster, MONSTER_DATA_EXPERIENCE, &ExpPoints);
+    //}
+    if (/*NextLevel > GetPartyLevelCap() ||*/ ExpPoints < gExperienceTables[gBaseStats[Index].growthRate][NextLevel])
+    {
+        return(FALSE);
+    }
+    else
+    {
+        SetMonsterData(monster, MONSTER_DATA_LEVEL, &NextLevel);
+        return(TRUE);
+    }
+}

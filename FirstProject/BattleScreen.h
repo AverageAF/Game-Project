@@ -4,8 +4,19 @@
 typedef enum BATTLESTATE
 {
 	BATTLESTATE_OPENING_TEXT,
-	BATTLESTATE_WAIT_INPUT1,
-	BATTLESTATE_CALCULATE,
+	BATTLESTATE_OPENING_WAIT,
+	BATTLESTATE_TURNORDER_CALC,
+	BATTLESTATE_FIRSTMOVE_TEXT,
+	BATTLESTATE_FIRSTMOVE_WAIT,
+	BATTLESTATE_FIRSTMOVE_CALC,
+	BATTLESTATE_POSTFIRSTMOVE_TEXT,
+	BATTLESTATE_SECONDMOVE_TEXT,
+	BATTLESTATE_SECONDMOVE_WAIT,
+	BATTLESTATE_SECONDMOVE_CALC,
+	BATTLESTATE_POSTSECONDMOVE_TEXT,
+	BATTLESTATE_KO,
+	BATTLESTATE_KO_WAIT,
+	BATTLESTATE_REWARD,
 	BATTLESTATE_RUN_FIGHT,
 	BATTLESTATE_SWITCH_FIGHT,				///////TODO harder difficulties where there is no running or item bag
 	BATTLESTATE_CHOOSE_MOVE,
@@ -36,8 +47,9 @@ void DrawBattleButtons(void);
 
 void DrawMoveButtons(void);
 
-void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname);
+void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar);
 
+////////////MENU//BUTTONS//////////////
 
 void MenuItem_BattleScreen_FightButton(void);
 
@@ -75,6 +87,8 @@ void MenuItem_MoveScreen_SignatureMove(void);
 
 void MenuItem_MoveScreen_BackButton(void);
 
+////////////MENU//BUTTONS//////////////
+
 uint8_t CalculateOpponentMoveChoice(uint8_t npcaiFlag);
 
 BOOL CalculateSpeedPriorityIfPlayerMovesFirst(uint16_t speedStatPlayer, uint16_t speedStatOpponent);
@@ -83,4 +97,4 @@ uint16_t CalcPotentialDamageToPlayerMonster(uint8_t oppLevel, uint16_t oppMonAtk
 
 uint16_t CalcPotentialDamageToOpponentMonster(uint8_t playerLevel, uint16_t playerMonAtk, uint16_t oppMonDef, uint16_t playerMonPsi, uint16_t oppMonRes, uint8_t movePower1, uint8_t movePower2, uint8_t movePower3, uint8_t split);
 
-void ModiftyMonsterHealthValuesThisTurn(uint16_t damageToPlayer, uint16_t damageToOpponent, BOOL isPlayerGoingFirst);
+BOOL ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster);

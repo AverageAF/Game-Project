@@ -655,7 +655,7 @@ DWORD InitializePlayer(void)
     gCamera.y = 0;                  //0                                             //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
-    gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
+    gPlayer.RandomEncounterPercent = 500;   //50 == a 5% chance
 
     gPlayer.Seed = 777;
 

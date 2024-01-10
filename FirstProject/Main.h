@@ -99,12 +99,7 @@
 #define END_OF_STRING 0xFF
 #define MAX_STAT_CHANGES 6
 #define MAX_DIALOGUE_ROWS 7
-
-
-
-
-#define TOTAL_MONSTERS 10
-#define TOTAL_MOVES 10
+#define MAX_BATTLECHAR_PER_ROW 40
 
 
 
@@ -640,8 +635,8 @@ uint8_t gOpponentPartyCount;
 struct Monster gPlayerParty[MAX_PARTY_SIZE];
 struct Monster gOpponentParty[MAX_PARTY_SIZE];
 
-GAMEBITMAP gBattleSpriteBack[TOTAL_MONSTERS];	//////temp while still working on MONSTERINFO struct
-GAMEBITMAP gBattleSpriteFront[TOTAL_MONSTERS];
+GAMEBITMAP gBattleSpriteBack[NUM_MONSTERS];	//////temp while still working on MONSTERINFO struct
+GAMEBITMAP gBattleSpriteFront[NUM_MONSTERS];
 
 GAMEMAP gOverWorld01;
 
