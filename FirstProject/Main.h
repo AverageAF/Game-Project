@@ -1,12 +1,13 @@
 #pragma once
 
 #ifdef _DEBUG
-	#define ASSERT(Expression) if (!(Expression)) { *(int*)0 = 0; }
+	#define ASSERT(Expression, Message) if (!(Expression)) { *(int*)0 = 0; }
 #else
-	#define ASSERT((void),0);
+	#define ASSERT(Expression, Message) ((void),0);
 #endif
 
 #define GAME_NAME "A_Game"
+#define GAME_VERSION "0.9a"
 
 #define GAME_RES_WIDTH 384		//maybe 400
 #define GAME_RES_HEIGHT 240
@@ -14,10 +15,11 @@
 #define GAME_DRAWING_AREA_MEMORY_SIZE (GAME_RES_WIDTH * GAME_RES_HEIGHT * (GAME_BPP/8))
 
 #define CALCULATE_AVG_FPS_EVERY_X_FRAMES 25			//goal of 120fps
-#define GOAL_MICROSECONDS_PER_FRAME 16667ULL		//16667 = 60fps
+#define GOAL_MICROSECONDS_PER_FRAME 16667ULL		//16667 = 60fps <8000 for 120fps
 
 #define SIMD
 
+#define NUMBER_OF_SFX_SOURCE_VOICES 8
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
@@ -40,23 +42,57 @@
 
 typedef enum DIRECTION
 {
-	Down = 0,
-	Left = 3,
-	Right = 6,
-	Up = 9
+	DOWN = 0,
+	LEFT = 3,
+	RIGHT = 6,
+	UP = 9
 } DIRECTION;
+
+
 
 typedef enum LOGLEVEL
 {
-	None = 0,
-	LogError = 1,
-	Warn = 2,
-	Info = 3,
-	Debug = 4
+	LL_NONE = 0,
+	LL_ERROR = 1,
+	LL_WARNING = 2,
+	LL_INFO = 3,
+	LL_DEBUG = 4
 } LOGLEVEL;
 
 #define LOG_FILE_NAME GAME_NAME ".log"
 
+typedef enum GAMESTATE
+{
+	GAMESTATE_OPENINGSPLASH,
+	GAMESTATE_TITLESCREEN,
+	GAMESTATE_OVERWORLD,
+	GAMESTATE_BATTLE,
+	GAMESTATE_OPTIONS,
+	GAMESTATE_EXITYESNO,
+	GAMESTATE_CHARACTERNAME
+} GAMESTATE;
+
+typedef struct GAMEINPUT
+{
+	int16_t EscapeKeyPressed;		////key inputs
+	int16_t DebugKeyPressed;
+	int16_t SDownKeyPressed;
+	int16_t ALeftKeyPressed;
+	int16_t DRightKeyPressed;
+	int16_t WUpKeyPressed;
+	int16_t ChooseKeyPressed;
+	int16_t TabKeyPressed;
+
+	int16_t EscapeKeyAlreadyPressed;	////for pulse responces
+	int16_t DebugKeyAlreadyPressed;
+	int16_t SDownKeyAlreadyPressed;
+	int16_t ALeftKeyAlreadyPressed;
+	int16_t DRightKeyAlreadyPressed;
+	int16_t WUpKeyAlreadyPressed;
+	int16_t ChooseKeyAlreadyPressed;
+	int16_t TabKeyAlreadyPressed;
+
+} GAMEINPUT;
 
 typedef LONG(NTAPI* _NtQueryTimerResolution) (OUT PULONG MinimumResolution, OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
 
@@ -66,7 +102,15 @@ typedef struct GAMEBITMAP
 {
 	BITMAPINFO BitmapInfo;
 	void* Memory;
+
 } GAMEBITMAP;
+
+typedef struct GAMESOUND
+{
+	WAVEFORMATEX WaveFormat;
+	XAUDIO2_BUFFER Buffer;
+
+} GAMESOUND;
 
 typedef struct PIXEL32
 {
@@ -85,8 +129,13 @@ typedef struct GAME_PERFORMANCE_DATA
 	int64_t PerfFrequency;
 
 	MONITORINFO MonitorInfo;
-	int MonitorWidth;
-	int MonitorHeight;
+	/*int32_t MonitorWidth;
+	int32_t MonitorHeight;
+	int32_t WindowWidth;
+	int32_t WindowHeight;*/
+
+	/*RECT MonitorRect;
+	RECT WindowRect;*/
 
 	BOOL DisplayDebugInfo;
 	LONG MinimumTimerResolution;		//if warning C4057 make ULONG instead
@@ -100,23 +149,36 @@ typedef struct GAME_PERFORMANCE_DATA
 	int64_t PreviousSystemTime;
 	double CPUPercent;
 
+	uint8_t MaxScaleFactor;
+	uint8_t CurrentScaleFactor;
+
 } GAME_PERFORMANCE_DATA;
 
 typedef struct PLAYER
 {
 	char Name[12];
 	GAMEBITMAP Sprite[3][12]; 
+	BOOL Active;
 	int16_t ScreenPosX;
 	int16_t ScreenPosY;
 	uint8_t MovementRemaining;
 	DIRECTION Direction;
 	uint8_t CurrentSuit;
 	uint8_t SpriteIndex;
+
 } PLAYER;
 
 typedef struct REGISTRYPARAMS
 {
 	DWORD LogLevel;
+
+	DWORD SFXVolume;
+
+	DWORD MusicVolume;
+
+	DWORD ScaleFactor;
+
+	BOOL FullScreen;
 
 } REGISTRYPARAMS;
 
@@ -140,12 +202,35 @@ void RenderFrameGraphics(void);
 
 DWORD LoadRegistryParameters(void);
 
-void LogMessageA(_In_ DWORD LogLevel, _In_ char* Message, _In_ ...);
+DWORD SaveRegistryParameters(void);
+
+void LogMessageA(_In_ LOGLEVEL LogLevel, _In_ char* Message, _In_ ...);
 
 void DrawDebugInfo(void);
+
+HRESULT InitializeSoundEngine(void);
+
+DWORD LoadWaveFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
+
+void PlayGameSound(_In_ GAMESOUND* GameSound);
 
 #ifdef SIMD
 void ClearScreenColor(_In_ __m128i* Color);
 #else
 void ClearScreenColor(_In_ PIXEL32* Color);
 #endif
+
+void DrawOpeningSplashScreen(void);
+void DrawTitleScreen(void);
+void DrawOverworldScreen(void);
+void DrawBattleScreen(void);
+void DrawOptionsScreen(void);
+void DrawExitYesNoScreen(void);
+void DrawCharacterNaming(void);
+
+void PPI_OpeningSplashScreen(void);
+void PPI_TitleScreen(void);
+void PPI_Overworld(void);
+void PPI_ExitYesNoScreen(void);
+void PPI_OptionsScreen(void);
+void PPI_CharacterName(void);

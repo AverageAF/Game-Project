@@ -1,1 +1,2 @@
-xcopy C:\Users\Frankenstein\source\repos\FirstProject\Assets C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets /i /y
+del %FIRSTPROJDIR%\x64\Debug\Assets\ /Q
+xcopy %FIRSTPROJDIR%\Assets %FIRSTPROJDIR%\x64\Debug\Assets /i /y
