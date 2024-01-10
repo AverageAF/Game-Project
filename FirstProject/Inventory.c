@@ -16,17 +16,19 @@ BOOL gHasSelectedInvSlot = FALSE;
 
 MENUITEM gMI_Inventory_SelectedItem_Back = { "Back", 28 + (48 * 0) + 0, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Back };
 
-MENUITEM gMI_Inventory_SelectedItem_Trash = { "Trash", 28 + (48 * 1) + 2, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Trash };
+MENUITEM gMI_Inventory_SelectedItem_Trash = { "Trash", 28 + (48 * 1) + 2, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Trash };          //name changes to USE on adventure items
 
-MENUITEM gMI_Inventory_SelectedItem_Use = { "Use", 28 + (48 * 2) + 4, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Use };
+MENUITEM gMI_Inventory_SelectedItem_Use = { "Use", 28 + (48 * 2) + 4, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Use };                // removed on treasure and adventure items
 
-MENUITEM gMI_Inventory_SelectedItem_Equip = { "Equip", 28 + (48 * 2) + 4, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Equip };
+MENUITEM gMI_Inventory_SelectedItem_Inspect = { "Stats", 28 + (48 * 1) + 2, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Inspect };      //replaces the trash position when used on monsters
 
-MENUITEM gMI_Inventory_SelectedItem_Inspect = { "Stats", 28 + (48 * 1) + 2, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Inspect };     //replaces the trash pos when used on monsters
+MENUITEM gMI_Inventory_SelectedItem_Rename = { "Rename", 28 + (48 * 0) + 0, 158, TRUE, MenuItem_Inventory_SelectedItem_Rename };            //only for monsters
 
-MENUITEM gMI_Inventory_SelectedItem_Give = { "Give", 28 + (48 * 2) + 4, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Give };        //replaces the use/equip pos when used on monsters
+MENUITEM gMI_Inventory_SelectedItem_Equip = { "Equip", 28 + (48 * 1) + 2, 158, TRUE, MenuItem_Inventory_SelectedItem_Equip };               //only for monsters
 
-MENUITEM* gMI_InventorySelectedItem_Items[] = { &gMI_Inventory_SelectedItem_Back, &gMI_Inventory_SelectedItem_Trash, &gMI_Inventory_SelectedItem_Use, &gMI_Inventory_SelectedItem_Equip, &gMI_Inventory_SelectedItem_Inspect, &gMI_Inventory_SelectedItem_Give };
+MENUITEM gMI_Inventory_SelectedItem_Unequip = { "Remove", 28 + (48 * 2) + 4, 158, TRUE, MenuItem_Inventory_SelectedItem_Unequip };          //only for monsters
+
+MENUITEM* gMI_InventorySelectedItem_Items[] = { &gMI_Inventory_SelectedItem_Back, &gMI_Inventory_SelectedItem_Trash, &gMI_Inventory_SelectedItem_Use, &gMI_Inventory_SelectedItem_Inspect, &gMI_Inventory_SelectedItem_Rename, &gMI_Inventory_SelectedItem_Equip, &gMI_Inventory_SelectedItem_Unequip, };
 
 MENU gMenu_InventorySelectedItem = { "Selected Item Options", 0, _countof(gMI_InventorySelectedItem_Items), gMI_InventorySelectedItem_Items };
 
@@ -210,6 +212,7 @@ uint16_t gEquipSlotIndex[/*_countof(gMI_InventoryEquipable_Items)*/17] = { 0 }; 
 int32_t gEquipSlotOffset = 0;                                           //shuffle items in menu windows when cursor is at top or bottom of menu boxes
 uint16_t gEquipHasItemSort[NUM_EQUIP_ITEMS] = { 0 };                    // simple sorting algorithm that sorts the gEquipableItems.Index's that have a non zero count first but keeps the order of Index, if an Index is zero it returns 0xFFFF for that value (example; 0, 2, 3, 5, 8, 13, 21, 23, 45 (last non-zero index), 65535, 65535, 65535, 65535, ...)
 uint16_t gEquipItemCount = 0;                                           //total number of non-zero index's in the equipables pocket (number of unique equipable items owned by the player)
+uint8_t gEquipItemEffect = ITEM_EQUIP_EFFECT_NULL;                       // for knowing what item effect is on what monster
 
 //// EQUIPSLOT MENU VARIABLES ////
 
@@ -436,27 +439,27 @@ void PPI_InventoryScreen(void)
             {
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                    if (gMenu_InventorySelectedItem.SelectedItem > 0)
                     {
                         gMenu_InventorySelectedItem.SelectedItem--;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 3)
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 1;
+                        gMenu_InventorySelectedItem.SelectedItem = 2;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    if (gMenu_InventorySelectedItem.SelectedItem < 2)
                     {
                         gMenu_InventorySelectedItem.SelectedItem++;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 3;
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -547,12 +550,22 @@ void PPI_InventoryScreen(void)
                         gMenu_InventorySelectedItem.SelectedItem--;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 2;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem < 3)
+                    if (gMenu_InventorySelectedItem.SelectedItem < 2)
                     {
                         gMenu_InventorySelectedItem.SelectedItem++;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -642,7 +655,12 @@ void PPI_InventoryScreen(void)
                 {
                     if (gMenu_InventorySelectedItem.SelectedItem == 1)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem--;
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 1;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -650,7 +668,12 @@ void PPI_InventoryScreen(void)
                 {
                     if (gMenu_InventorySelectedItem.SelectedItem == 0)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem++;
+                        gMenu_InventorySelectedItem.SelectedItem = 1;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -739,9 +762,14 @@ void PPI_InventoryScreen(void)
             {
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    if (gMenu_InventorySelectedItem.SelectedItem == 1)
                     {
                         gMenu_InventorySelectedItem.SelectedItem = 0;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 1;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -749,7 +777,12 @@ void PPI_InventoryScreen(void)
                 {
                     if (gMenu_InventorySelectedItem.SelectedItem == 0)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 2;
+                        gMenu_InventorySelectedItem.SelectedItem = 1;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -838,14 +871,29 @@ void PPI_InventoryScreen(void)
             {
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem == 5)
+                    if (gMenu_InventorySelectedItem.SelectedItem == 0)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 4;
+                        gMenu_InventorySelectedItem.SelectedItem = 2;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 3;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 3)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem >= 5 && gMenu_InventorySelectedItem.SelectedItem <= 6)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem--;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                     else if (gMenu_InventorySelectedItem.SelectedItem == 4)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 0;
+                        gMenu_InventorySelectedItem.SelectedItem = 6;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -853,12 +901,95 @@ void PPI_InventoryScreen(void)
                 {
                     if (gMenu_InventorySelectedItem.SelectedItem == 0)
                     {
+                        gMenu_InventorySelectedItem.SelectedItem = 3;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 3)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 2;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem >= 4 && gMenu_InventorySelectedItem.SelectedItem <= 5)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem++;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 6)
+                    {
                         gMenu_InventorySelectedItem.SelectedItem = 4;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                }
+
+                if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
+                {
+                    if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 4;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 3)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 5;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 6;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                     else if (gMenu_InventorySelectedItem.SelectedItem == 4)
                     {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 5)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 3;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 6)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 2;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                }
+
+                if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+                {
+                    if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 4;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 3)
+                    {
                         gMenu_InventorySelectedItem.SelectedItem = 5;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 6;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 4)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 0;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 5)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 3;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
+                    else if (gMenu_InventorySelectedItem.SelectedItem == 6)
+                    {
+                        gMenu_InventorySelectedItem.SelectedItem = 2;
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -897,7 +1028,7 @@ void PPI_InventoryScreen(void)
                 PlayGameSound(&gSoundMenuNavigate);
             }
 
-            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed && (gMenu_InventoryAdventure.SelectedItem <= 5 && gMenu_InventoryAdventure.SelectedItem >= 0) && gEquipItemCount != 0)
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed && (gMenu_InventoryMonster.SelectedItem <= 5 && gMenu_InventoryMonster.SelectedItem >= 0) && gEquipItemCount != 0)
             {
                 gMI_InventoryMonster_Items[gMenu_InventoryMonster.SelectedItem]->Action();
                 PlayGameSound(&gSoundMenuChoose);
@@ -1013,6 +1144,8 @@ void DrawEquipablePocket(void)
     }
 
     BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventoryEquipable_Items[gMenu_InventoryEquipable.SelectedItem]->x - 6, gMI_InventoryEquipable_Items[gMenu_InventoryEquipable.SelectedItem]->y);
+
+    BlitItemDescription(gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Description);
 }
 
 void DrawUseablePocket(void)
@@ -1364,14 +1497,20 @@ void DrawSelectedItemOptions(void)
 {
     DrawWindow(20 + (48 * 0) + 0, 152 - 18, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
 
-    if (gCurrentPockets != POCKETSTATE_ADVENTURE)
-    {
-        DrawWindow(20 + (48 * 1) + 2, 152 - 18, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
-    }
+    DrawWindow(20 + (48 * 1) + 2, 152 - 18, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
 
-    if (gCurrentPockets != POCKETSTATE_VALUABLE)
+    if (gCurrentPockets != POCKETSTATE_VALUABLE && gCurrentPockets != POCKETSTATE_ADVENTURE)
     {
         DrawWindow(20 + (48 * 2) + 4, 152 - 18, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+    }
+
+    if (gCurrentPockets == POCKETSTATE_MONSTER)
+    {
+        DrawWindow(20 + (48 * 0) + 0, 152, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+        DrawWindow(20 + (48 * 1) + 2, 152, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+        DrawWindow(20 + (48 * 2) + 4, 152, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
     }
 
     switch (gCurrentPockets)
@@ -1380,7 +1519,7 @@ void DrawSelectedItemOptions(void)
         {
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Equip.x, gMI_Inventory_SelectedItem_Equip.y);
+            BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);         ////EQUIP jumps to the position of USE when in EQUIPABLE
 
             BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
 
@@ -1408,7 +1547,7 @@ void DrawSelectedItemOptions(void)
         case POCKETSTATE_ADVENTURE:
         {
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);
+            BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);       ////Use jumps to the position of TRASH while in ADVENTURE
 
             BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
 
@@ -1418,7 +1557,10 @@ void DrawSelectedItemOptions(void)
         {
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Inspect.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Give.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Give.x, gMI_Inventory_SelectedItem_Give.y);
+            BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);
+            BlitStringToBuffer(gMI_Inventory_SelectedItem_Rename.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Rename.x, gMI_Inventory_SelectedItem_Rename.y);
+            BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Equip.x, gMI_Inventory_SelectedItem_Equip.y);
+            BlitStringToBuffer(gMI_Inventory_SelectedItem_Unequip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Unequip.x, gMI_Inventory_SelectedItem_Unequip.y);
 
             BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
 
@@ -1445,20 +1587,17 @@ void MenuItem_Inventory_ItemSelected_Action(void)
 
 void MenuItem_Inventory_MonsterSelected_Action(void)
 {
+    gSelectedMonster = gMenu_InventoryMonster.SelectedItem;
+    gHasSelectedInvSlot = TRUE;
+
     if (gCurrentPockets == POCKETSTATE_MONSTER)
     {
-        gSelectedMonster = gMenu_InventoryMonster.SelectedItem;
 
-        gHasSelectedInvSlot = TRUE;
     }
     else if (gCurrentPockets == POCKETSTATE_MONSTER_SELECT)
     {
         if (gPreviousPockets == POCKETSTATE_USABLE)
         {
-            gSelectedMonster = gMenu_InventoryMonster.SelectedItem;
-
-            gHasSelectedMonster = TRUE;
-
             switch (gUseableItemEffect)
             {
                 case ITEM_USE_EFFECT_HEAL_MONSTER: 
@@ -1617,6 +1756,11 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                 }
                 case ITEM_USE_EFFECT_UPGRADE:
                 {
+                    uint8_t monstername[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
+                    uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
+                    GetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                    GetMonsterNameFromIndex(monstername, MONSTER_WOLF);
+
                     if (gPlayerParty[gSelectedMonster].DriveMonster.Index == MONSTER_WOLF)
                     {
                         switch (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem])
@@ -1624,46 +1768,100 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                             case INV_USABLE_ITEM_15:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_EARTHWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_EARTHWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_16:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_AIRWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_AIRWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_17:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_FIREWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_FIREWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_18:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_WATERWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_WATERWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_19:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_ELECTRICWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_ELECTRICWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_20:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_METALWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_METALWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_21:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_SOULWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_SOULWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_22:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_LIFEWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_LIFEWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             case INV_USABLE_ITEM_23:
                             {
                                 gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_DEATHWOLF;
+
+                                if (strcmp(nickname, monstername) == 0)
+                                {
+                                    GetMonsterNameFromIndex(nickname, MONSTER_DEATHWOLF);
+                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
+                                }
                                 break;
                             }
                             default:
@@ -1738,9 +1936,60 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                 }
             }
         }
-        else if (gPreviousPockets == POCKETSTATE_EQUIPABLE)
+        else if (gPreviousPockets == POCKETSTATE_EQUIPABLE && gPlayerParty[gSelectedMonster].DriveMonster.HeldItem == 0)        ////equipping an item onto a monster
         {
+            switch (gEquipItemEffect)
+            {
+                case ITEM_EQUIP_EFFECT_ELEMENT_BOOST:
+                {
+                    gPlayerParty[gSelectedMonster].DriveMonster.HeldItem = gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem];
+                    gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count--;
 
+                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+
+                    ReSortEquipableitems();
+
+                    break;
+                }
+                case ITEM_EQUIP_EFFECT_NONE:
+                {
+                    break;
+                }
+                case ITEM_EQUIP_EFFECT_NULL:
+                default:
+                {
+                    ASSERT(FALSE, "unknown item effect when equipping an item on a selected monster!")
+                }
+            }
+        }
+        else if (gPreviousPockets == POCKETSTATE_EQUIPABLE && gPlayerParty[gSelectedMonster].DriveMonster.HeldItem != 0)        ////unequipping an item from a monster
+        {
+            switch (gEquipItemEffect)
+            {
+                case ITEM_EQUIP_EFFECT_ELEMENT_BOOST:
+                {
+                    gEquipableItems[gPlayerParty[gSelectedMonster].DriveMonster.HeldItem].Count++;
+                    gPlayerParty[gSelectedMonster].DriveMonster.HeldItem = gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem];
+                    gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count--;
+
+                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+
+                    ReSortEquipableitems();
+
+                    break;
+                }
+                case ITEM_EQUIP_EFFECT_NONE:
+                {
+                    break;
+                }
+                case ITEM_EQUIP_EFFECT_NULL:
+                default:
+                {
+                    ASSERT(FALSE, "unknown item effect when unequipping an item on a selected monster!")
+                }
+            }
         }
     }
 }
@@ -1753,9 +2002,16 @@ void MenuItem_Inventory_SelectedItem_Back(void)
     gMenu_InventorySelectedItem.SelectedItem = 0;
 }
 
-void MenuItem_Inventory_SelectedItem_Trash(void)        //TODO: all that is left with inventory is item effect functions and applying them to monsters
+void MenuItem_Inventory_SelectedItem_Trash(void)
 {
-
+    if (gCurrentPockets == POCKETSTATE_ADVENTURE)
+    {
+        ////allow whatever adventure item to be used
+    }
+    else if (gCurrentPockets != POCKETSTATE_ADVENTURE && gCurrentPockets != POCKETSTATE_MONSTER && gCurrentPockets != POCKETSTATE_MONSTER_SELECT)
+    {
+        ////remove a specified amount of items from players inventory by subtracting from its .Count
+    }
 }
 
 void MenuItem_Inventory_SelectedItem_Use(void)
@@ -1764,6 +2020,13 @@ void MenuItem_Inventory_SelectedItem_Use(void)
     {
         case POCKETSTATE_EQUIPABLE:
         {
+            if (gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Effect == ITEM_EQUIP_EFFECT_ELEMENT_BOOST && gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count > 0)
+            {
+                gEquipItemEffect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST;
+                gPreviousPockets = POCKETSTATE_EQUIPABLE;
+                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                gSwitchingMonster = 255;
+            }
             break;
         }
         case POCKETSTATE_USABLE:
@@ -1801,11 +2064,6 @@ void MenuItem_Inventory_SelectedItem_Use(void)
     }
 }
 
-void MenuItem_Inventory_SelectedItem_Equip(void)
-{
-
-}
-
 void MenuItem_Inventory_SelectedItem_Inspect(void)
 {
     gMonsterToViewStats = gMenu_InventoryMonster.SelectedItem;
@@ -1813,7 +2071,25 @@ void MenuItem_Inventory_SelectedItem_Inspect(void)
     gCurrentGameState = GAMESTATE_MONSTERSTATS;
 }
 
-void MenuItem_Inventory_SelectedItem_Give(void)
+void MenuItem_Inventory_SelectedItem_Rename(void)
 {
+    //go to naming screen based on character naming screen
+}
 
+void MenuItem_Inventory_SelectedItem_Equip(void)
+{
+    //go to equip screen without ALeft or DRight
+
+    /*if (gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Effect == ITEM_EQUIP_EFFECT_ELEMENT_BOOST && gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count > 0)
+    {
+        gEquipItemEffect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST;
+        gPreviousPockets = POCKETSTATE_EQUIPABLE;
+        gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+        gSwitchingMonster = 255;
+    }*/
+}
+
+void MenuItem_Inventory_SelectedItem_Unequip(void)
+{
+    //remove the item from selected monster and increase the count of an equipable item with the same index by one
 }

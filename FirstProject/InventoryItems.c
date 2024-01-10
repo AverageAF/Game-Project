@@ -6,25 +6,26 @@
 InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
     [INV_EQUIP_ITEM_0] =
     {
-        .ValueCurrency = 1,
+        .ValueCurrency = 0,
         .HasItem = FALSE,
-        .Count = 1,
-        .Description = "-----",
-        .Effect = 0,
-        .Name = "EQUIPITEM 0",
+        .Count = 0,
+        .Description = "ERROR NULL ITEM",
+        .Effect = ITEM_EQUIP_EFFECT_NULL,
+        .Name = "NULL",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
+
     [INV_EQUIP_ITEM_1] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 1,
-        .Name = "EQUIPITEM 1",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of NONE \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "None booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -32,12 +33,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_2] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 2,
-        .Name = "EQUIPITEM 2",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of EARTH \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Earth booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -45,12 +46,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_3] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 3,
-        .Name = "EQUIPITEM 3",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of AIR \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Air booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -58,12 +59,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_4] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 4,
-        .Name = "EQUIPITEM 4",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of FIRE \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Fire booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -71,12 +72,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_5] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 5,
-        .Name = "EQUIPITEM 5",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of WATER \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Water booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -84,12 +85,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_6] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 6,
-        .Name = "EQUIPITEM 6",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of ELECTRIC \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Electric booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -97,12 +98,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_7] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 7,
-        .Name = "EQUIPITEM 7",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of METAL \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Metal booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -110,12 +111,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_8] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 8,
-        .Name = "EQUIPITEM 8",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of SOUL \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Soul booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -123,12 +124,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_9] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 9,
-        .Name = "EQUIPITEM 9",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of LIFE \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Life booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -136,12 +137,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_10] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 10,
-        .Name = "EQUIPITEM 10",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Boosts the damage of DEATH \nelement moves while equipped \n \n +25% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Death booster",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -149,12 +150,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_11] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 11,
-        .Name = "EQUIPITEM 11",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof NONE element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Smooth stone",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -162,12 +163,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_12] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 12,
-        .Name = "EQUIPITEM 12",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof EARTH element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Dry clay",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -175,12 +176,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_13] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 13,
-        .Name = "EQUIPITEM 13",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof AIR element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Light feather",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -188,12 +189,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_14] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 14,
-        .Name = "EQUIPITEM 14",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof FIRE element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Wax candle",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -201,12 +202,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_15] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 15,
-        .Name = "EQUIPITEM 15",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof WATER element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Teardrop pearl",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -214,12 +215,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_16] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 16,
-        .Name = "EQUIPITEM 16",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof ELECTRIC element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Spent sparkplug",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -227,12 +228,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_17] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 17,
-        .Name = "EQUIPITEM 17",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof METAL element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Abrasive whetstone",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -240,12 +241,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_18] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 18,
-        .Name = "EQUIPITEM 18",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof SOUL element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Torn tarot",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -253,12 +254,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_19] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 19,
-        .Name = "EQUIPITEM 19",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof LIFE element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Blooming sunflower",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -266,12 +267,12 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
     [INV_EQUIP_ITEM_20] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 20,
-        .Name = "EQUIPITEM 20",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Slightly boosts the damage \nof DEATH element moves \nwhile equipped \n \n +10% damage",
+        .Effect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST,
+        .Name = "Razor blade",
         .Sprite = 0,
         .Favorite = FALSE,
     },

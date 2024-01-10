@@ -58,8 +58,10 @@ void MenuItem_Inventory_SelectedItem_Trash(void);
 
 void MenuItem_Inventory_SelectedItem_Use(void);
 
-void MenuItem_Inventory_SelectedItem_Equip(void);
-
 void MenuItem_Inventory_SelectedItem_Inspect(void);
 
-void MenuItem_Inventory_SelectedItem_Give(void);
+void MenuItem_Inventory_SelectedItem_Rename(void);
+
+void MenuItem_Inventory_SelectedItem_Equip(void);
+
+void MenuItem_Inventory_SelectedItem_Unequip(void);

@@ -4074,11 +4074,23 @@ uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonst
         }
     }
 
+    ////////////////////calculate bonus when user and move have same element
+
     if (isPlayerMonsterMoveTarget == TRUE)
     {
         if (AttackingElement == gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1 || AttackingElement == gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2)
         {
             DamageAfterElement *= 1.5;
+        }
+
+        //////////////////calculate bonuses from elemental boosting equipable items
+        if (AttackingElement == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.HeldItem - 1)        //first 10 equip items (1...10) are all element boosters and align with the values for elements in order
+        {
+            DamageAfterElement *= 1.25;
+        }
+        else if (AttackingElement == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.HeldItem - 11)
+        {
+            DamageAfterElement *= 1.1;
         }
     }
     else
@@ -4087,10 +4099,19 @@ uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonst
         {
             DamageAfterElement *= 1.5;
         }
+
+        //////////////////calculate bonuses from elemental boosting equipable items
+        if (AttackingElement == gPlayerParty[gCurrentPartyMember].DriveMonster.HeldItem - 1)        //first 10 equip items (1...10) are all element boosters and align with the values for elements in order
+        {
+            DamageAfterElement *= 1.25;
+        }
+        else if (AttackingElement == gPlayerParty[gCurrentPartyMember].DriveMonster.HeldItem - 11)
+        {
+            DamageAfterElement *= 1.1;
+        }
     }
 
     return(DamageAfterElement);
-
 }
 
 void GenerateOpponentMove(uint8_t Opponent)
