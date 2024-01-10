@@ -333,15 +333,15 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
 
 
-InventoryItem gUsableItems[NUM_USABLE_ITEMS] = {
+InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
     [INV_USABLE_ITEM_0] =
     {
         .ValueCurrency = 100,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "Medicine that heals 20HP",
-        .Effect = 0,    //TODO: setup simple healing mechanic for one party member
-        .Name = "HP Usable [MKI]",
+        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,    //TODO: setup simple healing mechanic for one party member
+        .Name = "HP Useable [MKI]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -353,8 +353,8 @@ InventoryItem gUsableItems[NUM_USABLE_ITEMS] = {
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A common medicine, heals 50HP",
-        .Effect = 1,
-        .Name = "HP Usable [MKII]",
+        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
+        .Name = "HP Useable [MKII]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -366,8 +366,8 @@ InventoryItem gUsableItems[NUM_USABLE_ITEMS] = {
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A rare medicine, heals 100HP",
-        .Effect = 2,
-        .Name = "HP Usable [MKIII]",
+        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
+        .Name = "HP Useable [MKIII]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -379,8 +379,8 @@ InventoryItem gUsableItems[NUM_USABLE_ITEMS] = {
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A strong medicine, heals 250HP",
-        .Effect = 3,
-        .Name = "HP Usable [MKIV]",
+        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
+        .Name = "HP Useable [MKIV]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -392,8 +392,8 @@ InventoryItem gUsableItems[NUM_USABLE_ITEMS] = {
         .HasItem = FALSE,
         .Count = 1,
         .Description = "Potent medicine, fully heals HP",
-        .Effect = 4,
-        .Name = "HP Usable [MKV]",
+        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
+        .Name = "HP Useable [MKV]",
         .Sprite = 0,
         .Favorite = FALSE,
     },

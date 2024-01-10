@@ -5,9 +5,15 @@
 
 #include "MonsterData.h"
 
+#include "InventoryItems.h"
+#include "Inventory.h"
 
 
 
+///////// item variables
+
+uint8_t gUsableItemSelectedPartyMember = 0;
+uint8_t gUseableItemEffect_SelectedItem = ITEM_USE_EFFECT_NULL;
 
 ///////// load starting monster
 BOOL gWasMonsterKOed = FALSE;
@@ -36,12 +42,12 @@ MENU gMenu_BattleScreen = { "Battle Menu", 0 , _countof(gMI_BattleScreen_Items),
 
 ////////Menu choices for switching monsters in battle
 
-MENUITEM gMI_SwitchScreen_PartySlot0 = { &gPlayerParty[0].DriveMonster.nickname, 70, 187, FALSE, MenuItem_SwitchScreen_PartySlot0 };
-MENUITEM gMI_SwitchScreen_PartySlot1 = { &gPlayerParty[1].DriveMonster.nickname, 200, 187, FALSE, MenuItem_SwitchScreen_PartySlot1 };
-MENUITEM gMI_SwitchScreen_PartySlot2 = { &gPlayerParty[2].DriveMonster.nickname, 70, 207, FALSE, MenuItem_SwitchScreen_PartySlot2 };
-MENUITEM gMI_SwitchScreen_PartySlot3 = { &gPlayerParty[3].DriveMonster.nickname, 200, 207, FALSE, MenuItem_SwitchScreen_PartySlot3 };
-MENUITEM gMI_SwitchScreen_PartySlot4 = { &gPlayerParty[4].DriveMonster.nickname, 70, 230, FALSE, MenuItem_SwitchScreen_PartySlot4 };
-MENUITEM gMI_SwitchScreen_PartySlot5 = { &gPlayerParty[5].DriveMonster.nickname, 200, 230, FALSE, MenuItem_SwitchScreen_PartySlot5 };
+MENUITEM gMI_SwitchScreen_PartySlot0 = { &gPlayerParty[0].DriveMonster.nickname, 70, 187, FALSE, MenuItem_SwitchScreen_PartySelected };
+MENUITEM gMI_SwitchScreen_PartySlot1 = { &gPlayerParty[1].DriveMonster.nickname, 200, 187, FALSE, MenuItem_SwitchScreen_PartySelected };
+MENUITEM gMI_SwitchScreen_PartySlot2 = { &gPlayerParty[2].DriveMonster.nickname, 70, 207, FALSE, MenuItem_SwitchScreen_PartySelected };
+MENUITEM gMI_SwitchScreen_PartySlot3 = { &gPlayerParty[3].DriveMonster.nickname, 200, 207, FALSE, MenuItem_SwitchScreen_PartySelected };
+MENUITEM gMI_SwitchScreen_PartySlot4 = { &gPlayerParty[4].DriveMonster.nickname, 70, 230, FALSE, MenuItem_SwitchScreen_PartySelected };
+MENUITEM gMI_SwitchScreen_PartySlot5 = { &gPlayerParty[5].DriveMonster.nickname, 200, 230, FALSE, MenuItem_SwitchScreen_PartySelected };
 
 MENUITEM gMI_SwitchScreen_BackButton = { "Back", 28, 190, TRUE, MenuItem_SwitchScreen_BackButton };
 
@@ -66,6 +72,24 @@ MENUITEM gMI_MoveScreen_BackButton = { "Back", 1 + (6 * 4 / 2), 206, TRUE, MenuI
 MENUITEM* gMI_MoveScreen_Items[] = { &gMI_MoveScreen_BackButton, &gMI_MoveScreen_MoveSlot0, &gMI_MoveScreen_MoveSlot1, &gMI_MoveScreen_MoveSlot2, &gMI_MoveScreen_MoveSlot3, &gMI_MoveScreen_MoveSlotSignature };
 
 MENU gMenu_MoveScreen = { "Move Menu", 0, _countof(gMI_MoveScreen_Items), gMI_MoveScreen_Items };
+
+//////////Menu choices for usable items
+
+MENUITEM gMI_UseableScreen_ItemSlot0 = { "ItemSlot0", 66, 180, TRUE, MenuItem_UseableScreen_SlotSelected };
+
+MENUITEM gMI_UseableScreen_ItemSlot1 = { "ItemSlot1", 66, 180 + (12 * 1), TRUE, MenuItem_UseableScreen_SlotSelected };
+
+MENUITEM gMI_UseableScreen_ItemSlot2 = { "ItemSlot2", 66, 180 + (12 * 2), TRUE, MenuItem_UseableScreen_SlotSelected };
+
+MENUITEM gMI_UseableScreen_ItemSlot3 = { "ItemSlot3", 66, 180 + (12 * 3), TRUE, MenuItem_UseableScreen_SlotSelected };
+
+MENUITEM gMI_UseableScreen_ItemSlot4 = { "ItemSlot4", 66, 180 + (12 * 4), TRUE, MenuItem_UseableScreen_SlotSelected };
+
+MENUITEM gMI_UseableScreen_BackButton = { "Back", 34, 180, TRUE, MenuItem_UseableScreen_BackButton };
+
+MENUITEM* gMI_UseableScreen_Items[] = { &gMI_UseableScreen_ItemSlot0, &gMI_UseableScreen_ItemSlot1, &gMI_UseableScreen_ItemSlot2, &gMI_UseableScreen_ItemSlot3, &gMI_UseableScreen_ItemSlot4, &gMI_UseableScreen_BackButton };
+
+MENU gMenu_UseableScreen = { "Useable Items", 0, _countof(gMI_UseableScreen_Items), gMI_UseableScreen_Items };
 
 //////////
 
@@ -127,6 +151,36 @@ void DrawBattleScreen(void)
         BattleTextLineCharactersWritten = 0;
         BattleTextRowsToShow = 0;
         CalculatedExpReward = 0;
+        gMenu_BattleScreen.SelectedItem = 0;
+
+        ////TODO: make this a cunction that can be called/////////////////
+        uint8_t ItemCount = 0;
+        for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
+        {
+            if (gUseableItems[i].Count > 0)
+            {
+                gUseableItems[i].HasItem = TRUE;
+            }
+            else
+            {
+                gUseableItems[i].HasItem = FALSE;
+            }
+            if (gUseableItems[i].HasItem == TRUE)
+            {
+                gUseableHasItemSort[ItemCount] = i;
+                ItemCount++;
+            }
+            if (i == NUM_USABLE_ITEMS - 1)
+            {
+                gUseableItemCount = ItemCount;
+                for (uint8_t j = 0; j < NUM_USABLE_ITEMS - ItemCount; j++)
+                {
+                    gUseableHasItemSort[ItemCount + j] = 0xFFFF;
+                }
+
+            }
+        }
+        /////////////////////////////////////////////////////////////////
 
         gMI_MoveScreen_MoveSlot0.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[0]];
         gMI_MoveScreen_MoveSlot1.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1]];
@@ -383,6 +437,11 @@ void DrawBattleScreen(void)
                     sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
+                else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
 
                 if (gWasLastMoveCriticalHit == TRUE)
                 {
@@ -403,6 +462,11 @@ void DrawBattleScreen(void)
                 else if (gLastMoveElementalBonus == ELEMENT_RESIST)
                 {
                     sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
+                else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
 
@@ -491,6 +555,56 @@ void DrawBattleScreen(void)
             gMI_MoveScreen_MoveSlot1.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[1]];
             gMI_MoveScreen_MoveSlot2.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[2]];
             gMI_MoveScreen_MoveSlot3.Name = gBattleMoveNames[gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[3]];
+            
+            break;
+        }
+        case BATTLESTATE_USEITEM_TEXT:
+        {
+            IsPlayerMovingFirst = TRUE;
+
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayer.Name, gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Name);
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s was healed!", &gPlayerParty[gUsableItemSelectedPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+
+            /*
+            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
+            BattleTextLineCount++;*/
+
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SWITCHING_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitUseItem;
+            }
+
+            break;
+        }
+        case BATTLESTATE_USEITEM_WAIT:
+        {
+
+        WaitUseItem:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
+            //TODO: maybe move healing calculation to right here??
 
             break;
         }
@@ -627,6 +741,11 @@ void DrawBattleScreen(void)
                     sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
+                else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
 
                 if (gWasLastMoveCriticalHit == TRUE)
                 {
@@ -648,6 +767,11 @@ void DrawBattleScreen(void)
                 else if (gLastMoveElementalBonus == ELEMENT_RESIST)
                 {
                     sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                }
+                else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
 
@@ -806,6 +930,7 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_CHOOSE_ITEM:
         {
+            DrawUseableItemsButtons();
             break;
         }
     }
@@ -974,6 +1099,23 @@ void PPI_BattleScreen(void)
                     gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
                     gFinishedBattleTextAnimation = FALSE;
                 }
+            }
+            break;
+        }
+        case BATTLESTATE_USEITEM_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_USEITEM_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_USEITEM_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                gFinishedBattleTextAnimation = FALSE;
             }
             break;
         }
@@ -1299,6 +1441,72 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_CHOOSE_ITEM:
         {
+            if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+            {
+                if (gMenu_UseableScreen.SelectedItem == 5)
+                {
+                    gMenu_UseableScreen.Items[gMenu_UseableScreen.SelectedItem]->Action();
+                    PlayGameSound(&gSoundMenuChoose);
+                }
+                else
+                {
+                    gMenu_UseableScreen.SelectedItem = 5;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+
+            if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
+            {
+                if (gMenu_UseableScreen.SelectedItem > 0)
+                {
+                    gMenu_UseableScreen.SelectedItem--;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gMenu_UseableScreen.SelectedItem == 0 && gUseableItemCount > _countof(gMI_UseableScreen_Items) - 1)
+                {
+                    gUseableSlotOffset--;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+
+            if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+            {
+                if (gMenu_UseableScreen.SelectedItem < gUseableItemCount - 1)
+                {
+                    gMenu_UseableScreen.SelectedItem++;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gMenu_UseableScreen.SelectedItem == 4 && gUseableItemCount > _countof(gMI_UseableScreen_Items) - 1)
+                {
+                    gUseableSlotOffset++;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+
+            if (gGameInput.DRightKeyPressed && gGameInput.DRightKeyAlreadyPressed)
+            {
+                if (gMenu_UseableScreen.SelectedItem == 5)
+                {
+                    gMenu_UseableScreen.SelectedItem = 0;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+
+            if (gGameInput.ALeftKeyPressed && gGameInput.ALeftKeyAlreadyPressed)
+            {
+                if (gMenu_UseableScreen.SelectedItem < 5)
+                {
+                    gMenu_UseableScreen.SelectedItem = 5;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gMenu_UseableScreen.Items[gMenu_UseableScreen.SelectedItem]->Action();
+                PlayGameSound(&gSoundMenuChoose);
+            }
+
             break;
         }
     }
@@ -1374,6 +1582,75 @@ void DrawMonsterPartyButtons(void)
     BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_SwitchScreen_Items[gMenu_SwitchScreen.SelectedItem]->x - 9, gMI_SwitchScreen_Items[gMenu_SwitchScreen.SelectedItem]->y);
 }
 
+void DrawUseableItemsButtons(void)
+{
+    //slot 1
+    DrawWindow(64, 178, 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    DrawWindow(64, 178 + (12 * 1), 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    DrawWindow(64, 178 + (12 * 2), 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    DrawWindow(64, 178 + (12 * 3), 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    DrawWindow(64, 178 + (12 * 4), 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    DrawWindow(32, 178, 26, 11, &COLOR_BLACK, &COLOR_DARK_RED, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    for (uint8_t UseableBox = 0; UseableBox < _countof(gMI_UseableScreen_Items) - 1; UseableBox++)
+    {
+        uint16_t SlotLoop = 0x800C;
+
+        int32_t SlotOrder = 0;
+
+        uint16_t SlotIndex = 0;
+
+    SlotIndexing:
+
+
+
+        SlotOrder = UseableBox + gUseableSlotOffset + SlotLoop;
+
+        if (gUseableItemCount != 0)
+        {
+            SlotOrder %= gUseableItemCount;
+        }
+
+        SlotIndex = gUseableHasItemSort[SlotOrder];
+
+        if (gUseableHasItemSort[UseableBox] == 0xFFFF)
+        {
+            SlotIndex = 0xFFFF;
+            goto SlotIndexed;
+        }
+        if (SlotIndex == 0xFFFF)
+        {
+            SlotLoop++;
+            goto SlotIndexing;
+        }
+
+    SlotIndexed:
+
+        gUseableSlotIndex[UseableBox] = SlotIndex;  //used for PPI_InventoryScreen to know what item is in what menubox and prevent using blank items
+
+        if (gMI_UseableScreen_Items[UseableBox]->Enabled == TRUE && SlotIndex != 0xFFFF)
+        {
+            uint16_t ItemCountSize = snprintf(NULL, 0, "x%d", gUseableItems[SlotIndex].Count);
+            char* ItemCountString = malloc(ItemCountSize + 1);
+            snprintf(ItemCountString, ItemCountSize + 1, "x%d", gUseableItems[SlotIndex].Count);
+
+            BlitStringToBuffer(gUseableItems[SlotIndex].Name, &g6x7Font, &COLOR_BLACK, gMI_UseableScreen_Items[UseableBox]->x, gMI_UseableScreen_Items[UseableBox]->y);
+
+            BlitStringToBuffer(ItemCountString, &g6x7Font, &COLOR_BLACK, gMI_UseableScreen_Items[UseableBox]->x + 149, gMI_UseableScreen_Items[UseableBox]->y);
+        }
+    }
+
+    BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_UseableScreen_Items[gMenu_UseableScreen.SelectedItem]->x - 7, gMI_UseableScreen_Items[gMenu_UseableScreen.SelectedItem]->y);
+
+    BlitStringToBuffer("Back", &g6x7Font, &COLOR_BLACK, gMI_UseableScreen_Items[5]->x, gMI_UseableScreen_Items[5]->y);
+
+}
+
 //////// initial choice menu
 
 void MenuItem_BattleScreen_FightButton(void)
@@ -1409,93 +1686,127 @@ void MenuItem_BattleScreen_SwitchButton(void)
 
 void MenuItem_BattleScreen_ItemsButton(void)
 {
-
+    gPreviousBattleState = gCurrentBattleState;
+    gCurrentBattleState = BATTLESTATE_CHOOSE_ITEM;
 }
 
 /////// switching monsters screen
-
-void MenuItem_SwitchScreen_PartySlot0(void)
+void MenuItem_SwitchScreen_PartySelected(void)
 {
-    if (gCurrentPartyMember == 0 || gPlayerParty[0].Health == 0)
+    if (gPreviousBattleState == BATTLESTATE_RUN_FIGHT)
     {
-        //trying to swap to monster already in battle
+        if (gCurrentPartyMember == gMenu_SwitchScreen.SelectedItem || gPlayerParty[gMenu_SwitchScreen.SelectedItem].Health == gMenu_SwitchScreen.SelectedItem)
+        {
+            //trying to swap to monster already in battle
+        }
+        else
+        {
+            gPartyMemberToSwitchIn = gMenu_SwitchScreen.SelectedItem;
+            gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+        }
     }
-    else
+    else if (gPreviousBattleState == BATTLESTATE_CHOOSE_ITEM && gPlayerParty[gMenu_SwitchScreen.SelectedItem].DriveMonster.hasIndex)
     {
-        gPartyMemberToSwitchIn = 0;
-        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
-    }
-}
+        gUsableItemSelectedPartyMember = gMenu_SwitchScreen.SelectedItem;
 
-void MenuItem_SwitchScreen_PartySlot1(void)
-{
-    if (gCurrentPartyMember == 1 || gPlayerParty[1].Health == 0)
-    {
-        //trying to swap to monster already in battle
-    }
-    else
-    {
-        gPartyMemberToSwitchIn = 1;
-        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
-    }
-}
+        switch (gUseableItemEffect_SelectedItem)
+        {
+            case ITEM_USE_EFFECT_HEAL_MONSTER:
+            {
+                if (gPlayerParty[gUsableItemSelectedPartyMember].Health == gPlayerParty[gUsableItemSelectedPartyMember].MaxHealth)      //selected monster has full health
+                {
+                    gCurrentBattleState = BATTLESTATE_CHOOSE_ITEM;
+                    gPreviousBattleState = BATTLESTATE_CHOOSE_MONSTER;
+                }
+                else
+                {
+                    uint16_t healthBeforeHeal = gPlayerParty[gUsableItemSelectedPartyMember].Health;
+                    uint16_t healAmount = 0;
+                    if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_0)
+                    {
+                        healAmount = 20;
+                    }
+                    else if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_1)
+                    {
+                        healAmount = 50;
+                    }
+                    else if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_2)
+                    {
+                        healAmount = 100;
+                    }
+                    else if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_3)
+                    {
+                        healAmount = 250;
+                    }
+                    else if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_4)
+                    {
+                        healAmount = gPlayerParty[gUsableItemSelectedPartyMember].MaxHealth;
+                    }
 
-void MenuItem_SwitchScreen_PartySlot2(void)
-{
-    if (gCurrentPartyMember == 2 || gPlayerParty[2].Health == 0)
-    {
-        //trying to swap to monster already in battle
-    }
-    else
-    {
-        gPartyMemberToSwitchIn = 2;
-        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
-    }
-}
+                    for (uint16_t healedHealth = gPlayerParty[gUsableItemSelectedPartyMember].Health; healedHealth <= healthBeforeHeal + healAmount; healedHealth++)
+                    {
+                        gPlayerParty[gUsableItemSelectedPartyMember].Health = healedHealth;
+                        if (gPlayerParty[gUsableItemSelectedPartyMember].Health == gPlayerParty[gUsableItemSelectedPartyMember].MaxHealth)
+                        {
+                            break;
+                        }
+                    }
 
-void MenuItem_SwitchScreen_PartySlot3(void)
-{
-    if (gCurrentPartyMember == 3 || gPlayerParty[3].Health == 0)
-    {
-        //trying to swap to monster already in battle
-    }
-    else
-    {
-        gPartyMemberToSwitchIn = 3;
-        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
-    }
-}
+                    gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count--;
 
-void MenuItem_SwitchScreen_PartySlot4(void)
-{
-    if (gCurrentPartyMember == 4 || gPlayerParty[4].Health == 0)
-    {
-        //trying to swap to monster already in battle
-    }
-    else
-    {
-        gPartyMemberToSwitchIn = 4;
-        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
-    }
-}
+                    //gCurrentPockets = POCKETSTATE_USABLE;
+                    //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    gCurrentBattleState = BATTLESTATE_USEITEM_TEXT;
+                    gPreviousBattleState = BATTLESTATE_CHOOSE_MONSTER;
 
-void MenuItem_SwitchScreen_PartySlot5(void)
-{
-    if (gCurrentPartyMember == 5 || gPlayerParty[5].Health == 0)
-    {
-        //trying to swap to monster already in battle
-    }
-    else
-    {
-        gPartyMemberToSwitchIn = 5;
-        gCurrentBattleState = BATTLESTATE_SWITCHING_TEXT;
+                    uint16_t count = 0;
+                    for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
+                    {
+                        if (gUseableItems[i].Count > 0)
+                        {
+                            gUseableItems[i].HasItem = TRUE;
+                        }
+                        else
+                        {
+                            gUseableItems[i].HasItem = FALSE;
+                        }
+                        if (gUseableItems[i].HasItem == TRUE)
+                        {
+                            gUseableHasItemSort[count] = i;
+                            count++;
+                        }
+                        if (i == NUM_USABLE_ITEMS - 1)
+                        {
+                            gUseableItemCount = count;
+                            for (uint8_t j = 0; j < NUM_USABLE_ITEMS - count; j++)
+                            {
+                                gUseableHasItemSort[count + j] = 0xFFFF;
+                            }
+
+                        }
+                    }
+                }
+                break;
+            }
+            case ITEM_USE_EFFECT_CAPTURE:
+            {
+                break;
+            }
+            default:
+            {
+                ASSERT(FALSE, "Usable item in battle had an unknown gUsableItemEffect_SelectedItem!");
+            }
+        }
     }
 }
 
 void MenuItem_SwitchScreen_BackButton(void)
 {
-    gPreviousBattleState = gCurrentBattleState;
-    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+    if (gPreviousBattleState == BATTLESTATE_CHOOSE_ITEM || gPreviousBattleState == BATTLESTATE_RUN_FIGHT)
+    {
+        gCurrentBattleState = gPreviousBattleState;
+        gPreviousBattleState = BATTLESTATE_CHOOSE_MONSTER;
+    }
 }
 
 ///////////// selecting moves screen
@@ -1560,6 +1871,28 @@ void MenuItem_MoveScreen_SignatureMove(void)
 }
 
 void MenuItem_MoveScreen_BackButton(void)
+{
+    gPreviousBattleState = gCurrentBattleState;
+    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+}
+
+void MenuItem_UseableScreen_SlotSelected(void)
+{
+    if (gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Effect == ITEM_USE_EFFECT_HEAL_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count > 0)
+    {
+        gUseableItemEffect_SelectedItem = ITEM_USE_EFFECT_HEAL_MONSTER;
+        gPreviousBattleState = gCurrentBattleState;
+        gCurrentBattleState = BATTLESTATE_CHOOSE_MONSTER;
+    }
+    else if (gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Effect == ITEM_USE_EFFECT_CAPTURE && gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count > 0)
+    {
+        //TODO: make capture / additional party members
+        //capture opposing monster and copy to party
+    }
+
+}
+
+void MenuItem_UseableScreen_BackButton(void)
 {
     gPreviousBattleState = gCurrentBattleState;
     gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
@@ -1831,7 +2164,7 @@ uint16_t CalcPotentialDamageToPlayerMonster(uint8_t oppLevel, uint16_t oppMonAtk
     PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
 
     gWasLastMoveCriticalHit = FALSE;
-    if (Random16 % 16 == 0 && split != SPLIT_STATUS)
+    if (Random16 % 16 == 0 && split != SPLIT_STATUS && gLastMoveElementalBonus != ELEMENT_IMMUNE)
     {
         gWasLastMoveCriticalHit = TRUE;
         PotentialDmg += (PotentialDmg * 1.5);
@@ -2022,7 +2355,7 @@ uint16_t CalcPotentialDamageToOpponentMonster(uint8_t playerLevel, uint16_t play
     PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
 
     gWasLastMoveCriticalHit = FALSE;
-    if (Random16 % 16 == 0 && split != SPLIT_STATUS)
+    if (Random16 % 16 == 0 && split != SPLIT_STATUS && gLastMoveElementalBonus != ELEMENT_IMMUNE)
     {
         gWasLastMoveCriticalHit = TRUE;
         PotentialDmg *= 1.5;

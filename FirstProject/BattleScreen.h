@@ -28,6 +28,8 @@ typedef enum BATTLESTATE
 	BATTLESTATE_FIRSTMOVE_POSTWAIT,
 	BATTLESTATE_SECONDMOVE_POSTTEXT,
 	BATTLESTATE_SECONDMOVE_POSTWAIT,
+	BATTLESTATE_USEITEM_TEXT,
+	BATTLESTATE_USEITEM_WAIT,
 
 } BATTLESTATE;
 
@@ -58,6 +60,8 @@ void DrawMoveButtons(void);
 
 void DrawMonsterPartyButtons(void);
 
+void DrawUseableItemsButtons(void);
+
 
 ////////////MENU//BUTTONS//////////////
 
@@ -70,17 +74,17 @@ void MenuItem_BattleScreen_SwitchButton(void);
 void MenuItem_BattleScreen_ItemsButton(void);
 
 
-void MenuItem_SwitchScreen_PartySlot0(void);
-
-void MenuItem_SwitchScreen_PartySlot1(void);
-
-void MenuItem_SwitchScreen_PartySlot2(void);
-
-void MenuItem_SwitchScreen_PartySlot3(void);
-
-void MenuItem_SwitchScreen_PartySlot4(void);
-
-void MenuItem_SwitchScreen_PartySlot5(void);
+void MenuItem_SwitchScreen_PartySelected(void);
+//
+//void MenuItem_SwitchScreen_PartySlot1(void);
+//
+//void MenuItem_SwitchScreen_PartySlot2(void);
+//
+//void MenuItem_SwitchScreen_PartySlot3(void);
+//
+//void MenuItem_SwitchScreen_PartySlot4(void);
+//
+//void MenuItem_SwitchScreen_PartySlot5(void);
 
 void MenuItem_SwitchScreen_BackButton(void);
 
@@ -96,6 +100,11 @@ void MenuItem_MoveScreen_MoveSlot3(void);
 void MenuItem_MoveScreen_SignatureMove(void);
 
 void MenuItem_MoveScreen_BackButton(void);
+
+
+void MenuItem_UseableScreen_SlotSelected(void);
+
+void MenuItem_UseableScreen_BackButton(void);
 
 ////////////MENU//BUTTONS//////////////
 
