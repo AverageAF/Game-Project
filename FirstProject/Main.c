@@ -3241,3 +3241,58 @@ void ClearTempGameFlags(void)
         gGameFlags[tempflag] = FALSE;
     }
 }
+
+void BlitItemDescription(char* description)
+{
+    //char DescLineScratch[30] = { 0 };
+
+    char InString[210] = { 0 };
+    char* NextToken = NULL;
+    char Separator[] = "\n";
+
+    char* StrPtr[8];
+
+    if (strlen(description) <= 30 * MAX_DIALOGUE_ROWS && strlen(description) > 0)
+    {
+        strcpy_s(InString, 210, description);        ////need to define max msg length bc sizeof() and strlen() both result in errors
+
+        StrPtr[1] = strtok_s(InString, Separator, &NextToken);       ////split string into pieces using \n as a separator
+        StrPtr[2] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[3] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[4] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[5] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[6] = strtok_s(NULL, Separator, &NextToken);
+        StrPtr[7] = strtok_s(NULL, Separator, &NextToken);
+
+        BlitStringToBuffer(StrPtr[1], &g6x7Font, &COLOR_BLACK, 10, 155 + ((0) * 8));                 //////every time \n is called add a row to the dialogue box
+        if (StrPtr[2] != NULL)
+        {
+            BlitStringToBuffer(StrPtr[2], &g6x7Font, &COLOR_BLACK, 10, 155 + ((1) * 8));
+        }
+        if (StrPtr[3] != NULL)
+        {
+            BlitStringToBuffer(StrPtr[3], &g6x7Font, &COLOR_BLACK, 10, 155 + ((2) * 8));
+        }
+        if (StrPtr[4] != NULL)
+        {
+            BlitStringToBuffer(StrPtr[4], &g6x7Font, &COLOR_BLACK, 10, 155 + ((3) * 8));
+        }
+        if (StrPtr[5] != NULL)
+        {
+            BlitStringToBuffer(StrPtr[5], &g6x7Font, &COLOR_BLACK, 10, 155 + ((4) * 8));
+        }
+        if (StrPtr[6] != NULL)
+        {
+            BlitStringToBuffer(StrPtr[6], &g6x7Font, &COLOR_BLACK, 10, 155 + ((5) * 8));
+        }
+        if (StrPtr[7] != NULL)
+        {
+            BlitStringToBuffer(StrPtr[7], &g6x7Font, &COLOR_BLACK, 10, 155 + ((6) * 8));
+        }
+    }
+    else
+    {
+        BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_BLACK, 10, 155);
+        LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, description);
+    }
+}

@@ -195,7 +195,7 @@ void MenuItem_LoadGameSave_Slot1(void)
         gPlayer.ScreenPos.y = PlayerInfo->valueint;
     }
     PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "CameraPosX");
-    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo != NULL))       //BUGFIX: something is preventing '0' to be an allowed value in this if statement, despite it being used all over this document
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo != NULL))       //BUGFIX: something is preventing '0' to be an allowed value in this if statement, despite it being used all over this document, dropped '->valueint'
     {
         gCamera.x = PlayerInfo->valueint;
     }
@@ -421,13 +421,12 @@ void MenuItem_LoadGameSave_Slot1(void)
         }
     }
 
+    char* InfoName = malloc(16);
+    cJSON* SpriteInfo;
     for (uint8_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
     {
         if (gCharacterSprite[sprite].Exists == TRUE)
         {
-            char* InfoName = malloc(16);
-            cJSON* SpriteInfo;
-
             snprintf(InfoName, 16, "ScreenPosX%d", sprite);
             SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
             if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
@@ -515,9 +514,6 @@ void MenuItem_LoadGameSave_Slot1(void)
         }
         else
         {
-            char* InfoName = malloc(16);
-            cJSON* SpriteInfo;
-
             snprintf(InfoName, 16, "Event%d", sprite);
             SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
             if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
@@ -549,7 +545,19 @@ void MenuItem_LoadGameSave_Slot1(void)
                 gCharacterSprite[sprite].DialogueFlag = SpriteInfo->valueint;
             }
         }
-        
+
+
+        char* FlagIndex = malloc(16);
+        cJSON* Flag;
+        for (uint8_t flagindex = START_OF_FLAGS; flagindex < END_OF_FLAGS; flagindex++)
+        {
+            snprintf(FlagIndex, 16, "Flag%d", flagindex);
+            Flag = cJSON_GetObjectItemCaseSensitive(json, FlagIndex);
+            if (cJSON_IsNumber(Flag) && (Flag->valueint == TRUE))
+            {
+                gGameFlags[flagindex] = Flag->valueint;
+            }
+        }
     }
 
     // delete the JSON object 

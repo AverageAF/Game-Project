@@ -983,3 +983,5 @@ void ReSortLearnableMovesFromMonster(struct DriveMonster* driveMonster);
 void SetGameFlag(uint8_t flag);
 void ClearGameFlag(uint8_t flag);
 void ClearTempGameFlags(void);
+
+void BlitItemDescription(char* description);

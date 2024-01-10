@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "InventoryItems.h"
 #include "MonsterStatsScreen.h"
+#include "MonsterData.h"
 
 
 //// SELECTEDSLOT MENU VARIABLES ////
@@ -431,7 +432,7 @@ void PPI_InventoryScreen(void)
                     }
                 }
             }
-            else
+            else            ////gHasSelectedInvSlot == TRUE
             {
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
@@ -1115,6 +1116,8 @@ void DrawUseablePocket(void)
     }
 
     BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_InventoryUseable_Items[gMenu_InventoryUseable.SelectedItem]->x - 6, gMI_InventoryUseable_Items[gMenu_InventoryUseable.SelectedItem]->y);
+
+    BlitItemDescription(gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Description);
 }
 
 void DrawValuablePocket(void)
@@ -1460,7 +1463,7 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
             {
                 case ITEM_USE_EFFECT_HEAL_MONSTER: 
                 {
-                    if (gPlayerParty[gSelectedMonster].Health == gPlayerParty[gSelectedMonster].MaxHealth)      ////selected monster has full hp
+                    if (gPlayerParty[gSelectedMonster].Health == gPlayerParty[gSelectedMonster].MaxHealth | gPlayerParty[gSelectedMonster].Health == 0)      ////selected monster has full hp or is knocked out
                     {
                         gCurrentPockets = POCKETSTATE_USABLE;
                         gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
@@ -1469,25 +1472,37 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                     {
                         uint16_t healthBeforeHeal = gPlayerParty[gSelectedMonster].Health;
                         uint16_t healAmount = 0;
-                        if (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem] == INV_USABLE_ITEM_0)
+                        switch (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem])
                         {
-                            healAmount = 20;
-                        }
-                        else if (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem] == INV_USABLE_ITEM_1)
-                        {
-                            healAmount = 50;
-                        }
-                        else if (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem] == INV_USABLE_ITEM_2)
-                        {
-                            healAmount = 100;
-                        }
-                        else if (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem] == INV_USABLE_ITEM_3)
-                        {
-                            healAmount = 250;
-                        }
-                        else if (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem] == INV_USABLE_ITEM_4)
-                        {
-                            healAmount = gPlayerParty[gSelectedMonster].MaxHealth;
+                            case INV_USABLE_ITEM_0: 
+                            {
+                                healAmount = 20;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_1:
+                            {
+                                healAmount = 50;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_2:
+                            {
+                                healAmount = 100;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_3:
+                            {
+                                healAmount = 250;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_4:
+                            {
+                                healAmount = gPlayerParty[gSelectedMonster].MaxHealth;
+                                break;
+                            }
+                            default:
+                            {
+                                ASSERT(FALSE, "unknown Usable Item with effect ITEM_USE_EFFECT_HEAL_MONSTER");
+                            }
                         }
 
                         for (uint16_t healedHealth = gPlayerParty[gSelectedMonster].Health; healedHealth <= healthBeforeHeal + healAmount; healedHealth++)
@@ -1512,13 +1527,214 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                 }
                 case ITEM_USE_EFFECT_EXP_MONSTER:
                 {
+                    if (gPlayerParty[gSelectedMonster].Level <= 99)
+                    {
+                        uint32_t ExpBeforeBoost = gPlayerParty[gSelectedMonster].DriveMonster.Experience;
+                        uint32_t ExpAmount = 0;
+                        switch (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem])
+                        {
+                            case INV_USABLE_ITEM_8:
+                            {
+                                ExpAmount = 100;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_9:
+                            {
+                                ExpAmount = 250;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_10:
+                            {
+                                ExpAmount = 500;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_11:
+                            {
+                                ExpAmount = 1000;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_12:
+                            {
+                                ExpAmount = 3000;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_13:
+                            {
+                                ExpAmount = 10000;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_14:
+                            {
+                                ExpAmount = gExperienceTables[gBaseStats[gPlayerParty[gSelectedMonster].DriveMonster.Index].growthRate][gPlayerParty[gSelectedMonster].Level + 1] - gPlayerParty[gSelectedMonster].DriveMonster.Experience;
+                                break;
+                            }
+                            default:
+                            {
+                                ASSERT(FALSE, "unknown Usable Item with effect ITEM_USE_EFFECT_EXP_MONSTER");
+                            }
+                        }
+
+                        for (uint32_t newExpVal = ExpBeforeBoost; newExpVal <= ExpBeforeBoost + ExpAmount; newExpVal++)
+                        {
+                            gPlayerParty[gSelectedMonster].DriveMonster.Experience = newExpVal;
+                            if (gExperienceTables[gBaseStats[gPlayerParty[gSelectedMonster].DriveMonster.Index].growthRate][100] == newExpVal)  //hit level 100 before full amount was given
+                            {
+                                break;
+                            }
+                        }
+
+                        BOOL DidMonsterLevelUp = FALSE;
+
+                    TryLevelUp:
+
+                        DidMonsterLevelUp = TryIncrementMonsterLevel(&gPlayerParty[gSelectedMonster]);
+
+                        if (DidMonsterLevelUp == TRUE)
+                        {
+                            CalculateMonsterStats(&gPlayerParty[gSelectedMonster]);
+
+                            MonsterTryLearningNewMove(&gPlayerParty[gSelectedMonster], TRUE);
+
+                            goto TryLevelUp;
+                        }
+
+                        gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
+
+                        gCurrentPockets = POCKETSTATE_USABLE;
+                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        gHasSelectedInvSlot = FALSE;
+
+                        ReSortUsableitems();
+                    }
+                    
                     break;
                 }
                 case ITEM_USE_EFFECT_CAPTURE:
+                {
+                    gCurrentPockets = POCKETSTATE_USABLE;
+                    gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    break;
+                }
+                case ITEM_USE_EFFECT_UPGRADE:
+                {
+                    if (gPlayerParty[gSelectedMonster].DriveMonster.Index == MONSTER_WOLF)
+                    {
+                        switch (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem])
+                        {
+                            case INV_USABLE_ITEM_15:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_EARTHWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_16:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_AIRWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_17:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_FIREWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_18:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_WATERWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_19:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_ELECTRICWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_20:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_METALWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_21:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_SOULWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_22:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_LIFEWOLF;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_23:
+                            {
+                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_DEATHWOLF;
+                                break;
+                            }
+                            default:
+                            {
+                                ASSERT(FALSE, "unknown Usable Item with effect ITEM_USE_EFFECT_UPGRADE");
+                            }
+                        }
+
+                        gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
+
+                        gCurrentPockets = POCKETSTATE_USABLE;
+                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        gHasSelectedInvSlot = FALSE;
+
+                        ReSortUsableitems();
+
+                        CalculateMonsterStats(&gPlayerParty[gSelectedMonster]);
+                    }
+                    else
+                    {
+                        gCurrentPockets = POCKETSTATE_USABLE;
+                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    }
+                    break;
+                }
+                case ITEM_USE_EFFECT_REVIVE_MONSTER:
+                {
+                    if (gPlayerParty[gSelectedMonster].Health == 0)
+                    {
+                        switch (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem])
+                        {
+                            case INV_USABLE_ITEM_24:
+                            {
+                                gPlayerParty[gSelectedMonster].Health = gPlayerParty[gSelectedMonster].MaxHealth / 8;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_25:
+                            {
+                                gPlayerParty[gSelectedMonster].Health = gPlayerParty[gSelectedMonster].MaxHealth / 2;
+                                break;
+                            }
+                            case INV_USABLE_ITEM_26:
+                            {
+                                gPlayerParty[gSelectedMonster].Health = gPlayerParty[gSelectedMonster].MaxHealth;
+                                break;
+                            }
+                            default:
+                            {
+                                ASSERT(FALSE, "unknown Usable Item with effect ITEM_USE_EFFECT_REVIVE_MONSTER");
+                            }
+                        }
+
+                        gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
+
+                        gCurrentPockets = POCKETSTATE_USABLE;
+                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        gHasSelectedInvSlot = FALSE;
+
+                        ReSortUsableitems();
+                    }
+                    else
+                    {
+                        gCurrentPockets = POCKETSTATE_USABLE;
+                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    }
+                    break;
+                }
                 case ITEM_USE_EFFECT_NULL:
                 default:
                 {
-                    ASSERT(FALSE, "Incorrect item effect when using an item on a selected monster!");
+                    ASSERT(FALSE, "unknown item effect when using an item on a selected monster!");
                 }
             }
         }
@@ -1555,6 +1771,27 @@ void MenuItem_Inventory_SelectedItem_Use(void)
             if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_HEAL_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
             {
                 gUseableItemEffect = ITEM_USE_EFFECT_HEAL_MONSTER;
+                gPreviousPockets = POCKETSTATE_USABLE;
+                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                gSwitchingMonster = 255;
+            }
+            else if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_EXP_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
+            {
+                gUseableItemEffect = ITEM_USE_EFFECT_EXP_MONSTER;
+                gPreviousPockets = POCKETSTATE_USABLE;
+                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                gSwitchingMonster = 255;
+            }
+            else if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_UPGRADE && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
+            {
+                gUseableItemEffect = ITEM_USE_EFFECT_UPGRADE;
+                gPreviousPockets = POCKETSTATE_USABLE;
+                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                gSwitchingMonster = 255;
+            }
+            else if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_REVIVE_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
+            {
+                gUseableItemEffect = ITEM_USE_EFFECT_REVIVE_MONSTER;
                 gPreviousPockets = POCKETSTATE_USABLE;
                 gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
                 gSwitchingMonster = 255;

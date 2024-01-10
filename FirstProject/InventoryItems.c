@@ -339,7 +339,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .ValueCurrency = 100,
         .HasItem = FALSE,
         .Count = 1,
-        .Description = "Medicine that heals 20HP",
+        .Description = "A common medicine to heal \nmonsters, heals 20HP",
         .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,    //TODO: setup simple healing mechanic for one party member
         .Name = "HP Useable [MKI]",
         .Sprite = 0,
@@ -352,7 +352,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .ValueCurrency = 800,
         .HasItem = FALSE,
         .Count = 1,
-        .Description = "A common medicine, heals 50HP",
+        .Description = "Monster medicine, heals 50HP",
         .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
         .Name = "HP Useable [MKII]",
         .Sprite = 0,
@@ -365,7 +365,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .ValueCurrency = 1600,
         .HasItem = FALSE,
         .Count = 1,
-        .Description = "A rare medicine, heals 100HP",
+        .Description = "Rare medicine, heals 100HP",
         .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
         .Name = "HP Useable [MKIII]",
         .Sprite = 0,
@@ -378,7 +378,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .ValueCurrency = 2700,
         .HasItem = FALSE,
         .Count = 1,
-        .Description = "A strong medicine, heals 250HP",
+        .Description = "Strong medicine, heals 250HP",
         .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
         .Name = "HP Useable [MKIV]",
         .Sprite = 0,
@@ -391,7 +391,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .ValueCurrency = 4200,
         .HasItem = FALSE,
         .Count = 1,
-        .Description = "Potent medicine, fully heals HP",
+        .Description = "Potent monster medicine, \ncompletely heals to MAX HP",
         .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
         .Name = "HP Useable [MKV]",
         .Sprite = 0,
@@ -404,7 +404,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .ValueCurrency = 100,
         .HasItem = FALSE,
         .Count = 5,
-        .Description = "Simple capture device for wild monsters",
+        .Description = "A simple capture device \nfor wild monsters",
         .Effect = ITEM_USE_EFFECT_CAPTURE,
         .Name = "Capture Device A",
         .Sprite = 0,
@@ -427,12 +427,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_7] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 7,
-        .Name = "USABLEITEM 7",
+        .ValueCurrency = 1600,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Grand capture device",
+        .Effect = ITEM_USE_EFFECT_CAPTURE,
+        .Name = "Capture Device C",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -440,12 +440,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_8] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 8,
-        .Name = "USABLEITEM 8",
+        .ValueCurrency = 50,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives +100 Experience",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Tiny Exp shard",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -453,12 +453,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_9] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 9,
-        .Name = "USABLEITEM 9",
+        .ValueCurrency = 125,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives +250 Experience",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Small Exp shard",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -466,12 +466,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_10] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 10,
-        .Name = "USABLEITEM 10",
+        .ValueCurrency = 250,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives +500 Experience",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Medium Exp shard",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -479,12 +479,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_11] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 11,
-        .Name = "USABLEITEM 11",
+        .ValueCurrency = 500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives +1000 Experience",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Greater Exp shard",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -492,12 +492,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_12] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 12,
-        .Name = "USABLEITEM 12",
+        .ValueCurrency = 1500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives +3000 Experience",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Large Exp shard",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -505,12 +505,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_13] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 13,
-        .Name = "USABLEITEM 13",
+        .ValueCurrency = 5500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives +10000 Experience",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Massive Exp shard",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -518,12 +518,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_14] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 14,
-        .Name = "USABLEITEM 14",
+        .ValueCurrency = 7200,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Gives enough Exp to Level Up",
+        .Effect = ITEM_USE_EFFECT_EXP_MONSTER,
+        .Name = "Experience Crystal",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -531,12 +531,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_15] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 15,
-        .Name = "USABLEITEM 15",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Topaz",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -544,12 +544,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_16] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 16,
-        .Name = "USABLEITEM 16",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Opal",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -557,12 +557,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_17] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 17,
-        .Name = "USABLEITEM 17",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Cinnabar",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -570,12 +570,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_18] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 18,
-        .Name = "USABLEITEM 18",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Sapphire",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -583,12 +583,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_19] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 19,
-        .Name = "USABLEITEM 19",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Magnetite",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -596,12 +596,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_20] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 20,
-        .Name = "USABLEITEM 20",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Titanite",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -609,12 +609,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_21] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 21,
-        .Name = "USABLEITEM 21",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Amethyst",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -622,12 +622,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_22] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 22,
-        .Name = "USABLEITEM 22",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Jadeite",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -635,12 +635,12 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_23] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 23,
-        .Name = "USABLEITEM 23",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "A beautiful gemstone, \nbeloved by certain monsters",
+        .Effect = ITEM_USE_EFFECT_UPGRADE,
+        .Name = "Onyx",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -648,12 +648,38 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
 
     [INV_USABLE_ITEM_24] =
     {
-        .ValueCurrency = 1,
-        .HasItem = FALSE,
-        .Count = 0,
-        .Description = "-----",
-        .Effect = 24,
-        .Name = "USABLEITEM 24",
+        .ValueCurrency = 1000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Just barely brings any \nmonster back from being \nK.O.'ed",
+        .Effect = ITEM_USE_EFFECT_REVIVE_MONSTER,
+        .Name = "Weak Revive",
+        .Sprite = 0,
+        .Favorite = FALSE,
+    },
+
+
+    [INV_USABLE_ITEM_25] =
+    {
+        .ValueCurrency = 2500,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Brings any monster back \nfrom being K.O.'ed with \nhalf HP",
+        .Effect = ITEM_USE_EFFECT_REVIVE_MONSTER,
+        .Name = "Monster Revive",
+        .Sprite = 0,
+        .Favorite = FALSE,
+    },
+
+
+    [INV_USABLE_ITEM_26] =
+    {
+        .ValueCurrency = 5000,
+        .HasItem = TRUE,
+        .Count = 1,
+        .Description = "Brings any monster back \nfrom being K.O.'ed with \nfull HP",
+        .Effect = ITEM_USE_EFFECT_REVIVE_MONSTER,
+        .Name = "Full Revive",
         .Sprite = 0,
         .Favorite = FALSE,
     },
@@ -995,9 +1021,9 @@ InventoryItem gAdventureItems[NUM_ADVENTURE_ITEMS] = {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 1,
-        .Description = "-----",
+        .Description = "Hold CTRL to run, or toggle sprinting",
         .Effect = 0,
-        .Name = "ADVENTUREITEM 0",
+        .Name = "Sprinting Shoes",
         .Sprite = 0,
         .Favorite = FALSE,
     },

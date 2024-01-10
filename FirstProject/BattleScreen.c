@@ -2834,6 +2834,10 @@ void MenuItem_UseableScreen_SlotSelected(void)
         {
             gCaptureDeviceHelp = 50;
         }
+        else if (gUseableSlotIndex[gMenu_UseableScreen.SelectedItem] == INV_USABLE_ITEM_7)
+        {
+            gCaptureDeviceHelp = 75;
+        }
         else
         {
             gCaptureDeviceHelp = 0;

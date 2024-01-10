@@ -67,8 +67,10 @@
 #define INV_USABLE_ITEM_22 22
 #define INV_USABLE_ITEM_23 23
 #define INV_USABLE_ITEM_24 24
+#define INV_USABLE_ITEM_25 25
+#define INV_USABLE_ITEM_26 26
 
-#define NUM_USABLE_ITEMS 25
+#define NUM_USABLE_ITEMS 27
 
 #define INV_VALUABLE_ITEM_0 0
 #define INV_VALUABLE_ITEM_1 1
@@ -129,16 +131,16 @@
 //////////////////////////////ITEMS////////////////////////////////////
 
 /////////////////////////////ELEMENTS//////////////////////////////////
-#define ELEMENT_NONE 0
-#define ELEMENT_EARTH 1
-#define ELEMENT_AIR 2
-#define ELEMENT_FIRE 3
-#define ELEMENT_WATER 4
-#define ELEMENT_ELECTRIC 5
-#define ELEMENT_METAL 6
-#define ELEMENT_SOUL 7
-#define ELEMENT_LIFE 8
-#define ELEMENT_DEATH 9
+#define ELEMENT_NONE 0		//calcite
+#define ELEMENT_EARTH 1		//topaz		amber
+#define ELEMENT_AIR 2		//gypsum	opal	turquoise
+#define ELEMENT_FIRE 3		//cinnabar	ruby
+#define ELEMENT_WATER 4		//saphire	opal	pearl
+#define ELEMENT_ELECTRIC 5	//quartz	magnetite
+#define ELEMENT_METAL 6		//titanite	hematite
+#define ELEMENT_SOUL 7		//amethyst
+#define ELEMENT_LIFE 8		//emerald jadeite
+#define ELEMENT_DEATH 9		//onyx	jet	coal
 
 #define ELEMENT_COUNT 10
 

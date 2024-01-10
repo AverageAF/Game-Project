@@ -132,9 +132,9 @@ void MenuItem_SaveGameSave_Slot1(void)
     cJSON_AddNumberToObject(json, "CurrentAreaIndex", gCurrentArea.Index);
     cJSON_AddNumberToObject(json, "PartyCount", gPlayerPartyCount);
 
+    char* monsterinfo = malloc(16);
     for (uint8_t Monster = 0; Monster < gPlayerPartyCount; Monster++)
     {
-        char* monsterinfo = malloc(16);
         snprintf(monsterinfo, 16, "Nickname%d", Monster);
         cJSON_AddStringToObject(json, monsterinfo, gPlayerParty[Monster].DriveMonster.nickname);
         snprintf(monsterinfo, 16, "MonsterIndex%d", Monster);
@@ -198,9 +198,9 @@ void MenuItem_SaveGameSave_Slot1(void)
 
     for (uint8_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
     {
+        char* SpriteInfo = malloc(16);
         if (gCharacterSprite[sprite].Exists == TRUE)
         {
-            char* SpriteInfo = malloc(16);
             snprintf(SpriteInfo, 16, "ScreenPosX%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ScreenPos.x);
             snprintf(SpriteInfo, 16, "ScreenPosY%d", sprite);
@@ -233,7 +233,6 @@ void MenuItem_SaveGameSave_Slot1(void)
         }
         else
         {
-            char* SpriteInfo = malloc(16);
             snprintf(SpriteInfo, 16, "Event%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);
             snprintf(SpriteInfo, 16, "Exists%d", sprite);
@@ -244,6 +243,16 @@ void MenuItem_SaveGameSave_Slot1(void)
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);
             snprintf(SpriteInfo, 16, "DialogueFlag%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);
+        }
+
+        char* flag = malloc(16);
+        for (uint8_t flagindex = START_OF_FLAGS; flagindex < END_OF_FLAGS; flagindex++)
+        {
+            if (gGameFlags[flagindex] == TRUE)
+            {
+                snprintf(flag, 16, "Flag%d", flagindex);
+                cJSON_AddNumberToObject(json, flag, gGameFlags[flagindex]);
+            }
         }
     }
 
