@@ -568,13 +568,24 @@ DWORD InitializePlayer(void)
     gCamera.y = 0;                  //0                                             //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
-    gPlayer.RandomEncounterPercent = 250;   //50 == a 5% chance
+    gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
 
     gPlayer.Name[0] = 'M';
     gPlayer.Name[1] = 'a';
     gPlayer.Name[2] = 'p';
     gPlayer.Name[3] = 'l';
     gPlayer.Name[4] = 'e';
+
+    /////////////////////////////////////////temporary init of character sprites///////////////////// TODO REMOVE THIS
+    gCharacterSprite[0].ScreenPosS.x = 64;
+    gCharacterSprite[0].ScreenPosS.y = 128;
+    gCharacterSprite[0].WorldPosS.x = 64;
+    gCharacterSprite[0].WorldPosS.y = 128;
+    gCharacterSprite[0].DirectionS = DOWN_S;
+    gCharacterSprite[0].Movement = MOVEMENT_SPIN;
+    gCharacterSprite[0].Visible = TRUE;
+    gCharacterSprite[0].Exists = TRUE;
+
 
     return(0);
 }
@@ -2465,7 +2476,7 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
-    ////////////////////////////////////////////////////////// loading sprites
+    ////////////////////////////////////////////////////////// loading sprites///////////////////////////////////////////////
 
     if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingDown0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
     {
@@ -2530,8 +2541,35 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingUp2.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
+    ////////////////////////////////////////////////non player sprites//////////////////////////////////////////////////////////
 
-    /////////////////////////////////////////////battle backgrounds//////////////////////////////////
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[1])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[2])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[3])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+
+    /////////////////////////////////////////////////////////battle backgrounds////////////////////////////////////////////////////
 
 
     if ((Error = LoadAssetFromArchive(ASSET_FILE, "BattleBackgroundGrass01.bmpx", RESOURCE_TYPE_BMPX, &gBattleScreen_Grass01)) != ERROR_SUCCESS)

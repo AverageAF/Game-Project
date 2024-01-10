@@ -66,6 +66,7 @@
 
 #define MAX_NAME_LENGTH 8							//8 characters + 1 null
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
+#define MAX_SPRITE_LOAD 10
 
 #define SUIT_0 0
 #define SUIT_1 1
@@ -92,8 +93,6 @@ typedef enum DIRECTION
 	UP = 9
 
 } DIRECTION;
-
-
 
 typedef enum LOGLEVEL
 {
@@ -142,6 +141,16 @@ typedef enum WINDOW_FLAGS
 
 } WINDOW_FLAGS;
 
+typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
+{
+	MOVEMENT_STILL,
+	MOVEMENT_SPIN,
+	MOVEMENT_FACEDOWN,
+	MOVEMENT_FACELEFT,
+	MOVEMENT_FACERIGHT,
+	MOVEMENT_FACEUP,
+
+} MOVEMENTTYPE;
 
 typedef struct UPOINT		//used for character screen position
 {
@@ -279,6 +288,36 @@ typedef struct PLAYER
 
 } PLAYER;
 
+
+///////////////////temporary for messing with in game models///////////////////////////////////// TODO REMOVE LATER
+typedef enum DIRECTIONSPRITE
+{
+	DOWN_S = 0,
+	LEFT_S = 1,
+	RIGHT_S = 2,
+	UP_S = 3
+
+} DIRECTIONSPRITE;
+//////////////////////////////////////////////////////////////////////////
+
+typedef struct INGAMESPRITE			///// for sprites other than the player
+{
+	char Name[MAX_NAME_LENGTH + 1];
+	UPOINT WorldPosS;
+	POINT ScreenPosS;
+	DIRECTIONSPRITE DirectionS;
+	uint8_t SpriteIndexS;
+	GAMEBITMAP SpriteS[4];
+	MOVEMENTTYPE Movement;
+	BOOL Visible;
+	BOOL Exists;
+
+} INGAMESPRITE;
+
+
+
+
+
 typedef struct REGISTRYPARAMS
 {
 	DWORD LogLevel;
@@ -341,6 +380,8 @@ BOOL gGameIsRunning;                //when set to FALSE ends the game, controls 
 GAME_PERFORMANCE_DATA gGamePerformanceData;
 
 BOOL gInputEnabled;
+
+INGAMESPRITE gCharacterSprite[MAX_SPRITE_LOAD];
 
 PLAYER gPlayer;
 UPOINT gCamera;

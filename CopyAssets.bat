@@ -2,8 +2,9 @@
 del Assets.dat
 del CopyAssets.log
 
-REM  -bitmaps-
+REM  --bitmaps--
 
+REM   -sprites-
 MyMiniz.exe Assets.dat + .\Assets\PixelFont(6x7).bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingDown0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingDown1.bmpx >> CopyAssets.log
@@ -17,7 +18,18 @@ MyMiniz.exe Assets.dat + .\Assets\Suit0FacingRight2.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp1.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp2.bmpx >> CopyAssets.log
+
+MyMiniz.exe Assets.dat + .\Assets\ManFacingDown.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingLeft.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingRight.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingUp.bmpx >> CopyAssets.log
+
+REM   -worldmap-
+
 MyMiniz.exe Assets.dat + .\Assets\Maps\Overworld01.bmpx >> CopyAssets.log
+
+REM   -battle background-
+
 MyMiniz.exe Assets.dat + .\Assets\Maps\BattleBackgroundGrass01.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\Maps\BattleBackgroundStoneBricks01.bmpx >> CopyAssets.log
 

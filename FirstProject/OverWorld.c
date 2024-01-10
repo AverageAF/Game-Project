@@ -36,6 +36,21 @@ void DrawOverworldScreen(void)
 
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
+
+
+
+    TriggerNPCMovement(LocalFrameCounter, MOVEMENT_SPIN);
+
+    for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
+    {
+        if (gCharacterSprite[Index].Visible == TRUE)
+        {
+            Blit32BppBitmapToBuffer(&gCharacterSprite[Index].SpriteS[gCharacterSprite[Index].SpriteIndexS + gCharacterSprite[Index].DirectionS], gCharacterSprite[Index].ScreenPosS.x, gCharacterSprite[Index].ScreenPosS.y, BrightnessAdjustment);
+        }
+    }
+
+
+
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
                                             //BB    GG    RR    AA
     //DrawWindow(32, 8, 96, 160, (PIXEL32) { 0x00, 0x00, 0x00, 0xFF }, WINDOW_FLAG_BORDERED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_SHADOWED);
@@ -100,12 +115,10 @@ void PPI_Overworld(void)
 
     if (!gPlayer.MovementRemaining)
     {
-        //BOOL CanMoveToDesiredTile = FALSE;
-
+        BOOL CanMoveToDesiredTile = FALSE;
+        BOOL NoSpriteCollision = FALSE;
         if (gGameInput.SDownKeyPressed)
         {
-            BOOL CanMoveToDesiredTile = FALSE;
-
             for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
             {
                 if (((gPlayer.WorldPos.y / 16) + 1 > gOverWorld01.TileMap.Height - 1))      ////not perfect but prevents crashing when walking to bottom of world
@@ -120,25 +133,39 @@ void PPI_Overworld(void)
                     break;
                 }
             }
-            if (CanMoveToDesiredTile == TRUE)
+            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
             {
+                if (gCharacterSprite[Index].Visible == TRUE)
+                {
+                    if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y + 16 == gCharacterSprite[Index].WorldPosS.y))
+                    {
+                        NoSpriteCollision = FALSE;
+                        break;
+                    }
+                    else
+                    {
+                        NoSpriteCollision = TRUE;
+                        break;
+                    }
+                }
+                else
+                {
+                    NoSpriteCollision = TRUE;
+                }
+            }
+            if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
+            {   
                 if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 16)
                 {
                     gPlayer.Direction = DOWN;
                     gPlayer.MovementRemaining = 16;
                     gPlayer.StepsTaken++;
                 }
-                else
-                {
-                    gPlayer.Direction = DOWN;
-                }
             }
+            gPlayer.Direction = DOWN;
         }
-
         else if (gGameInput.ALeftKeyPressed)
         {
-            BOOL CanMoveToDesiredTile = FALSE;
-
             for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
             {
                 if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) - 1] == gPassableTiles[Counter])
@@ -148,7 +175,27 @@ void PPI_Overworld(void)
                     break;
                 }
             }
-            if (CanMoveToDesiredTile == TRUE)
+            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+            {
+                if (gCharacterSprite[Index].Visible == TRUE)
+                {
+                    if ((gPlayer.WorldPos.x - 16 == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPosS.y))
+                    {
+                        NoSpriteCollision = FALSE;
+                        break;
+                    }
+                    else
+                    {
+                        NoSpriteCollision = TRUE;
+                        break;
+                    }
+                }
+                else
+                {
+                    NoSpriteCollision = TRUE;
+                }
+            }
+            if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
             {
                 if (gPlayer.ScreenPos.x > 0)
                 {
@@ -156,16 +203,11 @@ void PPI_Overworld(void)
                     gPlayer.MovementRemaining = 16;
                     gPlayer.StepsTaken++;
                 }
-                else
-                {
-                    gPlayer.Direction = LEFT;
-                }
             }
+            gPlayer.Direction = LEFT;
         }
         else if (gGameInput.DRightKeyPressed)
         {
-            BOOL CanMoveToDesiredTile = FALSE;
-
             for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
             {
                 if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) + 1] == gPassableTiles[Counter])
@@ -175,7 +217,27 @@ void PPI_Overworld(void)
                     break;
                 }
             }
-            if (CanMoveToDesiredTile == TRUE)
+            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+            {
+                if (gCharacterSprite[Index].Visible == TRUE)
+                {
+                    if ((gPlayer.WorldPos.x + 16 == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPosS.y))
+                    {
+                        NoSpriteCollision = FALSE;
+                        break;
+                    }
+                    else
+                    {
+                        NoSpriteCollision = TRUE;
+                        break;
+                    }
+                }
+                else
+                {
+                    NoSpriteCollision = TRUE;
+                }
+            }
+            if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
             {
                 if (gPlayer.ScreenPos.x < GAME_RES_WIDTH - 16)
                 {
@@ -183,18 +245,13 @@ void PPI_Overworld(void)
                     gPlayer.MovementRemaining = 16;
                     gPlayer.StepsTaken++;
                 }
-                else
-                {
-                    gPlayer.Direction = RIGHT;
-                }
             }
+            gPlayer.Direction = RIGHT;
         }
         else if (gGameInput.WUpKeyPressed)
         {
             if (gPlayer.ScreenPos.y > 0)
             {
-            BOOL CanMoveToDesiredTile = FALSE;
-
                 for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
                 {
                     if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) - 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
@@ -204,7 +261,27 @@ void PPI_Overworld(void)
                         break;
                     }
                 }
-                if (CanMoveToDesiredTile == TRUE)
+                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                {
+                    if (gCharacterSprite[Index].Visible == TRUE)
+                    {
+                        if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y - 16 == gCharacterSprite[Index].WorldPosS.y))
+                        {
+                            NoSpriteCollision = FALSE;
+                            break;
+                        }
+                        else
+                        {
+                            NoSpriteCollision = TRUE;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        NoSpriteCollision = TRUE;
+                    }
+                }
+                if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
                 {
                     if (gPlayer.ScreenPos.y > 0)
                     {
@@ -213,11 +290,8 @@ void PPI_Overworld(void)
                         gPlayer.StepsTaken++;
                     }
                 }
-                else
-                {
-                    gPlayer.Direction = UP;
-                }
             }
+            gPlayer.Direction = UP;
         }
     }
     else
@@ -234,6 +308,28 @@ void PPI_Overworld(void)
             {
                 if (gCamera.y < gCurrentArea.Area.bottom - GAME_RES_HEIGHT)
                 {
+                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                    {
+                        if (gCharacterSprite[Index].Exists == TRUE)
+                        {
+                            if (gCharacterSprite[Index].Visible == TRUE)
+                            {
+                                if (gCharacterSprite[Index].ScreenPosS.y <= 0 || gCharacterSprite[Index].ScreenPosS.y >= GAME_RES_HEIGHT - 16)
+                                {
+                                    gCharacterSprite[Index].Visible = FALSE;
+                                }
+                            }
+                            gCharacterSprite[Index].ScreenPosS.y--;
+
+                            if (gCharacterSprite[Index].Visible == FALSE)
+                            {
+                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                {
+                                    gCharacterSprite[Index].Visible = TRUE;
+                                }
+                            }
+                        }
+                    }
                     gCamera.y++;
                 }
                 else
@@ -254,6 +350,28 @@ void PPI_Overworld(void)
             {
                 if (gCamera.x > gCurrentArea.Area.left)
                 {
+                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                    {
+                        if (gCharacterSprite[Index].Exists == TRUE)
+                        {
+                            if (gCharacterSprite[Index].Visible == TRUE)
+                            {
+                                if (gCharacterSprite[Index].ScreenPosS.x <= 0 || gCharacterSprite[Index].ScreenPosS.x >= GAME_RES_WIDTH - 16)
+                                {
+                                    gCharacterSprite[Index].Visible = FALSE;
+                                }
+                            }
+                            gCharacterSprite[Index].ScreenPosS.x++;
+
+                            if (gCharacterSprite[Index].Visible == FALSE)
+                            {
+                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                {
+                                    gCharacterSprite[Index].Visible = TRUE;
+                                }
+                            }
+                        }
+                    }
                     gCamera.x--;
                 }
                 else
@@ -273,6 +391,28 @@ void PPI_Overworld(void)
             {
                 if (gCamera.x < gCurrentArea.Area.right - GAME_RES_WIDTH)
                 {
+                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                    {
+                        if (gCharacterSprite[Index].Exists == TRUE)
+                        {
+                            if (gCharacterSprite[Index].Visible == TRUE)
+                            {
+                                if (gCharacterSprite[Index].ScreenPosS.x <= 0 || gCharacterSprite[Index].ScreenPosS.x >= GAME_RES_WIDTH - 16)
+                                {
+                                    gCharacterSprite[Index].Visible = FALSE;
+                                }
+                            }
+                            gCharacterSprite[Index].ScreenPosS.x--;
+
+                            if (gCharacterSprite[Index].Visible == FALSE)
+                            {
+                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                {
+                                    gCharacterSprite[Index].Visible = TRUE;
+                                }
+                            }
+                        }
+                    }
                     gCamera.x++;
                 }
                 else
@@ -292,6 +432,28 @@ void PPI_Overworld(void)
             {
                 if (gCamera.y > gCurrentArea.Area.top)
                 {
+                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                    {
+                        if (gCharacterSprite[Index].Exists == TRUE)
+                        {
+                            if (gCharacterSprite[Index].Visible == TRUE)
+                            {
+                                if (gCharacterSprite[Index].ScreenPosS.y <= 0 || gCharacterSprite[Index].ScreenPosS.y >= GAME_RES_HEIGHT - 16)
+                                {
+                                    gCharacterSprite[Index].Visible = FALSE;
+                                }
+                            }
+                            gCharacterSprite[Index].ScreenPosS.y++;
+
+                            if (gCharacterSprite[Index].Visible == FALSE)
+                            {
+                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                {
+                                    gCharacterSprite[Index].Visible = TRUE;
+                                }
+                            }
+                        }
+                    }
                     gCamera.y--;
                 }
                 else
@@ -398,4 +560,37 @@ void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE
 {
     PreviousGameState = CurrentGameState;
     *CurrentGameState = GAMESTATE_BATTLE;
+}
+
+
+void TriggerNPCMovement(_In_ uint64_t Counter, _In_ MOVEMENTTYPE MovementFlag)
+{
+    for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
+    {
+        if (Counter % 30 == 0)
+        {
+            if (gCharacterSprite[Index].Visible == TRUE)
+            {
+                switch (gCharacterSprite[Index].Movement)
+                {
+                    case (MOVEMENT_SPIN):
+                    {
+                        if (gCharacterSprite[Index].DirectionS > 2)
+                        {
+                            gCharacterSprite[Index].DirectionS = 0;
+                        }
+                        else
+                        {
+                            gCharacterSprite[Index].DirectionS++;
+                        }
+                        break;
+                    }
+                    default:
+                    {
+                        ASSERT(FALSE, "INGAMESPRITE has an unknown movement type!")
+                    }
+                }
+            }
+        }
+    }
 }
