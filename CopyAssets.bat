@@ -1,0 +1,1 @@
+xcopy C:\Users\Frankenstein\source\repos\FirstProject\Assets C:\Users\Frankenstein\source\repos\FirstProject\x64\Debug\Assets /i /y
