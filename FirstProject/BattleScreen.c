@@ -1500,12 +1500,30 @@ void MenuItem_MoveScreen_MoveSlot1(void)
 
 void MenuItem_MoveScreen_MoveSlot2(void)
 {
-    //end player turn start calculating
+
+    if (gMI_MoveScreen_MoveSlot1.Name == gBattleMoveNames[BATTLEMOVE_NULL])
+    {
+
+    }
+    else          //end player turn start calculating
+    {
+        gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[2];
+        gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
+    }
 }
 
 void MenuItem_MoveScreen_MoveSlot3(void)
 {
-    //end player turn start calculating
+
+    if (gMI_MoveScreen_MoveSlot1.Name == gBattleMoveNames[BATTLEMOVE_NULL])
+    {
+
+    }
+    else          //end player turn start calculating
+    {
+        gSelectedPlayerMove = gPlayerParty[gCurrentPartyMember].DriveMonster.Moves[3];
+        gCurrentBattleState = BATTLESTATE_TURNORDER_CALC;
+    }
 }
 
 void MenuItem_MoveScreen_SignatureMove(void)

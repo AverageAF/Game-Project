@@ -26,13 +26,23 @@ void DrawAdvemturePocket(void);
 
 void DrawMonsterParty(void);
 
+void DrawSelectedItemOptions(void);
 
-void MenuItem_Inventory_Equipable_Slot_Action(void);
+void DrawSelectedMonsterOptions(void);
 
-void MenuItem_Inventory_Restore_Slot_Action(void);
 
-void MenuItem_Inventory_Valuable_Slot_Action(void);
+void MenuItem_Inventory_ItemSelected_Action(void);
 
-void MenuItem_Inventory_Adventure_Slot_Action(void);
+void MenuItem_Inventory_MonsterSelected_Action(void);
 
-void MenuItem_Inventory_Monster_Slot_Action(void);
+void MenuItem_Inventory_SelectedItem_Back(void);
+
+void MenuItem_Inventory_SelectedItem_Trash(void);
+
+void MenuItem_Inventory_SelectedItem_Use(void);
+
+void MenuItem_Inventory_SelectedItem_Equip(void);
+
+void MenuItem_Inventory_SelectedItem_Inspect(void);
+
+void MenuItem_Inventory_SelectedItem_Give(void);

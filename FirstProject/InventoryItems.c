@@ -8,7 +8,7 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
-        .Count = 0,
+        .Count = 1,
         .Description = "-----",
         .Effect = 0,
         .Name = "EQUIPITEM 0",
