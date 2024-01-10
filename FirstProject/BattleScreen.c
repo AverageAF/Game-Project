@@ -6,7 +6,7 @@
 
 ///////// load starting monster
 
-UNIQUEMONSTER gCurrentPartyMember = { 0 };      //TODO find a way to make a variable for "in" monster and not just indexing
+struct Monster gCurrentPartyMember = { 0 };      //TODO find a way to make a variable for "in" monster and not just indexing
 
 ////////Initial starting choices at the start of battle
 
@@ -24,30 +24,30 @@ MENU gMenu_BattleScreen = { "Battle Menu", 0 , _countof(gMI_BattleScreen_Items),
 
 ////////Menu choices for switching monsters in battle
 
-MENUITEM gMI_SwitchScreen_PartySlot0 = { &gPlayer.Party[0].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64, FALSE, MenuItem_SwitchScreen_PartySlot0 };
-MENUITEM gMI_SwitchScreen_PartySlot1 = { &gPlayer.Party[1].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 16, FALSE, MenuItem_SwitchScreen_PartySlot1 };
-MENUITEM gMI_SwitchScreen_PartySlot2 = { &gPlayer.Party[2].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 32, FALSE, MenuItem_SwitchScreen_PartySlot2 };
-MENUITEM gMI_SwitchScreen_PartySlot3 = { &gPlayer.Party[3].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 48, FALSE, MenuItem_SwitchScreen_PartySlot3 };
-MENUITEM gMI_SwitchScreen_PartySlot4 = { &gPlayer.Party[4].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 64, FALSE, MenuItem_SwitchScreen_PartySlot4 };
-MENUITEM gMI_SwitchScreen_PartySlot5 = { &gPlayer.Party[5].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 80, FALSE, MenuItem_SwitchScreen_PartySlot5 };
+//MENUITEM gMI_SwitchScreen_PartySlot0 = { &gPlayer.Party[0].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64, FALSE, MenuItem_SwitchScreen_PartySlot0 };
+//MENUITEM gMI_SwitchScreen_PartySlot1 = { &gPlayer.Party[1].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 16, FALSE, MenuItem_SwitchScreen_PartySlot1 };
+//MENUITEM gMI_SwitchScreen_PartySlot2 = { &gPlayer.Party[2].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 32, FALSE, MenuItem_SwitchScreen_PartySlot2 };
+//MENUITEM gMI_SwitchScreen_PartySlot3 = { &gPlayer.Party[3].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 48, FALSE, MenuItem_SwitchScreen_PartySlot3 };
+//MENUITEM gMI_SwitchScreen_PartySlot4 = { &gPlayer.Party[4].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 64, FALSE, MenuItem_SwitchScreen_PartySlot4 };
+//MENUITEM gMI_SwitchScreen_PartySlot5 = { &gPlayer.Party[5].MonsterBaseInfo.Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MONSTER_NAME_LENGTH) / 2), 64 + 80, FALSE, MenuItem_SwitchScreen_PartySlot5 };
 
-MENUITEM gMI_SwitchScreen_BackButton = { "Back", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 64 + 96, TRUE, MenuItem_SwitchScreen_BackButton };
+//MENUITEM gMI_SwitchScreen_BackButton = { "Back", (GAME_RES_WIDTH / 2) - (6 * 4 / 2), 64 + 96, TRUE, MenuItem_SwitchScreen_BackButton };
 
-MENUITEM* gMI_SwitchScreen_Items[] = { &gMI_SwitchScreen_PartySlot0, &gMI_SwitchScreen_PartySlot1, &gMI_SwitchScreen_PartySlot2, &gMI_SwitchScreen_PartySlot3, &gMI_SwitchScreen_PartySlot4, &gMI_SwitchScreen_PartySlot5 };
+//MENUITEM* gMI_SwitchScreen_Items[] = { &gMI_SwitchScreen_PartySlot0, &gMI_SwitchScreen_PartySlot1, &gMI_SwitchScreen_PartySlot2, &gMI_SwitchScreen_PartySlot3, &gMI_SwitchScreen_PartySlot4, &gMI_SwitchScreen_PartySlot5 };
 
-MENU gMenu_SwitchScreen = { "Switch Menu", 0, _countof(gMI_SwitchScreen_Items), gMI_SwitchScreen_Items };
+//MENU gMenu_SwitchScreen = { "Switch Menu", 0, _countof(gMI_SwitchScreen_Items), gMI_SwitchScreen_Items };
 
 //////////Menu choices for selecting moves
 
-MENUITEM gMI_MoveScreen_MoveSlot0 = { &gCurrentPartyMember.LearnedMoveSlot[0].Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 187, TRUE, MenuItem_MoveScreen_MoveSlot0};
+MENUITEM gMI_MoveScreen_MoveSlot0 = { "Slot1", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 187, TRUE, MenuItem_MoveScreen_MoveSlot0 };
 
-MENUITEM gMI_MoveScreen_MoveSlot1 = { &gCurrentPartyMember.LearnedMoveSlot[1].Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 201, TRUE, MenuItem_MoveScreen_MoveSlot1 };
+MENUITEM gMI_MoveScreen_MoveSlot1 = { "Slot2", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 201, TRUE, MenuItem_MoveScreen_MoveSlot1};
 
-MENUITEM gMI_MoveScreen_MoveSlot2 = { &gCurrentPartyMember.LearnedMoveSlot[2].Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 215, TRUE, MenuItem_MoveScreen_MoveSlot2 };
+MENUITEM gMI_MoveScreen_MoveSlot2 = { "Slot3", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 215, TRUE, MenuItem_MoveScreen_MoveSlot2};
 
-MENUITEM gMI_MoveScreen_MoveSlot3 = { &gCurrentPartyMember.LearnedMoveSlot[3].Name, (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 229, FALSE, MenuItem_MoveScreen_MoveSlot3 };
+MENUITEM gMI_MoveScreen_MoveSlot3 = { "Slot4", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 229, FALSE, MenuItem_MoveScreen_MoveSlot3};
 
-MENUITEM gMI_MoveScreen_MoveSlotSignature = { &gCurrentPartyMember.SignatureMove.Name, 276 + (6 * (MAX_MOVE_NAME_LENGTH) / 2), 206, FALSE, MenuItem_MoveScreen_SignatureMove };
+MENUITEM gMI_MoveScreen_MoveSlotSignature = { "SlotSig", 276 + (6 * (MAX_MOVE_NAME_LENGTH) / 2), 206, FALSE, MenuItem_MoveScreen_SignatureMove};
 
 MENUITEM gMI_MoveScreen_BackButton = { "Back", 52 + (6 * 4 / 2), 206, TRUE, MenuItem_MoveScreen_BackButton };
 
@@ -91,7 +91,7 @@ void DrawBattleScreen(void)
     if ((gGamePerformanceData.TotalFramesRendered > (LastFrameSeen + 1)))
     {
         LocalFrameCounter = 0;
-        gCurrentPartyMember = gPlayer.Party[0];
+        gCurrentPartyMember = gPlayerParty[0];
         gCurrentBattleState = 0;
         BrightnessAdjustment = -255;
         gInputEnabled = FALSE;
@@ -108,14 +108,13 @@ void DrawBattleScreen(void)
 
     for (uint8_t Counter = 0; Counter < TOTAL_MONSTERS; Counter++)
     {
-        if (gPlayer.Party[0].MonsterBaseInfo.MonsterIndex == Counter)
+        if (gPlayerParty[0].PcMonster.secure.substructs[0].type0.Index == Counter)
         {
             PlayerMonsterSprite = &gBattleSpriteBack[Counter];
         }
 
-        if (gCharacterSprite[Opponent].Party[0].MonsterBaseInfo.MonsterIndex == Counter)
+        if (gOpponentParty[0].PcMonster.secure.substructs[0].type0.Index == Counter)
         {
-            //////////TODO obviously make front facing sprites
             OpponentMonsterSprite = &gBattleSpriteFront[Counter];
         }
     }
@@ -157,7 +156,6 @@ void DrawBattleScreen(void)
     {
         case TILE_GRASS_01:
         {
-            /////////TODO make battlescene floor higher for sprites to stand on
             BattleScene = &gBattleScreen_Grass01;
             break;
         }
@@ -262,24 +260,73 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_CHOOSE_MOVE:
         {
-            if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+            if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
             {
-                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                if (gMenu_MoveScreen.SelectedItem > 1 && gMenu_MoveScreen.SelectedItem < 5)
                 {
-                    if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].WantsToBattle == TRUE))
-                    {
-                        gCharacterSprite[Index].InteractedWith = FALSE;
-                        gCharacterSprite[Index].WantsToBattle = FALSE;
-                        gCharacterSprite[Index].SightRange = 0;
-                        break;
-                    }
+                    gMenu_MoveScreen.SelectedItem--;
                 }
-
-                gPreviousGameState = gCurrentGameState;
-                gCurrentGameState = GAMESTATE_OVERWORLD;
-                gInputEnabled = FALSE;
-                StopGameMusic();
+                else
+                {
+                    gMenu_MoveScreen.SelectedItem = 1;
+                }
+                PlayGameSound(&gSoundMenuNavigate);
             }
+            else if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
+            {
+                if (gMenu_MoveScreen.SelectedItem == 5)
+                {
+                    gMenu_MoveScreen.SelectedItem = 4;
+                }
+                else if (gMenu_MoveScreen.SelectedItem > 0 && gMenu_MoveScreen.SelectedItem < 5)
+                {
+                    gMenu_MoveScreen.SelectedItem = 0;
+                }
+                PlayGameSound(&gSoundMenuNavigate);
+            }
+            else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
+            {
+                if (gMenu_MoveScreen.SelectedItem == 0)
+                {
+                    gMenu_MoveScreen.SelectedItem = 1;
+                }
+                else if (gMenu_MoveScreen.SelectedItem > 0 && gMenu_MoveScreen.SelectedItem < 5)
+                {
+                    gMenu_MoveScreen.SelectedItem = 5;
+                }
+                PlayGameSound(&gSoundMenuNavigate);
+            }
+            else if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+            {
+                if (gMenu_MoveScreen.SelectedItem > 0 && gMenu_MoveScreen.SelectedItem < 4)
+                {
+                    gMenu_MoveScreen.SelectedItem++;
+                }
+                else
+                {
+                    gMenu_MoveScreen.SelectedItem = 4;
+                }
+                PlayGameSound(&gSoundMenuNavigate);
+            }
+            else if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gMenu_MoveScreen.Items[gMenu_MoveScreen.SelectedItem]->Action();
+                PlayGameSound(&gSoundMenuChoose);
+            }
+            else if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+            {
+                if (gMenu_MoveScreen.SelectedItem == 0)
+                {
+                    gMenu_MoveScreen.Items[gMenu_MoveScreen.SelectedItem]->Action();
+                    PlayGameSound(&gSoundMenuChoose);
+                }
+                else
+                {
+                    gMenu_MoveScreen.SelectedItem = 0;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+            }
+            break;
         }
         case BATTLESTATE_CHOOSE_MONSTER:
         {
@@ -442,5 +489,6 @@ void MenuItem_MoveScreen_SignatureMove(void)
 
 void MenuItem_MoveScreen_BackButton(void)
 {
-
+    gPreviousBattleState = gCurrentBattleState;
+    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
 }

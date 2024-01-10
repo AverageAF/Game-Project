@@ -56,6 +56,7 @@
 #pragma warning(pop)
 
 #include "Tiles.h"
+#include "SimpleConstants.h"
 
 #define NUMBER_OF_SFX_SOURCE_VOICES 8
 
@@ -182,21 +183,6 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 
 } MOVEMENTTYPE;
 
-typedef enum MONSTER_ELEMENTS
-{
-	ELEMENT_NONE = 0,
-	ELEMENT_EARTH = 1,
-	ELEMENT_AIR = 2,
-	ELEMENT_FIRE = 4,
-	ELEMENT_WATER = 8,
-	ELEMENT_METAL = 16,
-	ELEMENT_ELECTRIC = 32,
-	ELEMENT_SPIRIT = 64,
-	ELEMENT_LIFE = 128,
-	ELEMENT_DEATH = 256
-
-} MONSTER_ELEMENTS;
-
 typedef struct UPOINT		//used for character screen position
 {
 	uint16_t x;
@@ -314,112 +300,152 @@ typedef struct GAMEMAP
 } GAMEMAP;
 
 
-typedef struct ELEMENTINFO
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+struct MonsterSubstruct0
 {
-	uint8_t ElementIndex;
+	uint8_t Index;			//0x00
+	uint16_t HeldItem;			//0x01
+	uint32_t Experience;		//0x03
+	uint8_t Friendship;			//0x07
 
-	char Name[10];
+};	//size = 0x08
 
-	PIXEL32 PrimaryColor;
-	PIXEL32 SecondaryColor;
-
-	MONSTER_ELEMENTS ElementFlag;
-
-	//weakness		TODO
-	//strengths
-
-
-} ELEMENTINFO;
-
-
-
-typedef struct BATTLEMOVEINFO
+struct MonsterSubstruct1
 {
-	uint16_t MoveIndex;
-	char Name[MAX_MOVE_NAME_LENGTH + 1];
-	////	Attack power
-	uint8_t SlashPower;
-	uint8_t BluntPower;
-	uint8_t PiercePower;
-	//// Psi power
-	uint8_t ThermalPower;
-	uint8_t MentalPower;
-	uint8_t AstralPower;
+	uint16_t Moves[MAX_NONSIGNATURE_MOVES];	//0x00
+};	//size = 0x08 		(uint16_t x 4 = 2 bytes x 4 = 8 bytes)
 
-	ELEMENTINFO MoveElement;
-
-	////MOVE_EFFECT MoveEffect;		TODO
-
-	BOOL MoveSignature;
-
-} BATTLEMOVEINFO;
-
-
-typedef struct MONSTERINFO			/////this structure will contain all info for all monsters from a general POV, including sprites and base-stats
+struct MonsterSubstruct2
 {
-	uint8_t MonsterIndex;
-	char* Name;
-	GAMEBITMAP MonsterBattleSpriteFront;
-	GAMEBITMAP MonsterBattleSpriteBack;
+	uint8_t HpTraining;			//0x00
+	uint8_t AttackTraining;		//0x01
+	uint8_t DefenseTraining;	//0x02
+	uint8_t SpeedTraining;		//0x03
+	uint8_t PsiTraining;		//0x04
+	uint8_t ResolveTraining;	//0x05
+	uint16_t SignatureMove;		//0x06
+};	//size = 0x08
 
-	uint8_t MonsterBaseHealthStat;
-	uint8_t MonsterBaseAttackStat;
-	uint8_t MonsterBasePsiStat;
-	uint8_t MonsterBaseDefenseStat;
-	uint8_t MonsterBaseResolveStat;
-	uint8_t MonsterBaseSpeedStat;
-	uint16_t MonsterBaseStatTotal;
-
-	MONSTER_ELEMENTS MonsterElement1;
-	MONSTER_ELEMENTS MonsterElement2;
-
-	BATTLEMOVEINFO MonsterMovePool[TOTAL_MOVES];
-
-} MONSTERINFO;
-
-
-
-typedef struct UNIQUEMONSTER
+struct MonsterSubstruct3
 {
-	MONSTERINFO MonsterBaseInfo;
+	uint8_t MetLocation;		//0x00
+	uint8_t MetLevel;			//0x01
 
-	uint8_t MonsterCurrentLevel;
-	uint8_t MonsterCurrentXp;
+	uint32_t HpGenetics : 5;		//0x02
+	uint32_t AttackGenetics : 5;	//0x02
+	uint32_t DefenseGenetics : 5;	//0x03
+	uint32_t SpeedGenetics : 5;	//0x03
+	uint32_t PsiGenetics : 5;		//0x03
+	uint32_t ResolveGenetics : 5;	//0x04
+	uint32_t AbilityNumber : 2;	//0x05
 
-	//TODO
-	///////EQUIPPED_ITEM MonsterEquippedItem; ????
-	// 
-	BATTLEMOVEINFO LearnedMoveSlot[MAX_NONSIGNATURE_MOVES];
-	BATTLEMOVEINFO SignatureMove;
+	uint8_t Filler1Sub3;		//0x06
+	uint8_t Filler2Sub3;		//0x07
+};	//size = 0x08
 
-	uint16_t MonsterCurrentHealth;
-	uint16_t MonsterMaxHealth;
-	float MonsterPercetHealth;
+#define NUM_SUBSTRUCT_BYTES (max(sizeof(struct MonsterSubstruct0), max(sizeof(struct MonsterSubstruct1), max(sizeof(struct MonsterSubstruct2), sizeof (struct MonsterSubstruct3)))))
 
-	uint8_t MonsterHealthStat;
-	uint8_t MonsterAttackStat;
-	uint8_t MonsterPsiStat;
-	uint8_t MonsterDefenseStat;
-	uint8_t MonsterResolveStat;
-	uint8_t MonsterSpeedStat;
-
-	uint8_t HealthTrained;
-	uint8_t AttackTrained;
-	uint8_t PsiTrained;
-	uint8_t DefenseTrained;
-	uint8_t ResolveTrained;
-	uint8_t SpeedTrained;
-
-	uint8_t GeneticHealth;
-	uint8_t GeneticAttack;
-	uint8_t GeneticPsi;
-	uint8_t GeneticDefense;
-	uint8_t GeneticResolve;
-	uint8_t GeneticSpeed;
-
-} UNIQUEMONSTER;
+union MonsterSubstruct
+{
+	struct MonsterSubstruct0 type0;
+	struct MonsterSubstruct1 type1;
+	struct MonsterSubstruct2 type2;
+	struct MonsterSubstruct3 type3;
+	uint16_t raw[NUM_SUBSTRUCT_BYTES / 2];		//	/2 bc its uint16 not uint8
+};
 
 
+struct PCMonster
+{
+	uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1];
+	uint8_t playerName[MAX_MONSTER_NAME_LENGTH + 1];
+	uint8_t hasIndex : 1;
+	uint8_t Filler : 7;
+
+	union
+	{
+		uint32_t raw[(NUM_SUBSTRUCT_BYTES * 4) / 4];	//	*4 bc there are 4 substructs, /4 bc its uint32 not uint8
+		union MonsterSubstruct substructs[4];
+	} secure;
+};
+
+struct Monster
+{
+	struct PCMonster PcMonster;
+	uint32_t Status;
+	uint8_t Level;
+	uint16_t Health;
+	uint16_t MaxHealth;
+	uint16_t Attack;
+	uint16_t Defense;
+	uint16_t Speed;
+	uint16_t Psi;
+	uint16_t Resolve;
+};
+
+struct BattleMonster
+{
+	uint8_t Index;
+	uint16_t Health;
+	uint16_t MaxHealth;
+	uint16_t Attack;
+	uint16_t Defense;
+	uint16_t Speed;
+	uint16_t Psi;
+	uint16_t Resolve;
+	uint16_t Moves[MAX_NONSIGNATURE_MOVES];
+	uint16_t SignatureMove;
+	uint32_t HpGenetics : 5;
+	uint32_t AttackGenetics : 5;
+	uint32_t DefenseGenetics : 5;
+	uint32_t SpeedGenetics : 5;
+	uint32_t PsiGenetics : 5;
+	uint32_t ResolveGenetics : 5;
+	uint32_t AbilityNumber : 2;
+	uint8_t Element1;
+	uint8_t Element2;
+	uint8_t Level;
+	uint8_t Friendship;
+	uint16_t EquippedItem;
+	uint8_t Nickname[MAX_MONSTER_NAME_LENGTH + 1];
+	uint8_t PlayerName[MAX_MONSTER_NAME_LENGTH + 1];
+	uint32_t Experience;
+	uint32_t Status;
+};
+
+
+struct BaseStats
+{
+	uint8_t baseHP;
+	uint8_t baseAttack;
+	uint8_t baseDefense;
+	uint8_t baseSpeed;
+	uint8_t basePsi;
+	uint8_t baseResolve;
+	uint8_t element1;
+	uint8_t element2;
+	uint8_t catchrate;
+	uint16_t expYield;
+	uint16_t trainingYieldHp : 2;
+	uint16_t trainingYieldAttack : 2;
+	uint16_t trainingYieldDefense : 2;
+	uint16_t trainingYieldSpeed : 2;
+	uint16_t trainingYieldPsi : 2;
+	uint16_t trainingYieldResolve : 2;
+	uint16_t itemCommon;
+	uint16_t itemRare;
+	uint8_t genderRatio;
+	uint8_t eggHatch;
+	uint8_t friendship;
+	uint8_t growthRate;
+	uint8_t eggGroup1;
+	uint8_t eggGroup2;
+	uint16_t abilities[NUM_ABILITY_SLOTS];
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct PLAYER
 {
@@ -438,7 +464,6 @@ typedef struct PLAYER
 
 	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
 	uint16_t RandomEncounterPercent;
-	UNIQUEMONSTER Party[MAX_PARTY_SIZE];
 
 } PLAYER;
 
@@ -463,7 +488,6 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
 	BOOL WantsToBattle;
-	UNIQUEMONSTER Party[MAX_PARTY_SIZE];
 
 } INGAMESPRITE;
 
@@ -521,6 +545,9 @@ GAMEBITMAP gBackBuffer;
 GAMEBITMAP g6x7Font;
 GAMEBITMAP gBattleScreen_Grass01;
 GAMEBITMAP gBattleScreen_StoneBricks01;
+
+struct Monster gPlayerParty[MAX_PARTY_SIZE];
+struct Monster gOpponentParty[MAX_PARTY_SIZE];
 
 GAMEBITMAP gBattleSpriteBack[TOTAL_MONSTERS];	//////temp while still working on MONSTERINFO struct
 GAMEBITMAP gBattleSpriteFront[TOTAL_MONSTERS];

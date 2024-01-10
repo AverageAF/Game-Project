@@ -14,7 +14,7 @@ typedef enum BATTLESTATE
 BATTLESTATE gPreviousBattleState;
 BATTLESTATE gCurrentBattleState;
 
-UNIQUEMONSTER gCurrentPartyMember;
+struct Monster gCurrentPartyMember;
 
 void PPI_BattleScreen(void);
 
