@@ -34,7 +34,7 @@ void DrawOpeningSplashScreen(void)
     if (Blink && (WaitForSingleObject(gAssetLoadingThreadHandle, 0) != WAIT_OBJECT_0))
     {
         //TODO:Draw better "Loading..." text
-        BlitStringToBuffer("Loading...", &g6x7Font, &COLOR_NES_GRAY , GAME_RES_WIDTH - (6*11), GAME_RES_HEIGHT - 8);
+        BlitStringToBuffer("Loading...", &g6x7Font, &COLOR_DARK_GRAY, GAME_RES_WIDTH - (6*11), GAME_RES_HEIGHT - 8);
     }
     else
     {

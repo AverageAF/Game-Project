@@ -20,6 +20,7 @@ void DrawOverworldScreen(void)
         LocalFrameCounter = 0;
         BrightnessAdjustment = -255;
         gInputEnabled = FALSE;
+        gOverWorldControls = TRUE;
     }
 
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
@@ -63,7 +64,7 @@ void DrawOverworldScreen(void)
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
 
 
-    if (gDialogueControls == TRUE)
+    if (gOverWorldControls == FALSE)
     {
         for (uint8_t Counter = 0; Counter <= MAX_SPRITE_LOAD; Counter++)
         {
@@ -73,17 +74,17 @@ void DrawOverworldScreen(void)
                 {
                     case 0:
                     {
-                        DrawDialogueBox(gCharacterSprite[0].Dialogue[0], NULL, NULL);
+                        DrawDialogueBox(gCharacterSprite[0].Dialogue[0], LocalFrameCounter, NULL, NULL);
                         goto FoundSprite;
                     }
                     case 1:
                     {
-                        DrawDialogueBox(gCharacterSprite[1].Dialogue[0], NULL, NULL);
+                        DrawDialogueBox(gCharacterSprite[1].Dialogue[0], LocalFrameCounter, NULL, NULL);
                         goto FoundSprite;
                     }
                     case 2:
                     {
-                        DrawDialogueBox(gCharacterSprite[2].Dialogue[0], NULL, NULL);
+                        DrawDialogueBox(gCharacterSprite[2].Dialogue[0], LocalFrameCounter, NULL, NULL);
                         goto FoundSprite;
                     }
                     default:
@@ -142,7 +143,7 @@ FoundSprite:
 
 void PPI_Overworld(void)
 {
-    if (gDialogueControls == FALSE)
+    if (gOverWorldControls == TRUE)
     {
         if (gGameInput.EscapeKeyPressed && gGameInput.EscapeKeyAlreadyPressed)
         {
@@ -151,6 +152,14 @@ void PPI_Overworld(void)
             PlayGameSound(&gSoundMenuChoose);
             PauseGameMusic();
         }
+
+
+        if (gGameInput.TabKeyPressed && !gGameInput.TabKeyAlreadyPressed)
+        {
+            gPreviousGameState = gCurrentGameState;
+            gCurrentGameState = GAMESTATE_INVENTORYSCREEN;
+        }
+
 
         //ASSERT(gCamera.x <= gCurrentArea.right - GAME_RES_WIDTH, "Camera went out of bounds!");
 
@@ -697,28 +706,40 @@ void PPI_Overworld(void)
             }
         }
     }
-    else
+    else if (gOverWorldControls == FALSE)
     {
-        if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+        if (gDialogueControls == TRUE)
         {
-            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                if (gCharacterSprite[Index].InteractedWith == TRUE)
+                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
                 {
-                    if (gCharacterSprite[Index].WantsToBattle == TRUE)
+                    if (gCharacterSprite[Index].InteractedWith == TRUE)
                     {
-                        RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
-                        break;
-                    }
-                    else
-                    {
-                        gCharacterSprite[Index].InteractedWith = FALSE;
-                        break;
+                        if (gCharacterSprite[Index].WantsToBattle == TRUE)
+                        {
+                            RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                            break;
+                        }
+                        else
+                        {
+                            gCharacterSprite[Index].InteractedWith = FALSE;
+                            break;
+                        }
                     }
                 }
+                gGamePaused = FALSE;
+                gDialogueControls = FALSE;
+                gOverWorldControls = TRUE;
+                gFinishedDialogueTextAnimation = FALSE;
             }
-            gGamePaused = FALSE;
-            gDialogueControls = FALSE;
+        }
+        else
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gFinishedDialogueTextAnimation = TRUE;
+            }
         }
     }
 }                                                   

@@ -70,7 +70,9 @@
 #define COLOR_LIGHT_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
 #define COLOR_NES_WHITE (PIXEL32){ .Bytes = 0xFFFCFCFC }
 #define COLOR_DARK_WHITE (PIXEL32){ .Bytes = 0xFFDCDCDC }
-#define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF202020 }
+#define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF7c7c7c }
+#define COLOR_DARK_GRAY (PIXEL32){ .Bytes = 0xFF303030 }
+#define COLOR_LIGHT_GRAY (PIXEL32){ .Bytes = 0xFFacacac }
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
@@ -83,6 +85,14 @@
 #define MAX_DIALOGUE_BOXES 10
 #define MAX_PARTY_SIZE 6
 #define MAX_NONSIGNATURE_MOVES 4
+#define MAX_GENETICS_VALUE 31
+#define LEGENDARY_GENETICS_PERFECT_COUNT 4
+#define USE_RANDOM_GENETICS (MAX_GENETICS_VALUE + 1)
+#define MONSTER_FLAG_LEGENDARY (1 << 0)
+#define NUM_MONSTER_STATS 6
+#define END_OF_STRING 0xFF
+#define MAX_LEVEL 100
+
 
 
 
@@ -107,6 +117,8 @@
 #define FACING_RIGHT_0 9
 #define FACING_RIGHT_1 10
 #define FACING_RIGHT_2 11
+
+
 
 typedef enum DIRECTION
 {
@@ -139,18 +151,10 @@ typedef enum GAMESTATE
 	GAMESTATE_EXITYESNO,
 	GAMESTATE_CHARACTERNAME,
 	GAMESTATE_LOADGAMESAVE,
-	GAMESTATE_DELETESAVEYESNO
+	GAMESTATE_DELETESAVEYESNO,
+	GAMESTATE_INVENTORYSCREEN
 
 } GAMESTATE;
-
-//typedef enum RESOURCE_TYPE
-//{
-//	RESOURCE_TYPE_WAV,
-//	RESOURCE_TYPE_OGG,
-//	RESOURCE_TYPE_TILEMAP,
-//	RESOURCE_TYPE_BMPX
-//
-//} RESOURCE_TYPE;
 
 typedef enum WINDOW_FLAGS
 {
@@ -182,6 +186,55 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 	MOVEMENT_WALK_LEFT_RIGHT
 
 } MOVEMENTTYPE;
+
+
+//labels for GetMonsterData/SetMonsterData
+enum MONSTER_DATA
+{
+	MONSTER_DATA_MONSTER_SEED,
+	MONSTER_DATA_PLAYER_SEED,
+	MONSTER_DATA_NICKNAME,
+	MONSTER_DATA_PLAYER_NAME,
+	MONSTER_DATA_HAS_INDEX,
+	MONSTER_DATA_CHECKSUM,
+	MONSTER_DATA_ENCRYPT,
+	MONSTER_DATA_INDEX,
+	MONSTER_DATA_HELDITEM,
+	MONSTER_DATA_EXPERIENCE,
+	MONSTER_DATA_FRIENDSHIP,
+	MONSTER_DATA_MOVE_1,
+	MONSTER_DATA_MOVE_2,
+	MONSTER_DATA_MOVE_3,
+	MONSTER_DATA_MOVE_4,
+	MONSTER_DATA_HP_TRAINING,
+	MONSTER_DATA_ATTACK_TRAINING,
+	MONSTER_DATA_DEFENSE_TRAINING,
+	MONSTER_DATA_SPEED_TRAINING,
+	MONSTER_DATA_PSI_TRAINING,
+	MONSTER_DATA_RESOLVE_TRAINING,
+	MONSTER_DATA_SIGNATURE_MOVE,
+	MONSTER_DATA_MET_LOCATION,
+	MONSTER_DATA_MET_LEVEL,
+	MONSTER_DATA_HP_GENETICS,
+	MONSTER_DATA_ATTACK_GENETICS,
+	MONSTER_DATA_DEFENSE_GENETICS,
+	MONSTER_DATA_SPEED_GENETICS,
+	MONSTER_DATA_PSI_GENETICS,
+	MONSTER_DATA_RESOLVE_GENETICS,
+	MONSTER_DATA_ABILITY_NUMBER,
+	MONSTER_DATA_STATUS,
+	MONSTER_DATA_LEVEL,
+	MONSTER_DATA_HEALTH,
+	MONSTER_DATA_MAX_HEALTH,
+	MONSTER_DATA_ATTACK,
+	MONSTER_DATA_DEFENSE,
+	MONSTER_DATA_SPEED,
+	MONSTER_DATA_PSI,
+	MONSTER_DATA_RESOLVE,
+	MONSTER_DATA_GENETICS,
+	MONSTER_DATA_KNOWN_MOVES,
+
+};
 
 typedef struct UPOINT		//used for character screen position
 {
@@ -356,13 +409,17 @@ union MonsterSubstruct
 	uint16_t raw[NUM_SUBSTRUCT_BYTES / 2];		//	/2 bc its uint16 not uint8
 };
 
-
+//PC
 struct PCMonster
 {
+	uint32_t MonsterSeed;
+	uint32_t PlayerSeed;
 	uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1];
-	uint8_t playerName[MAX_MONSTER_NAME_LENGTH + 1];
+	uint8_t playerName[MAX_NAME_LENGTH + 1];
 	uint8_t hasIndex : 1;
 	uint8_t Filler : 7;
+	uint16_t checkSum;
+	uint16_t unknown;
 
 	union
 	{
@@ -415,6 +472,11 @@ struct BattleMonster
 	uint32_t Status;
 };
 
+struct LevelUpMove
+{
+	uint16_t move;
+	uint16_t level;
+};
 
 struct BaseStats
 {
@@ -443,6 +505,8 @@ struct BaseStats
 	uint8_t eggGroup1;
 	uint8_t eggGroup2;
 	uint16_t abilities[NUM_ABILITY_SLOTS];
+	uint16_t flags;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -534,7 +598,6 @@ typedef struct MENU
 
 } MENU;
 
-
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
@@ -562,10 +625,11 @@ BOOL gGameIsRunning;                //when set to FALSE ends the game, controls 
 
 GAME_PERFORMANCE_DATA gGamePerformanceData;
 
-BOOL gInputEnabled;
-BOOL gGamePaused;
-BOOL gDialogueControls;
-BOOL gMenuControls;
+BOOL gInputEnabled;							//reads player inputs but does not apply them until enabled
+BOOL gGamePaused;							//pauses sprites in background
+BOOL gDialogueControls;						//enables input confirmation after dialogue
+BOOL gOverWorldControls;					//enables overworld controls
+BOOL gFinishedDialogueTextAnimation;		//allows for dialogue text animation to reset between boxes
 
 INGAMESPRITE gCharacterSprite[MAX_SPRITE_LOAD];
 
@@ -667,3 +731,5 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
 void EnterDialogue(void);
 
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags);
+
+

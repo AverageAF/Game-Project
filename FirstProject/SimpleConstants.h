@@ -3,11 +3,11 @@
 
 ///////////////////////////////MISC////////////////////////////////////
 
-#define GROWTH_RATE_FAST 0
-#define GROWTH_RATE_VERY_FAST 1
+#define GROWTH_RATE_VERY_FAST 0
+#define GROWTH_RATE_FAST 1
 #define GROWTH_RATE_NORMAL 2
-#define GROWTH_RATE_VERY_SLOW 3
-#define GROWTH_RATE_SLOW 4
+#define GROWTH_RATE_SLOW 3
+#define GROWTH_RATE_VERY_SLOW 4
 #define GROWTH_RATE_LEGENDARY 5
 
 ///////////////////////////////MISC////////////////////////////////////
@@ -44,7 +44,7 @@
 #define MONSTER_LIFEWOLF 9
 #define MONSTER_DEATHWOLF 10
 
-#define NUM_MONSTERS (11 - 1)
+#define NUM_MONSTERS (11)
 
 /////////////////////////////MONSTERS//////////////////////////////////
 
@@ -68,6 +68,10 @@
 #define BATTLEMOVE_DEADLY_SWIPE 14
 
 #define NUM_BATTLEMOVES 15
+
+#define MONSTER_HAS_MAX_MOVES 0xFFFF
+#define MONSTER_ALREADY_KNOWS_MOVE 0xFFFE
+#define MONSTER_MOVE_NONE 0
 
 ///////////////////////////////MOVES///////////////////////////////////
 

@@ -1,4 +1,7 @@
-#include"Main.h"
+#pragma once
+
+#include "SimpleConstants.h"
+#include "Main.h"
 
 #define MONSTER_GENDERLESS 255
 #define MONSTER_FEMALE 254

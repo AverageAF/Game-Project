@@ -22,6 +22,8 @@
 #include "BattleScreen.h"
 #include "LoadGameSave.h"
 #include "SimpleConstants.h"
+#include "Inventory.h"
+#include "MonsterData.h"
 
 
 #pragma comment(lib, "Winmm.lib")
@@ -527,6 +529,11 @@ void ProcessPlayerInput(void)
         {
             break;
         }
+        case GAMESTATE_INVENTORYSCREEN:
+        {
+            PPI_InventoryScreen();
+            break;
+        }
         default:
         {
             ASSERT(FALSE, "Unknown GameState for player input!")
@@ -567,7 +574,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].Visible = TRUE;
     gCharacterSprite[0].Exists = TRUE;
     gCharacterSprite[0].Loaded = TRUE;
-    gCharacterSprite[0].Dialogue[0] = "Hello!";
+    gCharacterSprite[0].Dialogue[0] = "I dropped my glasses\nI can't find them anywhere!";
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
 
@@ -766,6 +773,11 @@ void RenderFrameGraphics(void)
         }
         case GAMESTATE_DELETESAVEYESNO:
         {
+            break;
+        }
+        case GAMESTATE_INVENTORYSCREEN:
+        {
+            DrawInventoryScreen();
             break;
         }
         default:
@@ -2456,7 +2468,7 @@ void EnterDialogue(void)
 {
     PlayGameSound(&gSoundMenuChoose);
     gGamePaused = TRUE;
-    gDialogueControls = TRUE;
+    gOverWorldControls = FALSE;
 }
 
 
@@ -2467,12 +2479,15 @@ void EnterDialogue(void)
 //use character "\n" with no spaces behind for next row (spaces after will indent)
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
 {
+    static uint16_t DialogueCharactersToShow;
+    char DialogueLineScratch[32] = { 0 };
+
     char InString[224] = { 0 };
     uint8_t Row = 0;
     char* NextToken = NULL;
     char Separator[] = "\n";
 
-    DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
+    DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
     if (strlen(Dialogue) <= 32 * 7 && strlen(Dialogue) > 0)
     {
         strcpy_s(InString, 224, Dialogue);        ////need to define max msg length bc sizeof() and strlen() both result in errors
@@ -2481,14 +2496,48 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
 
         while (StrPtr != NULL)
         {
-            BlitStringToBuffer(StrPtr, &g6x7Font, &COLOR_NES_GRAY, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
-            StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
-            Row++;
+            if ((Counter % (gRegistryParams.TextSpeed + 1) == 0) && (gRegistryParams.TextSpeed < 4))
+            {
+                if (DialogueCharactersToShow <= strlen(StrPtr) && gFinishedDialogueTextAnimation == FALSE)
+                {
+                    DialogueCharactersToShow++;
+                }
+                else if (DialogueCharactersToShow > strlen(StrPtr) || gFinishedDialogueTextAnimation == TRUE)   ////TODO FIX BUG: when using \n, gFinishedDialogueTextAnimation will be set at shortest line finishing, not once all text is finished
+                {
+                    DialogueCharactersToShow = 0;
+                    goto StartBlit;
+                }
+            }
+            else if (gRegistryParams.TextSpeed == 4 || gFinishedDialogueTextAnimation == TRUE)
+            {
+
+        StartBlit:
+
+                BlitStringToBuffer(StrPtr, &g6x7Font, &COLOR_BLACK, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
+                BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 276, 224);
+                gDialogueControls = TRUE;
+                gFinishedDialogueTextAnimation = TRUE;
+
+                StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
+                Row++;
+            }
+
+            if (!gFinishedDialogueTextAnimation)
+            {
+                snprintf(DialogueLineScratch, DialogueCharactersToShow, "%s", StrPtr);
+
+                BlitStringToBuffer(DialogueLineScratch, &g6x7Font, &COLOR_BLACK, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
+
+                StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
+                Row++;
+            }
         }
     }
     else
     {
-        BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_NES_GRAY, 101, 174);
+        BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_BLACK, 101, 174);
         LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, Dialogue);
     }
 }
+
+

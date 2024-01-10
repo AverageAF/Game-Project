@@ -45,7 +45,7 @@ void DrawOptionsScreen(void)
 
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, NULL);
 
-    ApplyFadeIn(LocalFrameCounter, COLOR_NES_GRAY, & Gray, NULL);
+    ApplyFadeIn(LocalFrameCounter, COLOR_DARK_GRAY, & Gray, NULL);
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 
