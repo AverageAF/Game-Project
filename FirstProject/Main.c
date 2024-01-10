@@ -569,18 +569,19 @@ DWORD InitializeSprites(void)
 {
     /////////////////////////////////////////temporary init of character sprites/////////////////////
 
-    gCharacterSprite[0].ScreenPos.x = 64;
+    gCharacterSprite[0].ScreenPos.x = 96;
     gCharacterSprite[0].ScreenPos.y = 192;
-    gCharacterSprite[0].WorldPos.x = 64;
+    gCharacterSprite[0].WorldPos.x = 96;
     gCharacterSprite[0].WorldPos.y = 192;
-    gCharacterSprite[0].ResetScreenPos.x = 64;
+    gCharacterSprite[0].ResetScreenPos.x = 96;
     gCharacterSprite[0].ResetScreenPos.y = 192;
-    gCharacterSprite[0].ResetWorldPos.x = 64;
+    gCharacterSprite[0].ResetWorldPos.x = 96;
     gCharacterSprite[0].ResetWorldPos.y = 192;
-    gCharacterSprite[0].Direction = UP;
-    gCharacterSprite[0].ResetDirection = UP;
-    gCharacterSprite[0].Movement = MOVEMENT_WALK_UP_DOWN;
+    gCharacterSprite[0].Direction = LEFT;
+    gCharacterSprite[0].ResetDirection = LEFT;
+    gCharacterSprite[0].Movement = MOVEMENT_WALK_LEFT_RIGHT;
     gCharacterSprite[0].MovementRange.y = 5;
+    gCharacterSprite[0].MovementRange.x = 5;
     gCharacterSprite[0].Visible = TRUE;
     gCharacterSprite[0].Exists = TRUE;
     gCharacterSprite[0].Loaded = TRUE;
@@ -603,6 +604,26 @@ DWORD InitializeSprites(void)
     gCharacterSprite[1].Exists = TRUE;
     gCharacterSprite[1].Loaded = FALSE;
     gCharacterSprite[1].Dialogue[0] = "Wow!\nThis place is dark!";
+
+
+    gCharacterSprite[2].ScreenPos.x = 224;
+    gCharacterSprite[2].ScreenPos.y = 32;
+    gCharacterSprite[2].WorldPos.x = 224;
+    gCharacterSprite[2].WorldPos.y = 32;
+    gCharacterSprite[2].ResetScreenPos.x = 224;
+    gCharacterSprite[2].ResetScreenPos.y = 32;
+    gCharacterSprite[2].ResetWorldPos.x = 224;
+    gCharacterSprite[2].ResetWorldPos.y = 32;
+    gCharacterSprite[2].Direction = DOWN;
+    gCharacterSprite[2].ResetDirection = DOWN;
+    gCharacterSprite[2].SightRange = 3;
+    gCharacterSprite[2].ResetSightRange = 3;
+    gCharacterSprite[2].WantsToBattle = TRUE;
+    gCharacterSprite[2].Movement = MOVEMENT_STILL;
+    gCharacterSprite[2].Visible = TRUE;
+    gCharacterSprite[2].Exists = TRUE;
+    gCharacterSprite[2].Loaded = TRUE;
+    gCharacterSprite[2].Dialogue[0] = "Lets have a battle!";
 
     return (0);
 }
@@ -2258,6 +2279,32 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
+
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_DOWN_0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_LEFT_0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_UP_0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_RIGHT_0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
     /////////////////////////////////////////////////////////battle backgrounds////////////////////////////////////////////////////
 
 
@@ -2281,12 +2328,16 @@ Exit:
 
 void InitializeGlobals(void)
 {
-    ASSERT(_countof(gPassableTiles) == 3, "The gPassableTiles array is the wrong size!");
+    ASSERT(_countof(gPassableTiles) == 4, "The gPassableTiles array is the wrong size!");
 
     ////make sure gPassableTiles array is large enough to fit all tiles (declared in main.h)
     gPassableTiles[0] = TILE_GRASS_01;
-    gPassableTiles[1] = TILE_STONE_BRICKS_01;
+    gPassableTiles[1] = TILE_STONEBRICKS_FLOOR_01;
     gPassableTiles[2] = TILE_TELEPORT01;
+    gPassableTiles[3] = TILE_TALLGRASS_01;
+
+    gEncounterTiles[0] = TILE_TALLGRASS_01;
+    gEncounterTiles[1] = TILE_STONEBRICKS_FLOOR_01;
 
     gOverworldArea = (GAMEAREA){ .Name = "Overworld01",
                                  .Area = (RECT){.left = 0, .top = 0, .right = 3840, .bottom = 2400 },

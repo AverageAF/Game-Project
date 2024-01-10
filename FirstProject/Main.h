@@ -157,7 +157,8 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 	MOVEMENT_SPIN,
 	MOVEMENT_LOOK_AROUND,
 	MOVEMENT_WANDER,
-	MOVEMENT_WALK_UP_DOWN
+	MOVEMENT_WALK_UP_DOWN,
+	MOVEMENT_WALK_LEFT_RIGHT
 
 } MOVEMENTTYPE;
 
@@ -312,9 +313,12 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs"
 	UPOINT ResetWorldPos;
 	POINT ResetScreenPos;
 	DIRECTION ResetDirection;
+	uint8_t ResetSightRange;
+	uint8_t SightRange;
 	UPOINT MovementRange;
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
+	BOOL WantsToBattle;
 
 } INGAMESPRITE;
 
@@ -363,7 +367,8 @@ typedef struct MENU
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
-uint8_t gPassableTiles[3];
+uint8_t gPassableTiles[4];
+uint8_t gEncounterTiles[2];
 
 REGISTRYPARAMS gRegistryParams;
 

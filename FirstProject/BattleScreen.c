@@ -44,7 +44,12 @@ void DrawBattleScreen(void)
             BattleScene = &gBattleScreen_Grass01;
             break;
         }
-        case TILE_STONE_BRICKS_01:
+        case TILE_TALLGRASS_01:
+        {
+            BattleScene = &gBattleScreen_Grass01;
+            break;
+        }
+        case TILE_STONEBRICKS_FLOOR_01:
         {
             BattleScene = &gBattleScreen_StoneBricks01;
             break;
