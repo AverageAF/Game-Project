@@ -1,6 +1,7 @@
 #include "Main.h"
 #include "SaveGameSave.h"
 #include "OverWorld.h"
+#include "InventoryItems.h"
 
 MENUITEM gMI_SaveGameSave_Back = { "Back",(GAME_RES_WIDTH / 2) - (6 * 5 / 2) - 150, (GAME_RES_HEIGHT - 14), TRUE, MenuItem_SaveGameSave_Back };
 
@@ -241,15 +242,37 @@ void MenuItem_SaveGameSave_Slot1(void)
             snprintf(SpriteInfo, 16, "DialogueFlag%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);
         }
+    }
 
-        char* flag = malloc(16);
-        for (uint8_t flagindex = START_OF_FLAGS; flagindex < END_OF_FLAGS; flagindex++)
+    char* item = malloc(20);
+    for (uint8_t equip = 0; equip < NUM_EQUIP_ITEMS; equip++)
+    {
+        snprintf(item, 20, "Equip%d", equip);
+        cJSON_AddNumberToObject(json, item, gEquipableItems[equip].Count);
+    }
+    for (uint8_t use = 0; use < NUM_USABLE_ITEMS; use++)
+    {
+        snprintf(item, 20, "Use%d", use);
+        cJSON_AddNumberToObject(json, item, gUseableItems[use].Count);
+    }
+    for (uint8_t value = 0; value < NUM_VALUABLE_ITEMS; value++)
+    {
+        snprintf(item, 20, "Value%d", value);
+        cJSON_AddNumberToObject(json, item, gValuableItems[value].Count);
+    }
+    for (uint8_t adventure = 0; adventure < NUM_ADVENTURE_ITEMS; adventure++)
+    {
+        snprintf(item, 20, "Adventure%d", adventure);
+        cJSON_AddNumberToObject(json, item, gAdventureItems[adventure].Count);
+    }
+
+    char* flag = malloc(16);
+    for (uint8_t flagindex = START_OF_FLAGS; flagindex < END_OF_FLAGS; flagindex++)
+    {
+        if (gGameFlags[flagindex] == TRUE)
         {
-            if (gGameFlags[flagindex] == TRUE)
-            {
-                snprintf(flag, 16, "Flag%d", flagindex);
-                cJSON_AddNumberToObject(json, flag, gGameFlags[flagindex]);
-            }
+            snprintf(flag, 16, "Flag%d", flagindex);
+            cJSON_AddNumberToObject(json, flag, gGameFlags[flagindex]);
         }
     }
 

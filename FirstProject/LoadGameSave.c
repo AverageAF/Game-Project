@@ -2,6 +2,7 @@
 #include "LoadGameSave.h"
 #include "OverWorld.h"
 #include "MonsterData.h"
+#include "InventoryItems.h"
 
 MENUITEM gMI_LoadGameSave_Back = { "Back",(GAME_RES_WIDTH / 2) - (6 * 5 / 2) - 150, (GAME_RES_HEIGHT - 14), TRUE, MenuItem_LoadGameSave_Back };
 
@@ -146,8 +147,8 @@ void MenuItem_LoadGameSave_Slot1(void)
         //return 1;
     }
 
-    // read the file contents into a string 
-    char buffer[4096];
+    //read the file contents into a string
+    char buffer[8192] = { 0 };
     int len = fread(buffer, 1, sizeof(buffer), fp);
     fclose(fp);
 
@@ -280,18 +281,7 @@ void MenuItem_LoadGameSave_Slot1(void)
         loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
         if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
         {
-            switch (loadedinfo->valueint)   ////TODO: make this better. Array for all game locations?
-            {
-                case 0:
-                    SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gHome01Area.Name);
-                    break;
-                case 1:
-                    SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gOverworldArea.Name);
-                    break;
-                case 2:
-                    SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gDungeon01Area.Name);
-                    break;
-            }
+            SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, &gGameAreas[loadedinfo->valueint].Index);
         }
         snprintf(monsterinfo, 16, "HpGenes%d", monster);
         loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
@@ -409,7 +399,7 @@ void MenuItem_LoadGameSave_Slot1(void)
 
         snprintf(monsterinfo, 16, "CurrentHealth%d", monster);
         loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
-        if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+        if (cJSON_IsNumber(loadedinfo) && (loadedinfo != NULL))
         {
             gPlayerParty[monster].Health = loadedinfo->valueint;
         }
@@ -491,24 +481,92 @@ void MenuItem_LoadGameSave_Slot1(void)
         {
             gCharacterSprite[sprite].DialogueFlag = SpriteInfo->valueint;
         }
+    }
 
-
-        char* FlagIndex = malloc(16);
-        cJSON* Flag;
-        for (uint8_t flagindex = START_OF_FLAGS; flagindex < END_OF_FLAGS; flagindex++)
+    char* ItemIndex = malloc(20);
+    cJSON* Item;
+    for (uint8_t equip = 0; equip < NUM_EQUIP_ITEMS; equip++)
+    {
+        snprintf(ItemIndex, 20, "Equip%d", equip);
+        Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
+        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
         {
-            snprintf(FlagIndex, 16, "Flag%d", flagindex);
-            Flag = cJSON_GetObjectItemCaseSensitive(json, FlagIndex);
-            if (cJSON_IsNumber(Flag) && (Flag->valueint == TRUE))
-            {
-                gGameFlags[flagindex] = Flag->valueint;
-            }
+            gEquipableItems[equip].Count = Item->valueint;
+            gEquipableItems[equip].HasItem = TRUE;
+        }
+        else
+        {
+            gEquipableItems[equip].Count = 0;
+            gEquipableItems[equip].HasItem = FALSE;
+        }
+    }
+    for (uint8_t use = 0; use < NUM_USABLE_ITEMS; use++)
+    {
+        snprintf(ItemIndex, 20, "Use%d", use);
+        Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
+        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        {
+            gUseableItems[use].Count = Item->valueint;
+            gUseableItems[use].HasItem = TRUE;
+        }
+        else
+        {
+            gUseableItems[use].Count = 0;
+            gUseableItems[use].HasItem = FALSE;
+        }
+    }
+    for (uint8_t value = 0; value < NUM_VALUABLE_ITEMS; value++)
+    {
+        snprintf(ItemIndex, 20, "Value%d", value);
+        Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
+        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        {
+            gValuableItems[value].Count = Item->valueint;
+            gValuableItems[value].HasItem = TRUE;
+        }
+        else
+        {
+            gValuableItems[value].Count = 0;
+            gValuableItems[value].HasItem = FALSE;
+        }
+    }
+    for (uint8_t adventure = 0; adventure < NUM_ADVENTURE_ITEMS; adventure++)
+    {
+        snprintf(ItemIndex, 20, "Adventure%d", adventure);
+        Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
+        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        {
+            gAdventureItems[adventure].Count = Item->valueint;
+            gAdventureItems[adventure].HasItem = TRUE;
+        }
+        else
+        {
+            gAdventureItems[adventure].Count = 0;
+            gAdventureItems[adventure].HasItem = FALSE;
         }
     }
 
-    // delete the JSON object 
+    char* FlagIndex = malloc(16);
+    cJSON* Flag;
+    for (uint8_t flagindex = START_OF_FLAGS; flagindex < END_OF_FLAGS; flagindex++)
+    {
+        snprintf(FlagIndex, 16, "Flag%d", flagindex);
+        Flag = cJSON_GetObjectItemCaseSensitive(json, FlagIndex);
+        if (cJSON_IsNumber(Flag) && (Flag->valueint == TRUE))
+        {
+            gGameFlags[flagindex] = Flag->valueint;
+        }
+    }
+
+    //delete the JSON object
     cJSON_Delete(json);
     //return 0;
+
+    /*if (buffer)
+    {
+        free(buffer);
+    }*/
+
     PlayGameSound(&gSoundMenuChoose);
 
     LoadUnloadSpritesVIAGameArea();

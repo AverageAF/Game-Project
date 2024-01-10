@@ -980,10 +980,12 @@ void TeleportHandler(void)
             PortalFound = TRUE;
             gPlayer.HasMovedSincePort = FALSE;
             gFade = TRUE;
-            gPlayer.WorldPos.x += gPortCoords[Counter].WorldPosAdd.x;
-            gPlayer.WorldPos.y += gPortCoords[Counter].WorldPosAdd.y;
-            gCamera.x += gPortCoords[Counter].CameraPosAdd.x;
-            gCamera.y += gPortCoords[Counter].CameraPosAdd.y;
+            gPlayer.WorldPos = gPortCoords[gPortCoords[Counter].PortDestIndex].WorldPos;
+            gCamera = gPortCoords[Counter].CameraDest;
+            //gPlayer.WorldPos.x += gPortCoords[Counter].WorldPosAdd.x;
+            //gPlayer.WorldPos.y += gPortCoords[Counter].WorldPosAdd.y;
+            //gCamera.x += gPortCoords[Counter].CameraPosAdd.x;
+            //gCamera.y += gPortCoords[Counter].CameraPosAdd.y;
             gPlayer.ScreenPos.x = gPlayer.WorldPos.x - gCamera.x;
             gPlayer.ScreenPos.y = gPlayer.WorldPos.y - gCamera.y;
             gCurrentArea = gPortCoords[Counter].AreaDest;

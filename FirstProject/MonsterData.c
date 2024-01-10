@@ -108,7 +108,7 @@ void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_
 {
     uint8_t MonsterName[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
     uint32_t MonsterSeed;
-    char* MetLocation;
+    uint16_t MetLocation;
     uint32_t Value;
     uint16_t checksum;
     uint8_t i;
@@ -144,7 +144,7 @@ void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_
     SetDriveMonsterData(driveMonster, MONSTER_DATA_INDEX, &Index);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_EXPERIENCE, &gExperienceTables[gBaseStats[Index].growthRate][Level]);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_FRIENDSHIP, &gBaseStats[Index].friendship);
-    MetLocation = gCurrentArea.Name;
+    MetLocation = gCurrentArea.Index;
     SetDriveMonsterData(driveMonster, MONSTER_DATA_MET_LOCATION, &MetLocation);
     SetDriveMonsterData(driveMonster, MONSTER_DATA_MET_LEVEL, &Level);
 

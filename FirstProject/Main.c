@@ -2829,76 +2829,76 @@ void InitializeGlobals(void)
 
 
     ////from forest1 to route1
-    gTeleport001 = (PORTCOORDS){ .AreaDest = gRoute01Area,
-                                    .CameraPosAdd = (POINT)  {.x = 240, .y = 240 },    //512, 4048 src        //752, 4288 dest
-                                    .WorldPosAdd = (POINT)  {.x = 320, .y = 160 },        //944, 4400 dest
+    gTeleport000 = (PORTCOORDS){ .AreaDest = gRoute01Area,
+                                    .CameraDest = (UPOINT)  {.x = 752, .y = 4288 },    //512, 4048 src        //752, 4288 dest
+                                    .PortDestIndex = 1,        //944, 4400 dest
                                     .WorldPos = (UPOINT) {.x = 624,  .y = 4240 },
     };
 
 
     ////from route1 to forest1
-    gTeleport002 = (PORTCOORDS){ .AreaDest = gForest01Area,
-                                    .CameraPosAdd = (POINT)  {.x = -240, .y = -240 },    //512, 4048 dest        //752, 4288 src
-                                    .WorldPosAdd = (POINT)  {.x = -320, .y = -160 },        //624, 4240 dest
+    gTeleport001 = (PORTCOORDS){ .AreaDest = gForest01Area,
+                                    .CameraDest = (UPOINT)  {.x = 512, .y = 4048 },    //512, 4048 dest        //752, 4288 src
+                                    .PortDestIndex = 0,        //624, 4240 dest
                                     .WorldPos = (UPOINT) {.x = 944,  .y = 4400 },
     };
 
 
     ////from starttown to home
-    gTeleport003 = (PORTCOORDS){ .AreaDest = gHome01Area,
-                                    .CameraPosAdd = (POINT)  {.x = 3760, .y = -4144 },    //3856, 256 dest
-                                    .WorldPosAdd = (POINT)  {.x = 3792, .y = -4064 },       //4048, 432
+    gTeleport002 = (PORTCOORDS){ .AreaDest = gHome01Area,
+                                    .CameraDest = (UPOINT)  {.x = 3856, .y = 256 },    //3856, 256 dest
+                                    .PortDestIndex = 3,       //4048, 432
                                     .WorldPos = (UPOINT) {.x = 256,  .y = 4496 },     
     };
 
 
     ////from home to starttown
-    gTeleport004 = (PORTCOORDS){ .AreaDest = gStartingTownArea,
-                                    .CameraPosAdd = (POINT)  {.x = -3760, .y = 4144 },    //96, 4400 dest
-                                    .WorldPosAdd = (POINT)  {.x = -3792, .y = 4064 },       //256, 4496
+    gTeleport003 = (PORTCOORDS){ .AreaDest = gStartingTownArea,
+                                    .CameraDest = (UPOINT)  {.x = 96, .y = 4400 },    //96, 4400 dest
+                                    .PortDestIndex = 2,       //256, 4496
                                     .WorldPos = (UPOINT) {.x = 4048,  .y = 432 },
     };
 
 
     ////from forest1 to first battle town
-    gTeleport005 = (PORTCOORDS){ .AreaDest = gBattleTown01Area,
-                                    .CameraPosAdd = (POINT)  {.x = 672, .y = 208 },    //1616, 4256 dest        //944, 4048 src
-                                    .WorldPosAdd = (POINT)  {.x = 576, .y = 80 },        //1808, 4320 dest
+    gTeleport004 = (PORTCOORDS){ .AreaDest = gBattleTown01Area,
+                                    .CameraDest = (UPOINT)  {.x = 1616, .y = 4256 },    //1616, 4256 dest        //944, 4048 src
+                                    .PortDestIndex = 5,        //1808, 4320 dest
                                     .WorldPos = (UPOINT) {.x = 1232,  .y = 4240 },
     };
 
 
     ////from first battle town to forest1
-    gTeleport006 = (PORTCOORDS){ .AreaDest = gForest01Area,
-                                    .CameraPosAdd = (POINT)  {.x = -672, .y = -208 },    //944, 4048 dest        //1616, 4256 src
-                                    .WorldPosAdd = (POINT)  {.x = -576, .y = -80 },        //1232, 4240 dest
+    gTeleport005 = (PORTCOORDS){ .AreaDest = gForest01Area,
+                                    .CameraDest = (UPOINT)  {.x = 944, .y = 4048 },    //944, 4048 dest        //1616, 4256 src
+                                    .PortDestIndex = 4,        //1232, 4240 dest
                                     .WorldPos = (UPOINT) {.x = 1808,  .y = 4320 },
     };
 
 
     ////from forest1 to route2
-    gTeleport007 = (PORTCOORDS){ .AreaDest = gRoute02Area,
-                                    .CameraPosAdd = (POINT)  {.x = -384, .y = 352 },    //176, 4160 dest        //560, 3808 src
-                                    .WorldPosAdd = (POINT)  {.x = -384, .y = 464 },        //368, 4304 dest
+    gTeleport006 = (PORTCOORDS){ .AreaDest = gRoute02Area,
+                                    .CameraDest = (UPOINT)  {.x = 176, .y = 4160 },    //176, 4160 dest        //560, 3808 src
+                                    .PortDestIndex = 7,        //368, 4304 dest
                                     .WorldPos = (UPOINT) {.x = 752,  .y = 3840 },
     };
 
 
     ////from forest1 to route2
-    gTeleport008 = (PORTCOORDS){ .AreaDest = gForest01Area,
-                                    .CameraPosAdd = (POINT)  {.x = 384, .y = -352 },    //176, 4160 dest        //560, 3808 src
-                                    .WorldPosAdd = (POINT)  {.x = 384, .y = -464 },        //752, 3840 dest
+    gTeleport007 = (PORTCOORDS){ .AreaDest = gForest01Area,
+                                    .CameraDest = (UPOINT)  {.x = 560, .y = 3808 },    //176, 4160 src        //560, 3808 dest
+                                    .PortDestIndex = 6,        //752, 3840 dest
                                     .WorldPos = (UPOINT) {.x = 368,  .y = 4304 },
     };
 
-    gPortCoords[0] = gTeleport001;
-    gPortCoords[1] = gTeleport002;
-    gPortCoords[2] = gTeleport003;
-    gPortCoords[3] = gTeleport004;
-    gPortCoords[4] = gTeleport005;
-    gPortCoords[5] = gTeleport006;
-    gPortCoords[6] = gTeleport007;
-    gPortCoords[7] = gTeleport008;
+    gPortCoords[0] = gTeleport000;
+    gPortCoords[1] = gTeleport001;
+    gPortCoords[2] = gTeleport002;
+    gPortCoords[3] = gTeleport003;
+    gPortCoords[4] = gTeleport004;
+    gPortCoords[5] = gTeleport005;
+    gPortCoords[6] = gTeleport006;
+    gPortCoords[7] = gTeleport007;
 
 }
 

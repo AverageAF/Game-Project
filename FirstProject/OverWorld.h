@@ -4,27 +4,23 @@
 
 typedef struct PORTCOORDS
 {
+	//index for this portal, used for others to target this one
+	//uint16_t PortIndex;
+
 	////where is the source portal in world coordinates
 	UPOINT WorldPos;
 
 	////add this many world coords to current world position
-	POINT WorldPosAdd;
+	//POINT WorldPosAdd;
 
-	////add this many screen coords to current screen position
-	//POINT ScreenPosAdd;
+	//index to target another portal, 
+	uint16_t PortDestIndex;
 
-	////add this many world coords to current camera position
-	POINT CameraPosAdd;
+	////location of new camera upon teleporting to destination
+	UPOINT CameraDest;
 
 	////which area is the player in after teleporting to their dest
 	GAMEAREA AreaDest;
-	
-	//TODO: remove these bottom two and create a funtion to load/unload sprites instead
-	////sprites onscreen after teleporting
-	//BOOL SpritesToLoad[NUM_CHAR_SPRITES];
-
-	////sprites onscreen before teleporting
-	//BOOL SpritesToUnload[NUM_CHAR_SPRITES];
 
 } PORTCOORDS;
 
@@ -55,6 +51,7 @@ BOOL gHasPlayerTransitioned;
 
 PORTCOORDS gPortCoords[UNIQUE_TELEPADS_COUNT];
 
+PORTCOORDS gTeleport000;
 PORTCOORDS gTeleport001;
 PORTCOORDS gTeleport002;
 PORTCOORDS gTeleport003;
@@ -62,7 +59,6 @@ PORTCOORDS gTeleport004;
 PORTCOORDS gTeleport005;
 PORTCOORDS gTeleport006;
 PORTCOORDS gTeleport007;
-PORTCOORDS gTeleport008;
 
 #define NUM_GAME_AREAS 9
 
