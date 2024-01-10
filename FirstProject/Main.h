@@ -8,6 +8,7 @@
 
 #define GAME_NAME "A_Game"
 #define GAME_VERSION "0.9a"
+#define ASSET_FILE "C:\\Users\\Frankenstein\\source\\repos\\FirstProject\\x64\\Debug\\Assets.dat"		////a fullyqualified directory, TODO: change somehow to a relative directory
 
 #define GAME_RES_WIDTH 384		//maybe 400
 #define GAME_RES_HEIGHT 240
@@ -29,10 +30,6 @@
 #include <stdio.h>                  // String manipulation functions such as sprintf, etc.
 
 #include <psapi.h>                  // Process Status API, e.g. GetProcessMemoryInfo
-
-#include <Xinput.h>                 // Xbox 360 gamepad input
-
-#pragma comment(lib, "XInput.lib")  // Xbox 360 gamepad input.
 
 #include <stdint.h>                 // Nicer data types, e.g., uint8_t, int32_t, etc.
 
@@ -83,6 +80,7 @@ typedef enum DIRECTION
 	LEFT = 3,
 	RIGHT = 6,
 	UP = 9
+
 } DIRECTION;
 
 
@@ -94,6 +92,7 @@ typedef enum LOGLEVEL
 	LL_WARNING = 2,
 	LL_INFO = 3,
 	LL_DEBUG = 4
+
 } LOGLEVEL;
 
 #define LOG_FILE_NAME GAME_NAME ".log"
@@ -107,7 +106,17 @@ typedef enum GAMESTATE
 	GAMESTATE_OPTIONS,
 	GAMESTATE_EXITYESNO,
 	GAMESTATE_CHARACTERNAME
+
 } GAMESTATE;
+
+typedef enum RESOURCE_TYPE
+{
+	RESOURCE_TYPE_WAV,
+	RESOURCE_TYPE_OGG,
+	RESOURCE_TYPE_TILEMAP,
+	RESOURCE_TYPE_BMPX
+
+} RESOURCE_TYPE;
 
 typedef struct UPOINT		//used for character screen position
 {
@@ -279,6 +288,8 @@ GAMEMAP gOverWorld01;
 
 HWND gGameWindow;
 
+BOOL gGameIsRunning;                //when set to FALSE ends the game, controls main game loop in winmain
+
 GAME_PERFORMANCE_DATA gGamePerformanceData;
 
 PLAYER gPlayer;
@@ -293,9 +304,14 @@ GAMEINPUT gGameInput;
 uint8_t gSFXVolume;
 uint8_t gMusicVolume;
 
+HANDLE gAssetLoadingThreadHandle;
+
+HANDLE gEssentialAssetsLoadedEvent;     ////event gets signaled after essential assets have been loaded (mostly req for splash screen)
+
 GAMESOUND gSoundMenuNavigate;
 GAMESOUND gSoundMenuChoose;
 GAMESOUND gSoundSplashScreen;
+GAMESOUND gMusicOverWorld01;
 
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);
@@ -307,6 +323,8 @@ BOOL GameIsAlreadyRunning(void);
 void ProcessPlayerInput(void);
 
 DWORD Load32BppBitmapFromFile(_In_ char* FileName, _Inout_ GAMEBITMAP* GameBitmap);
+
+DWORD Load32BppBitmapFromMem(_In_ void* Buffer, _Inout_ GAMEBITMAP* GameBitmap);
 
 DWORD InitializePlayer(void);
 
@@ -330,7 +348,13 @@ HRESULT InitializeSoundEngine(void);
 
 DWORD LoadWaveFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
 
+DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound);
+
+
 void PlayGameSound(_In_ GAMESOUND* GameSound);
+void PlayGameMusic(_In_ GAMESOUND* GameSound);
+
+DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource);
 
 // This is defined at the beginning of Main.c.
 #ifdef AVX
@@ -345,4 +369,13 @@ void DrawBattleScreen(void);
 
 
 DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
+
+DWORD LoadTileMapFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ TILEMAP* TileMap);
+
+DWORD LoadOggFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
+
+DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESOUND* GameSound);
+
+
+DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
 

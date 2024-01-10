@@ -16,22 +16,26 @@ void DrawOverworldScreen(void)
         LocalFrameCounter = 0;
     }
 
+    if (LocalFrameCounter == 60)
+    {
+        PlayGameMusic(&gMusicOverWorld01);
+    }
 
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap);
 
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
 
-    /*for (uint16_t Row = 0; Row < GAME_RES_HEIGHT / 16; Row++)         ////for debugging
-    {
-        for (uint16_t Column = 0; Column < GAME_RES_WIDTH / 16; Column++)
-        { 
-            char Buffer[8] = { 0 };
+    //for (uint16_t Row = 0; Row < GAME_RES_HEIGHT / 16; Row++)         ////for debugging
+    //{
+    //    for (uint16_t Column = 0; Column < GAME_RES_WIDTH / 16; Column++)
+    //    { 
+    //        char Buffer[8] = { 0 };
 
-            _itoa_s(gOverWorld01.TileMap.Map[Row][Column], Buffer, sizeof(Buffer), 10);
+    //        _itoa_s(gOverWorld01.TileMap.Map[Row][Column], Buffer, sizeof(Buffer), 10);
 
-            BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, Column * 16, Row * 16);
-        }
-    }*/
+    //        BlitStringToBuffer(Buffer, &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, Column * 16, Row * 16);
+    //    }
+    //}
 
     LocalFrameCounter++;
 

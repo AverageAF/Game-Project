@@ -11,12 +11,30 @@ void DrawOpeningSplashScreen(void)
 
     static PIXEL32 TextColor = { 0xFF, 0xFF, 0xFF, 0xFF };
 
+    static BOOL Blink;
+
+    if (WaitForSingleObject(gEssentialAssetsLoadedEvent, 0) != WAIT_OBJECT_0)
+    {
+        return;
+    }
+
     if (gGamePerformanceData.TotalFramesRendered > LastFrameSeen + 1)
     {
         LocalFrameCounter = 0;
     }
 
+    if (gGamePerformanceData.TotalFramesRendered % 15 == 0)
+    {
+        Blink = !Blink;
+    }
+
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
+
+    if (Blink && (WaitForSingleObject(gAssetLoadingThreadHandle, 0) != WAIT_OBJECT_0))
+    {
+        //TODO:Draw "Loading..." text
+        BlitStringToBuffer("\xf2", &g6x7Font, &(PIXEL32) {0x20, 0x20, 0x20, 0xFF}, GAME_RES_WIDTH - 6, GAME_RES_HEIGHT - 7);
+    }
 
     if (LocalFrameCounter >= 60)
     {
@@ -44,8 +62,22 @@ void DrawOpeningSplashScreen(void)
 
         if (LocalFrameCounter > 160)
         {
-            gPreviousGameState = gCurrentGameState;
-            gCurrentGameState = GAMESTATE_TITLESCREEN;
+            if (WaitForSingleObject(gAssetLoadingThreadHandle, 0) == WAIT_OBJECT_0)
+            {
+                DWORD ThreadExitCode = ERROR_SUCCESS;
+                GetExitCodeThread(gAssetLoadingThreadHandle, &ThreadExitCode);
+
+                if (ThreadExitCode != ERROR_SUCCESS)
+                {
+                    LogMessageA(LL_ERROR, "[%s] Asset loading thread failed with 0x%08lx!", __FUNCTION__, ThreadExitCode);
+
+                    gGameIsRunning = FALSE;
+
+                    MessageBoxA(gGameWindow, "Asset Loading Failed Check Log!", "Error", MB_OK | MB_ICONERROR);
+                }
+                gPreviousGameState = gCurrentGameState;
+                gCurrentGameState = GAMESTATE_TITLESCREEN;
+            }
         }
 
         BlitStringToBuffer("A game by me :)", &g6x7Font, &TextColor, (GAME_RES_WIDTH / 2) - (6 * 16 / 2), 112);
@@ -71,7 +103,14 @@ void PPI_OpeningSplashScreen(void)      //skip splash screen
         gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed ||
         gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
     {
-        gPreviousGameState = gCurrentGameState;
-        gCurrentGameState = GAMESTATE_TITLESCREEN;
+        if (WaitForSingleObject(gAssetLoadingThreadHandle, 0) == WAIT_OBJECT_0)
+        {
+            gPreviousGameState = gCurrentGameState;
+            gCurrentGameState = GAMESTATE_TITLESCREEN;
+        }
+        else
+        {
+            //TODO:Draw "Loading..." text
+        }
     }
 }
