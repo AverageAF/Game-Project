@@ -1,10 +1,10 @@
 
 
-#include "Main.h"
 #include "BaseStats.h"
 #include "SimpleConstants.h"
 #include "LevelUpMoves.h"
 #include "ExperienceTables.h"
+
 #include "MonsterData.h"
 
 const uint32_t gBitTable[] =
@@ -43,7 +43,6 @@ const uint32_t gBitTable[] =
     1 << 31,
 };
 
-//TODO: Decide to leave here or move to another .c file
 /////////////////////////////////////////////////////////////////////MONSTER DATA FUNCTIONS/////////////////////
 void ZeroPcMonsterData(struct PCMonster* pcMonster)
 {
@@ -89,30 +88,60 @@ void ZeroOpponentPartyMonsters(void)
     }
 }
 
-void CreateMonster(struct Monster* monster, uint16_t Index, uint8_t Level, uint8_t FixedGenetics)       //TODO: FINISH
+//
+//
+void CreateMonster(struct Monster* monster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed)
 {
     ZeroMonsterData(monster);
-    CreatePCMonster(&monster->PcMonster, Index, Level, FixedGenetics);
+    CreatePCMonster(&monster->PcMonster, Index, Level, FixedGenetics, hasFixedMonsterSeed, FixedMonsterSeed, FixedPlayerSeed);
     SetMonsterData(monster, MONSTER_DATA_LEVEL, &Level);
-    //CalculateMonsterStats(monster);
+    CalculateMonsterStats(monster);
 }
 
-void CreatePCMonster(struct PCMonster* pcMonster, uint16_t Index, uint8_t Level, uint8_t FixedGenetics)     //TODO: FINISH
+//
+//TODO: FINISH
+void CreatePCMonster(struct PCMonster* pcMonster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed)
 {
     uint8_t MonsterName[MAX_MONSTER_NAME_LENGTH + 1];
+    uint32_t MonsterSeed;
     uint32_t Value;
+    uint16_t checksum;
     uint8_t i;
     uint8_t AvailableGenetics[NUM_MONSTER_STATS];
     uint8_t SelectedGenetics[LEGENDARY_GENETICS_PERFECT_COUNT];
 
     ZeroPcMonsterData(pcMonster);
 
+    if (hasFixedMonsterSeed)
+    {
+        MonsterSeed = FixedMonsterSeed;
+    }
+    else
+    {
+        rand_s((unsigned int*)&MonsterSeed);
+    }
 
-    //getmonstername
-    SetPCMonsterData(pcMonster, MONSTER_DATA_NICKNAME, MonsterName);
+    if (FixedPlayerSeed)
+    {
+        Value = FixedPlayerSeed;
+    }
+    else
+    {
+        rand_s((unsigned int*)&Value);      //TODO: make this gPlayer.seed or something similar
+    }
+
+    SetPCMonsterData(pcMonster, MONSTER_DATA_MONSTER_SEED, &MonsterSeed);
+    SetPCMonsterData(pcMonster, MONSTER_DATA_PLAYER_SEED, &Value);
+    checksum = CalculatePCMonsterCheckSum(pcMonster);
+    SetPCMonsterData(pcMonster, MONSTER_DATA_CHECKSUM, &checksum);
+
+    EncryptPCMonster(pcMonster);
+
+    //getmonstername                                                                                    //TODO: requires own header file probably
+    //SetPCMonsterData(pcMonster, MONSTER_DATA_NICKNAME, MonsterName);
     SetPCMonsterData(pcMonster, MONSTER_DATA_PLAYER_NAME, gPlayer.Name);
     SetPCMonsterData(pcMonster, MONSTER_DATA_INDEX, &Index);
-    //SetPCMonsterData(pcMonster, MONSTER_DATA_EXPERIENCE, &gExpTables);
+    SetPCMonsterData(pcMonster, MONSTER_DATA_EXPERIENCE, &gExperienceTables[gBaseStats[Index].growthRate][Level]);
     SetPCMonsterData(pcMonster, MONSTER_DATA_FRIENDSHIP, &gBaseStats[Index].friendship);
     //Value = gCurrentMapArea??
     //SetPCMonsterData(pcMonster, MONSTER_DATA_MET_LOCATION, &Value);
@@ -218,12 +247,31 @@ void CreatePCMonster(struct PCMonster* pcMonster, uint16_t Index, uint8_t Level,
         SetPCMonsterData(pcMonster, MONSTER_DATA_ABILITY_NUMBER, &Value);
     }
 
-    //GivePCMonsterInitialMoveSet(pcMonster);   //TODO
+    GivePCMonsterInitialMoveset(pcMonster);
+}
+
+void CreateMonsterWithGeneticsMonsterSeed(struct Monster *monster, uint8_t monsterIndex, uint8_t level, uint32_t genes, uint32_t monsterSeed)
+{
+    CreateMonster(monster, monsterIndex, level, 0, TRUE, monsterSeed, 0, 0);
+    SetMonsterData(monster, MONSTER_DATA_GENETICS, &genes);
+    CalculateMonsterStats(monster);
+}
+
+void CreateMonsterWithPtrGeneticsAndPresetPlayerSeed(struct Monster* monster, uint8_t monsterIndex, uint8_t level, uint8_t* genes, uint32_t PresetPlayerSeed)
+{
+    CreateMonster(monster, monsterIndex, level, 0, FALSE, 0, PresetPlayerSeed);
+    SetMonsterData(monster, MONSTER_DATA_HP_GENETICS, &genes[0]);
+    SetMonsterData(monster, MONSTER_DATA_ATTACK_GENETICS, &genes[1]);
+    SetMonsterData(monster, MONSTER_DATA_DEFENSE_GENETICS, &genes[2]);
+    SetMonsterData(monster, MONSTER_DATA_SPEED_GENETICS, &genes[3]);
+    SetMonsterData(monster, MONSTER_DATA_PSI_GENETICS, &genes[4]);
+    SetMonsterData(monster, MONSTER_DATA_RESOLVE_GENETICS, &genes[5]);
+    CalculateMonsterStats(monster);
 }
 
 uint8_t GetLevelFromMonsterExp(struct Monster* monster)
 {
-    uint16_t MonsterIndex = GetMonsterData(monster, MONSTER_DATA_INDEX, NULL);
+    uint8_t MonsterIndex = GetMonsterData(monster, MONSTER_DATA_INDEX, NULL);
     uint32_t Exp = GetMonsterData(monster, MONSTER_DATA_EXPERIENCE, NULL);
     int32_t Level = 1;
 
@@ -236,7 +284,7 @@ uint8_t GetLevelFromMonsterExp(struct Monster* monster)
 
 uint8_t GetLevelFromPCMonsterExp(struct PCMonster* pcMonster)
 {
-    uint16_t MonsterIndex = GetPCMonsterData(pcMonster, MONSTER_DATA_INDEX, NULL);
+    uint8_t MonsterIndex = GetPCMonsterData(pcMonster, MONSTER_DATA_INDEX, NULL);
     uint32_t Exp = GetPCMonsterData(pcMonster, MONSTER_DATA_EXPERIENCE, NULL);
     int32_t Level = 1;
 
@@ -1181,4 +1229,93 @@ static uint16_t CalculatePCMonsterCheckSum(struct PCMonster* pcMonster)
     }
 
     return (checksum);
+}
+
+uint8_t CountAliveMonstersInBattle(uint8_t caseId)
+{
+
+}
+
+uint8_t GetMonsterGender(struct Monster* monster)
+{
+    return (GetPCMonsterGender(&monster->PcMonster));
+}
+
+uint8_t GetPCMonsterGender(struct PCMonster* pcMonster)
+{
+    uint8_t monsterIndex = GetPCMonsterData(pcMonster, MONSTER_DATA_INDEX, NULL);
+    uint32_t monsterSeed = GetPCMonsterData(pcMonster, MONSTER_DATA_MONSTER_SEED, NULL);
+
+    switch (gBaseStats[monsterIndex].genderRatio)
+    {
+        case MONSTER_MALE:
+        case MONSTER_FEMALE:
+        case MONSTER_GENDERLESS:
+        {
+            return(gBaseStats[monsterIndex].genderRatio);
+        }
+    }
+
+    if (gBaseStats[monsterIndex].genderRatio > (monsterSeed & 0xFF))
+    {
+        return(MONSTER_FEMALE);
+    }
+    else
+    {
+        return(MONSTER_MALE);
+    }
+}
+
+uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterSeed)
+{
+    switch (gBaseStats[monsterIndex].genderRatio)
+    {
+        case MONSTER_MALE:
+        case MONSTER_FEMALE:
+        case MONSTER_GENDERLESS:
+        {
+            return(gBaseStats[monsterIndex].genderRatio);
+        }
+    }
+
+    if (gBaseStats[monsterIndex].genderRatio > (monsterSeed & 0xFF))
+    {
+        return(MONSTER_FEMALE);
+    }
+    else
+    {
+        return(MONSTER_MALE);
+    }
+}
+
+uint8_t GiveMonsterToPlayer(struct Monster* monster)
+{
+    int32_t i;
+
+    SetMonsterData(monster, MONSTER_DATA_PLAYER_NAME, &gPlayer.Name);
+    SetMonsterData(monster, MONSTER_DATA_PLAYER_SEED, &gPlayer.Seed);
+
+    for (i = 0; i < MAX_PARTY_SIZE; i++)
+    {
+        if (GetMonsterData(&gPlayerParty[i], MONSTER_DATA_INDEX, NULL) == MONSTER_NULL)
+        {
+            break;
+        }
+    }
+
+    if (i > MAX_PARTY_SIZE)         //TODO:FINISH
+    {
+        //return(SendMonsterToPC(monster));
+    }
+
+    CopyMonster(&gPlayerParty[i], monster, sizeof(monster));
+    gPlayerPartyCount = i + 1;
+    return(0);
+}
+
+uint8_t SendMonsterToPC(struct Monster* monster)            //TODO: FINISH
+{
+    //int32_t ;
+    //SetPCStorageToSendMonster();
+
 }

@@ -1,8 +1,7 @@
-#pragma once
+#pragma once 
 
-#include <stdint.h>  
+#include "Main.h"
 
-//// Might move this to its own Monster.h file
 void ZeroPcMonsterData(struct PCMonster* pcMonster);
 
 void ZeroMonsterData(struct Monster* monster);
@@ -11,9 +10,9 @@ void ZeroPlayerPartyMonsters(void);
 
 void ZeroOpponentPartyMonsters(void);
 
-void CreateMonster(struct Monster* monster, uint16_t Index, uint8_t Level, uint8_t FixedGenetics);
+void CreateMonster(struct Monster* monster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed);
 
-void CreatePCMonster(struct PCMonster* pcMonster, uint16_t Index, uint8_t Level, uint8_t FixedGenetics);
+void CreatePCMonster(struct PCMonster* pcMonster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed);
 
 uint8_t GetLevelFromMonsterExp(struct Monster* monster);
 
@@ -62,3 +61,15 @@ static void DecryptPCMonster(struct PCMonster* pcMonster);
 static union MonsterSubstruct* GetSubstruct(struct PCMonster* pcMonster, uint32_t MonsterSeed, uint8_t substructType);
 
 static uint16_t CalculatePCMonsterCheckSum(struct PCMonster* pcMonster);
+
+uint8_t CountAliveMonstersInBattle(uint8_t caseId);
+
+uint8_t GetMonsterGender(struct Monster* monster);
+
+uint8_t GetPCMonsterGender(struct PCMonster* pcMonster);
+
+uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterSeed);
+
+uint8_t GiveMonsterToPlayer(struct Monster* monster);
+
+uint8_t SendMonsterToPC(struct Monster* monster);

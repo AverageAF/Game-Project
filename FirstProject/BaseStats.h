@@ -3,8 +3,9 @@
 #include "SimpleConstants.h"
 #include "Main.h"
 
-#define MONSTER_GENDERLESS 255
-#define MONSTER_FEMALE 254
+#define MONSTER_GENDERLESS 0xFF
+#define MONSTER_FEMALE 0xFE
+#define MONSTER_MALE 0x00
 #define PERCENT_FEMALE(percent) min(254, ((percent * 255) / 100))
 
 const struct BaseStats gBaseStats[] =			//////setting up basestats for all monsters in the game systematically by array of species

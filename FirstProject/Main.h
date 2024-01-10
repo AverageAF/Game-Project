@@ -514,6 +514,7 @@ struct BaseStats
 typedef struct PLAYER
 {
 	char Name[MAX_NAME_LENGTH + 1];
+	uint32_t Seed;
 	GAMEBITMAP Sprite[3][12]; 
 	BOOL Active;
 	UPOINT ScreenPos;
@@ -610,6 +611,9 @@ GAMEBITMAP gBackBuffer;
 GAMEBITMAP g6x7Font;
 GAMEBITMAP gBattleScreen_Grass01;
 GAMEBITMAP gBattleScreen_StoneBricks01;
+
+uint8_t gPlayerPartyCount;
+uint8_t gOpponentPartyCount;
 
 struct Monster gPlayerParty[MAX_PARTY_SIZE];
 struct Monster gOpponentParty[MAX_PARTY_SIZE];
