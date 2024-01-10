@@ -168,23 +168,67 @@ void MenuItem_LoadGameSave_Slot1(void)
         char* nameletter = malloc(6);
         snprintf(nameletter, 6, "Name%d", letter);
         cJSON* playerletter = cJSON_GetObjectItemCaseSensitive(json, nameletter);       //searching for object "nameletter" like Name0 or Name1
-        if (cJSON_IsNumber(playerletter) && (playerletter->valueint != NULL))
+        if (cJSON_IsNumber(playerletter) && (playerletter != NULL))
         {
             gPlayer.Name[letter] = playerletter->valueint;
         }
     }
 
-    cJSON* PartyCount = cJSON_GetObjectItemCaseSensitive(json, "PartyCount");
-    if (cJSON_IsNumber(PartyCount) && (PartyCount->valueint != NULL))
+    cJSON* PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "WorldPosX");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo->valueint != NULL))
     {
-        gPlayerPartyCount = PartyCount->valueint;
+        gPlayer.WorldPos.x = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "WorldPosY");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo->valueint != NULL))
+    {
+        gPlayer.WorldPos.y = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "ScreenPosX");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo->valueint != NULL))
+    {
+        gPlayer.ScreenPos.x = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "ScreenPosY");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo->valueint != NULL))
+    {
+        gPlayer.ScreenPos.y = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "CameraPosX");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo != NULL))       //BUGFIX: something is preventing '0' to be an allowed value in this if statement, despite it being used all over this document
+    {
+        gCamera.x = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "CameraPosY");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo != NULL))
+    {
+        gCamera.y = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "CurrentAreaIndex");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo->valueint != NULL))
+    {
+        switch (PlayerInfo->valueint)   ////TOUSE for loading and unloading sprites??
+        {
+            case 0:
+                gCurrentArea = gHome01Area;
+                break;
+            case 1:
+                gCurrentArea = gOverworldArea;
+                break;
+            case 2:
+                gCurrentArea = gDungeon01Area;
+                break;
+        }
+        gCurrentArea.Index = PlayerInfo->valueint;
+    }
+    PlayerInfo = cJSON_GetObjectItemCaseSensitive(json, "PartyCount");
+    if (cJSON_IsNumber(PlayerInfo) && (PlayerInfo->valueint != NULL))
+    {
+        gPlayerPartyCount = PlayerInfo->valueint;
     }
 
     for (uint8_t monster = 0; monster < gPlayerPartyCount; monster++)
     {
-        //struct Monster* LoadingMonster = { 0 };
-        //ZeroMonsterData(LoadingMonster);
-        //ZeroDriveMonsterData(&LoadingMonster->DriveMonster);
         struct DriveMonster LoadingDMonster = { 0 };
         ZeroDriveMonsterData(&LoadingDMonster);
         char* monsterinfo = malloc(16);
@@ -242,7 +286,7 @@ void MenuItem_LoadGameSave_Slot1(void)
         loadedinfo = cJSON_GetObjectItemCaseSensitive(json, monsterinfo);
         if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
         {
-            switch (loadedinfo->valueint)   ////BUGFIX: probably will break because I havent incorperated GAMEAREA.index into MonsterData.c
+            switch (loadedinfo->valueint)   ////TODO: make this better. Array for all game locations?
             {
                 case 0:
                     SetDriveMonsterData(&LoadingDMonster, MONSTER_DATA_MET_LOCATION, gHome01Area.Name);
@@ -375,6 +419,137 @@ void MenuItem_LoadGameSave_Slot1(void)
         {
             gPlayerParty[monster].Health = loadedinfo->valueint;
         }
+    }
+
+    for (uint8_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
+    {
+        if (gCharacterSprite[sprite].Exists == TRUE)
+        {
+            char* InfoName = malloc(16);
+            cJSON* SpriteInfo;
+
+            snprintf(InfoName, 16, "ScreenPosX%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].ScreenPos.x = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "ScreenPosY%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].ScreenPos.y = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "WorldPosX%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].WorldPos.x = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "WorldPosY%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].WorldPos.y = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "RScreenPosX%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].ResetScreenPos.x = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "RScreenPosY%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].ResetScreenPos.y = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "RWorldPosX%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].ResetWorldPos.x = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "RWorldPosY%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].ResetWorldPos.y = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "Direction%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Direction = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "Event%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Event = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "Exists%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Exists = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "Loaded%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Loaded = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "SightRange%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].SightRange = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "DialogueFlag%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].DialogueFlag = SpriteInfo->valueint;
+            }
+        }
+        else
+        {
+            char* InfoName = malloc(16);
+            cJSON* SpriteInfo;
+
+            snprintf(InfoName, 16, "Event%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Event = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "Exists%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Exists = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "Loaded%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].Loaded = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "SightRange%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].SightRange = SpriteInfo->valueint;
+            }
+            snprintf(InfoName, 16, "DialogueFlag%d", sprite);
+            SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
+            if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
+            {
+                gCharacterSprite[sprite].DialogueFlag = SpriteInfo->valueint;
+            }
+        }
+        
     }
 
     // delete the JSON object 

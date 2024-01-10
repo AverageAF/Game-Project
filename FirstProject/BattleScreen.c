@@ -2620,6 +2620,7 @@ void MenuItem_BattleScreen_EscapeButton(void)
                 {
                     gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
                     gCharacterSprite[Index].SightRange = 0;
+                    gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
                 }
                 break;
             }

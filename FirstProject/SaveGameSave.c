@@ -129,7 +129,7 @@ void MenuItem_SaveGameSave_Slot1(void)
     cJSON_AddNumberToObject(json, "ScreenPosY", gPlayer.ScreenPos.y);
     cJSON_AddNumberToObject(json, "CameraPosX", gCamera.x);
     cJSON_AddNumberToObject(json, "CameraPosY", gCamera.y);
-    cJSON_AddNumberToObject(json, "CurrentArea Index", gCurrentArea.Index);
+    cJSON_AddNumberToObject(json, "CurrentAreaIndex", gCurrentArea.Index);
     cJSON_AddNumberToObject(json, "PartyCount", gPlayerPartyCount);
 
     for (uint8_t Monster = 0; Monster < gPlayerPartyCount; Monster++)
@@ -194,6 +194,57 @@ void MenuItem_SaveGameSave_Slot1(void)
         cJSON_AddNumberToObject(json, monsterinfo, gPlayerParty[Monster].DriveMonster.Moves[2]);
         snprintf(monsterinfo, 16, "MoveFourth%d", Monster);
         cJSON_AddNumberToObject(json, monsterinfo, gPlayerParty[Monster].DriveMonster.Moves[3]);
+    }
+
+    for (uint8_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
+    {
+        if (gCharacterSprite[sprite].Exists == TRUE)
+        {
+            char* SpriteInfo = malloc(16);
+            snprintf(SpriteInfo, 16, "ScreenPosX%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ScreenPos.x);
+            snprintf(SpriteInfo, 16, "ScreenPosY%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ScreenPos.y);
+            snprintf(SpriteInfo, 16, "WorldPosX%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].WorldPos.x);
+            snprintf(SpriteInfo, 16, "WorldPosY%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].WorldPos.y);
+            snprintf(SpriteInfo, 16, "RScreenPosX%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetScreenPos.x);
+            snprintf(SpriteInfo, 16, "RScreenPosY%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetScreenPos.y);
+            snprintf(SpriteInfo, 16, "RWorldPosX%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetWorldPos.x);
+            snprintf(SpriteInfo, 16, "RWorldPosY%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetWorldPos.y);
+            snprintf(SpriteInfo, 16, "Direction%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Direction);
+            snprintf(SpriteInfo, 16, "Event%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);
+            snprintf(SpriteInfo, 16, "Exists%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Exists);
+            snprintf(SpriteInfo, 16, "Loaded%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Loaded);
+            snprintf(SpriteInfo, 16, "SightRange%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);
+            snprintf(SpriteInfo, 16, "DialogueFlag%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);
+
+        }
+        else
+        {
+            char* SpriteInfo = malloc(16);
+            snprintf(SpriteInfo, 16, "Event%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);
+            snprintf(SpriteInfo, 16, "Exists%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Exists);
+            snprintf(SpriteInfo, 16, "Loaded%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Loaded);
+            snprintf(SpriteInfo, 16, "SightRange%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);
+            snprintf(SpriteInfo, 16, "DialogueFlag%d", sprite);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);
+        }
     }
 
     // convert the cJSON object to a JSON string 

@@ -21,10 +21,18 @@ MyMiniz.exe Assets.dat + .\Assets\Suit0FacingUp2.bmpx >> CopyAssets.log
 
 REM 	-npc sprites-
 
-MyMiniz.exe Assets.dat + .\Assets\ManFacingDown.bmpx >> CopyAssets.log
-MyMiniz.exe Assets.dat + .\Assets\ManFacingLeft.bmpx >> CopyAssets.log
-MyMiniz.exe Assets.dat + .\Assets\ManFacingRight.bmpx >> CopyAssets.log
-MyMiniz.exe Assets.dat + .\Assets\ManFacingUp.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingDown0.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingDown1.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingDown2.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingLeft0.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingLeft1.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingLeft2.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingRight0.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingRight1.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingRight2.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingUp0.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingUp1.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\ManFacingUp2.bmpx >> CopyAssets.log
 
 REM 	-monster sprites-
 

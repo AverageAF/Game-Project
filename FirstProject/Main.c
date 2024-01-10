@@ -585,7 +585,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].ResetScreenPos.x = 96;
     gCharacterSprite[0].ResetScreenPos.y = 192;
     gCharacterSprite[0].ResetWorldPos.x = 96;
-    gCharacterSprite[0].ResetOriginScreenPos.y = 192;
+    gCharacterSprite[0].ResetWorldPos.x = 192;
     gCharacterSprite[0].ResetOriginScreenPos.x = 96;
     gCharacterSprite[0].ResetOriginScreenPos.y = 192;
     gCharacterSprite[0].ResetOriginWorldPos.x = 96;
@@ -601,7 +601,10 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].Visible = FALSE;
     gCharacterSprite[0].Exists = TRUE;
     gCharacterSprite[0].Loaded = FALSE;
-    gCharacterSprite[0].Dialogue[0] = "Here have a Monster!\nI don't really need one";
+    gCharacterSprite[0].Dialogue[DIALOGUE_FLAG_0] = "Here have a Monster!\nI don't really need one";
+    gCharacterSprite[0].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[0].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
+    gCharacterSprite[0].DialogueLoopReturn = DIALOGUE_FLAG_0;
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
 
@@ -623,7 +626,10 @@ DWORD InitializeSprites(void)
     gCharacterSprite[1].Visible = FALSE;
     gCharacterSprite[1].Exists = TRUE;
     gCharacterSprite[1].Loaded = FALSE;
-    gCharacterSprite[1].Dialogue[0] = "Wow!\nThis place is dark!";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_0] = "Wow!\nThis place is dark!";
+    gCharacterSprite[1].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[1].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
+    gCharacterSprite[1].DialogueLoopReturn = DIALOGUE_FLAG_0;
 
 
     gCharacterSprite[1].Event = EVENT_FLAG_MONSTER;
@@ -653,7 +659,11 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].Visible = FALSE;
     gCharacterSprite[2].Exists = TRUE;
     gCharacterSprite[2].Loaded = FALSE;
-    gCharacterSprite[2].Dialogue[0] = "Lets have a battle!";
+    gCharacterSprite[2].Dialogue[DIALOGUE_FLAG_0] = "Lets have a battle!";
+    gCharacterSprite[2].Dialogue[DIALOGUE_FLAG_1] = "Wow! You're strong!";
+    gCharacterSprite[2].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[2].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
+    gCharacterSprite[2].DialogueLoopReturn = DIALOGUE_FLAG_1;
     gCharacterSprite[2].BattleAiFlag = FLAG_NPCAI_HIGHESTPOWER;
 
     sprintf_s(gCharacterSprite[2].Name, sizeof(gCharacterSprite[2].Name), "Jerry");
@@ -681,7 +691,14 @@ DWORD InitializeSprites(void)
     gCharacterSprite[3].Visible = FALSE;
     gCharacterSprite[3].Exists = TRUE;
     gCharacterSprite[3].Loaded = FALSE;
-    gCharacterSprite[3].Dialogue[0] = "Let me heal your monster!\n...\n...\n...\nThere! They seem much better!";
+    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_0] = "Let me heal your monsters!";
+    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_1] = "...";
+    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_2] = "...";
+    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_3] = "...";
+    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_4] = "There! They seem much better!";
+    gCharacterSprite[3].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[3].DialoguesBeforeLoop = DIALOGUE_FLAG_4;
+    gCharacterSprite[3].DialogueLoopReturn = DIALOGUE_FLAG_0;
 
     //////////////////////////////////////////////////////////////
 
@@ -698,11 +715,9 @@ DWORD InitializePlayer(void)
     gCamera.y = 256;                  //0                                             //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
-    gPlayer.RandomEncounterPercent = 500;   //50 == a 5% chance
+    gPlayer.RandomEncounterPercent = 200;   //50 == a 5% chance
 
     gPlayer.Seed = 777;
-
-    //gPlayerParty[0].DriveMonster.secure.substructs[0].type0.Index = MONSTER_WOLF;
 
     //////leave this as a char[] so letters can be reassigned
     gPlayer.Name[0] = 'M';
@@ -2275,22 +2290,54 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "Suit0FacingUp0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_0] },
         {   "Suit0FacingUp1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_1] },
         {   "Suit0FacingUp2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_2] },
-        {   "ManFacingDown.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_0] },
-        {   "ManFacingLeft.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_0] },
-        {   "ManFacingRight.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingUp.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_0] },
-        {   "ManFacingDown.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_0] },
-        {   "ManFacingLeft.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_0] },
-        {   "ManFacingRight.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingUp.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_0] },
-        {   "ManFacingDown.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_0] },
-        {   "ManFacingLeft.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_0] },
-        {   "ManFacingRight.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingUp.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_0] },
-        {   "ManFacingDown.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_0] },
-        {   "ManFacingLeft.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_0] },
-        {   "ManFacingRight.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingUp.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_0] },
+        {   "ManFacingDown0.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_2] },
+        {   "ManFacingDown0.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_2] },
+        {   "ManFacingDown0.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_2] },
+        {   "ManFacingDown0.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_2] },
         {   "BattleBackgroundGrass01.bmpx", &gBattleScreen_Grass01 },
         {   "BattleBackgroundStoneBricks01.bmpx", &gBattleScreen_StoneBricks01 },
         {   "Wolf64Back01.bmpx", &gBattleSpriteBack[MONSTER_WOLF] },
@@ -2354,6 +2401,12 @@ Exit:
 
 void InitializeGlobals(void)
 {
+
+    for (uint8_t flags = START_OF_FLAGS; flags < END_OF_FLAGS + 1; flags++) //clear all flags
+    {
+        gGameFlags[flags] = FALSE;
+    }
+
     ASSERT(_countof(gPassableTiles) == NUM_PASSABLE_TILES, "The gPassableTiles array is the wrong size!");
 
     ASSERT(_countof(gEncounterTiles) == NUM_ENCOUNTER_TILES, "The gEncounterTiles array is the wrong size!");
@@ -2644,7 +2697,7 @@ void EnterDialogue(void)
 }
 
 //MAX characters per row = 32, MAX rows = 7, only input needed is text
-//use character "\n" with no spaces behind for next row (spaces after will indent)
+//TODO: use character "\n" with no spaces behind for next row (spaces after will indent)
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
 {
     static uint8_t DialogueCharactersToShow;
@@ -2808,10 +2861,10 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
         LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, Dialogue);
     }
 
-    if (Flags && DIALOGUE_FLAG_BATTLE && gFinishedDialogueTextAnimation)
+    /*if (Flags && DIALOGUE_FLAG_BATTLE && gFinishedDialogueTextAnimation)
     {
 
-    }
+    }*/
 }
 
 
@@ -3168,5 +3221,23 @@ void ReSortLearnableMovesFromMonster(struct DriveMonster* driveMonster)
     for (uint16_t j = 0; j < NUM_BATTLEMOVES - LearnableCount; j++)
     {
         gLearnableMoveSort[LearnableCount + j] = 0xFFFF;
+    }
+}
+
+void SetGameFlag(uint8_t flag)
+{
+    gGameFlags[flag] = TRUE;
+}
+
+void ClearGameFlag(uint8_t flag)
+{
+    gGameFlags[flag] = FALSE;
+}
+
+void ClearTempGameFlags(void)
+{
+    for (uint8_t tempflag = FLAG_TEMP_1; tempflag < TEMP_FLAGS_END; tempflag++)
+    {
+        gGameFlags[tempflag] = FALSE;
     }
 }
