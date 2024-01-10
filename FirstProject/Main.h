@@ -68,6 +68,7 @@
 #define MAX_NAME_LENGTH 8							//8 characters + 1 null
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
 #define MAX_SPRITE_LOAD 10
+#define MAX_DIALOGUE_BOXES 10
 
 #define SUIT_0 0
 #define SUIT_1 1
@@ -295,35 +296,23 @@ typedef struct PLAYER
 
 } PLAYER;
 
-
-///////////////////temporary for messing with in game models///////////////////////////////////// TODO REMOVE LATER
-typedef enum DIRECTIONSPRITE
-{
-	DOWN_S = 0,
-	LEFT_S = 1,
-	RIGHT_S = 2,
-	UP_S = 3
-
-} DIRECTIONSPRITE;
-//////////////////////////////////////////////////////////////////////////
-
-typedef struct INGAMESPRITE			///// for sprites other than the player
+typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs"
 {
 	char Name[MAX_NAME_LENGTH + 1];
-	UPOINT WorldPosS;
-	POINT ScreenPosS;
-	DIRECTIONSPRITE DirectionS;
-	uint8_t SpriteIndexS;
-	GAMEBITMAP SpriteS[4];
+	UPOINT WorldPos;
+	POINT ScreenPos;
+	DIRECTION Direction;
+	uint8_t SpriteIndex;
+	GAMEBITMAP SpriteS[12];
 	MOVEMENTTYPE Movement;
 	BOOL Visible;
 	BOOL Exists;
+	BOOL Loaded;
+	UPOINT ResetWorldPos;
+	char* Dialogue[MAX_DIALOGUE_BOXES];
+	BOOL InteractedWith;
 
 } INGAMESPRITE;
-
-
-
-
 
 typedef struct REGISTRYPARAMS
 {
@@ -488,4 +477,4 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
 
 void EnterDialogue(void);
 
-void DrawDialogueBox(_In_ char* String, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags);
+void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags);

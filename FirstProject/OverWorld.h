@@ -4,20 +4,26 @@
 
 typedef struct PORTCOORDS
 {
-	////where is the portal in world coordinates
+	////where is the source portal in world coordinates
 	UPOINT WorldPos;
 
-	////where is the player in world coordinates after teleporting
-	UPOINT WorldDest;
+	////add this many world coords to current position
+	POINT WorldPosAdd;
 
-	////where is the player in screen coordinates after teleporting
-	UPOINT ScreenPos;
+	////add this many screen coords to current position
+	POINT ScreenPosAdd;
 
-	////where is the camera be in world coords after teleporting
-	UPOINT CameraPos;
+	////add this many coords to current camera position
+	POINT CameraPosAdd;
 
-	////which area is the player in after teleporting
+	////which area is the player in after teleporting to their dest
 	GAMEAREA AreaDest;
+
+	////sprites onscreen after teleporting
+	BOOL SpritesToLoad[MAX_SPRITE_LOAD];
+
+	////sprites onscreen before teleporting
+	BOOL SpritesToUnload[MAX_SPRITE_LOAD];
 
 } PORTCOORDS;
 
@@ -40,3 +46,4 @@ void TeleportHandler(void);
 
 void TriggerNPCMovement(_In_ uint64_t Counter, _In_ MOVEMENTTYPE MovementFlag);
 
+void ResetNPCs(void);

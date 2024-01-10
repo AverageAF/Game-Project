@@ -578,14 +578,28 @@ DWORD InitializePlayer(void)
     gPlayer.Name[4] = 'e';
 
     /////////////////////////////////////////temporary init of character sprites///////////////////// TODO REMOVE THIS
-    gCharacterSprite[0].ScreenPosS.x = 64;
-    gCharacterSprite[0].ScreenPosS.y = 128;
-    gCharacterSprite[0].WorldPosS.x = 64;
-    gCharacterSprite[0].WorldPosS.y = 128;
-    gCharacterSprite[0].DirectionS = DOWN_S;
+    gCharacterSprite[0].ScreenPos.x = 64;
+    gCharacterSprite[0].ScreenPos.y = 128;
+    gCharacterSprite[0].WorldPos.x = 64;
+    gCharacterSprite[0].WorldPos.y = 128;
+    gCharacterSprite[0].Direction = DOWN;
     gCharacterSprite[0].Movement = MOVEMENT_SPIN;
     gCharacterSprite[0].Visible = TRUE;
     gCharacterSprite[0].Exists = TRUE;
+    gCharacterSprite[0].Loaded = TRUE;
+    gCharacterSprite[0].Dialogue[0] = "Hello!\nHow are you today? I'm enjoying\nmyself standing by the lake!";
+
+
+    gCharacterSprite[1].ScreenPos.x = 16;
+    gCharacterSprite[1].ScreenPos.y = 16;
+    gCharacterSprite[1].WorldPos.x = 3872;
+    gCharacterSprite[1].WorldPos.y = 16;
+    gCharacterSprite[1].Direction = DOWN;
+    gCharacterSprite[1].Movement = MOVEMENT_SPIN;
+    gCharacterSprite[1].Visible = FALSE;
+    gCharacterSprite[1].Exists = TRUE;
+    gCharacterSprite[1].Loaded = FALSE;
+    gCharacterSprite[1].Dialogue[0] = "Wow this place is dark!\nI hope the way out is close!";
 
 
     return(0);
@@ -2176,24 +2190,48 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[1])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[3])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[2])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[6])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[3])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[9])) != ERROR_SUCCESS)
     {
         LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[0])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[3])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[6])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
+
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].SpriteS[9])) != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
+        goto Exit;
+    }
 
     /////////////////////////////////////////////////////////battle backgrounds////////////////////////////////////////////////////
 
@@ -2241,17 +2279,21 @@ void InitializeGlobals(void)
 
     ASSERT(_countof(gPortCoords) == 2, "The gTeleportCoords array is the wrong size!");
 
-    gTeleport001 = (PORTCOORDS){    .AreaDest   =       gDungeon01Area,
-                                    .CameraPos  =    (UPOINT) { .x = 3856, .y = 0 },//3856 0
-                                    .ScreenPos  =    (UPOINT) { .x = 144, .y = 96 },//144 96
-                                    .WorldDest  =    (UPOINT) { .x = 4000,.y = 96 },
-                                    .WorldPos   =    (UPOINT) { .x = 464, .y = 384 } };
+    gTeleport001 = (PORTCOORDS){    .AreaDest      =       gDungeon01Area,
+                                    .CameraPosAdd  =    (POINT)  { .x = 3584, .y = -272 },   //3856 0 dest
+                                    .ScreenPosAdd  =    (POINT)  { .x = -48,    .y = -16 },         //144 96 dest
+                                    .WorldPosAdd   =    (POINT)  { .x = 3536, .y = -288 },
+                                    .WorldPos      =    (UPOINT) { .x = 464,  .y = 384 },
+                                    .SpritesToLoad[0] = FALSE, .SpritesToLoad[1] = TRUE,
+                                    .SpritesToUnload[0] = TRUE, .SpritesToUnload[1] = FALSE };          ////load/unload sprites when teleporting
 
-    gTeleport002 = (PORTCOORDS){    .AreaDest   =       gOverworldArea,
-                                    .CameraPos  =    (UPOINT) {.x = 208, .y = 240 },//208 240
-                                    .ScreenPos  =    (UPOINT) {.x = 256,  .y = 144 },//256 144
-                                    .WorldDest  =    (UPOINT) {.x = 464,  .y = 384 },
-                                    .WorldPos   =    (UPOINT) {.x = 4000, .y = 96 } };
+    gTeleport002 = (PORTCOORDS){    .AreaDest      =       gOverworldArea,
+                                    .CameraPosAdd  =    (POINT)  {.x = -3584, .y = 272 },    //208 240 dest
+                                    .ScreenPosAdd  =    (POINT)  {.x = 48,     .y = 16 },         //192 112 dest (player centered)
+                                    .WorldPosAdd   =    (POINT)  {.x = -3536, .y = 288 },
+                                    .WorldPos      =    (UPOINT) {.x = 4000,  .y = 96 },
+                                    .SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE,
+                                    .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = TRUE };          ////load/unload sprites when teleporting
 
     gPortCoords[0] = gTeleport001;
 
@@ -2425,6 +2467,7 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
 
 void EnterDialogue(void)
 {
+    PlayGameSound(&gSoundMenuChoose);
     gGamePaused = TRUE;
     gDialogueControls = TRUE;
 }
@@ -2434,40 +2477,35 @@ void EnterDialogue(void)
 
 
 //Only input req is text, each row can fit 32 characters before going outside box
-//use character "\n" with no spaces behind it to jump to the next row
-void DrawDialogueBox(_In_ char* String, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
+//use character "\n" with no spaces behind it to jump to the next row (spaces after will indent)
+void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
 {
     char InString[224] = { 0 };
     uint8_t Row = 0;
     char* NextToken = NULL;
     char Separator[] = "\n";
 
-    if (gDialogueControls == TRUE)
+    DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
+    if (strlen(Dialogue) <= 32)            ///if string fits on first row leave it alone and blit it
     {
-        DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
-        if (strlen(String) <= 32)            ///if string fits on first row leave it alone and blit it
-        {
-            BlitStringToBuffer(String, &g6x7Font, &COLOR_NES_GRAY, 100, 174);
-        }
-        else if (strlen(String) <= 32 * 7 && strlen(String) > 32)
-        {
-            strcpy_s(InString, 224, String);        ////need to define max msg length bc sizeof() and strlen() both result in errors
+        BlitStringToBuffer(Dialogue, &g6x7Font, &COLOR_NES_GRAY, 100, 174);
+    }
+    else if (strlen(Dialogue) <= 32 * 7 && strlen(Dialogue) > 32)
+    {
+        strcpy_s(InString, 224, Dialogue);        ////need to define max msg length bc sizeof() and strlen() both result in errors
 
-            char* StrPtr = strtok_s(InString, Separator, &NextToken);       ////split string into pieces using \n as a separator
+        char* StrPtr = strtok_s(InString, Separator, &NextToken);       ////split string into pieces using \n as a separator
 
-            while (StrPtr != NULL)
-            {
-                BlitStringToBuffer(StrPtr, &g6x7Font, &COLOR_NES_GRAY, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
-                StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
-                Row++;
-            }
-        }
-        else
+        while (StrPtr != NULL)
         {
-            BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_NES_GRAY, 101, 174);
-            LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, String);
+            BlitStringToBuffer(StrPtr, &g6x7Font, &COLOR_NES_GRAY, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
+            StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
+            Row++;
         }
-        
-
+    }
+    else
+    {
+        BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_NES_GRAY, 101, 174);
+        LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, Dialogue);
     }
 }
