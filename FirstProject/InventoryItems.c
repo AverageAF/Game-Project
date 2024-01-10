@@ -333,327 +333,327 @@ InventoryItem gEquipableItems[NUM_EQUIP_ITEMS] = {
 
 
 
-InventoryItem gRestoreItems[NUM_RESTORE_ITEMS] = {
-    [INV_RESTORE_ITEM_0] =
+InventoryItem gUsableItems[NUM_USABLE_ITEMS] = {
+    [INV_USABLE_ITEM_0] =
     {
         .ValueCurrency = 100,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "Medicine that heals 20HP",
         .Effect = 0,    //TODO: setup simple healing mechanic for one party member
-        .Name = "HP Restore [MKI]",
+        .Name = "HP Usable [MKI]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_1] =
+    [INV_USABLE_ITEM_1] =
     {
         .ValueCurrency = 800,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A common medicine, heals 50HP",
         .Effect = 1,
-        .Name = "HP Restore [MKII]",
+        .Name = "HP Usable [MKII]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_2] =
+    [INV_USABLE_ITEM_2] =
     {
         .ValueCurrency = 1600,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A rare medicine, heals 100HP",
         .Effect = 2,
-        .Name = "HP Restore [MKIII]",
+        .Name = "HP Usable [MKIII]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_3] =
+    [INV_USABLE_ITEM_3] =
     {
         .ValueCurrency = 2700,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A strong medicine, heals 250HP",
         .Effect = 3,
-        .Name = "HP Restore [MKIV]",
+        .Name = "HP Usable [MKIV]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_4] =
+    [INV_USABLE_ITEM_4] =
     {
         .ValueCurrency = 4200,
         .HasItem = FALSE,
         .Count = 1,
         .Description = "Potent medicine, fully heals HP",
         .Effect = 4,
-        .Name = "HP Restore [MKV]",
+        .Name = "HP Usable [MKV]",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_5] =
+    [INV_USABLE_ITEM_5] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 5,
-        .Name = "RESTOREITEM 5",
+        .Name = "USABLEITEM 5",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_6] =
+    [INV_USABLE_ITEM_6] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 6,
-        .Name = "RESTOREITEM 6",
+        .Name = "USABLEITEM 6",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_7] =
+    [INV_USABLE_ITEM_7] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 7,
-        .Name = "RESTOREITEM 7",
+        .Name = "USABLEITEM 7",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_8] =
+    [INV_USABLE_ITEM_8] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 8,
-        .Name = "RESTOREITEM 8",
+        .Name = "USABLEITEM 8",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_9] =
+    [INV_USABLE_ITEM_9] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 9,
-        .Name = "RESTOREITEM 9",
+        .Name = "USABLEITEM 9",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_10] =
+    [INV_USABLE_ITEM_10] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 10,
-        .Name = "RESTOREITEM 10",
+        .Name = "USABLEITEM 10",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_11] =
+    [INV_USABLE_ITEM_11] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 11,
-        .Name = "RESTOREITEM 11",
+        .Name = "USABLEITEM 11",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_12] =
+    [INV_USABLE_ITEM_12] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 12,
-        .Name = "RESTOREITEM 12",
+        .Name = "USABLEITEM 12",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_13] =
+    [INV_USABLE_ITEM_13] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 13,
-        .Name = "RESTOREITEM 13",
+        .Name = "USABLEITEM 13",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_14] =
+    [INV_USABLE_ITEM_14] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 14,
-        .Name = "RESTOREITEM 14",
+        .Name = "USABLEITEM 14",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_15] =
+    [INV_USABLE_ITEM_15] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 15,
-        .Name = "RESTOREITEM 15",
+        .Name = "USABLEITEM 15",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_16] =
+    [INV_USABLE_ITEM_16] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 16,
-        .Name = "RESTOREITEM 16",
+        .Name = "USABLEITEM 16",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_17] =
+    [INV_USABLE_ITEM_17] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 17,
-        .Name = "RESTOREITEM 17",
+        .Name = "USABLEITEM 17",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_18] =
+    [INV_USABLE_ITEM_18] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 18,
-        .Name = "RESTOREITEM 18",
+        .Name = "USABLEITEM 18",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_19] =
+    [INV_USABLE_ITEM_19] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 19,
-        .Name = "RESTOREITEM 19",
+        .Name = "USABLEITEM 19",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_20] =
+    [INV_USABLE_ITEM_20] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 20,
-        .Name = "RESTOREITEM 20",
+        .Name = "USABLEITEM 20",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_21] =
+    [INV_USABLE_ITEM_21] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 21,
-        .Name = "RESTOREITEM 21",
+        .Name = "USABLEITEM 21",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_22] =
+    [INV_USABLE_ITEM_22] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 22,
-        .Name = "RESTOREITEM 22",
+        .Name = "USABLEITEM 22",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_23] =
+    [INV_USABLE_ITEM_23] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 23,
-        .Name = "RESTOREITEM 23",
+        .Name = "USABLEITEM 23",
         .Sprite = 0,
         .Favorite = FALSE,
     },
 
 
-    [INV_RESTORE_ITEM_24] =
+    [INV_USABLE_ITEM_24] =
     {
         .ValueCurrency = 1,
         .HasItem = FALSE,
         .Count = 0,
         .Description = "-----",
         .Effect = 24,
-        .Name = "RESTOREITEM 24",
+        .Name = "USABLEITEM 24",
         .Sprite = 0,
         .Favorite = FALSE,
     },

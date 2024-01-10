@@ -28,8 +28,26 @@ MyMiniz.exe Assets.dat + .\Assets\ManFacingUp.bmpx >> CopyAssets.log
 
 REM 	-monster sprites-
 
-MyMiniz.exe Assets.dat + .\Assets\Wolf64Back01.bmpx >> CopyAssets.log
-MyMiniz.exe Assets.dat + .\Assets\Wolf64Front01.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back01.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front01.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back02.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front02.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back03.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front03.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back04.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front04.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back05.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front05.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back06.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front06.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back07.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front07.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back08.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front08.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back09.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front09.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Back10.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\Monsters\Wolf64Front10.bmpx >> CopyAssets.log
 
 REM   -worldmap-
 

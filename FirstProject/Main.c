@@ -471,6 +471,7 @@ void ProcessPlayerInput(void)
     gGameInput.DRightKeyPressed = GetAsyncKeyState('D') | GetAsyncKeyState(VK_RIGHT);
     gGameInput.WUpKeyPressed = GetAsyncKeyState('W') | GetAsyncKeyState(VK_UP);
     gGameInput.ChooseKeyPressed = GetAsyncKeyState('E') | GetAsyncKeyState(VK_RETURN);
+    gGameInput.QKeyPressed = GetAsyncKeyState('Q');
 
     if (gGameInput.DebugKeyPressed && !gGameInput.DebugKeyAlreadyPressed)
     {
@@ -551,6 +552,7 @@ InputDisabled:
     gGameInput.SDownKeyAlreadyPressed = gGameInput.SDownKeyPressed;
     gGameInput.ChooseKeyAlreadyPressed = gGameInput.ChooseKeyPressed;
     gGameInput.TabKeyAlreadyPressed = gGameInput.TabKeyPressed;
+    gGameInput.QKeyAlreadyPressed = gGameInput.QKeyPressed;
 
 }
 
@@ -2271,7 +2273,25 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "BattleBackgroundGrass01.bmpx", &gBattleScreen_Grass01 },
         {   "BattleBackgroundStoneBricks01.bmpx", &gBattleScreen_StoneBricks01 },
         {   "Wolf64Back01.bmpx", &gBattleSpriteBack[MONSTER_WOLF] },
-        {   "Wolf64Front01.bmpx", &gBattleSpriteFront[MONSTER_WOLF] }
+        {   "Wolf64Front01.bmpx", &gBattleSpriteFront[MONSTER_WOLF] },
+        {   "Wolf64Back02.bmpx",& gBattleSpriteBack[MONSTER_EARTHWOLF] },
+        {   "Wolf64Front02.bmpx", &gBattleSpriteFront[MONSTER_EARTHWOLF] },
+        {   "Wolf64Back03.bmpx", &gBattleSpriteBack[MONSTER_AIRWOLF] },
+        {   "Wolf64Front03.bmpx", &gBattleSpriteFront[MONSTER_AIRWOLF] },
+        {   "Wolf64Back04.bmpx", &gBattleSpriteBack[MONSTER_FIREWOLF] },
+        {   "Wolf64Front04.bmpx", &gBattleSpriteFront[MONSTER_FIREWOLF] },
+        {   "Wolf64Back05.bmpx", &gBattleSpriteBack[MONSTER_WATERWOLF] },
+        {   "Wolf64Front05.bmpx", &gBattleSpriteFront[MONSTER_WATERWOLF] },
+        {   "Wolf64Back06.bmpx", &gBattleSpriteBack[MONSTER_ELECTRICWOLF] },
+        {   "Wolf64Front06.bmpx", &gBattleSpriteFront[MONSTER_ELECTRICWOLF] },
+        {   "Wolf64Back07.bmpx", &gBattleSpriteBack[MONSTER_METALWOLF] },
+        {   "Wolf64Front07.bmpx", &gBattleSpriteFront[MONSTER_METALWOLF] },
+        {   "Wolf64Back08.bmpx", &gBattleSpriteBack[MONSTER_SOULWOLF] },
+        {   "Wolf64Front08.bmpx", &gBattleSpriteFront[MONSTER_SOULWOLF] },
+        {   "Wolf64Back09.bmpx", &gBattleSpriteBack[MONSTER_LIFEWOLF] },
+        {   "Wolf64Front09.bmpx", &gBattleSpriteFront[MONSTER_LIFEWOLF] },
+        {   "Wolf64Back10.bmpx", &gBattleSpriteBack[MONSTER_DEATHWOLF] },
+        {   "Wolf64Front10.bmpx", &gBattleSpriteFront[MONSTER_DEATHWOLF] },
     };
 
     int FinalEssentialAssetIndex = 1;

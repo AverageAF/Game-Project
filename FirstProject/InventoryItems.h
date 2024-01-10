@@ -18,7 +18,7 @@ typedef struct InventoryItem
 
 InventoryItem gEquipableItems[NUM_EQUIP_ITEMS];
 
-InventoryItem gRestoreItems[NUM_RESTORE_ITEMS];
+InventoryItem gUsableItems[NUM_USABLE_ITEMS];
 
 InventoryItem gValuableItems[NUM_VALUABLE_ITEMS];
 

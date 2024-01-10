@@ -29,7 +29,8 @@ MENU gMenu_InventorySelectedItem = { "Selected Item Options", 0, _countof(gMI_In
 
 //// MONSTERSLOT MENU VARIABLES ////
 
-uint8_t gSelectedMonster = 0;       //tells game what monster was selected from inventory
+uint8_t gSelectedMonster = 255;       //tells game what monster was selected from inventory
+uint8_t gSwitchingMonster = 0;      //used for swaping party slots in inventory
 
 //// MONSTERSLOT MENU VARIABLES ////
 
@@ -150,52 +151,52 @@ MENU gMenu_InventoryValuable = { "Valuable Items", 0, _countof(gMI_InventoryValu
 
 
 
-//// RESTORESLOT MENU VARIABLES ////
+//// USABLESLOT MENU VARIABLES ////
 
-uint16_t gRestoreSlotIndex[/*_countof(gMI_InventoryRestore_Items)*/17] = { 0 };   //for PPI_InventoryScreen to know what item is in the selected menu window
-int32_t gRestoreSlotOffset = 0;                                           //shuffle items in menu windows when cursor is at top or bottom of menu boxes
-uint16_t gRestoreHasItemSort[NUM_RESTORE_ITEMS] = { 0 };                    // simple sorting algorithm that sorts the gRestoreItems.Index's that have a non zero count first but keeps the order of Index, if an Index is zero it returns 0xFFFF for that value (example; 0, 2, 3, 5, 8, 13, 21, 23, 45 (last non-zero index), 65535, 65535, 65535, 65535, ...)
-uint16_t gRestoreItemCount = 0;                                           //total number of non-zero index's in the restore pocket (number of unique resore items owned by the player)
+uint16_t gUsableSlotIndex[/*_countof(gMI_InventoryUsable_Items)*/17] = { 0 };   //for PPI_InventoryScreen to know what item is in the selected menu window
+int32_t gUsableSlotOffset = 0;                                           //shuffle items in menu windows when cursor is at top or bottom of menu boxes
+uint16_t gUsableHasItemSort[NUM_USABLE_ITEMS] = { 0 };                    // simple sorting algorithm that sorts the gUsableItems.Index's that have a non zero count first but keeps the order of Index, if an Index is zero it returns 0xFFFF for that value (example; 0, 2, 3, 5, 8, 13, 21, 23, 45 (last non-zero index), 65535, 65535, 65535, 65535, ...)
+uint16_t gUsableItemCount = 0;                                           //total number of non-zero index's in the usable pocket (number of unique resore items owned by the player)
 
-//// RESTORESLOT MENU VARIABLES ////
+//// USABLESLOT MENU VARIABLES ////
 
-MENUITEM gMI_Inventory_Restore_Slot0 = { "Slot1", 200, 26 + (10 * 2), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot0 = { "Slot1", 200, 26 + (10 * 2), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot1 = { "Slot2", 200, 26 + (10 * 3), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot1 = { "Slot2", 200, 26 + (10 * 3), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot2 = { "Slot3", 200, 26 + (10 * 4), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot2 = { "Slot3", 200, 26 + (10 * 4), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot3 = { "Slot4", 200, 26 + (10 * 5), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot3 = { "Slot4", 200, 26 + (10 * 5), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot4 = { "Slot5", 200, 26 + (10 * 6), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot4 = { "Slot5", 200, 26 + (10 * 6), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot5 = { "SLot6" , 200, 26 + (10 * 7), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot5 = { "SLot6" , 200, 26 + (10 * 7), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot6 = { "SLot7" , 200, 26 + (10 * 8), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot6 = { "SLot7" , 200, 26 + (10 * 8), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot7 = { "SLot8" , 200, 26 + (10 * 9), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot7 = { "SLot8" , 200, 26 + (10 * 9), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot8 = { "SLot9" , 200, 26 + (10 * 10), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot8 = { "SLot9" , 200, 26 + (10 * 10), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot9 = { "SLot10" , 200, 26 + (10 * 11), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot9 = { "SLot10" , 200, 26 + (10 * 11), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot10 = { "SLot11" , 200, 26 + (10 * 12), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot10 = { "SLot11" , 200, 26 + (10 * 12), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot11 = { "SLot12" , 200, 26 + (10 * 13), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot11 = { "SLot12" , 200, 26 + (10 * 13), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot12 = { "SLot13" , 200, 26 + (10 * 14), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot12 = { "SLot13" , 200, 26 + (10 * 14), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot13 = { "SLot14" , 200, 26 + (10 * 15), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot13 = { "SLot14" , 200, 26 + (10 * 15), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot14 = { "SLot15" , 200, 26 + (10 * 16), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot14 = { "SLot15" , 200, 26 + (10 * 16), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot15 = { "SLot16" , 200, 26 + (10 * 17), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot15 = { "SLot16" , 200, 26 + (10 * 17), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM gMI_Inventory_Restore_Slot16 = { "SLot17" , 200, 26 + (10 * 18), TRUE, MenuItem_Inventory_ItemSelected_Action };
+MENUITEM gMI_Inventory_Usable_Slot16 = { "SLot17" , 200, 26 + (10 * 18), TRUE, MenuItem_Inventory_ItemSelected_Action };
 
-MENUITEM* gMI_InventoryRestore_Items[] = { &gMI_Inventory_Restore_Slot0, &gMI_Inventory_Restore_Slot1, &gMI_Inventory_Restore_Slot2, &gMI_Inventory_Restore_Slot3, &gMI_Inventory_Restore_Slot4, &gMI_Inventory_Restore_Slot5, &gMI_Inventory_Restore_Slot6, &gMI_Inventory_Restore_Slot7, &gMI_Inventory_Restore_Slot8, &gMI_Inventory_Restore_Slot9, &gMI_Inventory_Restore_Slot10, &gMI_Inventory_Restore_Slot11, &gMI_Inventory_Restore_Slot12, &gMI_Inventory_Restore_Slot13, &gMI_Inventory_Restore_Slot14, &gMI_Inventory_Restore_Slot15, &gMI_Inventory_Restore_Slot16 };
+MENUITEM* gMI_InventoryUsable_Items[] = { &gMI_Inventory_Usable_Slot0, &gMI_Inventory_Usable_Slot1, &gMI_Inventory_Usable_Slot2, &gMI_Inventory_Usable_Slot3, &gMI_Inventory_Usable_Slot4, &gMI_Inventory_Usable_Slot5, &gMI_Inventory_Usable_Slot6, &gMI_Inventory_Usable_Slot7, &gMI_Inventory_Usable_Slot8, &gMI_Inventory_Usable_Slot9, &gMI_Inventory_Usable_Slot10, &gMI_Inventory_Usable_Slot11, &gMI_Inventory_Usable_Slot12, &gMI_Inventory_Usable_Slot13, &gMI_Inventory_Usable_Slot14, &gMI_Inventory_Usable_Slot15, &gMI_Inventory_Usable_Slot16 };
 
-MENU gMenu_InventoryRestore = { "Restore Items", 0, _countof(gMI_InventoryRestore_Items), gMI_InventoryRestore_Items };
+MENU gMenu_InventoryUsable = { "Usable Items", 0, _countof(gMI_InventoryUsable_Items), gMI_InventoryUsable_Items };
 
 
 
@@ -292,27 +293,27 @@ void DrawInventoryScreen(void)
         }
 
         count = 0;
-        for (uint16_t i = 0; i < NUM_RESTORE_ITEMS; i++)
+        for (uint16_t i = 0; i < NUM_USABLE_ITEMS; i++)
         {
-            if (gRestoreItems[i].Count > 0)
+            if (gUsableItems[i].Count > 0)
             {
-                gRestoreItems[i].HasItem = TRUE;
+                gUsableItems[i].HasItem = TRUE;
             }
             else
             {
-                gRestoreItems[i].HasItem = FALSE;
+                gUsableItems[i].HasItem = FALSE;
             }
-            if (gRestoreItems[i].HasItem == TRUE)
+            if (gUsableItems[i].HasItem == TRUE)
             {
-                gRestoreHasItemSort[count] = i;
+                gUsableHasItemSort[count] = i;
                 count++;
             }
-            if (i == NUM_RESTORE_ITEMS - 1)
+            if (i == NUM_USABLE_ITEMS - 1)
             {
-                gRestoreItemCount = count;
-                for (uint8_t j = 0; j < NUM_RESTORE_ITEMS - count; j++)
+                gUsableItemCount = count;
+                for (uint8_t j = 0; j < NUM_USABLE_ITEMS - count; j++)
                 {
-                    gRestoreHasItemSort[count + j] = 0xFFFF;
+                    gUsableHasItemSort[count + j] = 0xFFFF;
                 }
 
             }
@@ -401,9 +402,9 @@ void DrawInventoryScreen(void)
             }
             break;
         }
-        case POCKETSTATE_RESTORE:
+        case POCKETSTATE_USABLE:
         {
-            DrawRestorePocket();
+            DrawUsablePocket();
             if (gHasSelectedInvSlot == TRUE)
             {
                 DrawSelectedItemOptions();
@@ -500,10 +501,11 @@ void PPI_InventoryScreen(void)
                 {
                     gCurrentPockets = POCKETSTATE_MONSTER;
                     PlayGameSound(&gSoundMenuNavigate);
+                    gSwitchingMonster = 255;
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_RESTORE;
+                    gCurrentPockets = POCKETSTATE_USABLE;
                     PlayGameSound(&gSoundMenuNavigate);
                 }
 
@@ -559,13 +561,13 @@ void PPI_InventoryScreen(void)
             }
             break;
         }
-        case POCKETSTATE_RESTORE:
+        case POCKETSTATE_USABLE:
         {
             if (gHasSelectedInvSlot == FALSE)
             {
-                if (gMenu_InventoryRestore.SelectedItem >= gRestoreItemCount - 1 && gRestoreItemCount > _countof(gMI_InventoryRestore_Items))
+                if (gMenu_InventoryUsable.SelectedItem >= gUsableItemCount - 1 && gUsableItemCount > _countof(gMI_InventoryUsable_Items))
                 {
-                    gMenu_InventoryRestore.SelectedItem = 0;
+                    gMenu_InventoryUsable.SelectedItem = 0;
                 }
 
                 if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
@@ -577,28 +579,28 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
                 {
-                    if (gMenu_InventoryRestore.SelectedItem == 0 && gRestoreItemCount > _countof(gMI_InventoryRestore_Items))
+                    if (gMenu_InventoryUsable.SelectedItem == 0 && gUsableItemCount > _countof(gMI_InventoryUsable_Items))
                     {
-                        gRestoreSlotOffset--;      //change names on boxes when at bottom box and pushing "down" key
+                        gUsableSlotOffset--;      //change names on boxes when at bottom box and pushing "down" key
                         PlayGameSound(&gSoundMenuNavigate);
                     }
-                    else if (gMenu_InventoryRestore.SelectedItem > 0)
+                    else if (gMenu_InventoryUsable.SelectedItem > 0)
                     {
-                        gMenu_InventoryRestore.SelectedItem--;    //changes selected box
+                        gMenu_InventoryUsable.SelectedItem--;    //changes selected box
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
 
                 if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
                 {
-                    if (gMenu_InventoryRestore.SelectedItem == 16)
+                    if (gMenu_InventoryUsable.SelectedItem == 16)
                     {
-                        gRestoreSlotOffset++;      //change names on boxes when at top box and pushing "up" key
+                        gUsableSlotOffset++;      //change names on boxes when at top box and pushing "up" key
                         PlayGameSound(&gSoundMenuNavigate);
                     }
-                    else if (gMenu_InventoryRestore.SelectedItem < gRestoreItemCount - 1)
+                    else if (gMenu_InventoryUsable.SelectedItem < gUsableItemCount - 1)
                     {
-                        gMenu_InventoryRestore.SelectedItem++;    //changes selected box
+                        gMenu_InventoryUsable.SelectedItem++;    //changes selected box
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
@@ -614,11 +616,11 @@ void PPI_InventoryScreen(void)
                     PlayGameSound(&gSoundMenuNavigate);
                 }
 
-                if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed && (gMenu_InventoryRestore.SelectedItem <= 16 && gMenu_InventoryRestore.SelectedItem >= 0) && gEquipItemCount != 0)
+                if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed && (gMenu_InventoryUsable.SelectedItem <= 16 && gMenu_InventoryUsable.SelectedItem >= 0) && gEquipItemCount != 0)
                 {
-                    if (gRestoreSlotIndex[gMenu_InventoryRestore.SelectedItem] != 0xFFFF)
+                    if (gUsableSlotIndex[gMenu_InventoryUsable.SelectedItem] != 0xFFFF)
                     {
-                        gMI_InventoryRestore_Items[gMenu_InventoryRestore.SelectedItem]->Action();
+                        gMI_InventoryUsable_Items[gMenu_InventoryUsable.SelectedItem]->Action();
                         PlayGameSound(&gSoundMenuChoose);
                     }
                 }
@@ -703,7 +705,7 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_RESTORE;
+                    gCurrentPockets = POCKETSTATE_USABLE;
                     PlayGameSound(&gSoundMenuNavigate);
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
@@ -808,6 +810,7 @@ void PPI_InventoryScreen(void)
                 {
                     gCurrentPockets = POCKETSTATE_MONSTER;
                     PlayGameSound(&gSoundMenuNavigate);
+                    gSwitchingMonster = 255;
                 }
 
                 if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed && (gMenu_InventoryAdventure.SelectedItem <= 16 && gMenu_InventoryAdventure.SelectedItem >= 0) && gEquipItemCount != 0)
@@ -867,11 +870,13 @@ void PPI_InventoryScreen(void)
                 {
                     gCurrentPockets = POCKETSTATE_ADVENTURE;
                     PlayGameSound(&gSoundMenuNavigate);
+                    gSwitchingMonster = 255;
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
                     gCurrentPockets = POCKETSTATE_EQUIPABLE;
                     PlayGameSound(&gSoundMenuNavigate);
+                    gSwitchingMonster = 255;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed && gMenu_InventoryMonster.SelectedItem > 0)
@@ -890,6 +895,28 @@ void PPI_InventoryScreen(void)
                 {
                     gMI_InventoryMonster_Items[gMenu_InventoryMonster.SelectedItem]->Action();
                     PlayGameSound(&gSoundMenuChoose);
+                    gSwitchingMonster = 255;
+                }
+
+                if (gGameInput.QKeyPressed && !gGameInput.QKeyAlreadyPressed)
+                {
+                    if (gSwitchingMonster == 255)
+                    {
+                        gSwitchingMonster = gMenu_InventoryMonster.SelectedItem;
+                    }
+                    else if (gSwitchingMonster != gMenu_InventoryMonster.SelectedItem)
+                    {
+                        struct Monster MonsterSlotA = gPlayerParty[gSwitchingMonster];
+                        struct Monster MonsterSlotB = gPlayerParty[gMenu_InventoryMonster.SelectedItem];
+                        
+                        gPlayerParty[gSwitchingMonster] = MonsterSlotB;
+                        gPlayerParty[gMenu_InventoryMonster.SelectedItem] = MonsterSlotA;
+                        gSwitchingMonster = 255;
+                    }
+                    else if (gSwitchingMonster == gMenu_InventoryMonster.SelectedItem)
+                    {
+                        gSwitchingMonster = 255;
+                    }
                 }
             }
             else
@@ -1046,13 +1073,13 @@ void DrawEquipablePocket(void)
     BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventoryEquipable_Items[gMenu_InventoryEquipable.SelectedItem]->x - 6, gMI_InventoryEquipable_Items[gMenu_InventoryEquipable.SelectedItem]->y);
 }
 
-void DrawRestorePocket(void)
+void DrawUsablePocket(void)
 {
 
     //equip pockets
     DrawWindow(194, 26, 35, 18, &COLOR_DARK_GRAY, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);
     //restore pockets
-    DrawWindow(194 + (36 * 1), 26, 35, 18, &COLOR_BLACK, &COLOR_PINK, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);
+    DrawWindow(194 + (36 * 1), 26, 35, 18, &COLOR_BLACK, &COLOR_NES_PINK, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);
     //valuable pockets
     DrawWindow(194 + (36 * 2), 26, 36, 18, &COLOR_DARK_GRAY, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);  //middle box is 1 pixel wider
     //adventure pockets
@@ -1098,7 +1125,7 @@ void DrawRestorePocket(void)
     DrawWindow(194, 25 + (10 * 18), 180, 9, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
 
 
-    for (uint8_t RestoreBox = 0; RestoreBox < _countof(gMI_InventoryRestore_Items); RestoreBox++)
+    for (uint8_t UsableBox = 0; UsableBox < _countof(gMI_InventoryUsable_Items); UsableBox++)
     {
         uint16_t SlotLoop = 0x800C;
 
@@ -1110,16 +1137,16 @@ void DrawRestorePocket(void)
 
 
 
-        SlotOrder = RestoreBox + gRestoreSlotOffset + SlotLoop;
+        SlotOrder = UsableBox + gUsableSlotOffset + SlotLoop;
 
-        if (gRestoreItemCount != 0)
+        if (gUsableItemCount != 0)
         {
-            SlotOrder %= gRestoreItemCount;
+            SlotOrder %= gUsableItemCount;
         }
 
-        SlotIndex = gRestoreHasItemSort[SlotOrder];
+        SlotIndex = gUsableHasItemSort[SlotOrder];
 
-        if (gRestoreHasItemSort[RestoreBox] == 0xFFFF)
+        if (gUsableHasItemSort[UsableBox] == 0xFFFF)
         {
             SlotIndex = 0xFFFF;
             goto SlotIndexed;
@@ -1132,21 +1159,21 @@ void DrawRestorePocket(void)
 
     SlotIndexed:
 
-        gRestoreSlotIndex[RestoreBox] = SlotIndex;  //used for PPI_InventoryScreen to know what item is in what menubox and prevent using blank items
+        gUsableSlotIndex[UsableBox] = SlotIndex;  //used for PPI_InventoryScreen to know what item is in what menubox and prevent using blank items
 
-        if (gMI_InventoryRestore_Items[RestoreBox]->Enabled == TRUE && SlotIndex != 0xFFFF)
+        if (gMI_InventoryUsable_Items[UsableBox]->Enabled == TRUE && SlotIndex != 0xFFFF)
         {
-            uint16_t ItemCountSize = snprintf(NULL, 0, "x%d", gRestoreItems[SlotIndex].Count);
+            uint16_t ItemCountSize = snprintf(NULL, 0, "x%d", gUsableItems[SlotIndex].Count);
             char* ItemCountString = malloc(ItemCountSize + 1);
-            snprintf(ItemCountString, ItemCountSize + 1, "x%d", gRestoreItems[SlotIndex].Count);
+            snprintf(ItemCountString, ItemCountSize + 1, "x%d", gUsableItems[SlotIndex].Count);
 
-            BlitStringToBuffer(gRestoreItems[SlotIndex].Name, &g6x7Font, &COLOR_BLACK, gMI_InventoryRestore_Items[RestoreBox]->x, gMI_InventoryRestore_Items[RestoreBox]->y);
+            BlitStringToBuffer(gUsableItems[SlotIndex].Name, &g6x7Font, &COLOR_BLACK, gMI_InventoryUsable_Items[UsableBox]->x, gMI_InventoryUsable_Items[UsableBox]->y);
 
-            BlitStringToBuffer(ItemCountString, &g6x7Font, &COLOR_BLACK, gMI_InventoryRestore_Items[RestoreBox]->x + 149, gMI_InventoryRestore_Items[RestoreBox]->y);
+            BlitStringToBuffer(ItemCountString, &g6x7Font, &COLOR_BLACK, gMI_InventoryUsable_Items[UsableBox]->x + 149, gMI_InventoryUsable_Items[UsableBox]->y);
         }
     }
 
-    BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventoryRestore_Items[gMenu_InventoryRestore.SelectedItem]->x - 6, gMI_InventoryRestore_Items[gMenu_InventoryRestore.SelectedItem]->y);
+    BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventoryUsable_Items[gMenu_InventoryUsable.SelectedItem]->x - 6, gMI_InventoryUsable_Items[gMenu_InventoryUsable.SelectedItem]->y);
 }
 
 void DrawValuablePocket(void)
@@ -1367,8 +1394,14 @@ void DrawMonsterParty(void)
     //adventure pockets
     DrawWindow(194 + (36 * 3) + 1, 26, 35, 18, &COLOR_DARK_GRAY, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);//offset next two boxes by one pixel
     //monsters
-    DrawWindow(194 + (36 * 4) + 1, 26, 35, 18, &COLOR_BLACK, &COLOR_PURPLE, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);
+    DrawWindow(194 + (36 * 4) + 1, 26, 35, 18, &COLOR_BLACK, &COLOR_NES_PURPLE, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_THICK);
 
+    if (gSwitchingMonster != 255)
+    {
+        DrawWindow(gMI_InventoryMonster_Items[gSwitchingMonster]->x - 5, gMI_InventoryMonster_Items[gSwitchingMonster]->y - 12, 100 + 20, 19, &COLOR_NES_PURPLE, NULL, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_THICK);
+    }
+
+    BlitStringToBuffer("Q: SWITCH", &g6x7Font, &COLOR_BLACK, gMI_InventoryMonster_Items[1]->x + 60, gMI_InventoryMonster_Items[0]->y - 6);
 
     BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventoryMonster_Items[gMenu_InventoryMonster.SelectedItem]->x - 9, gMI_InventoryMonster_Items[gMenu_InventoryMonster.SelectedItem]->y - 5);
 
@@ -1380,6 +1413,7 @@ void DrawMonsterParty(void)
 
         DrawMonsterHpBar(gMI_InventoryMonster_Items[playerParty]->x, gMI_InventoryMonster_Items[playerParty]->y, HpPercent, ExpPercent, gPlayerParty[playerParty].Level, gPlayerParty[playerParty].DriveMonster.nickname, TRUE);
     }
+
 }
 
 void DrawSelectedItemOptions(void)
@@ -1408,7 +1442,7 @@ void DrawSelectedItemOptions(void)
 
             break;
         }
-        case POCKETSTATE_RESTORE:
+        case POCKETSTATE_USABLE:
         {
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
             BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
@@ -1486,7 +1520,7 @@ void MenuItem_Inventory_SelectedItem_Trash(void)        //TODO: all that is left
 
 void MenuItem_Inventory_SelectedItem_Use(void)
 {
-    if (gRestoreSlotIndex[gMenu_InventoryRestore.SelectedItem] == INV_RESTORE_ITEM_0 && gCurrentPockets == POCKETSTATE_RESTORE)
+    if (gUsableSlotIndex[gMenu_InventoryUsable.SelectedItem] == INV_USABLE_ITEM_0 && gCurrentPockets == POCKETSTATE_USABLE)
     {
         //TODO: draw monster party and select monster to use item on
         //increase selected monster health by 20 and remove one from item.count

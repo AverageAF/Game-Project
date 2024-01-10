@@ -116,6 +116,8 @@ void DrawBattleScreen(void)
     {
         LocalFrameCounter = 0;
         gCurrentBattleState = 0;
+        gCurrentPartyMember = 0;
+        gCurrentOpponentPartyMember = 0;
         BrightnessAdjustment = -255;
         gInputEnabled = FALSE;
         BattleTextLineCharactersToShow = 0;
@@ -200,16 +202,24 @@ void DrawBattleScreen(void)
     {
         case BATTLESTATE_OPENING_TEXT:
         {
+        PlayerStartBattle:
             if (gPlayerParty[gCurrentPartyMember].Health == 0)
             {
-                gCurrentBattleState = BATTLESTATE_KO;
+                if (gCurrentPartyMember < gPlayerPartyCount - 1)
+                {
+                    gCurrentPartyMember++;
+                    goto PlayerStartBattle;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_KO;
+                }
 
                 goto PlayerNoHP;
             }
 
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
-                gPreviousBattleState = gCurrentBattleState;
                 gCurrentBattleState = BATTLESTATE_OPENING_WAIT;
                 gSkipToNextText = FALSE;
             }
@@ -403,7 +413,6 @@ void DrawBattleScreen(void)
 
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
-                gPreviousBattleState = gCurrentBattleState;
                 gCurrentBattleState = BATTLESTATE_FIRSTMOVE_WAIT;
                 gSkipToNextText = FALSE;
             }
@@ -622,7 +631,6 @@ void DrawBattleScreen(void)
 
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
-                gPreviousBattleState = gCurrentBattleState;
                 gCurrentBattleState = BATTLESTATE_SWITCHING_WAIT;
                 gSkipToNextText = FALSE;
             }
@@ -812,7 +820,6 @@ void DrawBattleScreen(void)
 
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
-                gPreviousBattleState = gCurrentBattleState;
                 gCurrentBattleState = BATTLESTATE_SECONDMOVE_WAIT;
                 gSkipToNextText = FALSE;
             }
@@ -1002,14 +1009,23 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_KO:
         {
-
+            BOOL IsPlayerOutOfMonsters = FALSE;
             BOOL IsPlayerMonsterKOed = FALSE;
 
-        PlayerNoHP:
+        PlayerNoHP:             //if starting combat with no healthy monsters
 
             if (gPlayerParty[gCurrentPartyMember].Health == 0)
             {
                 IsPlayerMonsterKOed = TRUE;
+                IsPlayerOutOfMonsters = TRUE;
+                for (uint8_t partyMembers = 0; partyMembers < MAX_PARTY_SIZE; partyMembers++)
+                {
+                    if (gPlayerParty[partyMembers].Health != 0)
+                    {
+                        IsPlayerOutOfMonsters = FALSE;
+                        break;
+                    }
+                }
             }
             else if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
             {
@@ -1036,10 +1052,21 @@ void DrawBattleScreen(void)
             BattleTextLineCount = 0;
             if (IsPlayerMonsterKOed == TRUE)
             {
-                sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s was KO'ed!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
-                BattleTextLineCount++;
-                sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s blacked out!", &gPlayer.Name);
-                BattleTextLineCount++;
+                if (IsPlayerOutOfMonsters)
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s was KO'ed!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                    sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s blacked out!", &gPlayer.Name);
+                    BattleTextLineCount++;
+                }
+                else
+                {
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s was KO'ed!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    BattleTextLineCount++;
+                    sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "Choose another monster!");
+                    BattleTextLineCount++;
+                }
+                
             }
             else
             {
@@ -1051,7 +1078,6 @@ void DrawBattleScreen(void)
 
             if (gRegistryParams.TextSpeed == 4 || gFinishedBattleTextAnimation == TRUE)
             {
-                gPreviousBattleState = gCurrentBattleState;
                 gCurrentBattleState = BATTLESTATE_KO_WAIT;
                 gSkipToNextText = FALSE;
             }
@@ -1289,17 +1315,7 @@ void DrawBattleScreen(void)
         ASSERT(FALSE, "Opponent battle monster is NULL!");
     }
 
-    /////////////////////////////////////////TEMP HP BARS//////////////////////////////////////////////////////
-
-    /*uint16_t HpBarSize = snprintf(NULL, 0, "%d", gPlayerParty[gCurrentPartyMember].Health);
-    char* HpBarString = malloc(HpBarSize + 1);
-    snprintf(HpBarString, HpBarSize + 1, "%d", gPlayerParty[gCurrentPartyMember].Health);
-    BlitStringToBuffer(HpBarString, &g6x7Font, &COLOR_DARK_RED, 65, 111);
-
-    HpBarSize = snprintf(NULL, 0, "%d", gOpponentParty[gCurrentOpponentPartyMember].Health);
-    HpBarString = malloc(HpBarSize + 1);
-    snprintf(HpBarString, HpBarSize + 1, "%d", gOpponentParty[gCurrentOpponentPartyMember].Health);
-    BlitStringToBuffer(HpBarString, &g6x7Font, &COLOR_DARK_RED, 255, 79);*/
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     uint16_t HpPercent = 100 - ((gPlayerParty[gCurrentPartyMember].Health * 100) / (gPlayerParty[gCurrentPartyMember].MaxHealth));
 
@@ -1311,7 +1327,7 @@ void DrawBattleScreen(void)
 
     DrawMonsterHpBar(255 - 46, 79 - 8, HpPercent, 0, gOpponentParty[gCurrentOpponentPartyMember].Level, gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, FALSE);
 
-    //////////////////////////////////////////////TODO///REMOVE////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     LocalFrameCounter++;
 
@@ -1377,8 +1393,16 @@ void PPI_BattleScreen(void)
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
-                gFinishedBattleTextAnimation = FALSE;
+                if (gPreviousBattleState == BATTLESTATE_KO_WAIT)
+                {
+                    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+                    gFinishedBattleTextAnimation = FALSE;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                    gFinishedBattleTextAnimation = FALSE;
+                }
             }
             break;
         }
@@ -1415,8 +1439,76 @@ void PPI_BattleScreen(void)
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
+                BOOL ContinueBattle = FALSE;
                 gFinishedBattleTextAnimation = FALSE;
-                MenuItem_BattleScreen_EscapeButton();
+
+                if (gPlayerParty[gCurrentPartyMember].Health == 0)
+                {
+                    for (uint8_t party = 0; party < MAX_PARTY_SIZE; party++)
+                    {
+                        if (gPlayerParty[party].Health == 0)
+                        {
+                            ContinueBattle = FALSE;
+                        }
+                        else
+                        {
+                            ContinueBattle = TRUE;
+                            break;
+                        }
+                    }
+
+                    if (ContinueBattle == FALSE)    //check if player has more monsters in party
+                    {
+                        MenuItem_BattleScreen_EscapeButton();
+                    }
+                    else
+                    {
+                        gPreviousBattleState = BATTLESTATE_KO_WAIT;
+                        gCurrentBattleState = BATTLESTATE_CHOOSE_MONSTER;
+                        gMenu_SwitchScreen.SelectedItem = 0;
+                        goto PlayerChooseNewMonster;
+                    }
+                }
+
+                if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
+                {
+                    for (uint8_t enemy = 0; enemy < MAX_PARTY_SIZE; enemy++)
+                    {
+                        if (gOpponentParty[enemy].Health == 0)
+                        {
+                            ContinueBattle = FALSE;
+                        }
+                        else
+                        {
+                            ContinueBattle = TRUE;
+                            break;
+                        }
+                    }
+
+                    if (ContinueBattle == FALSE)        //check for more opponent monsters in party
+                    {
+                        MenuItem_BattleScreen_EscapeButton();
+                    }
+                    else                //TODO: make BATTLESTATE_ENEMYSWITCH_TEXT and BATTLESTATE_ENEMYSWITCH_WAIT for enemy switching monsters
+                    {
+
+                    FindNewOpponentMonster:
+
+                        gCurrentOpponentPartyMember++;
+                        if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
+                        {
+                            goto FindNewOpponentMonster;
+                        }
+                        else
+                        {
+                            gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+                        }
+                    }
+                }
+                else
+                {
+                    ASSERT(FALSE, "PPI case BATTLESTATE_KO_WAIT reached while both battlemonsters are at non-zero HP!");
+                }
             }
             break;
         }
@@ -1538,7 +1630,10 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_CHOOSE_MONSTER:
         {
-            if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+
+    PlayerChooseNewMonster:
+
+            if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed && gPreviousBattleState != BATTLESTATE_KO_WAIT)
             {
                 if (gMenu_SwitchScreen.SelectedItem == 6)
                 {
@@ -1559,7 +1654,7 @@ void PPI_BattleScreen(void)
                     gMenu_SwitchScreen.SelectedItem--;
                     PlayGameSound(&gSoundMenuNavigate);
                 }
-                else if (gMenu_SwitchScreen.SelectedItem == 0)
+                else if (gMenu_SwitchScreen.SelectedItem == 0 && gPreviousBattleState != BATTLESTATE_KO_WAIT)
                 {
                     gMenu_SwitchScreen.SelectedItem = 6;
                     PlayGameSound(&gSoundMenuNavigate);
@@ -1582,7 +1677,7 @@ void PPI_BattleScreen(void)
                     gMenu_SwitchScreen.SelectedItem = 0;
                     PlayGameSound(&gSoundMenuNavigate);
                 }
-                else if (gMenu_SwitchScreen.SelectedItem == gPlayerPartyCount - 1)
+                else if (gMenu_SwitchScreen.SelectedItem == gPlayerPartyCount - 1 && gPreviousBattleState != BATTLESTATE_KO_WAIT)
                 {
                     gMenu_SwitchScreen.SelectedItem = 6;
                     PlayGameSound(&gSoundMenuNavigate);
@@ -1591,8 +1686,15 @@ void PPI_BattleScreen(void)
 
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                gMenu_SwitchScreen.Items[gMenu_SwitchScreen.SelectedItem]->Action();
-                PlayGameSound(&gSoundMenuChoose);
+                if (gPreviousBattleState == BATTLESTATE_KO && gMenu_SwitchScreen.SelectedItem == 6)
+                {
+
+                }
+                else
+                {
+                    gMenu_SwitchScreen.Items[gMenu_SwitchScreen.SelectedItem]->Action();
+                    PlayGameSound(&gSoundMenuChoose);
+                }
             }
             break;
         }
@@ -1715,7 +1817,7 @@ void MenuItem_BattleScreen_ItemsButton(void)
 
 void MenuItem_SwitchScreen_PartySlot0(void)
 {
-    if (gCurrentPartyMember == 0)
+    if (gCurrentPartyMember == 0 || gPlayerParty[0].Health == 0)
     {
         //trying to swap to monster already in battle
     }
@@ -1728,7 +1830,7 @@ void MenuItem_SwitchScreen_PartySlot0(void)
 
 void MenuItem_SwitchScreen_PartySlot1(void)
 {
-    if (gCurrentPartyMember == 1)
+    if (gCurrentPartyMember == 1 || gPlayerParty[1].Health == 0)
     {
         //trying to swap to monster already in battle
     }
@@ -1741,7 +1843,7 @@ void MenuItem_SwitchScreen_PartySlot1(void)
 
 void MenuItem_SwitchScreen_PartySlot2(void)
 {
-    if (gCurrentPartyMember == 2)
+    if (gCurrentPartyMember == 2 || gPlayerParty[2].Health == 0)
     {
         //trying to swap to monster already in battle
     }
@@ -1754,7 +1856,7 @@ void MenuItem_SwitchScreen_PartySlot2(void)
 
 void MenuItem_SwitchScreen_PartySlot3(void)
 {
-    if (gCurrentPartyMember == 3)
+    if (gCurrentPartyMember == 3 || gPlayerParty[3].Health == 0)
     {
         //trying to swap to monster already in battle
     }
@@ -1767,7 +1869,7 @@ void MenuItem_SwitchScreen_PartySlot3(void)
 
 void MenuItem_SwitchScreen_PartySlot4(void)
 {
-    if (gCurrentPartyMember == 4)
+    if (gCurrentPartyMember == 4 || gPlayerParty[4].Health == 0)
     {
         //trying to swap to monster already in battle
     }
@@ -1780,7 +1882,7 @@ void MenuItem_SwitchScreen_PartySlot4(void)
 
 void MenuItem_SwitchScreen_PartySlot5(void)
 {
-    if (gCurrentPartyMember == 5)
+    if (gCurrentPartyMember == 5 || gPlayerParty[5].Health == 0)
     {
         //trying to swap to monster already in battle
     }

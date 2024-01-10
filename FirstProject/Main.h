@@ -78,9 +78,10 @@
 #define COLOR_LIGHT_GREEN (PIXEL32){ .Bytes = 0xFF00b800 }
 #define COLOR_DARK_GREEN (PIXEL32){ .Bytes = 0xFF005800 }
 #define COLOR_NEON_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
-#define COLOR_PINK (PIXEL32){ .Bytes = 0xFFf85898 }
+#define COLOR_NES_PINK (PIXEL32){ .Bytes = 0xFFf85898 }
 #define COLOR_GOLD (PIXEL32){ .Bytes = 0xFFFFD700 }
-#define COLOR_PURPLE (PIXEL32){ .Bytes = 0xFF940084 }
+#define COLOR_NES_PURPLE (PIXEL32){ .Bytes = 0xFF940084 }
+#define COLOR_NES_MAGENTA (PIXEL32){ .Bytes = 0xFFd800cc }
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
 
@@ -274,6 +275,7 @@ typedef struct GAMEINPUT
 	int16_t WUpKeyPressed;
 	int16_t ChooseKeyPressed;
 	int16_t TabKeyPressed;
+	int16_t QKeyPressed;
 
 	int16_t EscapeKeyAlreadyPressed;	////for pulse responces
 	int16_t DebugKeyAlreadyPressed;
@@ -283,6 +285,7 @@ typedef struct GAMEINPUT
 	int16_t WUpKeyAlreadyPressed;
 	int16_t ChooseKeyAlreadyPressed;
 	int16_t TabKeyAlreadyPressed;
+	int16_t QKeyAlreadyPressed;
 
 } GAMEINPUT;
 

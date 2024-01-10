@@ -3,7 +3,7 @@
 typedef enum INV_POCKETS
 {
 	POCKETSTATE_EQUIPABLE,
-	POCKETSTATE_RESTORE,
+	POCKETSTATE_USABLE,
 	POCKETSTATE_VALUABLE,
 	POCKETSTATE_ADVENTURE,
 	POCKETSTATE_MONSTER,
@@ -18,7 +18,7 @@ void PPI_InventoryScreen(void);
 
 void DrawEquipablePocket(void);
 
-void DrawRestorePocket(void);
+void DrawUsablePocket(void);
 
 void DrawValuablePocket(void);
 
