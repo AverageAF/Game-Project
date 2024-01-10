@@ -87,7 +87,7 @@ void DrawBattleScreen(void)
 
     for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
     {
-        if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].WantsToBattle == TRUE))
+        if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].Event == EVENT_FLAG_BATLLE))
         {
             Opponent = Index;
             break;
@@ -123,14 +123,14 @@ void DrawBattleScreen(void)
 
     for (uint8_t Counter = 0; Counter < TOTAL_MONSTERS; Counter++)
     {
-        if (gPlayerParty[0].PcMonster.secure.substructs[0].type0.Index == Counter)
+        if (gPlayerParty[0].DriveMonster.Index == Counter)
         {
             PlayerMonsterSprite = &gBattleSpriteBack[Counter];
         }
 
         //if (Opponent != NULL)         //temp removed so game doesnt assert on wild encounters
         {
-            if (gOpponentParty[0].PcMonster.secure.substructs[0].type0.Index == Counter)
+            if (gOpponentParty[0].DriveMonster.Index == Counter)
             {
                 OpponentMonsterSprite = &gBattleSpriteFront[Counter];
             }
@@ -482,10 +482,10 @@ void MenuItem_BattleScreen_EscapeButton(void)
 {
     for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
     {
-        if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].WantsToBattle == TRUE))
+        if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].Event == EVENT_FLAG_BATLLE))
         {
             gCharacterSprite[Index].InteractedWith = FALSE;
-            gCharacterSprite[Index].WantsToBattle = FALSE;
+            gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
             gCharacterSprite[Index].SightRange = 0;
             break;
         }

@@ -2,6 +2,8 @@
 
 #include "OverWorld.h"
 
+#include "MonsterData.h"
+
 BOOL gFade = FALSE;
 
 void DrawOverworldScreen(void)
@@ -706,9 +708,9 @@ void PPI_Overworld(void)
             }
         }
     }
-    else if (gOverWorldControls == FALSE)
+    else if (gOverWorldControls == FALSE)   //movement and camerapan ect..
     {
-        if (gDialogueControls == TRUE)
+        if (gDialogueControls == TRUE)  //typewriter effect has finished and arrow in bottom corner has appeared
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
@@ -716,15 +718,25 @@ void PPI_Overworld(void)
                 {
                     if (gCharacterSprite[Index].InteractedWith == TRUE)
                     {
-                        if (gCharacterSprite[Index].WantsToBattle == TRUE)
+                        switch (gCharacterSprite[Index].Event)
                         {
-                            RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
-                            break;
-                        }
-                        else
-                        {
-                            gCharacterSprite[Index].InteractedWith = FALSE;
-                            break;
+                            case EVENT_FLAG_BATLLE:
+                            {
+                                RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                                break;
+                            }
+                            case EVENT_FLAG_MONSTER:
+                            {
+                                ScriptGiveMonster(MONSTER_WOLF, 5, 0);
+                                gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
+                                gCharacterSprite[Index].InteractedWith = FALSE;
+                                break;
+                            }
+                            default:
+                            {
+                                gCharacterSprite[Index].InteractedWith = FALSE;
+                                break;
+                            }
                         }
                     }
                 }
@@ -734,9 +746,9 @@ void PPI_Overworld(void)
                 gFinishedDialogueTextAnimation = FALSE;
             }
         }
-        else
+        else        //no dialogue or overworld controls
         {
-            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)         //allows for skipping typewriter effect to instant dialogue blit
             {
                 gFinishedDialogueTextAnimation = TRUE;
             }
@@ -942,5 +954,41 @@ void TriggerNPCMovement(_In_ uint64_t Counter)
                 }
             }
         }
+    }
+}
+
+uint8_t ScriptGiveMonster(uint8_t index, uint8_t level, uint16_t item)
+{
+    int sentToPC;
+    uint8_t heldItem[2];
+    struct Monster monster;
+    //uint16_t targetIndex;         TODO:later when monsters have extra forms
+
+    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    heldItem[0] = item;
+    heldItem[1] = item >> 8;
+    SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
+
+    sentToPC = GiveMonsterToPlayer(&monster);
+    return(sentToPC);
+}
+
+void HealPlayerParty(void)
+{
+    uint8_t i, j;
+    uint8_t arg[4];
+
+    for (i = 0; i < gPlayerPartyCount; i++)
+    {
+        uint16_t maxHP = GetMonsterData(&gPlayerParty[i], MONSTER_DATA_MAX_HEALTH, NULL);
+        arg[0] = maxHP;
+        arg[1] = maxHP >> 8;
+        SetMonsterData(&gPlayerParty[i], MONSTER_DATA_HEALTH, arg);
+
+        arg[0] = 0;
+        arg[1] = 0;
+        arg[2] = 0;
+        arg[3] = 0;
+        SetMonsterData(&gPlayerParty[i], MONSTER_DATA_STATUS, arg);
     }
 }

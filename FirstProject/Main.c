@@ -568,6 +568,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].ResetWorldPos.y = 192;
     gCharacterSprite[0].Direction = LEFT;
     gCharacterSprite[0].ResetDirection = LEFT;
+    gCharacterSprite[0].Event = EVENT_FLAG_MONSTER;
     gCharacterSprite[0].Movement = MOVEMENT_WALK_LEFT_RIGHT;
     gCharacterSprite[0].MovementRange.y = 5;
     gCharacterSprite[0].MovementRange.x = 5;
@@ -608,7 +609,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].ResetDirection = DOWN;
     gCharacterSprite[2].SightRange = 3;
     gCharacterSprite[2].ResetSightRange = 3;
-    gCharacterSprite[2].WantsToBattle = TRUE;
+    gCharacterSprite[2].Event = EVENT_FLAG_BATLLE;
     gCharacterSprite[2].Movement = MOVEMENT_STILL;
     gCharacterSprite[2].Visible = TRUE;
     gCharacterSprite[2].Exists = TRUE;
@@ -617,7 +618,7 @@ DWORD InitializeSprites(void)
 
     sprintf_s(gCharacterSprite[2].Name, sizeof(gCharacterSprite[2].Name), "Jerry");
 
-    gOpponentParty[0].PcMonster.secure.substructs[0].type0.Index = MONSTER_WOLF;
+    gOpponentParty[0].DriveMonster.Index = MONSTER_WOLF;
 
     //////////////////////////////////////////////////////////////
 
@@ -636,7 +637,9 @@ DWORD InitializePlayer(void)
     gPlayer.Direction = DOWN;
     gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
 
-    gPlayerParty[0].PcMonster.secure.substructs[0].type0.Index = MONSTER_WOLF;
+    gPlayer.Seed = 777;
+
+    //gPlayerParty[0].DriveMonster.secure.substructs[0].type0.Index = MONSTER_WOLF;
 
     //////leave this as a char[] so letters can be reassigned
     gPlayer.Name[0] = 'M';
@@ -2537,6 +2540,11 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
     {
         BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_BLACK, 101, 174);
         LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, Dialogue);
+    }
+
+    if (Flags && DIALOGUE_FLAG_BATTLE && gFinishedDialogueTextAnimation)
+    {
+
     }
 }
 

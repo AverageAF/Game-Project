@@ -25,7 +25,7 @@ uint32_t GetDriveMonsterDataAt(uint8_t driveId, uint8_t drivePos, int32_t field)
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		return (GetPCMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], field, NULL));
+		return (GetDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], field, NULL));
 	}
 	else
 	{
@@ -37,7 +37,7 @@ void SetDriveMonsterDataAt(uint8_t driveId, uint8_t drivePos, int32_t field, con
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		SetPCMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], field, value);
+		SetDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], field, value);
 	}
 }
 
@@ -55,7 +55,7 @@ void GetDriveMonsterNicknameAt(uint8_t driveId, uint8_t drivePos, uint8_t *dest)
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		GetPCMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], MONSTER_DATA_NICKNAME, dest);
+		GetDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], MONSTER_DATA_NICKNAME, dest);
 	}
 	else
 	{
@@ -68,9 +68,9 @@ uint32_t GetDriveMonsterLevelAt(uint8_t driveId, uint8_t drivePos)
 {
 	uint32_t lvl;
 
-	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE && GetPCMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], MONSTER_DATA_HAS_INDEX, NULL))
+	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE && GetDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], MONSTER_DATA_HAS_INDEX, NULL))
 	{
-		lvl = GetLevelFromPCMonsterExp(&gMonsterStoragePtr->Drives[driveId][drivePos]);
+		lvl = GetLevelFromDriveMonsterExp(&gMonsterStoragePtr->Drives[driveId][drivePos]);
 	}
 	else
 	{
@@ -83,7 +83,7 @@ void SetDriveMonsterNicknameAt(uint8_t driveId, uint8_t drivePos, const uint8_t*
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		SetPCMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], MONSTER_DATA_NICKNAME, nickname);
+		SetDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], MONSTER_DATA_NICKNAME, nickname);
 	}
 }
 
@@ -91,7 +91,7 @@ uint32_t GetAndCopyDriveMonsterDataAt(uint8_t driveId, uint8_t drivePos, int32_t
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		return (GetPCMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], field, destination));
+		return (GetDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos], field, destination));
 	}
 	else
 	{
@@ -99,13 +99,13 @@ uint32_t GetAndCopyDriveMonsterDataAt(uint8_t driveId, uint8_t drivePos, int32_t
 	}
 }
 
-void SetDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct PCMonster* source)
+void SetDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct DriveMonster* source)
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 		gMonsterStoragePtr->Drives[driveId][drivePos] = *source;
 }
 
-void CopyDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct PCMonster* destination)
+void CopyDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct DriveMonster* destination)
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 		*destination = gMonsterStoragePtr->Drives[driveId][drivePos];
@@ -115,7 +115,7 @@ void CreateDriveMonsterAt(uint8_t driveId, uint8_t drivePos, uint16_t monsterInd
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		CreatePCMonster(&gMonsterStoragePtr->Drives[driveId][drivePos], monsterIndex, level, fixedGenetics, hasFixedMonsterSeed, monsterSeed, playerSeed);
+		CreateDriveMonster(&gMonsterStoragePtr->Drives[driveId][drivePos], monsterIndex, level, fixedGenetics, hasFixedMonsterSeed, monsterSeed, playerSeed);
 	}
 }
 
@@ -123,7 +123,7 @@ void ZeroDriveMonsterAt(uint8_t driveId, uint8_t drivePos)
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		ZeroPcMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos]);
+		ZeroDriveMonsterData(&gMonsterStoragePtr->Drives[driveId][drivePos]);
 	}
 }
 
@@ -131,11 +131,11 @@ void ConvDriveMonsterAtToMonster(uint8_t driveId, uint8_t drivePos, struct Monst
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
-		PCMonsterToMonster(&gMonsterStoragePtr->Drives[driveId][drivePos], destination);
+		DriveMonsterToMonster(&gMonsterStoragePtr->Drives[driveId][drivePos], destination);
 	}
 }
 
-struct PCMonster* GetDriveMonPtr(uint8_t driveId, uint8_t drivePos)
+struct DriveMonster* GetDriveMonPtr(uint8_t driveId, uint8_t drivePos)
 {
 	if (driveId < TOTAL_STORAGE_DRIVES && drivePos < TOTAL_IN_DRIVE)
 	{
@@ -179,7 +179,7 @@ static void SetDriveBackground(uint8_t driveId, uint8_t backgroundId)
 	}
 }
 
-int16_t AdvanceStorageMonsterIndex(struct PCMonster* driveMonster, uint8_t currentIndex, uint8_t maxIndex, uint8_t mode)
+int16_t AdvanceStorageMonsterIndex(struct DriveMonster* driveMonster, uint8_t currentIndex, uint8_t maxIndex, uint8_t mode)
 {
 	int16_t i;
 	int16_t direction = -1;
@@ -192,7 +192,7 @@ int16_t AdvanceStorageMonsterIndex(struct PCMonster* driveMonster, uint8_t curre
 	{
 		for (i = (int8_t)currentIndex + direction; i >= 0 && i < maxIndex; i += direction)
 		{
-			if (GetPCMonsterData(&driveMonster[i], MONSTER_DATA_INDEX, NULL) != MONSTER_NULL)
+			if (GetDriveMonsterData(&driveMonster[i], MONSTER_DATA_INDEX, NULL) != MONSTER_NULL)
 			{
 				return (i);
 			}
@@ -209,7 +209,7 @@ BOOL CheckFreeMonsterDriveSpace(void)
 	{
 		for (j = 0; j < TOTAL_IN_DRIVE; j++)
 		{
-			if (!GetPCMonsterData(&gMonsterStoragePtr->Drives[i][j], MONSTER_DATA_HAS_INDEX, NULL))
+			if (!GetDriveMonsterData(&gMonsterStoragePtr->Drives[i][j], MONSTER_DATA_HAS_INDEX, NULL))
 			{
 				return(TRUE);
 			}
@@ -228,7 +228,7 @@ uint32_t CountAllStorageMonsters(void)
 	{
 		for (j = 0; j < TOTAL_IN_DRIVE; j++)
 		{
-			if (GetPCMonsterData(&gMonsterStoragePtr->Drives[i][j], MONSTER_DATA_HAS_INDEX, NULL))
+			if (GetDriveMonsterData(&gMonsterStoragePtr->Drives[i][j], MONSTER_DATA_HAS_INDEX, NULL))
 			{
 				count++;
 			}

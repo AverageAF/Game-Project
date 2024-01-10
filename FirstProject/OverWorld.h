@@ -46,3 +46,7 @@ void TeleportHandler(void);
 
 void TriggerNPCMovement(_In_ uint64_t Counter);
 
+uint8_t ScriptGiveMonster(uint8_t index, uint8_t level, uint16_t item);
+
+void HealPlayerParty(void);
+

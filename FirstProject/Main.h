@@ -92,6 +92,7 @@
 #define NUM_MONSTER_STATS 6
 #define END_OF_STRING 0xFF
 #define MAX_LEVEL 100
+#define MAX_STAT_CHANGES 6
 
 
 
@@ -156,6 +157,16 @@ typedef enum GAMESTATE
 
 } GAMESTATE;
 
+typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events after dialogue
+{
+	EVENT_FLAG_NONE,
+	EVENT_FLAG_BATLLE,
+	EVENT_FLAG_CUTSCENE,
+	EVENT_FLAG_ITEM,
+	EVENT_FLAG_MONSTER,
+	EVENT_FLAG_MOVEMENT,
+};
+
 typedef enum WINDOW_FLAGS
 {
 	WINDOW_FLAG_BORDERED = 1,
@@ -169,10 +180,13 @@ typedef enum WINDOW_FLAGS
 } WINDOW_FLAGS;
 
 
-///////////////////TODO maybe remove?
+///////////////////TODO: make transition from dialogue to another state via flags
 typedef enum DIALOGUE_FLAGS
 {
-	DIALOGUE_FLAG_BRIEF = 1
+	DIALOGUE_FLAG_BATTLE,
+	DIALOGUE_FLAG_BRIEF,
+	DIALOGUE_FLAG_GIVE_ITEM,
+	DIALOGUE_FLAG_GIVE_MONSTER,
 
 } DIALOGUE_FLAGS;
 
@@ -356,22 +370,28 @@ typedef struct GAMEMAP
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-struct MonsterSubstruct0
+struct DriveMonster
 {
+	uint32_t MonsterSeed;
+	uint32_t PlayerSeed;
+	uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1];
+	uint8_t playerName[MAX_NAME_LENGTH + 1];
+	uint8_t hasIndex : 1;
+	uint8_t Filler : 7;
+	uint16_t checkSum;
+	uint16_t unknown;
+
+	////////////////////////////////////////
+
 	uint8_t Index;			//0x00
 	uint16_t HeldItem;			//0x01
 	uint32_t Experience;		//0x03
 	uint8_t Friendship;			//0x07
+	//size = 0x08
 
-};	//size = 0x08
-
-struct MonsterSubstruct1
-{
 	uint16_t Moves[MAX_NONSIGNATURE_MOVES];	//0x00
-};	//size = 0x08 		(uint16_t x 4 = 2 bytes x 4 = 8 bytes)
+	//size = 0x08 		(uint16_t x 4 = 2 bytes x 4 = 8 bytes)
 
-struct MonsterSubstruct2
-{
 	uint8_t HpTraining;			//0x00
 	uint8_t AttackTraining;		//0x01
 	uint8_t DefenseTraining;	//0x02
@@ -379,10 +399,9 @@ struct MonsterSubstruct2
 	uint8_t PsiTraining;		//0x04
 	uint8_t ResolveTraining;	//0x05
 	uint16_t SignatureMove;		//0x06
-};	//size = 0x08
+	//size = 0x08
 
-struct MonsterSubstruct3
-{
+
 	uint8_t MetLocation;		//0x00
 	uint8_t MetLevel;			//0x01
 
@@ -394,43 +413,16 @@ struct MonsterSubstruct3
 	uint32_t ResolveGenetics : 5;	//0x04
 	uint32_t AbilityNumber : 2;	//0x05
 
-	uint8_t Filler1Sub3;		//0x06
+	uint8_t Filler1Sub3;		//0x06		////TOUSE: make into interesting stats, ex. favorite food, height & weight, ...
 	uint8_t Filler2Sub3;		//0x07
-};	//size = 0x08
+	//size = 0x08
 
-#define NUM_SUBSTRUCT_BYTES (max(sizeof(struct MonsterSubstruct0), max(sizeof(struct MonsterSubstruct1), max(sizeof(struct MonsterSubstruct2), sizeof (struct MonsterSubstruct3)))))
 
-union MonsterSubstruct
-{
-	struct MonsterSubstruct0 type0;
-	struct MonsterSubstruct1 type1;
-	struct MonsterSubstruct2 type2;
-	struct MonsterSubstruct3 type3;
-	uint16_t raw[NUM_SUBSTRUCT_BYTES / 2];		//	/2 bc its uint16 not uint8
-};
-
-//PC
-struct PCMonster
-{
-	uint32_t MonsterSeed;
-	uint32_t PlayerSeed;
-	uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1];
-	uint8_t playerName[MAX_NAME_LENGTH + 1];
-	uint8_t hasIndex : 1;
-	uint8_t Filler : 7;
-	uint16_t checkSum;
-	uint16_t unknown;
-
-	union
-	{
-		uint32_t raw[(NUM_SUBSTRUCT_BYTES * 4) / 4];	//	*4 bc there are 4 substructs, /4 bc its uint32 not uint8
-		union MonsterSubstruct substructs[4];
-	} secure;
 };
 
 struct Monster
 {
-	struct PCMonster PcMonster;
+	struct DriveMonster DriveMonster;
 	uint32_t Status;
 	uint8_t Level;
 	uint16_t Health;
@@ -461,6 +453,8 @@ struct BattleMonster
 	uint32_t PsiGenetics : 5;
 	uint32_t ResolveGenetics : 5;
 	uint32_t AbilityNumber : 2;
+	int8_t StatChanges[MAX_STAT_CHANGES];
+	uint16_t Ability;
 	uint8_t Element1;
 	uint8_t Element2;
 	uint8_t Level;
@@ -469,7 +463,10 @@ struct BattleMonster
 	uint8_t Nickname[MAX_MONSTER_NAME_LENGTH + 1];
 	uint8_t PlayerName[MAX_MONSTER_NAME_LENGTH + 1];
 	uint32_t Experience;
-	uint32_t Status;
+	uint32_t Status1;
+	uint32_t Status2;
+	uint32_t MonsterSeed;
+	uint32_t PlayerSeed;
 };
 
 struct LevelUpMove
@@ -552,7 +549,7 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	UPOINT MovementRange;
 	char* Dialogue[MAX_DIALOGUE_BOXES];
 	BOOL InteractedWith;
-	BOOL WantsToBattle;
+	uint8_t Event;
 
 } INGAMESPRITE;
 
@@ -661,6 +658,11 @@ GAMESOUND gSoundSplashScreen;
 
 GAMESOUND gMusicOverWorld01;
 GAMESOUND gMusicDungeon01;
+
+//hopefully this works and I dont need a header for strings
+const uint8_t gMonsterNames[NUM_MONSTERS][MAX_MONSTER_NAME_LENGTH + 1];
+const uint8_t gBattleMoveNames[NUM_BATTLEMOVES][MAX_MOVE_NAME_LENGTH + 1];
+const uint8_t* const gMoveDescriptionPointers[NUM_BATTLEMOVES];
 
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);

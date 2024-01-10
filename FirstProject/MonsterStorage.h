@@ -16,7 +16,7 @@
 struct MonsterStorage
 {
 	uint8_t CurrentDrive;
-	struct PCMonster Drives[TOTAL_STORAGE_DRIVES][TOTAL_IN_DRIVE];
+	struct DriveMonster Drives[TOTAL_STORAGE_DRIVES][TOTAL_IN_DRIVE];
 	uint8_t DriveName[TOTAL_STORAGE_DRIVES][DRIVE_NAME_LENGTH + 1];
 	uint8_t DriveBackground[TOTAL_STORAGE_DRIVES];
 
@@ -44,9 +44,9 @@ void SetDriveMonsterNicknameAt(uint8_t driveId, uint8_t drivePos, const uint8_t*
 
 uint32_t GetAndCopyDriveMonsterDataAt(uint8_t driveId, uint8_t drivePos, int32_t field, void* destination);
 
-void SetDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct PCMonster* source);
+void SetDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct DriveMonster* source);
 
-void CopyDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct PCMonster* destination);
+void CopyDriveMonsterAt(uint8_t driveId, uint8_t drivePos, struct DriveMonster* destination);
 
 void CreateDriveMonsterAt(uint8_t driveId, uint8_t drivePos, uint16_t monsterIndex, uint8_t level, uint8_t fixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t monsterSeed, uint32_t playerSeed);
 
@@ -54,7 +54,7 @@ void ZeroDriveMonsterAt(uint8_t driveId, uint8_t drivePos);
 
 void ConvDriveMonsterAtToMonster(uint8_t driveId, uint8_t drivePos, struct Monster* destination);
 
-struct PCMonster* GetDriveMonPtr(uint8_t driveId, uint8_t drivePos);
+struct DriveMonster* GetDriveMonPtr(uint8_t driveId, uint8_t drivePos);
 
 uint8_t* GetDriveNamePtr(uint8_t driveId);
 
@@ -62,7 +62,7 @@ static uint8_t GetDriveBackground(uint8_t driveId);
 
 static void SetDriveBackground(uint8_t driveId, uint8_t backgroundId);
 
-int16_t AdvanceStorageMonsterIndex(struct PCMonster* driveMonster, uint8_t currentIndex, uint8_t maxIndex, uint8_t mode);
+int16_t AdvanceStorageMonsterIndex(struct DriveMonster* driveMonster, uint8_t currentIndex, uint8_t maxIndex, uint8_t mode);
 
 BOOL CheckFreeMonsterDriveSpace(void);
 

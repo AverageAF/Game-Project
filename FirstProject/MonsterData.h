@@ -2,7 +2,7 @@
 
 #include "Main.h"
 
-void ZeroPcMonsterData(struct PCMonster* pcMonster);
+void ZeroDriveMonsterData(struct DriveMonster* driveMonster);
 
 void ZeroMonsterData(struct Monster* monster);
 
@@ -12,29 +12,29 @@ void ZeroOpponentPartyMonsters(void);
 
 void CreateMonster(struct Monster* monster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed);
 
-void CreatePCMonster(struct PCMonster* pcMonster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed);
+void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_t Level, uint8_t FixedGenetics, uint8_t hasFixedMonsterSeed, uint32_t FixedMonsterSeed, uint32_t FixedPlayerSeed);
 
 uint8_t GetLevelFromMonsterExp(struct Monster* monster);
 
-uint8_t GetLevelFromPCMonsterExp(struct PCMonster* pcMonster);
+uint8_t GetLevelFromDriveMonsterExp(struct DriveMonster* driveMonster);
 
 void GiveMonsterInitialMoveset(struct Monster* monster);
 
-void GivePCMonsterInitialMoveset(struct PCMonster* pcMonster);
+void GiveDriveMonsterInitialMoveset(struct DriveMonster* driveMonster);
 
 uint16_t GiveMoveToMonster(struct Monster* monster, uint16_t move);
 
-static uint16_t GiveMoveToPCMonster(struct PCMonster* pcMonster, uint16_t move);
+static uint16_t GiveMoveToDriveMonster(struct DriveMonster* driveMonster, uint16_t move);
 
 void DeleteFirstMoveGiveMoveToMonster(struct Monster* monster, uint16_t move);
 
-void DeleteFirstMoveGiveMoveToPCMonster(struct PCMonster* pcMonster, uint16_t move);
+void DeleteFirstMoveGiveMoveToDriveMonster(struct DriveMonster* driveMonster, uint16_t move);
 
 static void RemoveGenesIndexFromList(uint8_t* genes, uint8_t selectedGene);
 
 void SetMonsterData(struct Monster* monster, int32_t field, const void* dataArgument);
 
-void SetPCMonsterData(struct PCMonster* pcMonster, int32_t field, const void* dataArgument);
+void SetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, const void* dataArgument);
 
 uint16_t GiveMoveToBattleMonster(struct BattleMonster* bMonster, uint16_t move);
 
@@ -44,32 +44,42 @@ void SetBattleMonsterMoveSlot(struct BattleMonster* bMonster, uint16_t move, uin
 
 uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove);
 
-void CopyMonster(void* destination, void* source, size_t size);
+void CopyMonster(struct Monster destination, struct Monster source);
 
-void PCMonsterToMonster(const struct PCMonster* source, struct Monster* destination);
+void DriveMonsterToMonster(const struct DriveMonster* source, struct Monster* destination);
 
 uint32_t GetMonsterData(struct Monster* monster, int32_t field, uint8_t* data);
 
-uint32_t GetPCMonsterData(struct PCMonster* pcMonster, int32_t field, uint8_t* data);
+uint32_t GetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, uint8_t* data);
 
 void CalculateMonsterStats(struct Monster* monster);
 
-static void EncryptPCMonster(struct PCMonster* pcMonster);
+//static void EncryptDriveMonster(struct DriveMonster* driveMonster);
 
-static void DecryptPCMonster(struct PCMonster* pcMonster);
+//static void DecryptDriveMonster(struct DriveMonster* driveMonster);
 
-static union MonsterSubstruct* GetSubstruct(struct PCMonster* pcMonster, uint32_t MonsterSeed, uint8_t substructType);
+//static union MonsterSubstruct* GetSubstruct(struct DriveMonster* driveMonster, uint32_t MonsterSeed, uint8_t substructType);
 
-static uint16_t CalculatePCMonsterCheckSum(struct PCMonster* pcMonster);
+//static uint16_t CalculateDriveMonsterCheckSum(struct DriveMonster* driveMonster);
 
 uint8_t CountAliveMonstersInBattle(uint8_t caseId);
 
 uint8_t GetMonsterGender(struct Monster* monster);
 
-uint8_t GetPCMonsterGender(struct PCMonster* pcMonster);
+uint8_t GetDriveMonsterGender(struct DriveMonster* driveMonster);
 
 uint8_t GetGenderFromMonsterIndexAndSeed(uint8_t monsterIndex, uint32_t monsterSeed);
 
 uint8_t GiveMonsterToPlayer(struct Monster* monster);
 
 uint8_t SendMonsterToPC(struct Monster* monster);
+
+void GetMonsterNameFromIndex(uint8_t* name, uint8_t index);
+
+uint16_t GetAbilityByIndex(uint16_t index, uint8_t abilityNum);
+
+uint16_t GetMonAbility(struct Monster* monster);
+
+void MonsterToBattleMonster(struct Monster* source, struct BattleMonster* dest);
+
+uint8_t* StringCopy_NickName(uint8_t* dest, const uint8_t* source);
