@@ -52,6 +52,8 @@
 
 #pragma warning(pop)
 
+#include "Tiles.h"
+
 #define NUMBER_OF_SFX_SOURCE_VOICES 8
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
@@ -188,14 +190,32 @@ typedef struct GAME_PERFORMANCE_DATA
 
 } GAME_PERFORMANCE_DATA;
 
+typedef struct TILEMAP
+{
+	
+	uint16_t Width;
+
+	uint16_t Height;
+
+	uint8_t** Map;
+
+} TILEMAP;
+
+typedef struct GAMEMAP
+{
+	TILEMAP TileMap;
+
+	GAMEBITMAP GameBitmap;
+
+} GAMEMAP;
+
 typedef struct PLAYER
 {
 	char Name[MAX_NAME_LENGTH + 1];
 	GAMEBITMAP Sprite[3][12]; 
 	BOOL Active;
-	UPOINT ScreenPos;/*
-	int16_t ScreenPosX;
-	int16_t ScreenPosY;*/
+	UPOINT ScreenPos;
+	UPOINT WorldPos;
 	uint8_t MovementRemaining;
 	DIRECTION Direction;
 	uint8_t CurrentSuit;
@@ -248,17 +268,21 @@ typedef struct MENU
 IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
 IXAudio2SourceVoice* gXAudioMusicSourceVoice;
 
+uint8_t gPassableTiles[1];
+
 REGISTRYPARAMS gRegistryParams;
 
 GAMEBITMAP gBackBuffer;
 
 GAMEBITMAP g6x7Font;
+GAMEMAP gOverWorld01;
 
 HWND gGameWindow;
 
 GAME_PERFORMANCE_DATA gGamePerformanceData;
 
 PLAYER gPlayer;
+UPOINT gCamera;
 
 GAMESTATE gCurrentGameState;
 GAMESTATE gPreviousGameState;
@@ -288,7 +312,7 @@ DWORD InitializePlayer(void);
 
 void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ uint16_t y);
 
-void BlitTilemapToBuffer(_In_ GAMEBITMAP* GameBitmap);
+void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap);
 
 void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXEL32* Color, _In_ uint16_t x, _In_ uint16_t y);
 
@@ -315,12 +339,10 @@ void ClearScreen(_In_ __m256i* Color);
 void ClearScreen(_In_ __m128i* Color);
 #else
 void ClearScreen(_In_ PIXEL32* Color);
-
 #endif
 
 void DrawBattleScreen(void);
 
-void DrawOverworldScreen(void);
 
-void PPI_Overworld(void);
+DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
 

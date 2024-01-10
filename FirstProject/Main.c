@@ -2,25 +2,27 @@
 #pragma warning(push, 3)
 #include <stdio.h>
 #include <windows.h>
-
 #include <psapi.h>
-
 #include <emmintrin.h>
+#include <xaudio2.h>
+#include <stdint.h>
 #pragma warning(pop)
 
 
-#include <xaudio2.h>
-#include <stdint.h>
 #include "Main.h"
+#include "CharacterName.h"
+#include "ExitYesNoScreen.h"
+#include "OpeningSplashScreen.h"
+#include "OptionsScreen.h"
+#include "TitleScreen.h"
+#include "OverWorld.h"
+
 
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "XAudio2.lib")
 
 BOOL gGameIsRunning;                //when set to FALSE ends the game, controls main game loop in winmain
 
-GAMEBITMAP gOverWorld01;
-
-UPOINT gCamera;
 
 // Map any char value to an offset dictated by the g6x7Font ordering.
 int gFontCharacterPixelOffset[] = {
@@ -41,9 +43,6 @@ int gFontCharacterPixelOffset[] = {
     //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. F2 .. .. .. .. .. .. .. .. .. .. .. .. ..
         93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,97,93,93,93,93,93,93,93,93,93,93,93,93,93
 };
-
-
-
 
 BOOL gWindowHasFocus;
 
@@ -77,6 +76,8 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
     HANDLE ProcessHandle = GetCurrentProcess();
     HMODULE NtDllModuleHandle = NULL;
+
+    gPassableTiles[0] = TILE_GRASS_01;
 
     if (LoadRegistryParameters() != ERROR_SUCCESS)
     {
@@ -182,9 +183,15 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         goto Exit;
     }
 
-    if ((Load32BppBitmapFromFile("..\\Assets\\Maps\\Overworld01.bmpx", &gOverWorld01)) != ERROR_SUCCESS)
+    if ((Load32BppBitmapFromFile("..\\Assets\\Maps\\Overworld01.bmpx", &gOverWorld01.GameBitmap)) != ERROR_SUCCESS)
     {
         MessageBoxA(NULL, "Load32BppBitmapFromFile Overworld01.bmpx failed!", "Error!", MB_ICONERROR | MB_OK);
+        goto Exit;
+    }
+
+    if ((LoadTileMapFromFile("..\\Assets\\Maps\\Overworld01.tmx", &gOverWorld01.TileMap)) != ERROR_SUCCESS)
+    {
+        MessageBoxA(NULL, "LoadTileMapFromFile Overworld01.tmx failed!", "Error!", MB_ICONERROR | MB_OK);
         goto Exit;
     }
 
@@ -640,8 +647,10 @@ DWORD InitializePlayer(void)
 {
     DWORD Error = ERROR_SUCCESS;
 
-    gPlayer.ScreenPos.x = 32;
+    gPlayer.ScreenPos.x = 192;
     gPlayer.ScreenPos.y = 32;
+    gPlayer.WorldPos.x = 192;
+    gPlayer.WorldPos.y = 32;
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
     if ((Error = Load32BppBitmapFromFile("..\\Assets\\Suit0FacingDown0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
@@ -890,7 +899,7 @@ void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ 
     }
 }   
 
-void BlitTilemapToBuffer(_In_ GAMEBITMAP* GameBitmap)
+void BlitBackgroundToBuffer(_In_ GAMEBITMAP* GameBitmap)
 {
     int32_t StartingScreenPixel = ((GAME_RES_HEIGHT * GAME_RES_WIDTH) - GAME_RES_WIDTH);
     int32_t StartingBitmapPixel = ((GameBitmap->BitmapInfo.bmiHeader.biWidth * GameBitmap->BitmapInfo.bmiHeader.biHeight) - GameBitmap->BitmapInfo.bmiHeader.biWidth) +gCamera.x - (GameBitmap->BitmapInfo.bmiHeader.biWidth * gCamera.y);
@@ -908,7 +917,7 @@ void BlitTilemapToBuffer(_In_ GAMEBITMAP* GameBitmap)
 
             BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
 
-            BitmapOctoPixel = _mm256_loadu_si256((PIXEL32*)gOverWorld01.Memory + BitmapOffset);
+            BitmapOctoPixel = _mm256_loadu_si256((PIXEL32*)GameBitmap->Memory + BitmapOffset);
 
             _mm256_store_si256((PIXEL32*)gBackBuffer.Memory + MemoryOffset, BitmapOctoPixel);
         }
@@ -925,7 +934,7 @@ void BlitTilemapToBuffer(_In_ GAMEBITMAP* GameBitmap)
 
             BitmapOffset = StartingBitmapPixel + XPixel - (GameBitmap->BitmapInfo.bmiHeader.biWidth * YPixel);
 
-            BitmapQuadPixel = _mm_load_si128((PIXEL32*)gOverWorld01.Memory + BitmapOffset);
+            BitmapQuadPixel = _mm_load_si128((PIXEL32*)GameBitmap->Memory + BitmapOffset);
 
             _mm_store_si128((PIXEL32*)gBackBuffer.Memory + MemoryOffset, BitmapQuadPixel);
         }
@@ -1262,7 +1271,7 @@ void DrawDebugInfo(void)
         char DebugTextBuffer[64] = { 0 };
         PIXEL32 White = { 0xFF, 0xFF, 0xFF, 0xFF };
         PIXEL32 LimeGreen = { 0x00, 0xFF, 0x17, 0xFF };
-        PIXEL32 SkyBlue = { 0xFF, 0xAF, 0x00, 0xFF };
+        PIXEL32 SkyBlue = { 0xFF, 0x0F, 0x00, 0xFF };
 
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "FPS Raw: %.01f ", gGamePerformanceData.RawFPSAverage);
         BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 0);
@@ -1282,142 +1291,15 @@ void DrawDebugInfo(void)
         BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 40);
         sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Frames   :%llu", gGamePerformanceData.TotalFramesRendered);
         BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &White, 0, 48);
-        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Coords: (%d,%d) ", gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Screen: (%d,%d) ", gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
         BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 56);
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "World: (%d,%d) ", gPlayer.WorldPos.x, gPlayer.WorldPos.y);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 64);
+        sprintf_s(DebugTextBuffer, _countof(DebugTextBuffer), "Camera: (%d,%d) ", gCamera.x, gCamera.y);
+        BlitStringToBuffer(DebugTextBuffer, &g6x7Font, &SkyBlue, 0, 72);
 }
 
 
-void DrawOverworldScreen(void)
-{
-    static uint64_t LocalFrameCounter;
-
-    static uint64_t LastFrameSeen;
-
-    static PIXEL32 TextColor = { 0xFF, 0xFF, 0xFF, 0xFF };
-
-    if (gGamePerformanceData.TotalFramesRendered > (LastFrameSeen + 1))
-    {
-        LocalFrameCounter = 0;
-        //memset(&TextColor, 0, sizeof(PIXEL32));
-    }
-
-    //__stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
-
-    BlitTilemapToBuffer(&gOverWorld01);
-
-    Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y);
-
-    LocalFrameCounter++;
-
-    LastFrameSeen = gGamePerformanceData.TotalFramesRendered;
-}
-void DrawBattleScreen(void)
-{
-
-}
-
-
-
-
-void PPI_Overworld(void)            
-{
-    if (gGameInput.EscapeKeyPressed && gGameInput.EscapeKeyAlreadyPressed)
-    {
-        gPreviousGameState = gCurrentGameState;
-        gCurrentGameState = GAMESTATE_EXITYESNO;
-        PlayGameSound(&gSoundMenuChoose);
-    }
-
-    if (!gPlayer.MovementRemaining)
-    {
-        if (gGameInput.SDownKeyPressed)
-        {
-            if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 16)
-            {
-                gPlayer.Direction = DOWN;
-                gPlayer.MovementRemaining = 16;
-            }
-        }
-        else if (gGameInput.ALeftKeyPressed)
-        {
-            if (gPlayer.ScreenPos.x > 0)
-            {
-                gPlayer.Direction = LEFT;
-                gPlayer.MovementRemaining = 16;
-            }
-        }
-        else if (gGameInput.DRightKeyPressed)
-        {
-            if (gPlayer.ScreenPos.x < GAME_RES_WIDTH - 16)
-            {
-                gPlayer.Direction = RIGHT;
-                gPlayer.MovementRemaining = 16;
-            }
-        }
-        else if (gGameInput.WUpKeyPressed)
-        {
-            if (gPlayer.ScreenPos.y > 0)
-            {
-                gPlayer.Direction = UP;
-                gPlayer.MovementRemaining = 16;
-            }
-        }
-    }
-    else
-    {
-        gPlayer.MovementRemaining--;
-
-        if (gPlayer.Direction == DOWN)
-        {
-            gPlayer.ScreenPos.y++;
-        }
-        else if (gPlayer.Direction == LEFT)
-        {
-            gPlayer.ScreenPos.x--;
-        }
-        else if (gPlayer.Direction == RIGHT)
-        {
-            gPlayer.ScreenPos.x++;
-        }
-        else if (gPlayer.Direction == UP)
-        {
-            gPlayer.ScreenPos.y--;
-        }
-
-        switch (gPlayer.MovementRemaining)
-        {
-            case 16:
-            {
-                gPlayer.SpriteIndex = 1;
-                break;
-            }
-            case 12:
-            {
-                gPlayer.SpriteIndex = 1;
-                break;
-            }
-            case 8:
-            {
-                gPlayer.SpriteIndex = 2;
-                break;
-            }
-            case 4:
-            {
-                gPlayer.SpriteIndex = 2;
-                break;
-            }
-            case 0:
-            {
-                gPlayer.SpriteIndex = 0;
-                break;
-            }
-            default:
-            {
-
-            }
-        }
-    }
-}                                                   /////////////////////////////////////////////////character movement
 
 
 HRESULT InitializeSoundEngine(void)
@@ -1684,4 +1566,286 @@ void PlayGameSound(_In_ GAMESOUND* GameSound)
     {
         gSFXSourceVoiceSelector = 0;
     }
+}
+
+
+DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap)
+{
+    DWORD Error = ERROR_SUCCESS;
+
+    HANDLE FileHandle = INVALID_HANDLE_VALUE;
+
+    LARGE_INTEGER FileSize = { 0 };
+
+    DWORD BytesRead = 0;
+
+    void* FileBuffer = NULL;
+
+    char* Cursor = NULL;
+
+    char TempBuffer[16] = { 0 };
+
+    uint16_t Rows = 0;
+
+    uint16_t Columns = 0;
+
+
+    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
+    {
+        Error = GetLastError();
+        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
+    {
+        Error = GetLastError();
+        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
+
+    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
+
+    if (FileBuffer == NULL)
+    {
+        Error = ERROR_OUTOFMEMORY;
+        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
+    {
+        Error = GetLastError();
+        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    ///////////width
+
+    if ((Cursor = strstr(FileBuffer, "width=")) == NULL)
+    {
+        Error = ERROR_INVALID_DATA;
+        LogMessageA(LL_ERROR, "[%s] Could not locate Width attribute! 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    BytesRead = 0;      //reset
+
+    for (;;)
+    {
+        if (BytesRead > 8)
+        {
+            ////should have found opening quotation mark ("width"=)
+            Error = ERROR_INVALID_DATA;
+            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before Width attribute! 0x%08lx!", __FUNCTION__, Error);
+            goto Exit;
+        }
+        if (*Cursor == '\"')
+        {
+            Cursor++;
+            break;
+        }
+        else
+        {
+            Cursor++;
+        }
+        BytesRead++;
+    }
+
+    BytesRead = 0;      //reset
+
+    for (uint8_t Counter = 0; Counter < 6; Counter++)
+    {
+        if (*Cursor == '\"')
+        {
+            Cursor++;
+            break;
+        }
+        else
+        {
+            TempBuffer[Counter] = *Cursor;
+            Cursor++;
+        }
+    }
+
+    TileMap->Width = atoi(TempBuffer);
+    if (TileMap->Width == 0)
+    {
+        Error = ERROR_INVALID_DATA;
+        LogMessageA(LL_ERROR, "[%s] Width attribute was 0! 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+            
+    memset(TempBuffer, 0, sizeof(TempBuffer));
+
+    //////////height
+
+    if ((Cursor = strstr(FileBuffer, "height=")) == NULL)
+    {
+        Error = ERROR_INVALID_DATA;
+        LogMessageA(LL_ERROR, "[%s] Could not locate height attribute! 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    BytesRead = 0;      //reset
+
+    for (;;)
+    {
+        if (BytesRead > 8)
+        {
+            ////should have found opening quotation mark ("height"=)
+            Error = ERROR_INVALID_DATA;
+            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before height attribute! 0x%08lx!", __FUNCTION__, Error);
+            goto Exit;
+        }
+        if (*Cursor == '\"')
+        {
+            Cursor++;
+            break;
+        }
+        else
+        {
+            Cursor++;
+        }
+        BytesRead++;
+    }
+
+    BytesRead = 0;      //reset
+
+    for (uint8_t Counter = 0; Counter < 6; Counter++)
+    {
+        if (*Cursor == '\"')
+        {
+            Cursor++;
+            break;
+        }
+        else
+        {
+            TempBuffer[Counter] = *Cursor;
+            Cursor++;
+        }
+    }
+
+    TileMap->Height = atoi(TempBuffer);
+    if (TileMap->Height == 0)
+    {
+        Error = ERROR_INVALID_DATA;
+        LogMessageA(LL_ERROR, "[%s] Height attribute was 0! 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    LogMessageA(LL_INFO, "[%s] %s TileMap dimensions: %dx%d.", __FUNCTION__, FileName, TileMap->Width, TileMap->Height);
+
+    Rows = TileMap->Height;
+
+    Columns = TileMap->Width;
+
+    TileMap->Map = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Rows * sizeof(void*));
+    if (TileMap->Map == NULL)
+    {
+        Error = ERROR_OUTOFMEMORY;
+        LogMessageA(LL_ERROR, "[%s] HeapAlloc of height Failed with error 0x%08lx!", __FUNCTION__, Error);
+        goto Exit;
+    }
+
+    for (uint16_t Counter = 0; Counter < TileMap->Height; Counter++)
+    {
+        TileMap->Map[Counter] = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Columns * sizeof(void*));
+
+        if (TileMap->Map[Counter] == NULL)
+        {
+            Error = ERROR_OUTOFMEMORY;
+            LogMessageA(LL_ERROR, "[%s] HeapAlloc of width Failed with error 0x%08lx!", __FUNCTION__, Error);
+            goto Exit;
+        }
+    }
+
+    BytesRead = 0;
+
+    memset(TempBuffer, 0, sizeof(TempBuffer));
+
+    if ((Cursor = strstr(FileBuffer, ",")) == NULL)
+    {
+        Error = ERROR_INVALID_DATA;
+
+        LogMessageA(LL_ERROR, "[%s] Could not find a comma character in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
+
+        goto Exit;
+    }
+
+    while (*Cursor != '\r' && *Cursor != '\n')
+    {
+        if (BytesRead > 4)
+        {
+            Error = ERROR_INVALID_DATA;
+
+            LogMessageA(LL_ERROR, "[%s] Could not find a new line character at the beginning of the tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
+
+            goto Exit;
+        }
+
+        BytesRead++;
+
+        Cursor--;
+    }
+
+    Cursor++;
+
+    for (uint16_t Row = 0; Row < Rows; Row++)
+    {
+        for (uint16_t Column = 0; Column < Columns; Column++)
+        {
+            memset(TempBuffer, 0, sizeof(TempBuffer));
+
+            Skip:
+
+            if (*Cursor == '\r' || *Cursor == '\n')
+            {
+                Cursor++;
+
+                goto Skip;
+            }
+
+            for (uint8_t Counter = 0; Counter <= 10; Counter++)
+            {
+                if (*Cursor == ',' || *Cursor == '<')
+                {
+                    if (((TileMap->Map[Row][Column]) = (uint8_t)atoi(TempBuffer)) == 0)
+                    {
+                        Error = ERROR_INVALID_DATA;
+
+                        LogMessageA(LL_ERROR, "[%s] atoi failed while converting tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
+
+                        goto Exit;
+                    }
+
+                    Cursor++;
+
+                    break;
+                }
+
+                TempBuffer[Counter] = *Cursor;
+
+                Cursor++;
+            }
+        }
+    }
+
+
+
+Exit:
+    if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
+    {
+        CloseHandle(FileHandle);
+    }
+
+    if (FileBuffer)
+    {
+
+        HeapFree(GetProcessHeap(), 0, FileBuffer);
+    }
+
+    return(Error);
 }

@@ -2566,3 +2566,1518 @@
 [07/17/2023 16:11:13.048][INFO][SaveRegistryParameters] Saved 'MusicVolume' in registry: 60. 
 [07/17/2023 16:11:13.048][INFO][SaveRegistryParameters] Saved 'ScaleFactor' in registry: 4. 
 [07/17/2023 16:11:13.048][INFO][SaveRegistryParameters] Saved 'FullScreen' in registry: 0. 
+[07/17/2023 17:36:21.564][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 17:36:21.565][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 17:36:21.566][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 17:36:21.566][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 17:36:21.566][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 17:36:21.567][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 17:36:21.567][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 17:36:21.567][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 17:36:21.607][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 17:36:21.607][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 17:36:21.609][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 17:36:21.625][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 17:36:21.636][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:05:54.859][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:05:54.860][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:05:54.860][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:05:54.860][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:05:54.861][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:05:54.861][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:05:54.861][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:05:54.861][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:05:54.903][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:05:54.903][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:05:54.907][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:05:54.922][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:05:54.932][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:05:54.932][ERROR][LoadTileMapFromFile] Could not locate opening quotation mark before height attribute! 0x0000000d!
+[07/17/2023 18:09:05.986][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:09:05.986][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:09:05.987][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:09:05.987][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:09:05.987][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:09:05.988][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:09:05.988][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:09:05.988][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:09:06.028][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:09:06.028][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:09:06.031][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:09:06.049][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:09:06.050][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:09:06.050][ERROR][LoadTileMapFromFile] Could not locate opening quotation mark before height attribute! 0x0000000d!
+[07/17/2023 18:12:57.276][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:12:57.277][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:12:57.277][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:12:57.277][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:12:57.277][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:12:57.278][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:12:57.278][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:12:57.278][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:12:57.315][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:12:57.315][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:12:57.318][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:12:57.335][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:12:57.335][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:42:30.699][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:42:30.700][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:42:30.700][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:42:30.701][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:42:30.701][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:42:30.701][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:42:30.702][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:42:30.702][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:42:30.743][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:42:30.744][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:42:30.746][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:42:30.763][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:42:30.764][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:42:30.765][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 18:45:47.222][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:45:47.223][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:45:47.223][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:45:47.223][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:45:47.223][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:45:47.224][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:45:47.224][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:45:47.224][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:45:47.266][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:45:47.266][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:45:47.269][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:45:47.287][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:45:47.287][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:45:47.288][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 18:48:15.750][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:48:15.751][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:48:15.751][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:48:15.751][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:48:15.751][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:48:15.752][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:48:15.752][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:48:15.752][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:48:15.790][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:48:15.790][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:48:15.793][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:48:15.808][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:48:15.809][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:48:15.809][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 18:49:09.004][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:49:09.004][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:49:09.005][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:49:09.005][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:49:09.005][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:49:09.006][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:49:09.006][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:49:09.006][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:49:09.056][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:49:09.056][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:49:09.059][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:49:09.076][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:49:09.076][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:49:09.077][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 18:50:10.058][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:50:10.059][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:50:10.059][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:50:10.059][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:50:10.060][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:50:10.060][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:50:10.060][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:50:10.061][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:50:10.102][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:50:10.102][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:50:10.105][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:50:10.120][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:50:10.120][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:50:10.121][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 18:52:50.928][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:52:50.929][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:52:50.929][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:52:50.929][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:52:50.929][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:52:50.930][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:52:50.930][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:52:50.930][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:52:50.968][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:52:50.969][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:52:50.971][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:52:50.987][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:52:50.988][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:52:50.988][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 18:53:04.094][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 18:53:04.094][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 18:53:04.094][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 18:53:04.095][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 18:53:04.096][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 18:53:04.097][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 18:53:04.098][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 18:53:04.098][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 18:53:04.099][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 18:53:04.099][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 18:53:04.100][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 18:53:04.100][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 18:53:04.101][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 18:53:04.101][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 18:53:04.101][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 18:53:56.472][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 18:53:56.472][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 18:53:56.473][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 18:53:56.473][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 18:53:56.473][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 18:53:56.474][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 18:53:56.474][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 18:53:56.474][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 18:53:56.512][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 18:53:56.513][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 18:53:56.515][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 18:53:56.531][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 18:53:56.531][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 18:53:56.532][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 19:08:22.229][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 19:08:22.230][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 19:08:22.230][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 19:08:22.230][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 19:08:22.231][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 19:08:22.231][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 19:08:22.231][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 19:08:22.231][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 19:08:22.270][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 19:08:22.271][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 19:08:22.273][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 19:08:22.289][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 19:08:22.290][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 19:08:22.291][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 19:11:52.651][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 19:11:52.652][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 19:11:52.652][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 19:11:52.652][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 19:11:52.652][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 19:11:52.653][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 19:11:52.653][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 19:11:52.653][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 19:11:52.690][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 19:11:52.690][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 19:11:52.693][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 19:11:52.710][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 19:11:52.711][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 19:11:52.711][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 19:11:52.712][ERROR][LoadTileMapFromFile] atoi failed while converting tile map data in the file ..\Assets\Maps\Overworld01.tmx! 0x0000000d!
+[07/17/2023 19:14:17.077][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 19:14:17.077][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 19:14:17.077][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 19:14:17.077][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 19:14:17.078][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 19:14:17.078][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 19:14:17.079][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 19:14:17.079][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 19:14:17.121][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 19:14:17.122][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 19:14:17.125][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 19:14:17.141][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 19:14:17.142][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 19:14:17.142][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 19:14:17.143][ERROR][LoadTileMapFromFile] atoi failed while converting tile map data in the file ..\Assets\Maps\Overworld01.tmx! 0x0000000d!
+[07/17/2023 19:53:47.428][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 19:53:47.429][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 19:53:47.429][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 19:53:47.429][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 19:53:47.429][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 19:53:47.430][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 19:53:47.430][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 19:53:47.430][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 19:53:47.468][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 19:53:47.468][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 19:53:47.471][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 19:53:47.486][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 19:53:47.487][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 19:53:47.487][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 19:53:47.488][ERROR][LoadTileMapFromFile] atoi failed while converting tile map data in the file ..\Assets\Maps\Overworld01.tmx! 0x0000000d!
+[07/17/2023 19:55:04.941][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 19:55:04.941][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 19:55:04.942][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 19:55:04.942][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 19:55:04.942][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 19:55:04.943][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 19:55:04.943][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 19:55:04.943][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 19:55:05.001][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 19:55:05.001][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 19:55:05.005][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 19:55:05.021][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 19:55:05.021][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 19:55:05.022][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:07:20.210][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:07:20.210][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:07:20.211][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:07:20.211][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:07:20.211][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:07:20.212][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:07:20.212][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:07:20.212][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:07:20.252][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:07:20.253][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:07:20.255][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:07:20.272][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:07:20.273][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:07:20.273][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:07:20.274][ERROR][LoadTileMapFromFile] atoi failed while converting tile map data in the file ..\Assets\Maps\Overworld01.tmx! 0x0000000d!
+[07/17/2023 20:07:54.806][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:07:54.806][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:07:54.807][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:07:54.807][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:07:54.807][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:07:54.808][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:07:54.808][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:07:54.808][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:07:54.847][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:07:54.848][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:07:54.850][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:07:54.866][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:07:54.867][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:07:54.868][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:14:48.557][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:14:48.558][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:14:48.558][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:14:48.558][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:14:48.559][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:14:48.559][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:14:48.559][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:14:48.560][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:14:48.600][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:14:48.600][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:14:48.603][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:14:48.620][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:14:48.621][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:14:48.622][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:20:08.776][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:20:08.777][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:20:08.777][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:20:08.777][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:20:08.777][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:20:08.778][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:20:08.778][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:20:08.778][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:20:08.820][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:20:08.820][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:20:08.823][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:20:08.838][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:20:08.839][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:20:08.839][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:20:08.901][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:20:08.901][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:20:08.902][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:20:08.902][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:20:08.903][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:20:08.903][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:20:08.903][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:20:08.904][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:20:08.904][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:20:08.904][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:20:08.905][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:20:08.905][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:20:08.906][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:20:08.906][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:20:08.906][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 20:21:06.445][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:21:06.446][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:21:06.446][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:21:06.446][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:21:06.446][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:21:06.447][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:21:06.447][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:21:06.447][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:21:06.486][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:21:06.486][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:21:06.489][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:21:06.505][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:21:06.506][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:21:06.506][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:21:06.507][ERROR][LoadTileMapFromFile] atoi failed while converting tile map data in the file ..\Assets\Maps\Overworld01.tmx! 0x0000000d!
+[07/17/2023 20:21:26.050][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:21:26.050][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:21:26.051][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:21:26.051][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:21:26.051][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:21:26.052][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:21:26.052][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:21:26.052][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:21:26.092][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:21:26.092][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:21:26.095][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:21:26.110][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:21:26.111][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:21:26.111][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:22:06.070][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:22:06.071][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:22:06.071][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:22:06.071][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:22:06.071][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:22:06.072][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:22:06.072][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:22:06.072][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:22:06.109][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:22:06.109][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:22:06.112][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:22:06.128][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:22:06.128][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:22:06.129][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:26:20.964][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:26:20.965][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:26:20.965][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:26:20.965][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:26:20.966][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:26:20.966][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:26:20.966][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:26:20.967][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:26:21.008][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:26:21.008][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:26:21.010][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:26:21.026][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:26:21.027][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:26:21.027][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:27:15.466][ERROR][LoadTileMapFromFile] atoi failed while converting tile map data in the file ..\Assets\Maps\Overworld01.tmx! 0x0000000d!
+[07/17/2023 20:27:54.300][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:27:54.301][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:27:54.301][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:27:54.301][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:27:54.302][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:27:54.302][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:27:54.303][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:27:54.303][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:27:54.342][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:27:54.343][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:27:54.345][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:27:54.360][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:27:54.361][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:27:54.361][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:29:21.522][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:29:21.522][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:29:21.523][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:29:21.523][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:29:21.523][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:29:21.524][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:29:21.524][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:29:21.524][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:29:21.567][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:29:21.568][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:29:21.570][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:29:21.585][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:29:21.586][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:29:21.586][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:29:21.654][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:29:21.654][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:29:21.655][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:29:21.655][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:29:21.656][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:29:21.656][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:29:21.656][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:29:21.657][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:29:21.657][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:29:21.657][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:29:21.658][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:29:21.658][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:29:21.658][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:29:21.659][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:29:21.659][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 20:30:24.891][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:30:24.892][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:30:24.892][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:30:24.892][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:30:24.893][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:30:24.893][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:30:24.893][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:30:24.894][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:30:24.932][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:30:24.932][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:30:24.935][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:30:24.950][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:30:24.951][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:30:24.951][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:30:25.015][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:30:25.015][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:30:25.016][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:30:25.016][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:30:25.017][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:30:25.017][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:30:25.017][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:30:25.018][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:30:25.018][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:30:25.018][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:30:25.019][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:30:25.019][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:30:25.019][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:30:25.020][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:30:25.020][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 20:31:55.487][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:31:55.488][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:31:55.488][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:31:55.489][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:31:55.489][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:31:55.489][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:31:55.490][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:31:55.490][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:31:55.531][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:31:55.531][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:31:55.533][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:31:55.549][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:31:55.550][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:31:55.550][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:31:55.612][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:31:55.612][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:31:55.613][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:31:55.613][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:31:55.614][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:31:55.614][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:31:55.614][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:31:55.615][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:31:55.615][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:31:55.615][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:31:55.616][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:31:55.616][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:31:55.616][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:31:55.617][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:31:55.617][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 20:33:49.199][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:33:49.200][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:33:49.200][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:33:49.200][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:33:49.200][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:33:49.201][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:33:49.201][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:33:49.201][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:33:49.238][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:33:49.238][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:33:49.240][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:33:49.257][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:33:49.257][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:33:49.258][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:33:49.322][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:33:49.322][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:33:49.323][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:33:49.323][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:33:49.324][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:33:49.324][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:33:49.325][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:33:49.325][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:33:49.325][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:33:49.326][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:33:49.326][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:33:49.326][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:33:49.327][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:33:49.327][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:33:49.327][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 20:34:30.815][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:34:30.816][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:34:30.817][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:34:30.817][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:34:30.818][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:34:30.819][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:34:30.819][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:34:30.820][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:34:30.860][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:34:30.861][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:34:30.864][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:34:30.879][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:34:30.880][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:34:30.880][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:34:30.948][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:34:30.949][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:34:30.949][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:34:30.950][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:34:30.950][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:34:30.951][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:34:30.951][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:34:30.951][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:34:30.952][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:34:30.952][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:34:30.952][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:34:30.953][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:34:30.953][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:34:30.953][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:34:30.954][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/17/2023 20:42:18.668][INFO][LoadRegistryParameters] LogLevel is 4
+[07/17/2023 20:42:18.669][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/17/2023 20:42:18.669][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/17/2023 20:42:18.669][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/17/2023 20:42:18.669][INFO][LoadRegistryParameters] FullScreen is 0
+[07/17/2023 20:42:18.670][INFO][WinMain] Starting A_Game version 0.9a
+[07/17/2023 20:42:18.670][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/17/2023 20:42:18.670][INFO][WinMain] CPU Architecture: x64
+[07/17/2023 20:42:18.711][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/17/2023 20:42:18.712][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/17/2023 20:42:18.714][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/17/2023 20:42:18.730][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/17/2023 20:42:18.730][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/17/2023 20:42:18.731][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/17/2023 20:42:18.807][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/17/2023 20:42:18.807][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/17/2023 20:42:18.808][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/17/2023 20:42:18.808][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/17/2023 20:42:18.809][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/17/2023 20:42:18.809][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/17/2023 20:42:18.809][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/17/2023 20:42:18.810][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/17/2023 20:42:18.810][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/17/2023 20:42:18.810][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/17/2023 20:42:18.811][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/17/2023 20:42:18.811][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/17/2023 20:42:18.811][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/17/2023 20:42:18.812][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/17/2023 20:42:18.812][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 09:59:57.786][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 09:59:57.787][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 09:59:57.787][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 09:59:57.787][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 09:59:57.788][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 09:59:57.788][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 09:59:57.788][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 09:59:57.788][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 09:59:57.844][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 09:59:57.844][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 09:59:57.847][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 09:59:57.871][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 09:59:57.871][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 193395.
+[07/18/2023 09:59:57.872][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 09:59:57.935][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 09:59:57.936][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 09:59:57.937][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 09:59:57.938][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 09:59:57.938][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 09:59:57.938][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 09:59:57.939][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 09:59:57.939][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 09:59:57.940][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 09:59:57.940][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 09:59:57.940][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 09:59:57.941][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 09:59:57.941][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 09:59:57.942][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 09:59:57.942][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:33:29.105][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:33:29.106][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:33:29.106][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:33:29.106][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:33:29.106][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:33:29.107][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:33:29.107][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:33:29.107][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:33:29.145][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:33:29.145][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:33:29.148][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:33:29.164][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:33:29.165][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 73029.
+[07/18/2023 10:33:29.165][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:33:29.229][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:33:29.229][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:33:29.230][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:33:29.230][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:33:29.230][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:33:29.231][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:33:29.231][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:33:29.231][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:33:29.232][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:33:29.232][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:33:29.232][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:33:29.233][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:33:29.233][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:33:29.234][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:33:29.234][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:44:28.729][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:44:28.730][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:44:28.730][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:44:28.730][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:44:28.731][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:44:28.731][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:44:28.731][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:44:28.731][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:44:28.790][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:44:28.790][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:44:28.805][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:44:28.821][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:44:28.822][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:44:28.822][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:44:28.876][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:44:28.876][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:44:28.877][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:44:28.877][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:44:28.878][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:44:28.878][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:44:28.878][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:44:28.879][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:44:28.879][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:44:28.880][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:44:28.880][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:44:28.880][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:44:28.881][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:44:28.881][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:44:28.881][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:46:24.457][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:46:24.457][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:46:24.458][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:46:24.458][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:46:24.459][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:46:24.459][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:46:24.460][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:46:24.461][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:46:24.505][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:46:24.506][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:46:24.508][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:46:24.523][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:46:24.524][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:46:24.524][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:46:24.589][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:46:24.589][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:46:24.590][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:46:24.590][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:46:24.591][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:46:24.591][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:46:24.591][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:46:24.592][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:46:24.592][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:46:24.592][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:46:24.593][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:46:24.593][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:46:24.593][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:46:24.594][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:46:24.594][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:47:06.788][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:47:06.789][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:47:06.789][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:47:06.789][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:47:06.790][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:47:06.790][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:47:06.790][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:47:06.790][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:47:06.831][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:47:06.831][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:47:06.833][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:47:06.849][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:47:06.850][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:47:06.851][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:47:06.916][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:47:06.917][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:47:06.917][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:47:06.917][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:47:06.918][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:47:06.918][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:47:06.919][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:47:06.919][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:47:06.920][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:47:06.920][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:47:06.920][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:47:06.921][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:47:06.921][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:47:06.922][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:47:06.922][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:49:13.045][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:49:13.045][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:49:13.046][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:49:13.046][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:49:13.046][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:49:13.047][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:49:13.047][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:49:13.047][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:49:13.087][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:49:13.088][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:49:13.090][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:49:13.108][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:49:13.108][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:49:13.109][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:49:13.175][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:49:13.175][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:49:13.176][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:49:13.176][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:49:13.177][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:49:13.177][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:49:13.177][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:49:13.178][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:49:13.178][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:49:13.179][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:49:13.179][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:49:13.179][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:49:13.180][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:49:13.180][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:49:13.181][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:52:26.720][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:52:26.721][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:52:26.721][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:52:26.721][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:52:26.721][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:52:26.722][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:52:26.722][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:52:26.722][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:52:26.759][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:52:26.760][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:52:26.762][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:52:26.779][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:52:26.779][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:52:26.780][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:52:26.844][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:52:26.845][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:52:26.845][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:52:26.845][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:52:26.846][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:52:26.846][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:52:26.846][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:52:26.847][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:52:26.847][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:52:26.848][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:52:26.848][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:52:26.848][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:52:26.849][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:52:26.849][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:52:26.849][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:54:41.828][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:54:41.829][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:54:41.829][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:54:41.829][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:54:41.829][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:54:41.830][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:54:41.830][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:54:41.830][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:54:41.874][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:54:41.875][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:54:41.877][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:54:41.894][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:54:41.894][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:54:41.895][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:54:41.958][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:54:41.959][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:54:41.959][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:54:41.960][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:54:41.960][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:54:41.961][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:54:41.961][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:54:41.962][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:54:41.962][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:54:41.963][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:54:41.963][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:54:41.963][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:54:41.964][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:54:41.964][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:54:41.964][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:58:41.955][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:58:41.955][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:58:41.956][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:58:41.956][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:58:41.956][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:58:41.957][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:58:41.958][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:58:41.958][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:58:42.001][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:58:42.002][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:58:42.004][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:58:42.020][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:58:42.021][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:58:42.021][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:58:42.084][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:58:42.084][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:58:42.085][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:58:42.085][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:58:42.086][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:58:42.086][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:58:42.086][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:58:42.087][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:58:42.087][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:58:42.087][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:58:42.088][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:58:42.088][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:58:42.089][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:58:42.089][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:58:42.089][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 10:59:33.449][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 10:59:33.450][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 10:59:33.450][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 10:59:33.450][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 10:59:33.450][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 10:59:33.451][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 10:59:33.451][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 10:59:33.451][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 10:59:33.490][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 10:59:33.491][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 10:59:33.493][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 10:59:33.509][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 10:59:33.509][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 10:59:33.510][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 10:59:33.574][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 10:59:33.574][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 10:59:33.574][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 10:59:33.576][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 10:59:33.576][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 10:59:33.576][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 10:59:33.577][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 10:59:33.577][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 10:59:33.577][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 10:59:33.577][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 10:59:33.578][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 10:59:33.578][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 10:59:33.578][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 10:59:33.579][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 10:59:33.579][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 11:13:06.047][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 11:13:06.048][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 11:13:06.048][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 11:13:06.048][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 11:13:06.048][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 11:13:06.049][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 11:13:06.049][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 11:13:06.049][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 11:13:06.091][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 11:13:06.091][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 11:13:06.094][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 11:13:06.110][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 11:13:06.111][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 11:13:06.111][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 11:13:06.164][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 11:13:06.165][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 11:13:06.165][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 11:13:06.166][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 11:13:06.166][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 11:13:06.166][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 11:13:06.167][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 11:13:06.167][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 11:13:06.168][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 11:13:06.168][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 11:13:06.168][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 11:13:06.169][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 11:13:06.169][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 11:13:06.169][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 11:13:06.170][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 11:15:33.941][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 11:15:33.942][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 11:15:33.942][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 11:15:33.942][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 11:15:33.942][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 11:15:33.943][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 11:15:33.943][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 11:15:33.943][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 11:15:33.978][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 11:15:33.979][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 11:15:33.981][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 11:15:33.999][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 11:15:33.999][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 11:15:34.000][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 11:15:34.060][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 11:15:34.061][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 11:15:34.062][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 11:15:34.062][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 11:15:34.063][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 11:15:34.063][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 11:15:34.063][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 11:15:34.064][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 11:15:34.064][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 11:15:34.064][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 11:15:34.065][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 11:15:34.065][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 11:15:34.065][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 11:15:34.066][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 11:15:34.066][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 11:18:24.341][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 11:18:24.342][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 11:18:24.342][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 11:18:24.342][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 11:18:24.342][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 11:18:24.343][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 11:18:24.343][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 11:18:24.343][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 11:18:24.384][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 11:18:24.384][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 11:18:24.386][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 11:18:24.402][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 11:18:24.403][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 11:18:24.403][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 11:18:24.465][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 11:18:24.466][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 11:18:24.466][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 11:18:24.467][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 11:18:24.467][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 11:18:24.467][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 11:18:24.468][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 11:18:24.468][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 11:18:24.468][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 11:18:24.469][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 11:18:24.469][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 11:18:24.469][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 11:18:24.470][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 11:18:24.470][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 11:18:24.471][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 11:27:34.842][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 11:27:34.843][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 11:27:34.844][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 11:27:34.845][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 11:27:34.845][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 11:27:34.846][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 11:27:34.847][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 11:27:34.847][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 11:27:34.889][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 11:27:34.889][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 11:27:34.892][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 11:27:34.911][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 11:27:34.912][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 11:27:34.912][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 11:27:35.008][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 11:27:35.009][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 11:27:35.009][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 11:27:35.010][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 11:27:35.010][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 11:27:35.010][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 11:27:35.011][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 11:27:35.011][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 11:27:35.011][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 11:27:35.012][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 11:27:35.012][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 11:27:35.012][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 11:27:35.013][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 11:27:35.013][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 11:27:35.013][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 11:52:59.956][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 11:52:59.957][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 11:52:59.957][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 11:52:59.957][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 11:52:59.957][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 11:52:59.958][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 11:52:59.958][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 11:52:59.958][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 11:53:00.000][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 11:53:00.000][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 11:53:00.002][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 11:53:00.027][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 11:53:00.148][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 11:53:00.149][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 11:53:00.213][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 11:53:00.214][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 11:53:00.214][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 11:53:00.215][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 11:53:00.215][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 11:53:00.216][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 11:53:00.216][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 11:53:00.216][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 11:53:00.217][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 11:53:00.217][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 11:53:00.217][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 11:53:00.218][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 11:53:00.218][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 11:53:00.219][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 11:53:00.219][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 11:59:05.254][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 11:59:05.255][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 11:59:05.255][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 11:59:05.255][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 11:59:05.256][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 11:59:05.256][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 11:59:05.256][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 11:59:05.256][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 11:59:05.295][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 11:59:05.295][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 11:59:05.297][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 11:59:05.313][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 11:59:05.313][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 11:59:05.314][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 11:59:05.367][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 11:59:05.368][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 11:59:05.368][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 11:59:05.369][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 11:59:05.369][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 11:59:05.369][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 11:59:05.370][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 11:59:05.370][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 11:59:05.370][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 11:59:05.371][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 11:59:05.371][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 11:59:05.372][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 11:59:05.372][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 11:59:05.372][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 11:59:05.373][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:01:31.713][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:01:31.714][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:01:31.714][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:01:31.714][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:01:31.715][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:01:31.715][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:01:31.715][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:01:31.715][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:01:31.751][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:01:31.752][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:01:31.754][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:01:31.771][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:01:31.772][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:01:31.773][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:01:31.822][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:01:31.823][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:01:31.823][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:01:31.824][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:01:31.824][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:01:31.824][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:01:31.825][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:01:31.825][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:01:31.825][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:01:31.826][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:01:31.826][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:01:31.826][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:01:31.827][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:01:31.827][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:01:31.827][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:10:04.816][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:10:04.817][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:10:04.817][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:10:04.817][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:10:04.817][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:10:04.818][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:10:04.818][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:10:04.818][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:10:04.855][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:10:04.856][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:10:04.858][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:10:04.875][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:10:04.875][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:10:04.876][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:10:04.927][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:10:04.928][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:10:04.928][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:10:04.928][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:10:04.929][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:10:04.929][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:10:04.929][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:10:04.930][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:10:04.930][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:10:04.931][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:10:04.931][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:10:04.931][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:10:04.932][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:10:04.932][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:10:04.932][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:11:41.489][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:11:41.490][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:11:41.490][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:11:41.490][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:11:41.491][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:11:41.491][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:11:41.492][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:11:41.492][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:11:41.530][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:11:41.531][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:11:41.533][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:11:41.549][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:11:41.549][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:11:41.550][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:11:41.612][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:11:41.612][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:11:41.612][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:11:41.613][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:11:41.613][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:11:41.614][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:11:41.614][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:11:41.614][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:11:41.615][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:11:41.615][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:11:41.615][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:11:41.616][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:11:41.616][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:11:41.616][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:11:41.617][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:17:09.242][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:17:09.243][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:17:09.243][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:17:09.243][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:17:09.244][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:17:09.244][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:17:09.244][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:17:09.245][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:17:09.283][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:17:09.283][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:17:09.285][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:17:09.303][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:17:09.303][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:17:09.304][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:17:09.356][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:17:09.357][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:17:09.357][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:17:09.358][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:17:09.358][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:17:09.358][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:17:09.359][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:17:09.359][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:17:09.360][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:17:09.360][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:17:09.360][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:17:09.361][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:17:09.361][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:17:09.362][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:17:09.362][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:36:09.299][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:36:09.300][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:36:09.300][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:36:09.300][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:36:09.301][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:36:09.301][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:36:09.301][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:36:09.302][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:36:09.334][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:36:09.335][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:36:09.338][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:36:09.354][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:36:09.355][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:36:09.355][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:36:09.406][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:36:09.406][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:36:09.407][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:36:09.407][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:36:09.408][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:36:09.408][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:36:09.408][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:36:09.409][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:36:09.409][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:36:09.409][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:36:09.410][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:36:09.410][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:36:09.410][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:36:09.411][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:36:09.411][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:39:10.726][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:39:10.727][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:39:10.727][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:39:10.727][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:39:10.727][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:39:10.728][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:39:10.728][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:39:10.728][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:39:10.764][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:39:10.765][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:39:10.767][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:39:10.783][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:39:10.784][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:39:10.784][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:39:10.850][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:39:10.851][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:39:10.851][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:39:10.852][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:39:10.852][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:39:10.853][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:39:10.853][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:39:10.853][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:39:10.854][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:39:10.854][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:39:10.855][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:39:10.855][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:39:10.855][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:39:10.856][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:39:10.856][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:41:16.139][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:41:16.140][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:41:16.140][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:41:16.140][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:41:16.141][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:41:16.141][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:41:16.141][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:41:16.142][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:41:16.178][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:41:16.179][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:41:16.181][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:41:16.197][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:41:16.197][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:41:16.198][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:41:16.256][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:41:16.257][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:41:16.257][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:41:16.258][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:41:16.258][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:41:16.258][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:41:16.259][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:41:16.259][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:41:16.259][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:41:16.260][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:41:16.260][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:41:16.260][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:41:16.261][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:41:16.261][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:41:16.261][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:43:47.764][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:43:47.765][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:43:47.765][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:43:47.765][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:43:47.766][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:43:47.766][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:43:47.766][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:43:47.767][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:43:47.809][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:43:47.809][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:43:47.812][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:43:47.828][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:43:47.828][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:43:47.829][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:43:47.889][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:43:47.890][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:43:47.890][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:43:47.890][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:43:47.891][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:43:47.891][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:43:47.892][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:43:47.892][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:43:47.892][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:43:47.893][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:43:47.893][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:43:47.893][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:43:47.894][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:43:47.894][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:43:47.894][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:44:41.031][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:44:41.032][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:44:41.032][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:44:41.032][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:44:41.033][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:44:41.033][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:44:41.033][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:44:41.034][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:44:41.070][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:44:41.071][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:44:41.074][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:44:41.089][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:44:41.089][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:44:41.090][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:44:41.148][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:44:41.149][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:44:41.149][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:44:41.150][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:44:41.150][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:44:41.150][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:44:41.151][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:44:41.151][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:44:41.151][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:44:41.152][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:44:41.152][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:44:41.152][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:44:41.153][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:44:41.153][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:44:41.153][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:47:32.802][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:47:32.803][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:47:32.803][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:47:32.803][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:47:32.803][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:47:32.804][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:47:32.804][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:47:32.804][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:47:32.845][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:47:32.845][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:47:32.848][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:47:32.865][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:47:32.865][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:47:32.866][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:47:32.921][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:47:32.922][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:47:32.923][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:47:32.923][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:47:32.923][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:47:32.924][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:47:32.924][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:47:32.925][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:47:32.925][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:47:32.925][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:47:32.926][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:47:32.926][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:47:32.926][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:47:32.927][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:47:32.927][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:52:16.374][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:52:16.375][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:52:16.375][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:52:16.375][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:52:16.376][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:52:16.376][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:52:16.376][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:52:16.377][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:52:16.416][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:52:16.417][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:52:16.419][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:52:16.436][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:52:16.436][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:52:16.437][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:52:16.499][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:52:16.500][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:52:16.500][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:52:16.500][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:52:16.501][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:52:16.501][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:52:16.501][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:52:16.502][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:52:16.502][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:52:16.503][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:52:16.503][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:52:16.503][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:52:16.504][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:52:16.504][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:52:16.504][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 12:56:37.852][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 12:56:37.853][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 12:56:37.853][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 12:56:37.853][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 12:56:37.853][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 12:56:37.854][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 12:56:37.854][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 12:56:37.854][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 12:56:37.893][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 12:56:37.894][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 12:56:37.896][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 12:56:37.912][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 12:56:37.913][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 12:56:37.913][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 12:56:37.967][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 12:56:37.968][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 12:56:37.968][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 12:56:37.968][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 12:56:37.969][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 12:56:37.969][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 12:56:37.970][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 12:56:37.970][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 12:56:37.970][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 12:56:37.971][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 12:56:37.971][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 12:56:37.971][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 12:56:37.972][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 12:56:37.972][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 12:56:37.972][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 13:00:40.263][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 13:00:40.264][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 13:00:40.264][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 13:00:40.264][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 13:00:40.264][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 13:00:40.265][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 13:00:40.265][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 13:00:40.265][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 13:00:40.302][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 13:00:40.302][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 13:00:40.305][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 13:00:40.322][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 13:00:40.323][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 13:00:40.323][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 13:00:40.386][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 13:00:40.387][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 13:00:40.387][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 13:00:40.388][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 13:00:40.388][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 13:00:40.389][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 13:00:40.389][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 13:00:40.389][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 13:00:40.390][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 13:00:40.390][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 13:00:40.390][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 13:00:40.391][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 13:00:40.391][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 13:00:40.391][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 13:00:40.392][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 13:02:39.056][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 13:02:39.057][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 13:02:39.057][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 13:02:39.057][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 13:02:39.058][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 13:02:39.058][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 13:02:39.058][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 13:02:39.059][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 13:02:39.098][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 13:02:39.098][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 13:02:39.101][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 13:02:39.117][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 13:02:39.117][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 13:02:39.117][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 13:02:39.184][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 13:02:39.185][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 13:02:39.186][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 13:02:39.187][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 13:02:39.187][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 13:02:39.188][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 13:02:39.188][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 13:02:39.188][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 13:02:39.189][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 13:02:39.189][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 13:02:39.190][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 13:02:39.190][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 13:02:39.190][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 13:02:39.191][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 13:02:39.191][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 13:03:40.918][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 13:03:40.960][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 13:03:40.961][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 13:03:40.961][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 13:03:40.961][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 13:03:40.962][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 13:03:40.962][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 13:03:40.962][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 13:03:41.000][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 13:03:41.001][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 13:03:41.003][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 13:03:41.018][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 13:03:41.019][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 13:03:41.019][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 13:03:41.080][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 13:03:41.080][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 13:03:41.081][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 13:03:41.081][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 13:03:41.081][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 13:03:41.082][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 13:03:41.082][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 13:03:41.083][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 13:03:41.083][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 13:03:41.083][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 13:03:41.084][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 13:03:41.084][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 13:03:41.085][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 13:03:41.085][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 13:03:41.085][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 13:04:12.503][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 13:04:12.503][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 13:04:12.504][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 13:04:12.504][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 13:04:12.504][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 13:04:12.505][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 13:04:12.505][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 13:04:12.505][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 13:04:12.542][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 13:04:12.543][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 13:04:12.545][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 13:04:12.564][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 13:04:12.564][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 13:04:12.565][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 13:04:12.627][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 13:04:12.627][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 13:04:12.628][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 13:04:12.628][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 13:04:12.628][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 13:04:12.629][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 13:04:12.629][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 13:04:12.629][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 13:04:12.630][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 13:04:12.630][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 13:04:12.630][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 13:04:12.631][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 13:04:12.631][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 13:04:12.631][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 13:04:12.632][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
+[07/18/2023 13:06:02.271][INFO][LoadRegistryParameters] LogLevel is 4
+[07/18/2023 13:06:02.272][INFO][LoadRegistryParameters] ScaleFactor is 4
+[07/18/2023 13:06:02.272][INFO][LoadRegistryParameters] SFXVolume is 80
+[07/18/2023 13:06:02.272][INFO][LoadRegistryParameters] MusicVolume is 60
+[07/18/2023 13:06:02.273][INFO][LoadRegistryParameters] FullScreen is 0
+[07/18/2023 13:06:02.273][INFO][WinMain] Starting A_Game version 0.9a
+[07/18/2023 13:06:02.273][INFO][WinMain] Number of CPUs (Logical Processors): 16
+[07/18/2023 13:06:02.274][INFO][WinMain] CPU Architecture: x64
+[07/18/2023 13:06:02.314][INFO][CreateMainGameWindow] Current screen scale factor is 4. Max scale factor is 4.
+[07/18/2023 13:06:02.315][INFO][CreateMainGameWindow] Will draw at 1536x960
+[07/18/2023 13:06:02.317][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\PixelFont(6x7).bmpx
+[07/18/2023 13:06:02.333][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Maps\Overworld01.bmpx
+[07/18/2023 13:06:02.333][INFO][LoadTileMapFromFile] Size of file ..\Assets\Maps\Overworld01.tmx: 72744.
+[07/18/2023 13:06:02.334][INFO][LoadTileMapFromFile] ..\Assets\Maps\Overworld01.tmx TileMap dimensions: 240x150.
+[07/18/2023 13:06:02.395][INFO][LoadWaveFromFile] Loading successful: ..\Assets\menu.wav
+[07/18/2023 13:06:02.395][INFO][LoadWaveFromFile] Loading successful: ..\Assets\item.wav
+[07/18/2023 13:06:02.396][INFO][LoadWaveFromFile] Loading successful: ..\Assets\SplashNoise.wav
+[07/18/2023 13:06:02.396][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown0.bmpx
+[07/18/2023 13:06:02.397][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown1.bmpx
+[07/18/2023 13:06:02.397][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingDown2.bmpx
+[07/18/2023 13:06:02.397][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft0.bmpx
+[07/18/2023 13:06:02.398][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft1.bmpx
+[07/18/2023 13:06:02.398][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingLeft2.bmpx
+[07/18/2023 13:06:02.398][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight0.bmpx
+[07/18/2023 13:06:02.399][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight1.bmpx
+[07/18/2023 13:06:02.399][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingRight2.bmpx
+[07/18/2023 13:06:02.399][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp0.bmpx
+[07/18/2023 13:06:02.400][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp1.bmpx
+[07/18/2023 13:06:02.400][INFO][Load32BppBitmapFromFile] Loading Successful: ..\Assets\Suit0FacingUp2.bmpx
