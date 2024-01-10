@@ -37,8 +37,7 @@ void DrawOverworldScreen(void)
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
 
-
-
+    /////////////////seems to work for one sprite TODO test with multiple sprites
     TriggerNPCMovement(LocalFrameCounter, MOVEMENT_SPIN);
 
     for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
@@ -50,10 +49,11 @@ void DrawOverworldScreen(void)
     }
 
 
-
     Blit32BppBitmapToBuffer(&gPlayer.Sprite[gPlayer.CurrentSuit][gPlayer.SpriteIndex + gPlayer.Direction], gPlayer.ScreenPos.x, gPlayer.ScreenPos.y, BrightnessAdjustment);
-                                            //BB    GG    RR    AA
-    //DrawWindow(32, 8, 96, 160, (PIXEL32) { 0x00, 0x00, 0x00, 0xFF }, WINDOW_FLAG_BORDERED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_SHADOWED);
+
+
+    DrawDialogueBox("Hello!\nHow are you today?\nI'm enjoying myself here, next\nto the lake!", NULL, NULL); 
+
 
     if (gGamePerformanceData.DisplayDebugInfo)
     {
@@ -99,162 +99,95 @@ void DrawOverworldScreen(void)
 
 void PPI_Overworld(void)
 {
-    if (gGameInput.EscapeKeyPressed && gGameInput.EscapeKeyAlreadyPressed)
+    if (gDialogueControls == FALSE)
     {
-        gPreviousGameState = gCurrentGameState;
-        gCurrentGameState = GAMESTATE_TITLESCREEN;
-        PlayGameSound(&gSoundMenuChoose);
-
-        PauseGameMusic();
-    }
-
-    //ASSERT(gCamera.x <= gCurrentArea.right - GAME_RES_WIDTH, "Camera went out of bounds!");
-
-    //ASSERT(gCamera.y <= gCurrentArea.bottom - GAME_RES_HEIGHT, "Camera went out of bounds!");
-
-
-    if (!gPlayer.MovementRemaining)
-    {
-        BOOL CanMoveToDesiredTile = FALSE;
-        BOOL NoSpriteCollision = FALSE;
-        if (gGameInput.SDownKeyPressed)
+        if (gGameInput.EscapeKeyPressed && gGameInput.EscapeKeyAlreadyPressed)
         {
-            for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
-            {
-                if (((gPlayer.WorldPos.y / 16) + 1 > gOverWorld01.TileMap.Height - 1))      ////not perfect but prevents crashing when walking to bottom of world
-                {
-                    break;
-                }
+            gPreviousGameState = gCurrentGameState;
+            gCurrentGameState = GAMESTATE_TITLESCREEN;
+            PlayGameSound(&gSoundMenuChoose);
 
-                if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
-                {
-                    CanMoveToDesiredTile = TRUE;
+            PauseGameMusic();
+        }
 
-                    break;
-                }
-            }
+        //ASSERT(gCamera.x <= gCurrentArea.right - GAME_RES_WIDTH, "Camera went out of bounds!");
+
+        //ASSERT(gCamera.y <= gCurrentArea.bottom - GAME_RES_HEIGHT, "Camera went out of bounds!");
+
+
+        /////////////////////////////////////////////TODO Interacting with a sprite pauses the game, removes player movement and enables dialogue controls,
+        /////////////////////////////////////////////     faces the interacted sprite towards the player, and finnally opens a dialogue box and waits for player input.
+        if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+        {
             for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
             {
                 if (gCharacterSprite[Index].Visible == TRUE)
                 {
-                    if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y + 16 == gCharacterSprite[Index].WorldPosS.y))
+                    switch (gPlayer.Direction)          ////////decending directional ordering (up = 9, right = 6, left = 3, down = 0)
                     {
-                        NoSpriteCollision = FALSE;
-                        break;
+                        case (UP):
+                        {
+                            if (gCharacterSprite[Index].WorldPosS.y == gPlayer.WorldPos.y - 16)
+                            {
+                                PlayGameSound(&gSoundMenuChoose);
+                                EnterDialogue();
+                                gCharacterSprite[Index].DirectionS = DOWN_S;
+                            }
+                            break;
+                        }
+                        case (RIGHT):
+                        {
+                            if (gCharacterSprite[Index].WorldPosS.x == gPlayer.WorldPos.x + 16)
+                            {
+                                PlayGameSound(&gSoundMenuChoose);
+                                EnterDialogue();
+                                gCharacterSprite[Index].DirectionS = LEFT_S;
+                            }
+                            break;
+                        }
+                        case (LEFT):
+                        {
+                            if (gCharacterSprite[Index].WorldPosS.x == gPlayer.WorldPos.x - 16)
+                            {
+                                PlayGameSound(&gSoundMenuChoose);
+                                EnterDialogue();
+                                gCharacterSprite[Index].DirectionS = RIGHT_S;
+                            }
+                            break;
+                        }
+                        case (DOWN):
+                        {
+                            if (gCharacterSprite[Index].WorldPosS.y == gPlayer.WorldPos.y + 16)
+                            {
+                                PlayGameSound(&gSoundMenuChoose);
+                                EnterDialogue();
+                                gCharacterSprite[Index].DirectionS = UP_S;
+                            }
+                            break;
+                        }
+                        default:
+                        {
+                            ASSERT(FALSE, "Player is facing an unknown direction!")
+                        }
                     }
-                    else
-                    {
-                        NoSpriteCollision = TRUE;
-                        break;
-                    }
-                }
-                else
-                {
-                    NoSpriteCollision = TRUE;
                 }
             }
-            if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
-            {   
-                if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 16)
-                {
-                    gPlayer.Direction = DOWN;
-                    gPlayer.MovementRemaining = 16;
-                    gPlayer.StepsTaken++;
-                }
-            }
-            gPlayer.Direction = DOWN;
         }
-        else if (gGameInput.ALeftKeyPressed)
-        {
-            for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
-            {
-                if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) - 1] == gPassableTiles[Counter])
-                {
-                    CanMoveToDesiredTile = TRUE;
 
-                    break;
-                }
-            }
-            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
-            {
-                if (gCharacterSprite[Index].Visible == TRUE)
-                {
-                    if ((gPlayer.WorldPos.x - 16 == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPosS.y))
-                    {
-                        NoSpriteCollision = FALSE;
-                        break;
-                    }
-                    else
-                    {
-                        NoSpriteCollision = TRUE;
-                        break;
-                    }
-                }
-                else
-                {
-                    NoSpriteCollision = TRUE;
-                }
-            }
-            if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
-            {
-                if (gPlayer.ScreenPos.x > 0)
-                {
-                    gPlayer.Direction = LEFT;
-                    gPlayer.MovementRemaining = 16;
-                    gPlayer.StepsTaken++;
-                }
-            }
-            gPlayer.Direction = LEFT;
-        }
-        else if (gGameInput.DRightKeyPressed)
+        if (!gPlayer.MovementRemaining)
         {
-            for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
-            {
-                if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) + 1] == gPassableTiles[Counter])
-                {
-                    CanMoveToDesiredTile = TRUE;
-
-                    break;
-                }
-            }
-            for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
-            {
-                if (gCharacterSprite[Index].Visible == TRUE)
-                {
-                    if ((gPlayer.WorldPos.x + 16 == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPosS.y))
-                    {
-                        NoSpriteCollision = FALSE;
-                        break;
-                    }
-                    else
-                    {
-                        NoSpriteCollision = TRUE;
-                        break;
-                    }
-                }
-                else
-                {
-                    NoSpriteCollision = TRUE;
-                }
-            }
-            if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
-            {
-                if (gPlayer.ScreenPos.x < GAME_RES_WIDTH - 16)
-                {
-                    gPlayer.Direction = RIGHT;
-                    gPlayer.MovementRemaining = 16;
-                    gPlayer.StepsTaken++;
-                }
-            }
-            gPlayer.Direction = RIGHT;
-        }
-        else if (gGameInput.WUpKeyPressed)
-        {
-            if (gPlayer.ScreenPos.y > 0)
+            BOOL CanMoveToDesiredTile = FALSE;
+            BOOL NoSpriteCollision = FALSE;
+            if (gGameInput.SDownKeyPressed)
             {
                 for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
                 {
-                    if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) - 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
+                    if (((gPlayer.WorldPos.y / 16) + 1 > gOverWorld01.TileMap.Height - 1))      ////not perfect but prevents crashing when walking to bottom of world
+                    {
+                        break;
+                    }
+
+                    if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
                     {
                         CanMoveToDesiredTile = TRUE;
 
@@ -265,7 +198,7 @@ void PPI_Overworld(void)
                 {
                     if (gCharacterSprite[Index].Visible == TRUE)
                     {
-                        if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y - 16 == gCharacterSprite[Index].WorldPosS.y))
+                        if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y + 16 == gCharacterSprite[Index].WorldPosS.y))
                         {
                             NoSpriteCollision = FALSE;
                             break;
@@ -283,245 +216,382 @@ void PPI_Overworld(void)
                 }
                 if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
                 {
-                    if (gPlayer.ScreenPos.y > 0)
+                    if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 16)
                     {
-                        gPlayer.Direction = UP;
+                        gPlayer.Direction = DOWN;
                         gPlayer.MovementRemaining = 16;
                         gPlayer.StepsTaken++;
                     }
                 }
+                gPlayer.Direction = DOWN;
             }
-            gPlayer.Direction = UP;
+            else if (gGameInput.ALeftKeyPressed)
+            {
+                for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
+                {
+                    if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) - 1] == gPassableTiles[Counter])
+                    {
+                        CanMoveToDesiredTile = TRUE;
+
+                        break;
+                    }
+                }
+                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                {
+                    if (gCharacterSprite[Index].Visible == TRUE)
+                    {
+                        if ((gPlayer.WorldPos.x - 16 == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPosS.y))
+                        {
+                            NoSpriteCollision = FALSE;
+                            break;
+                        }
+                        else
+                        {
+                            NoSpriteCollision = TRUE;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        NoSpriteCollision = TRUE;
+                    }
+                }
+                if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
+                {
+                    if (gPlayer.ScreenPos.x > 0)
+                    {
+                        gPlayer.Direction = LEFT;
+                        gPlayer.MovementRemaining = 16;
+                        gPlayer.StepsTaken++;
+                    }
+                }
+                gPlayer.Direction = LEFT;
+            }
+            else if (gGameInput.DRightKeyPressed)
+            {
+                for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
+                {
+                    if (gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16) + 1] == gPassableTiles[Counter])
+                    {
+                        CanMoveToDesiredTile = TRUE;
+
+                        break;
+                    }
+                }
+                for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                {
+                    if (gCharacterSprite[Index].Visible == TRUE)
+                    {
+                        if ((gPlayer.WorldPos.x + 16 == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y == gCharacterSprite[Index].WorldPosS.y))
+                        {
+                            NoSpriteCollision = FALSE;
+                            break;
+                        }
+                        else
+                        {
+                            NoSpriteCollision = TRUE;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        NoSpriteCollision = TRUE;
+                    }
+                }
+                if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
+                {
+                    if (gPlayer.ScreenPos.x < GAME_RES_WIDTH - 16)
+                    {
+                        gPlayer.Direction = RIGHT;
+                        gPlayer.MovementRemaining = 16;
+                        gPlayer.StepsTaken++;
+                    }
+                }
+                gPlayer.Direction = RIGHT;
+            }
+            else if (gGameInput.WUpKeyPressed)
+            {
+                if (gPlayer.ScreenPos.y > 0)
+                {
+                    for (uint8_t Counter = 0; Counter < _countof(gPassableTiles); Counter++)
+                    {
+                        if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) - 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
+                        {
+                            CanMoveToDesiredTile = TRUE;
+
+                            break;
+                        }
+                    }
+                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                    {
+                        if (gCharacterSprite[Index].Visible == TRUE)
+                        {
+                            if ((gPlayer.WorldPos.x == gCharacterSprite[Index].WorldPosS.x) && (gPlayer.WorldPos.y - 16 == gCharacterSprite[Index].WorldPosS.y))
+                            {
+                                NoSpriteCollision = FALSE;
+                                break;
+                            }
+                            else
+                            {
+                                NoSpriteCollision = TRUE;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            NoSpriteCollision = TRUE;
+                        }
+                    }
+                    if (CanMoveToDesiredTile == TRUE && NoSpriteCollision == TRUE)
+                    {
+                        if (gPlayer.ScreenPos.y > 0)
+                        {
+                            gPlayer.Direction = UP;
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.StepsTaken++;
+                        }
+                    }
+                }
+                gPlayer.Direction = UP;
+            }
+        }
+        else
+        {
+            gPlayer.MovementRemaining--;
+
+            if (gPlayer.Direction == DOWN)
+            {
+                if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 64)
+                {
+                    gPlayer.ScreenPos.y++;
+                }
+                else
+                {
+                    if (gCamera.y < gCurrentArea.Area.bottom - GAME_RES_HEIGHT)
+                    {
+                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        {
+                            if (gCharacterSprite[Index].Exists == TRUE)
+                            {
+                                if (gCharacterSprite[Index].Visible == TRUE)
+                                {
+                                    if (gCharacterSprite[Index].ScreenPosS.y <= 0 || gCharacterSprite[Index].ScreenPosS.y >= GAME_RES_HEIGHT - 16)
+                                    {
+                                        gCharacterSprite[Index].Visible = FALSE;
+                                    }
+                                }
+                                gCharacterSprite[Index].ScreenPosS.y--;
+
+                                if (gCharacterSprite[Index].Visible == FALSE)
+                                {
+                                    if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                    {
+                                        gCharacterSprite[Index].Visible = TRUE;
+                                    }
+                                }
+                            }
+                        }
+                        gCamera.y++;
+                    }
+                    else
+                    {
+                        gPlayer.ScreenPos.y++;
+                    }
+                }
+                gPlayer.WorldPos.y++;
+            }
+            else if (gPlayer.Direction == LEFT)
+            {
+                if (gPlayer.ScreenPos.x > 64)
+                {
+
+                    gPlayer.ScreenPos.x--;
+                }
+                else
+                {
+                    if (gCamera.x > gCurrentArea.Area.left)
+                    {
+                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        {
+                            if (gCharacterSprite[Index].Exists == TRUE)
+                            {
+                                if (gCharacterSprite[Index].Visible == TRUE)
+                                {
+                                    if (gCharacterSprite[Index].ScreenPosS.x <= 0 || gCharacterSprite[Index].ScreenPosS.x >= GAME_RES_WIDTH - 16)
+                                    {
+                                        gCharacterSprite[Index].Visible = FALSE;
+                                    }
+                                }
+                                gCharacterSprite[Index].ScreenPosS.x++;
+
+                                if (gCharacterSprite[Index].Visible == FALSE)
+                                {
+                                    if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                    {
+                                        gCharacterSprite[Index].Visible = TRUE;
+                                    }
+                                }
+                            }
+                        }
+                        gCamera.x--;
+                    }
+                    else
+                    {
+                        gPlayer.ScreenPos.x--;
+                    }
+                }
+                gPlayer.WorldPos.x--;
+            }
+            else if (gPlayer.Direction == RIGHT)
+            {
+                if (gPlayer.ScreenPos.x < GAME_RES_WIDTH - 64)
+                {
+                    gPlayer.ScreenPos.x++;
+                }
+                else
+                {
+                    if (gCamera.x < gCurrentArea.Area.right - GAME_RES_WIDTH)
+                    {
+                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        {
+                            if (gCharacterSprite[Index].Exists == TRUE)
+                            {
+                                if (gCharacterSprite[Index].Visible == TRUE)
+                                {
+                                    if (gCharacterSprite[Index].ScreenPosS.x <= 0 || gCharacterSprite[Index].ScreenPosS.x >= GAME_RES_WIDTH - 16)
+                                    {
+                                        gCharacterSprite[Index].Visible = FALSE;
+                                    }
+                                }
+                                gCharacterSprite[Index].ScreenPosS.x--;
+
+                                if (gCharacterSprite[Index].Visible == FALSE)
+                                {
+                                    if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                    {
+                                        gCharacterSprite[Index].Visible = TRUE;
+                                    }
+                                }
+                            }
+                        }
+                        gCamera.x++;
+                    }
+                    else
+                    {
+                        gPlayer.ScreenPos.x++;
+                    }
+                }
+                gPlayer.WorldPos.x++;
+            }
+            else if (gPlayer.Direction == UP)
+            {
+                if (gPlayer.ScreenPos.y > 64)
+                {
+                    gPlayer.ScreenPos.y--;
+                }
+                else
+                {
+                    if (gCamera.y > gCurrentArea.Area.top)
+                    {
+                        for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
+                        {
+                            if (gCharacterSprite[Index].Exists == TRUE)
+                            {
+                                if (gCharacterSprite[Index].Visible == TRUE)
+                                {
+                                    if (gCharacterSprite[Index].ScreenPosS.y <= 0 || gCharacterSprite[Index].ScreenPosS.y >= GAME_RES_HEIGHT - 16)
+                                    {
+                                        gCharacterSprite[Index].Visible = FALSE;
+                                    }
+                                }
+                                gCharacterSprite[Index].ScreenPosS.y++;
+
+                                if (gCharacterSprite[Index].Visible == FALSE)
+                                {
+                                    if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
+                                    {
+                                        gCharacterSprite[Index].Visible = TRUE;
+                                    }
+                                }
+                            }
+                        }
+                        gCamera.y--;
+                    }
+                    else
+                    {
+                        gPlayer.ScreenPos.y--;
+                    }
+                }
+                gPlayer.WorldPos.y--;
+            }
+
+            switch (gPlayer.MovementRemaining)
+            {
+                case 15:
+                {
+                    gPlayer.HasMovedSincePort = TRUE;
+                    gPlayer.SpriteIndex = 1;
+                    break;
+                }
+                case 12:
+                {
+                    gPlayer.SpriteIndex = 1;
+                    break;
+                }
+                case 8:
+                {
+                    gPlayer.SpriteIndex = 2;
+                    break;
+                }
+                case 4:
+                {
+                    gPlayer.SpriteIndex = 2;
+                    break;
+                }
+                case 0:
+                {
+                    gPlayer.SpriteIndex = 0;
+                    // is the player on a portal
+                    if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16)][(gPlayer.WorldPos.x / 16)] == TILE_TELEPORT01)
+                    {
+                        if (gPlayer.HasMovedSincePort == TRUE)
+                        {
+                            TeleportHandler();
+                        }
+                    }
+                    else
+                    {
+                        if (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD)
+                        {
+                            DWORD Random = 0;
+
+                            rand_s((unsigned int*)&Random);
+
+                            Random = Random % 1000;
+
+                            if (Random > (1000 - gPlayer.RandomEncounterPercent))
+                            {
+                                gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
+                                RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                            }
+                        }
+                    }
+
+                    break;
+                }
+                default:
+                {
+
+                }
+            }
         }
     }
     else
     {
-        gPlayer.MovementRemaining--;
-
-        if (gPlayer.Direction == DOWN)
+        if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
         {
-            if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 64)
-            {
-                gPlayer.ScreenPos.y++;
-            }
-            else
-            {
-                if (gCamera.y < gCurrentArea.Area.bottom - GAME_RES_HEIGHT)
-                {
-                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
-                    {
-                        if (gCharacterSprite[Index].Exists == TRUE)
-                        {
-                            if (gCharacterSprite[Index].Visible == TRUE)
-                            {
-                                if (gCharacterSprite[Index].ScreenPosS.y <= 0 || gCharacterSprite[Index].ScreenPosS.y >= GAME_RES_HEIGHT - 16)
-                                {
-                                    gCharacterSprite[Index].Visible = FALSE;
-                                }
-                            }
-                            gCharacterSprite[Index].ScreenPosS.y--;
-
-                            if (gCharacterSprite[Index].Visible == FALSE)
-                            {
-                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
-                                {
-                                    gCharacterSprite[Index].Visible = TRUE;
-                                }
-                            }
-                        }
-                    }
-                    gCamera.y++;
-                }
-                else
-                {
-                    gPlayer.ScreenPos.y++;
-                }
-            }
-            gPlayer.WorldPos.y++;
-        }
-        else if (gPlayer.Direction == LEFT)
-        {
-            if (gPlayer.ScreenPos.x > 64)
-            {
-
-                gPlayer.ScreenPos.x--;
-            }
-            else
-            {
-                if (gCamera.x > gCurrentArea.Area.left)
-                {
-                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
-                    {
-                        if (gCharacterSprite[Index].Exists == TRUE)
-                        {
-                            if (gCharacterSprite[Index].Visible == TRUE)
-                            {
-                                if (gCharacterSprite[Index].ScreenPosS.x <= 0 || gCharacterSprite[Index].ScreenPosS.x >= GAME_RES_WIDTH - 16)
-                                {
-                                    gCharacterSprite[Index].Visible = FALSE;
-                                }
-                            }
-                            gCharacterSprite[Index].ScreenPosS.x++;
-
-                            if (gCharacterSprite[Index].Visible == FALSE)
-                            {
-                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
-                                {
-                                    gCharacterSprite[Index].Visible = TRUE;
-                                }
-                            }
-                        }
-                    }
-                    gCamera.x--;
-                }
-                else
-                {
-                    gPlayer.ScreenPos.x--;
-                }
-            }
-            gPlayer.WorldPos.x--;
-        }
-        else if (gPlayer.Direction == RIGHT)
-        {
-            if (gPlayer.ScreenPos.x < GAME_RES_WIDTH - 64)
-            {
-                gPlayer.ScreenPos.x++;
-            }
-            else        
-            {
-                if (gCamera.x < gCurrentArea.Area.right - GAME_RES_WIDTH)
-                {
-                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
-                    {
-                        if (gCharacterSprite[Index].Exists == TRUE)
-                        {
-                            if (gCharacterSprite[Index].Visible == TRUE)
-                            {
-                                if (gCharacterSprite[Index].ScreenPosS.x <= 0 || gCharacterSprite[Index].ScreenPosS.x >= GAME_RES_WIDTH - 16)
-                                {
-                                    gCharacterSprite[Index].Visible = FALSE;
-                                }
-                            }
-                            gCharacterSprite[Index].ScreenPosS.x--;
-
-                            if (gCharacterSprite[Index].Visible == FALSE)
-                            {
-                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
-                                {
-                                    gCharacterSprite[Index].Visible = TRUE;
-                                }
-                            }
-                        }
-                    }
-                    gCamera.x++;
-                }
-                else
-                {
-                    gPlayer.ScreenPos.x++;
-                }
-            }
-            gPlayer.WorldPos.x++;
-        }
-        else if (gPlayer.Direction == UP)
-        {
-            if (gPlayer.ScreenPos.y > 64)
-            {
-                gPlayer.ScreenPos.y--;
-            }
-            else
-            {
-                if (gCamera.y > gCurrentArea.Area.top)
-                {
-                    for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
-                    {
-                        if (gCharacterSprite[Index].Exists == TRUE)
-                        {
-                            if (gCharacterSprite[Index].Visible == TRUE)
-                            {
-                                if (gCharacterSprite[Index].ScreenPosS.y <= 0 || gCharacterSprite[Index].ScreenPosS.y >= GAME_RES_HEIGHT - 16)
-                                {
-                                    gCharacterSprite[Index].Visible = FALSE;
-                                }
-                            }
-                            gCharacterSprite[Index].ScreenPosS.y++;
-
-                            if (gCharacterSprite[Index].Visible == FALSE)
-                            {
-                                if ((gCharacterSprite[Index].ScreenPosS.x >= 0 && gCharacterSprite[Index].ScreenPosS.x <= GAME_RES_WIDTH - 16) && (gCharacterSprite[Index].ScreenPosS.y >= 0 && gCharacterSprite[Index].ScreenPosS.y <= GAME_RES_HEIGHT - 16))
-                                {
-                                    gCharacterSprite[Index].Visible = TRUE;
-                                }
-                            }
-                        }
-                    }
-                    gCamera.y--;
-                }
-                else
-                {
-                    gPlayer.ScreenPos.y--;
-                }
-            }
-            gPlayer.WorldPos.y--;
-        }
-
-        switch (gPlayer.MovementRemaining)
-        {
-            case 15:
-            {
-                gPlayer.HasMovedSincePort = TRUE;
-                gPlayer.SpriteIndex = 1;
-                break;
-            }
-            case 12:
-            {
-                gPlayer.SpriteIndex = 1;
-                break;
-            }
-            case 8:
-            {
-                gPlayer.SpriteIndex = 2;
-                break;
-            }
-            case 4:
-            {
-                gPlayer.SpriteIndex = 2;
-                break;
-            }
-            case 0:
-            {
-                gPlayer.SpriteIndex = 0;
-                // is the player on a portal
-                if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16)][(gPlayer.WorldPos.x / 16)] == TILE_TELEPORT01)
-                {
-                    if (gPlayer.HasMovedSincePort == TRUE)
-                    {
-                        TeleportHandler();
-                    }
-                }
-                else
-                {
-                    if (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD)
-                    {
-                        DWORD Random = 0;
-
-                        rand_s((unsigned int*)&Random);
-
-                        Random = Random % 1000;
-
-                        if (Random > (1000 - gPlayer.RandomEncounterPercent))
-                        {
-                            gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
-                            RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
-                        }
-                    }
-                }
-
-                break;
-            }
-            default:
-            {
-
-            }
+            gGamePaused = FALSE;
+            gDialogueControls = FALSE;
         }
     }
 }                                                   
@@ -565,29 +635,32 @@ void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE
 
 void TriggerNPCMovement(_In_ uint64_t Counter, _In_ MOVEMENTTYPE MovementFlag)
 {
-    for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
+    if (gGamePaused == FALSE)
     {
-        if (Counter % 30 == 0)
+        for (uint8_t Index = 0; Index <= MAX_SPRITE_LOAD; Index++)
         {
-            if (gCharacterSprite[Index].Visible == TRUE)
+            if (Counter % 30 == 0)
             {
-                switch (gCharacterSprite[Index].Movement)
+                if (gCharacterSprite[Index].Visible == TRUE)
                 {
-                    case (MOVEMENT_SPIN):
+                    switch (gCharacterSprite[Index].Movement)
                     {
-                        if (gCharacterSprite[Index].DirectionS > 2)
+                        case (MOVEMENT_SPIN):
                         {
-                            gCharacterSprite[Index].DirectionS = 0;
+                            if (gCharacterSprite[Index].DirectionS > 2)
+                            {
+                                gCharacterSprite[Index].DirectionS = 0;
+                            }
+                            else
+                            {
+                                gCharacterSprite[Index].DirectionS++;
+                            }
+                            break;
                         }
-                        else
+                        default:
                         {
-                            gCharacterSprite[Index].DirectionS++;
+                            ASSERT(FALSE, "INGAMESPRITE has an unknown movement type!")
                         }
-                        break;
-                    }
-                    default:
-                    {
-                        ASSERT(FALSE, "INGAMESPRITE has an unknown movement type!")
                     }
                 }
             }

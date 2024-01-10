@@ -58,6 +58,7 @@
 
 #define FADE_DURATION_FRAMES 20
 #define COLOR_NES_WHITE (PIXEL32){ .Bytes = 0xFFFCFCFC }
+#define COLOR_DARK_WHITE (PIXEL32){ .Bytes = 0xFFDCDCDC }
 #define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF202020 }
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
@@ -140,6 +141,12 @@ typedef enum WINDOW_FLAGS
 	WINDOW_FLAG_THICK = 64
 
 } WINDOW_FLAGS;
+
+typedef enum DIALOGUE_FLAGS
+{
+	DIALOGUE_FLAG_BRIEF = 1
+
+} DIALOGUE_FLAGS;
 
 typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 {
@@ -380,6 +387,9 @@ BOOL gGameIsRunning;                //when set to FALSE ends the game, controls 
 GAME_PERFORMANCE_DATA gGamePerformanceData;
 
 BOOL gInputEnabled;
+BOOL gGamePaused;
+BOOL gDialogueControls;
+BOOL gMenuControls;
 
 INGAMESPRITE gCharacterSprite[MAX_SPRITE_LOAD];
 
@@ -476,4 +486,6 @@ void DrawWindow( _In_opt_ uint16_t x, _In_opt_ uint16_t y, _In_ int16_t Width, _
 
 void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Inout_ PIXEL32* TextColor, _Inout_opt_ int16_t* BrightnessAdjustment);
 
+void EnterDialogue(void);
 
+void DrawDialogueBox(_In_ char* String, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags);

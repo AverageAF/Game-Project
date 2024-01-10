@@ -7,6 +7,7 @@
 #include <xaudio2.h>
 #include <stdint.h>
 #include "stb_vorbis.h"
+#include <string.h>
 #pragma warning(pop)
 
 
@@ -1918,381 +1919,6 @@ void PlayGameMusic(_In_ GAMESOUND* GameSound, _In_ BOOL Looping, _In_ BOOL Immed
     gMusicPaused = FALSE;
 }
 
-//
-//DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap)
-//{
-//    DWORD Error = ERROR_SUCCESS;
-//
-//    HANDLE FileHandle = INVALID_HANDLE_VALUE;
-//
-//    LARGE_INTEGER FileSize = { 0 };
-//
-//    DWORD BytesRead = 0;
-//
-//    void* FileBuffer = NULL;
-//
-//    char* Cursor = NULL;
-//
-//    char TempBuffer[16] = { 0 };
-//
-//    uint16_t Rows = 0;
-//
-//    uint16_t Columns = 0;
-//
-//
-//    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-//    {
-//        Error = GetLastError();
-//        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
-//    {
-//        Error = GetLastError();
-//        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
-//
-//    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
-//
-//    if (FileBuffer == NULL)
-//    {
-//        Error = ERROR_OUTOFMEMORY;
-//        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
-//    {
-//        Error = GetLastError();
-//        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    ///////////width
-//
-//    if ((Cursor = strstr(FileBuffer, "width=")) == NULL)
-//    {
-//        Error = ERROR_INVALID_DATA;
-//        LogMessageA(LL_ERROR, "[%s] Could not locate Width attribute! 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    BytesRead = 0;      //reset
-//
-//    for (;;)
-//    {
-//        if (BytesRead > 8)
-//        {
-//            ////should have found opening quotation mark ("width"=)
-//            Error = ERROR_INVALID_DATA;
-//            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before Width attribute! 0x%08lx!", __FUNCTION__, Error);
-//            goto Exit;
-//        }
-//        if (*Cursor == '\"')
-//        {
-//            Cursor++;
-//            break;
-//        }
-//        else
-//        {
-//            Cursor++;
-//        }
-//        BytesRead++;
-//    }
-//
-//    BytesRead = 0;      //reset
-//
-//    for (uint8_t Counter = 0; Counter < 6; Counter++)
-//    {
-//        if (*Cursor == '\"')
-//        {
-//            Cursor++;
-//            break;
-//        }
-//        else
-//        {
-//            TempBuffer[Counter] = *Cursor;
-//            Cursor++;
-//        }
-//    }
-//
-//    TileMap->Width = atoi(TempBuffer);
-//    if (TileMap->Width == 0)
-//    {
-//        Error = ERROR_INVALID_DATA;
-//        LogMessageA(LL_ERROR, "[%s] Width attribute was 0! 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//            
-//    memset(TempBuffer, 0, sizeof(TempBuffer));
-//
-//    //////////height
-//
-//    if ((Cursor = strstr(FileBuffer, "height=")) == NULL)
-//    {
-//        Error = ERROR_INVALID_DATA;
-//        LogMessageA(LL_ERROR, "[%s] Could not locate height attribute! 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    BytesRead = 0;      //reset
-//
-//    for (;;)
-//    {
-//        if (BytesRead > 8)
-//        {
-//            ////should have found opening quotation mark ("height"=)
-//            Error = ERROR_INVALID_DATA;
-//            LogMessageA(LL_ERROR, "[%s] Could not locate opening quotation mark before height attribute! 0x%08lx!", __FUNCTION__, Error);
-//            goto Exit;
-//        }
-//        if (*Cursor == '\"')
-//        {
-//            Cursor++;
-//            break;
-//        }
-//        else
-//        {
-//            Cursor++;
-//        }
-//        BytesRead++;
-//    }
-//
-//    BytesRead = 0;      //reset
-//
-//    for (uint8_t Counter = 0; Counter < 6; Counter++)
-//    {
-//        if (*Cursor == '\"')
-//        {
-//            Cursor++;
-//            break;
-//        }
-//        else
-//        {
-//            TempBuffer[Counter] = *Cursor;
-//            Cursor++;
-//        }
-//    }
-//
-//    TileMap->Height = atoi(TempBuffer);
-//    if (TileMap->Height == 0)
-//    {
-//        Error = ERROR_INVALID_DATA;
-//        LogMessageA(LL_ERROR, "[%s] Height attribute was 0! 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    LogMessageA(LL_INFO, "[%s] %s TileMap dimensions: %dx%d.", __FUNCTION__, FileName, TileMap->Width, TileMap->Height);
-//
-//    Rows = TileMap->Height;
-//
-//    Columns = TileMap->Width;
-//
-//    TileMap->Map = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Rows * sizeof(void*));
-//    if (TileMap->Map == NULL)
-//    {
-//        Error = ERROR_OUTOFMEMORY;
-//        LogMessageA(LL_ERROR, "[%s] HeapAlloc of height Failed with error 0x%08lx!", __FUNCTION__, Error);
-//        goto Exit;
-//    }
-//
-//    for (uint16_t Counter = 0; Counter < TileMap->Height; Counter++)
-//    {
-//        TileMap->Map[Counter] = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, Columns * sizeof(void*));
-//
-//        if (TileMap->Map[Counter] == NULL)
-//        {
-//            Error = ERROR_OUTOFMEMORY;
-//            LogMessageA(LL_ERROR, "[%s] HeapAlloc of width Failed with error 0x%08lx!", __FUNCTION__, Error);
-//            goto Exit;
-//        }
-//    }
-//
-//    BytesRead = 0;
-//
-//    memset(TempBuffer, 0, sizeof(TempBuffer));
-//
-//    if ((Cursor = strstr(FileBuffer, ",")) == NULL)
-//    {
-//        Error = ERROR_INVALID_DATA;
-//
-//        LogMessageA(LL_ERROR, "[%s] Could not find a comma character in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
-//
-//        goto Exit;
-//    }
-//
-//    while (*Cursor != '\r' && *Cursor != '\n')
-//    {
-//        if (BytesRead > 4)
-//        {
-//            Error = ERROR_INVALID_DATA;
-//
-//            LogMessageA(LL_ERROR, "[%s] Could not find a new line character at the beginning of the tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
-//
-//            goto Exit;
-//        }
-//
-//        BytesRead++;
-//
-//        Cursor--;
-//    }
-//
-//    Cursor++;
-//
-//    for (uint16_t Row = 0; Row < Rows; Row++)
-//    {
-//        for (uint16_t Column = 0; Column < Columns; Column++)
-//        {
-//            memset(TempBuffer, 0, sizeof(TempBuffer));
-//
-//            Skip:
-//
-//            if (*Cursor == '\r' || *Cursor == '\n')
-//            {
-//                Cursor++;
-//
-//                goto Skip;
-//            }
-//
-//            for (uint8_t Counter = 0; Counter <= 10; Counter++)
-//            {
-//                if (*Cursor == ',' || *Cursor == '<')
-//                {
-//                    if (((TileMap->Map[Row][Column]) = (uint8_t)atoi(TempBuffer)) == 0)
-//                    {
-//                        Error = ERROR_INVALID_DATA;
-//
-//                        LogMessageA(LL_ERROR, "[%s] atoi failed while converting tile map data in the file %s! 0x%08lx!", __FUNCTION__, FileName, Error);
-//
-//                        goto Exit;
-//                    }
-//
-//                    Cursor++;
-//
-//                    break;
-//                }
-//
-//                TempBuffer[Counter] = *Cursor;
-//
-//                Cursor++;
-//            }
-//        }
-//    }
-//
-//
-//
-//Exit:
-//    if (FileHandle && (FileHandle != INVALID_HANDLE_VALUE))
-//    {
-//        CloseHandle(FileHandle);
-//    }
-//
-//    if (FileBuffer)
-//    {
-//
-//        HeapFree(GetProcessHeap(), 0, FileBuffer);
-//    }
-//
-//    return(Error);
-//}
-
-//
-//DWORD LoadOggFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound)
-//{
-//    DWORD Error = ERROR_SUCCESS;
-//
-//    HANDLE FileHandle = INVALID_HANDLE_VALUE;
-//
-//    LARGE_INTEGER FileSize = { 0 };
-//
-//    DWORD BytesRead = 0;
-//
-//    void* FileBuffer = NULL;
-//
-//    int SamplesDecoded = 0;
-//
-//    int Channels = 0;
-//
-//    int SampleRate = 0;
-//
-//    short* DecodedAudio = NULL;
-//
-//
-//    if ((FileHandle = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-//    {
-//        Error = GetLastError();
-//        LogMessageA(LL_ERROR, "[%s] CreateFileA failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-//        goto Exit;
-//    }
-//
-//    if (GetFileSizeEx(FileHandle, &FileSize) == 0)
-//    {
-//        Error = GetLastError();
-//        LogMessageA(LL_ERROR, "[%s] GetFileSizeEx failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-//        goto Exit;
-//    }
-//
-//    LogMessageA(LL_INFO, "[%s] Size of file %s: %lu.", __FUNCTION__, FileName, FileSize.QuadPart);
-//
-//
-//    FileBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.QuadPart);
-//
-//    if (FileBuffer == NULL)
-//    {
-//        Error = ERROR_OUTOFMEMORY;
-//        LogMessageA(LL_ERROR, "[%s] HeapAllox failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-//        goto Exit;
-//    }
-//
-//    if (ReadFile(FileHandle, FileBuffer, FileSize.QuadPart, &BytesRead, NULL) == 0)
-//    {
-//        Error = GetLastError();
-//        LogMessageA(LL_ERROR, "[%s] ReadFile failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-//        goto Exit;
-//    }
-//
-//    SamplesDecoded = stb_vorbis_decode_memory(FileBuffer, FileSize.QuadPart, &Channels, &SampleRate, &DecodedAudio);
-//
-//    if (SamplesDecoded < 1)
-//    {
-//        Error = ERROR_BAD_COMPRESSION_BUFFER;
-//        LogMessageA(LL_ERROR, "[%s] stb_vorbis_decode_memory failed with 0x%08lx on %s!", __FUNCTION__, Error, FileName);
-//        goto Exit;
-//    }
-//
-//    GameSound->WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
-//
-//    GameSound->WaveFormat.nChannels = Channels;
-//
-//    GameSound->WaveFormat.nSamplesPerSec = SampleRate;
-//
-//    GameSound->WaveFormat.nAvgBytesPerSec = GameSound->WaveFormat.nSamplesPerSec * GameSound->WaveFormat.nChannels * 2;
-//
-//    GameSound->WaveFormat.nBlockAlign = GameSound->WaveFormat.nChannels * 2;
-//
-//    GameSound->WaveFormat.wBitsPerSample = 16;
-//
-//    GameSound->Buffer.Flags = XAUDIO2_END_OF_STREAM;
-//
-//    GameSound->Buffer.AudioBytes = SamplesDecoded * GameSound->WaveFormat.nChannels * 2;
-//
-//    GameSound->Buffer.pAudioData = DecodedAudio;
-//
-//
-//Exit:
-//
-//    if (FileBuffer)
-//    {
-//        HeapFree(GetProcessHeap(), 0, FileBuffer);
-//    }
-//
-//    return(Error);
-//}
-
 BOOL MusicIsPlaying(void)
 {
     XAUDIO2_VOICE_STATE  State = { 0 };
@@ -2550,15 +2176,15 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[1])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[1])) != ERROR_SUCCESS)
     {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[2])) != ERROR_SUCCESS)
+    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].SpriteS[2])) != ERROR_SUCCESS)
     {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
+        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
         goto Exit;
     }
 
@@ -2794,4 +2420,54 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
     TextColor->Colors.Red = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Red + LocalBrightnessAdjustment)));
     TextColor->Colors.Blue = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Blue + LocalBrightnessAdjustment)));
     TextColor->Colors.Green = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Green + LocalBrightnessAdjustment)));
+}
+
+
+void EnterDialogue(void)
+{
+    gGamePaused = TRUE;
+    gDialogueControls = TRUE;
+}
+
+
+//TODO create flags to allow for multiple dialogue boxes back to back; also allow for the dialogue box to go away on a timer without player input (FLAG_BRIEF)
+
+
+//Only input req is text, each row can fit 32 characters before going outside box
+//use character "\n" with no spaces behind it to jump to the next row
+void DrawDialogueBox(_In_ char* String, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
+{
+    char InString[224] = { 0 };
+    uint8_t Row = 0;
+    char* NextToken = NULL;
+    char Separator[] = "\n";
+
+    if (gDialogueControls == TRUE)
+    {
+        DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
+        if (strlen(String) <= 32)            ///if string fits on first row leave it alone and blit it
+        {
+            BlitStringToBuffer(String, &g6x7Font, &COLOR_NES_GRAY, 100, 174);
+        }
+        else if (strlen(String) <= 32 * 7 && strlen(String) > 32)
+        {
+            strcpy_s(InString, 224, String);        ////need to define max msg length bc sizeof() and strlen() both result in errors
+
+            char* StrPtr = strtok_s(InString, Separator, &NextToken);       ////split string into pieces using \n as a separator
+
+            while (StrPtr != NULL)
+            {
+                BlitStringToBuffer(StrPtr, &g6x7Font, &COLOR_NES_GRAY, 100, 174 + ((Row) * 8));                 //////every time \n is called add a row to the dialogue box
+                StrPtr = strtok_s(NULL, Separator, &NextToken);                                                 // find the next row of dialogue
+                Row++;
+            }
+        }
+        else
+        {
+            BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_NES_GRAY, 101, 174);
+            LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, String);
+        }
+        
+
+    }
 }
