@@ -32,25 +32,6 @@ CRITICAL_SECTION gLogCritSec;                 ////used to sync logging to logfil
 
 // post-build commandline was $(SolutionDir)CopyAssets.bat
 
-// Map any char value to an offset dictated by the g6x7Font ordering.
-int gFontCharacterPixelOffset[] = {
-    //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
-        93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
-    //     !  "  #  $  %  &  '  (  )  *  +  ,  -  .  /  0  1  2  3  4  5  6  7  8  9  :  ;  <  =  >  ?
-        94,64,87,66,67,68,70,85,72,73,71,77,88,74,91,92,52,53,54,55,56,57,58,59,60,61,86,84,89,75,90,93,
-    //  @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
-        65,0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,80,78,81,69,76,
-    //  `  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~  ..
-        62,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,82,79,83,63,93,
-    //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
-        93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
-    //  .. .. .. .. .. .. .. .. .. .. .. «  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. »  .. .. .. ..
-        93,93,93,93,93,93,93,93,93,93,93,96,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,95,93,93,93,93,
-    //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
-        93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
-    //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. F2 .. .. .. .. .. .. .. .. .. .. .. .. ..
-        93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,97,93,93,93,93,93,93,93,93,93,93,93,93,93
-};
 
 //lookup table for fade in/out animations. Maps frame count to brightness adjustment
 
@@ -663,6 +644,28 @@ DWORD InitializePlayer(void)
 
 void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXEL32* Color, _In_ uint16_t x, _In_ uint16_t y)
 {
+
+    // Map any char value to an offset dictated by the g6x7Font ordering.
+    static int FontCharacterPixelOffset[] = {
+        //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+            93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
+        //     !  "  #  $  %  &  '  (  )  *  +  ,  -  .  /  0  1  2  3  4  5  6  7  8  9  :  ;  <  =  >  ?
+            94,64,87,66,67,68,70,85,72,73,71,77,88,74,91,92,52,53,54,55,56,57,58,59,60,61,86,84,89,75,90,93,
+        //  @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
+            65,0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,80,78,81,69,76,
+        //  `  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~  ..
+            62,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,82,79,83,63,93,
+        //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+            93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
+        //  .. .. .. .. .. .. .. .. .. .. .. «  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. »  .. .. .. ..
+            93,93,93,93,93,93,93,93,93,93,93,96,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,95,93,93,93,93,
+        //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+            93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
+        //  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. F2 .. .. .. .. .. .. .. .. .. .. .. .. ..
+            93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,97,93,93,93,93,93,93,93,93,93,93,93,93,93
+    };
+
+
     uint16_t CharWidth = (uint16_t)FontSheet->BitmapInfo.bmiHeader.biWidth / FONT_SHEET_CHARACTERS_PER_ROW;
     uint16_t CharHeight = (uint16_t)FontSheet->BitmapInfo.bmiHeader.biHeight;      // only one row
     uint16_t BytesPerCharacter = (CharWidth * CharHeight * (FontSheet->BitmapInfo.bmiHeader.biBitCount / 8));
@@ -685,7 +688,7 @@ void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXE
 
         PIXEL32 FontSheetPixel = { 0 };
 
-        StartingFontSheetPixel = (FontSheet->BitmapInfo.bmiHeader.biWidth * FontSheet->BitmapInfo.bmiHeader.biHeight) - FontSheet->BitmapInfo.bmiHeader.biWidth + (CharWidth * gFontCharacterPixelOffset[(uint8_t)String[Character]]);
+        StartingFontSheetPixel = (FontSheet->BitmapInfo.bmiHeader.biWidth * FontSheet->BitmapInfo.bmiHeader.biHeight) - FontSheet->BitmapInfo.bmiHeader.biWidth + (CharWidth * FontCharacterPixelOffset[(uint8_t)String[Character]]);
 
         for (int YPixel = 0; YPixel < CharHeight; YPixel++)
         {
@@ -2034,7 +2037,7 @@ BOOL MusicIsPlaying(void)
     }
 }
 
-DWORD LoadAssetFromArchive(_In_ char* ArchiveName, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource)
+DWORD LoadAssetFromArchive(_In_ char* ArchiveName, _In_ char* AssetFileName, _Inout_ void* Resource)
 {
     DWORD Error = ERROR_SUCCESS;
 
@@ -2045,6 +2048,8 @@ DWORD LoadAssetFromArchive(_In_ char* ArchiveName, _In_ char* AssetFileName, _In
     size_t DecompressedSize = 0;
 
     BOOL FileFoundInArchive = FALSE;
+
+    char* FileExtension = NULL;
 
     if ((mz_zip_reader_init_file(&Archive, ArchiveName, 0)) == FALSE)       
     {                                                                       
@@ -2103,36 +2108,34 @@ DWORD LoadAssetFromArchive(_In_ char* ArchiveName, _In_ char* AssetFileName, _In
         goto Exit;
     }
 
-    switch (ResourceType)
+    for (int i = strlen(AssetFileName) - 1; i > 0; i--)     //look for period and point to file extension
     {
-        case (RESOURCE_TYPE_WAV):
+        FileExtension = &AssetFileName[i];
+        if (FileExtension[0] == '.')
         {
-            Error = LoadWaveFromMem(DecompressedBuffer, Resource);
-
             break;
         }
-        case (RESOURCE_TYPE_OGG):
-        {
-            Error = LoadOggFromMem(DecompressedBuffer, (uint32_t)DecompressedSize, Resource);
+    }
 
-            break;
-        }
-        case (RESOURCE_TYPE_TILEMAP):
-        {
-            Error = LoadTileMapFromMem(DecompressedBuffer, (uint32_t)DecompressedSize, Resource);
-
-            break;
-        }
-        case (RESOURCE_TYPE_BMPX):
-        {
-            Error = Load32BppBitmapFromMem(DecompressedBuffer, Resource);
-
-            break;
-        }
-        default:
-        {
-            ASSERT(FALSE, "Unknown resource type in LoadAssetFromArchive!")
-        }
+    if (FileExtension && _stricmp(FileExtension, ".bmpx") == 0)
+    {
+        Error = Load32BppBitmapFromMem(DecompressedBuffer, Resource);
+    }
+    else if (FileExtension && _stricmp(FileExtension, ".ogg") == 0)
+    {
+        Error = LoadOggFromMem(DecompressedBuffer, (uint32_t)DecompressedSize, Resource);
+    }
+    else if (FileExtension && _stricmp(FileExtension, ".wav") == 0)
+    {
+        Error = LoadWaveFromMem(DecompressedBuffer, Resource);
+    }
+    else if (FileExtension && _stricmp(FileExtension, ".tmx") == 0)
+    {
+        Error = LoadTileMapFromMem(DecompressedBuffer, (uint32_t)DecompressedSize, Resource);
+    }
+    else
+    {
+        ASSERT(FALSE, "Unknown resource type in LoadAssetFromArchive!");
     }
 
 
@@ -2150,235 +2153,86 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
 
     DWORD Error = ERROR_SUCCESS;
 
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "PixelFont(6x7).bmpx", RESOURCE_TYPE_BMPX, &g6x7Font)) != ERROR_SUCCESS)
+    typedef struct ASSET
     {
-        MessageBoxA(NULL, "LoadAssetFromArchive PixelFont(6x7).bmpx failed!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }
+        char* Name;
 
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "SplashNoise.wav", RESOURCE_TYPE_WAV, &gSoundSplashScreen)) != ERROR_SUCCESS)
+        void* Destination;
+
+    } ASSET;
+
+    ASSET Assets[] = {
+        {   "PixelFont(6x7).bmpx", &g6x7Font },
+        {   "SplashNoise.wav", &gSoundSplashScreen },           // last essential asset
+        {   "Overworld01.bmpx", &gOverWorld01.GameBitmap },
+        {   "Overworld01.tmx", &gOverWorld01.TileMap },
+        {   "menu.wav", &gSoundMenuNavigate },
+        {   "item.wav", &gSoundMenuChoose },
+        {   "NewAdventures.ogg", &gMusicOverWorld01 },
+        {   "MysteriousDeep.ogg", &gMusicDungeon01 },
+        {   "Suit0FacingDown0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_0] },
+        {   "Suit0FacingDown1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_1] },
+        {   "Suit0FacingDown2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_DOWN_2] },
+        {   "Suit0FacingLeft0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_LEFT_0] },
+        {   "Suit0FacingLeft1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_LEFT_1] },
+        {   "Suit0FacingLeft2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_LEFT_2] },
+        {   "Suit0FacingRight0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_RIGHT_0] },
+        {   "Suit0FacingRight1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_RIGHT_1] },
+        {   "Suit0FacingRight2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_RIGHT_2] },
+        {   "Suit0FacingUp0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_0] },
+        {   "Suit0FacingUp1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_1] },
+        {   "Suit0FacingUp2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_2] },
+        {   "ManFacingDown.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_0] },
+        {   "ManFacingLeft.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_0] },
+        {   "ManFacingRight.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingUp.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_0] },
+        {   "ManFacingDown.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_0] },
+        {   "ManFacingLeft.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_0] },
+        {   "ManFacingRight.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingUp.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_0] },
+        {   "ManFacingDown.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_0] },
+        {   "ManFacingLeft.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_0] },
+        {   "ManFacingRight.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingUp.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_0] },
+        {   "BattleBackgroundGrass01.bmpx", &gBattleScreen_Grass01 },
+        {   "BattleBackgroundStoneBricks01.bmpx", &gBattleScreen_StoneBricks01 },
+        {   "Wolf64Back01.bmpx", &gBattleSpriteBack[MONSTER_WOLF] },
+        {   "Wolf64Front01.bmpx", &gBattleSpriteFront[MONSTER_WOLF] }
+    };
+
+    int FinalEssentialAssetIndex = 1;
+
+    LogMessageA(LL_INFO, "[%s] Asset loading has begun.", __FUNCTION__);
+
+    for (int i = 0; i < _countof(Assets); i++)
     {
-        MessageBoxA(NULL, "LoadAssetFromArchive failed with SplashNoise.wav!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
+        if ((Error = LoadAssetFromArchive(ASSET_FILE, Assets[i].Name, Assets[i].Destination)) != ERROR_SUCCESS)
+        {
+            MessageBoxA(NULL, "LoadAssetFromArchive failed! Check log file!", "Error!", MB_ICONERROR | MB_OK);
+            LogMessageA(LL_ERROR, "[%s] Loading %s failed with error 0x%08lx!", __FUNCTION__, Assets[i].Name, Error);
+            goto Exit;
+        }
+
+        if (i == FinalEssentialAssetIndex)
+        {
+            //end of assets needed for splash screen and titlescreen
+            SetEvent(gEssentialAssetsLoadedEvent);
+        }
     }
-
-    SetEvent(gEssentialAssetsLoadedEvent);
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Overworld01.bmpx", RESOURCE_TYPE_BMPX, &gOverWorld01.GameBitmap)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Overworld01.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Overworld01.tmx", RESOURCE_TYPE_TILEMAP, &gOverWorld01.TileMap)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Overworld01.tmx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "menu.wav", RESOURCE_TYPE_WAV, &gSoundMenuNavigate)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive menu.wav failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "item.wav", RESOURCE_TYPE_WAV, &gSoundMenuChoose)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive item.wav failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "NewAdventures.ogg", RESOURCE_TYPE_OGG, &gMusicOverWorld01)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive NewAdventures.ogg failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "MysteriousDeep.ogg", RESOURCE_TYPE_OGG, &gMusicDungeon01)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive MysteriousDeep.ogg failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    ////////////////////////////////////////////////////////// loading player sprites///////////////////////////////////////////////
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingDown0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingDown0.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingDown1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingDown1.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingDown2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_DOWN_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingDown2.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingLeft0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_LEFT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingLeft0.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingLeft1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_LEFT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingLeft1.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingLeft2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_LEFT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingLeft2.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingUp0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingUp0.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingUp1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingUp1.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingUp2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_UP_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingUp2.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight0.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight0.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight1.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_1])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight1.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Suit0FacingRight2.bmpx", RESOURCE_TYPE_BMPX, &gPlayer.Sprite[SUIT_0][FACING_RIGHT_2])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Suit0FacingRight2.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-    ////////////////////////////////////////////////non player sprites//////////////////////////////////////////////////////////
-
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_DOWN_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_LEFT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_UP_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[0].Sprite[FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_DOWN_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_LEFT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_UP_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[1].Sprite[FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingDown.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_DOWN_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingDown.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingLeft.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_LEFT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingLeft.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingUp.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_UP_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingUp.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "ManFacingRight.bmpx", RESOURCE_TYPE_BMPX, &gCharacterSprite[2].Sprite[FACING_RIGHT_0])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive ManFacingRight.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    /////////////////////////////////////////////////////////battle backgrounds////////////////////////////////////////////////////
-
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "BattleBackgroundGrass01.bmpx", RESOURCE_TYPE_BMPX, &gBattleScreen_Grass01)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive BattleBackgroundGrass01.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "BattleBackgroundStoneBricks01.bmpx", RESOURCE_TYPE_BMPX, &gBattleScreen_StoneBricks01)) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive BattleBackgroundStoneBricks01.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    //////////////////////////////////////////////////////monster battle sprites /////////////////////////////////////////////////
-
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Wolf64Back01.bmpx", RESOURCE_TYPE_BMPX, &gBattleSpriteBack[MONSTER_WOLF])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Wolf64Back01.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
-    if ((Error = LoadAssetFromArchive(ASSET_FILE, "Wolf64Front01.bmpx", RESOURCE_TYPE_BMPX, &gBattleSpriteFront[MONSTER_WOLF])) != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] LoadAssetFromArchive Wolf64Front01.bmpx failed!", __FUNCTION__);
-        goto Exit;
-    }
-
 
 
 
 Exit:
+
+    if (Error == ERROR_SUCCESS)
+    {
+        LogMessageA(LL_INFO, "[%s] Asset loading ended successfully.", __FUNCTION__);
+    }
+    else
+    {
+        LogMessageA(LL_ERROR, "[%s] Asset loading failed with result 0x%08lx!", __FUNCTION__, Error);
+    }
+
     return(Error);
 }
 

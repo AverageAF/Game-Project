@@ -143,14 +143,14 @@ typedef enum GAMESTATE
 
 } GAMESTATE;
 
-typedef enum RESOURCE_TYPE
-{
-	RESOURCE_TYPE_WAV,
-	RESOURCE_TYPE_OGG,
-	RESOURCE_TYPE_TILEMAP,
-	RESOURCE_TYPE_BMPX
-
-} RESOURCE_TYPE;
+//typedef enum RESOURCE_TYPE
+//{
+//	RESOURCE_TYPE_WAV,
+//	RESOURCE_TYPE_OGG,
+//	RESOURCE_TYPE_TILEMAP,
+//	RESOURCE_TYPE_BMPX
+//
+//} RESOURCE_TYPE;
 
 typedef enum WINDOW_FLAGS
 {
@@ -642,7 +642,7 @@ void StopGameMusic(void);
 
 BOOL MusicIsPlaying(void);
 
-DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _In_ RESOURCE_TYPE ResourceType, _Inout_ void* Resource);
+DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _Inout_ void* Resource);
 
 
 //DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
