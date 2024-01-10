@@ -65,12 +65,12 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 		.power2 = 0,
 		.power3 = 0,
 
-		.element = ELEMENT_NONE,
+		.element = ELEMENT_NULL,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = 0,
-		.split = SPLIT_PHYS,
+		.split = SPLIT_STATUS,
 	},
 
 
@@ -84,7 +84,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_NONE,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -93,15 +93,15 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 	[BATTLEMOVE_GROWL] =
 	{
-		.effect = EFFECT_ATTACK_UP,
+		.effect = EFFECT_ATTACK_DOWN,
 
 		.power1 = 0,
 		.power2 = 0,
 		.power3 = 0,
 
-		.element = ELEMENT_NONE,
+		.element = ELEMENT_STATUS,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_USER,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_STATUSMOVE,
 		.split = SPLIT_STATUS,
@@ -110,15 +110,15 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 	[BATTLEMOVE_BARK] =
 	{
-		.effect = EFFECT_ATTACK_DOWN,
+		.effect = EFFECT_ATTACK_UP,
 
 		.power1 = 0,
 		.power2 = 0,
 		.power3 = 0,
 
-		.element = ELEMENT_NONE,
+		.element = ELEMENT_STATUS,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_USER,
+		.target = MOVE_TARGET_SELF,
 		.speedPriority = 0,
 		.flags = FLAG_STATUSMOVE,
 		.split = SPLIT_STATUS,
@@ -135,7 +135,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_NONE,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -152,7 +152,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_NONE,
 		.secondEffectChance = 10,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -169,7 +169,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_EARTH,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -186,7 +186,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_AIR,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -203,7 +203,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_FIRE,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -220,7 +220,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_WATER,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -237,7 +237,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_ELECTRIC,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -254,7 +254,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_METAL,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -271,7 +271,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_SOUL,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -288,7 +288,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_LIFE,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,
@@ -305,7 +305,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES] =
 
 		.element = ELEMENT_DEATH,
 		.secondEffectChance = 0,
-		.target = MOVE_TARGET_SELECTED,
+		.target = MOVE_TARGET_OPPONENT,
 		.speedPriority = 0,
 		.flags = FLAG_CONTACTMOVE | FLAG_BLOCKABLEMOVE,
 		.split = SPLIT_PHYS,

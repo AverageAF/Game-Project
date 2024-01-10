@@ -143,6 +143,7 @@
 #define ELEMENT_COUNT 10
 
 #define ELEMENT_NULL 255
+#define ELEMENT_STATUS 254
 
 #define ELEMENT_NEUTRAL 0
 #define ELEMENT_RESIST 1
@@ -210,8 +211,8 @@
 #define SPLIT_PSI 0x1
 #define SPLIT_STATUS 0x2
 
-#define MOVE_TARGET_SELECTED 0
-#define MOVE_TARGET_USER 1
+#define MOVE_TARGET_OPPONENT 0
+#define MOVE_TARGET_SELF 1
 
 ///////////////////////////////MOVES///////////////////////////////////
 

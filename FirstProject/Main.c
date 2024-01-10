@@ -622,7 +622,7 @@ DWORD InitializeSprites(void)
 
     gCharacterSprite[1].Event = EVENT_FLAG_MONSTER;
     gCharacterSprite[1].EventMonsterIndex = MONSTER_EARTHWOLF;
-    gCharacterSprite[1].EventMonsterLevel = 5;
+    gCharacterSprite[1].EventMonsterLevel = 14;
 
     //////////////////////////////////////////////////////////////
 

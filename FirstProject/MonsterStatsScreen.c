@@ -184,7 +184,7 @@ void DrawMonsterStatsScreen(void)
     }
     
 
-    __stosd(gBackBuffer.Memory, 0xFF008888, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
+    __stosd(gBackBuffer.Memory, 0xFF787878, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));                             //background
 
     ApplyFadeIn(LocalFrameCounter, COLOR_NES_WHITE, &TextColor, &BrightnessAdjustment);
 
@@ -213,15 +213,6 @@ void DrawMonsterStatsScreen(void)
     DrawWindow(159, 63 + (12 * 3), 100, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //psi
 
     DrawWindow(159, 63 + (12 * 4), 100, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //res
-
-
-    DrawWindow(63, 71 + (12 * 5), 196, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //move 0
-
-    DrawWindow(63, 71 + (12 * 6), 196, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //move 1
-
-    DrawWindow(63, 71 + (12 * 7), 196, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //move 2
-
-    DrawWindow(63, 71 + (12 * 8), 196, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //move 3
 
     BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gMI_MonsterStats_MoveItems[gMenu_MonsterStats_Moves.SelectedItem]->x - 7, gMI_MonsterStats_MoveItems[gMenu_MonsterStats_Moves.SelectedItem]->y);
 
@@ -268,7 +259,7 @@ void DrawMonsterStatsScreen(void)
 
     if ((health * 100 / maxHealth) > 50)
     {
-        BlitStringToBuffer(StatsTextLine[1], &g6x7Font, &COLOR_LIGHT_GREEN, 65, 63 - (12 * 2) + 2);       //high hp
+        BlitStringToBuffer(StatsTextLine[1], &g6x7Font, &COLOR_FORREST_GREEN, 65, 63 - (12 * 2) + 2);       //high hp
     }
     else if ((health * 100 / maxHealth) <= 50 && (health * 100 / maxHealth) > 10)
     {
@@ -285,42 +276,42 @@ void DrawMonsterStatsScreen(void)
 
     sprintf_s((char*)StatsTextLine[2], sizeof(StatsTextLine[2]), "Exp: %d / %d  Tot: %d", expCurr, expNextLvl, gPlayerParty[gMonsterToViewStats].DriveMonster.Experience);
 
-    BlitStringToBuffer(StatsTextLine[2], &g6x7Font, &COLOR_NEON_BLUE, 65, 63 - (12 * 1) + 2);
+    BlitStringToBuffer(StatsTextLine[2], &g6x7Font, &COLOR_NES_BLUE, 65, 63 - (12 * 1) + 2);
 
 
     int attack = (int*)gPlayerParty[gMonsterToViewStats].Attack;
 
     sprintf_s((char*)StatsTextLine[3], sizeof(StatsTextLine[3]), "Attack: %d", attack);
 
-    BlitStringToBuffer(StatsTextLine[3], &g6x7Font, &COLOR_LIGHT_GREEN, 161, 64 + (12 * 0) + 1);
+    BlitStringToBuffer(StatsTextLine[3], &g6x7Font, &COLOR_FORREST_GREEN, 161, 64 + (12 * 0) + 1);
 
 
     int defense = (int*)gPlayerParty[gMonsterToViewStats].Defense;
 
     sprintf_s((char*)StatsTextLine[4], sizeof(StatsTextLine[4]), "Defense: %d", defense);
 
-    BlitStringToBuffer(StatsTextLine[4], &g6x7Font, &COLOR_LIGHT_GREEN, 161, 64 + (12 * 1) + 1);
+    BlitStringToBuffer(StatsTextLine[4], &g6x7Font, &COLOR_FORREST_GREEN, 161, 64 + (12 * 1) + 1);
 
 
     int speed = (int*)gPlayerParty[gMonsterToViewStats].Speed;
 
     sprintf_s((char*)StatsTextLine[5], sizeof(StatsTextLine[5]), "Speed: %d", speed);
 
-    BlitStringToBuffer(StatsTextLine[5], &g6x7Font, &COLOR_LIGHT_GREEN, 161, 64 + (12 * 2) + 1);
+    BlitStringToBuffer(StatsTextLine[5], &g6x7Font, &COLOR_FORREST_GREEN, 161, 64 + (12 * 2) + 1);
 
 
     int psi = (int*)gPlayerParty[gMonsterToViewStats].Psi;
 
     sprintf_s((char*)StatsTextLine[6], sizeof(StatsTextLine[6]), "Psi: %d", psi);
 
-    BlitStringToBuffer(StatsTextLine[6], &g6x7Font, &COLOR_LIGHT_GREEN, 161, 64 + (12 * 3) + 1);
+    BlitStringToBuffer(StatsTextLine[6], &g6x7Font, &COLOR_FORREST_GREEN, 161, 64 + (12 * 3) + 1);
 
 
     int resolve = (int*)gPlayerParty[gMonsterToViewStats].Resolve;
 
-    sprintf_s((char*)StatsTextLine[7], sizeof(StatsTextLine[7]), "Res: %d", resolve);
+    sprintf_s((char*)StatsTextLine[7], sizeof(StatsTextLine[7]), "Resolve: %d", resolve);
 
-    BlitStringToBuffer(StatsTextLine[7], &g6x7Font, &COLOR_LIGHT_GREEN, 161, 64 + (12 * 4) + 1);
+    BlitStringToBuffer(StatsTextLine[7], &g6x7Font, &COLOR_FORREST_GREEN, 161, 64 + (12 * 4) + 1);
 
 
     BlitStringToBuffer(Element1Name, &g6x7Font, &COLOR_NES_WHITE, 65, 63 - (12 * 4) + 2);
@@ -330,14 +321,77 @@ void DrawMonsterStatsScreen(void)
         BlitStringToBuffer(Element2Name, &g6x7Font, &COLOR_NES_WHITE, 65 + 65, 63 - (12 * 4) + 2);
     }
 
+    static PIXEL32 MoveColor = { 0x00, 0x00, 0x00, 0x00 };
 
-    BlitStringToBuffer(gBattleMoveNames[gPlayerParty[gMonsterToViewStats].DriveMonster.Moves[0]], &g6x7Font, &COLOR_NES_WHITE, 65, 71 + (12 * 5) + 2);
+    for (uint8_t Moves = 0; Moves < MAX_NONSIGNATURE_MOVES; Moves++)
+    {
+        switch (gBattleMoves[gPlayerParty[gMonsterToViewStats].DriveMonster.Moves[Moves]].element)
+        {
+            case ELEMENT_NONE:
+            {
+                MoveColor = COLOR_NES_TAN;
+                break;
+            }
+            case ELEMENT_EARTH:
+            {
+                MoveColor = COLOR_NES_BROWN;
+                break;
+            }
+            case ELEMENT_AIR:
+            {
+                MoveColor = COLOR_NES_SKY_BLUE;
+                break;
+            }
+            case ELEMENT_FIRE:
+            {
+                MoveColor = COLOR_NES_ORANGE;
+                break;
+            }
+            case ELEMENT_WATER:
+            {
+                MoveColor = COLOR_NES_BLUE;
+                break;
+            }
+            case ELEMENT_ELECTRIC:
+            {
+                MoveColor = COLOR_NES_YELLOW;
+                break;
+            }
+            case ELEMENT_METAL:
+            {
+                MoveColor = COLOR_NES_GRAY;
+                break;
+            }
+            case ELEMENT_SOUL:
+            {
+                MoveColor = COLOR_NES_PURPLE;
+                break;
+            }
+            case ELEMENT_LIFE:
+            {
+                MoveColor = COLOR_NES_LIGHT_GREEN;
+                break;
+            }
+            case ELEMENT_DEATH:
+            {
+                MoveColor = COLOR_NES_BLACK_RED;
+                break;
+            }
+            case ELEMENT_STATUS:
+            {
+                MoveColor = COLOR_NES_PINK;
+                break;
+            }
+            default:
+            {
+                MoveColor = COLOR_LIGHT_GRAY;
+                break;
+            }
+        }
+        DrawWindow(63, 71 + (12 * (5 + Moves)), 196, 11, &COLOR_BLACK, &MoveColor, NULL, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);   //move box
 
-    BlitStringToBuffer(gBattleMoveNames[gPlayerParty[gMonsterToViewStats].DriveMonster.Moves[1]], &g6x7Font, &COLOR_NES_WHITE, 65, 71 + (12 * 6) + 2);
-
-    BlitStringToBuffer(gBattleMoveNames[gPlayerParty[gMonsterToViewStats].DriveMonster.Moves[2]], &g6x7Font, &COLOR_NES_WHITE, 65, 71 + (12 * 7) + 2);
-
-    BlitStringToBuffer(gBattleMoveNames[gPlayerParty[gMonsterToViewStats].DriveMonster.Moves[3]], &g6x7Font, &COLOR_NES_WHITE, 65, 71 + (12 * 8) + 2);
+        BlitStringToBuffer(gBattleMoveNames[gPlayerParty[gMonsterToViewStats].DriveMonster.Moves[Moves]], &g6x7Font, &COLOR_NES_WHITE, 65, 71 + (12 * (5 + Moves)) + 2);    //move text
+    }
     
     //TODO: signature move
 

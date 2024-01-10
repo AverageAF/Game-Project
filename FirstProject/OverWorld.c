@@ -414,6 +414,7 @@ void PPI_Overworld(void)
         {
             gPlayer.MovementRemaining--;
 
+
             if (gPlayer.Direction == DOWN)
             {
                 if (gPlayer.ScreenPos.y < GAME_RES_HEIGHT - 128)   ////keeps player centered
@@ -592,17 +593,17 @@ void PPI_Overworld(void)
                     gPlayer.SpriteIndex = 1;
                     break;
                 }
-                case 12:
+                case 11:
                 {
                     gPlayer.SpriteIndex = 1;
                     break;
                 }
-                case 8:
+                case 7:
                 {
                     gPlayer.SpriteIndex = 2;
                     break;
                 }
-                case 4:
+                case 3:
                 {
                     gPlayer.SpriteIndex = 2;
                     break;

@@ -474,7 +474,7 @@ void PPI_InventoryScreen(void)
             }
             break;
         }
-        case POCKETSTATE_USABLE:
+        case POCKETSTATE_USABLE:        //TODO: BUG when selecting(but not using) the last itme in USABLE and then using an item in battle, the cursor will be beyond the bottom-most item if the menu shrinks
         {
             if (gHasSelectedInvSlot == FALSE)
             {
@@ -560,6 +560,7 @@ void PPI_InventoryScreen(void)
                 {
                     gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->Action();
                     PlayGameSound(&gSoundMenuChoose);
+                    gMenu_InventorySelectedItem.SelectedItem = 0;
                 }
 
                 if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
