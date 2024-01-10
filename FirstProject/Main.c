@@ -474,6 +474,7 @@ void ProcessPlayerInput(void)
     gGameInput.DRightKeyPressed = GetAsyncKeyState('D') | GetAsyncKeyState(VK_RIGHT);
     gGameInput.WUpKeyPressed = GetAsyncKeyState('W') | GetAsyncKeyState(VK_UP);
     gGameInput.ChooseKeyPressed = GetAsyncKeyState('E') | GetAsyncKeyState(VK_RETURN);
+    gGameInput.CtrlKeyPressed = GetAsyncKeyState(VK_CONTROL);
     gGameInput.QKeyPressed = GetAsyncKeyState('Q');
 
     if (gGameInput.DebugKeyPressed && !gGameInput.DebugKeyAlreadyPressed)
@@ -570,6 +571,7 @@ InputDisabled:
     gGameInput.SDownKeyAlreadyPressed = gGameInput.SDownKeyPressed;
     gGameInput.ChooseKeyAlreadyPressed = gGameInput.ChooseKeyPressed;
     gGameInput.TabKeyAlreadyPressed = gGameInput.TabKeyPressed;
+    gGameInput.CtrlKeyAlreadyPressed = gGameInput.CtrlKeyPressed;
     gGameInput.QKeyAlreadyPressed = gGameInput.QKeyPressed;
 
 }
@@ -702,6 +704,34 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
+    gCharacterSprite[4].ScreenPos.x = 192;
+    gCharacterSprite[4].ScreenPos.y = 192;
+    gCharacterSprite[4].WorldPos.x = 192;
+    gCharacterSprite[4].WorldPos.y = 192;
+    gCharacterSprite[4].ResetScreenPos.x = 192;
+    gCharacterSprite[4].ResetScreenPos.y = 192;
+    gCharacterSprite[4].ResetWorldPos.x = 192;
+    gCharacterSprite[4].ResetWorldPos.x = 192;
+    gCharacterSprite[4].ResetOriginScreenPos.x = 192;
+    gCharacterSprite[4].ResetOriginScreenPos.y = 192;
+    gCharacterSprite[4].ResetOriginWorldPos.x = 192;
+    gCharacterSprite[4].ResetOriginWorldPos.y = 192;
+    gCharacterSprite[4].Direction = DOWN;
+    gCharacterSprite[4].ResetDirection = DOWN;
+    gCharacterSprite[4].Event = EVENT_FLAG_STORE;
+    gCharacterSprite[4].Movement = MOVEMENT_STILL;
+    gCharacterSprite[4].Visible = FALSE;
+    gCharacterSprite[4].Exists = TRUE;
+    gCharacterSprite[4].Loaded = FALSE;
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_0] = "Do you want to buy something?";
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_1] = "I have all sorts of wares!";
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_9] = "Come again!";
+    gCharacterSprite[4].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[4].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
+    gCharacterSprite[4].DialogueLoopReturn = DIALOGUE_FLAG_0;
+
+    //////////////////////////////////////////////////////////////
+
     return (0);
 }
 
@@ -725,6 +755,8 @@ DWORD InitializePlayer(void)
     gPlayer.Name[2] = 'p';
     gPlayer.Name[3] = 'l';
     gPlayer.Name[4] = 'e';
+
+    gSellingItems = FALSE;
 
 
     return(0);
@@ -2338,6 +2370,18 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "ManFacingUp0.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_0] },
         {   "ManFacingUp1.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_1] },
         {   "ManFacingUp2.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_2] },
+        {   "ManFacingDown0.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_2] },
         {   "BattleBackgroundGrass01.bmpx", &gBattleScreen_Grass01 },
         {   "BattleBackgroundStoneBricks01.bmpx", &gBattleScreen_StoneBricks01 },
         {   "Wolf64Back01.bmpx", &gBattleSpriteBack[MONSTER_WOLF] },
@@ -2448,24 +2492,28 @@ void InitializeGlobals(void)
 
     gOverworld01EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld01Enc",
                                                 .Area = (RECT){.left = 16, .top = 176, .right = 80, .bottom = 192 },
+                                                .EncounterRate = 100,
                                                 .MaxLevel = 6,
                                                 .MinLevel = 4,
                                                 .MonsterIndexChanceSlots = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 
     gOverworld02EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld02Enc",
                                                 .Area = (RECT){.left = 384, .top = 80, .right = 528, .bottom = 448 },
+                                                .EncounterRate = 200,
                                                 .MaxLevel = 8,
                                                 .MinLevel = 6,
                                                 .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0 } };
 
     gOverworld03EncounterArea = (ENCOUNTERAREA){ .Name = "Overworld03Enc",
                                                 .Area = (RECT){.left = 112, .top = 464, .right = 480, .bottom = 608 },
+                                                .EncounterRate = 200,
                                                 .MaxLevel = 10,
                                                 .MinLevel = 8,
                                                 .MonsterIndexChanceSlots = { 1, 1, 1, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0 } };
 
     gDungeon01EncounterArea = (ENCOUNTERAREA){ .Name = "Dungeon01Enc",
                                                 .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
+                                                .EncounterRate = 300,
                                                 .MaxLevel = 15,
                                                 .MinLevel = 12,
                                                 .MonsterIndexChanceSlots = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0 } };
@@ -2502,8 +2550,8 @@ void InitializeGlobals(void)
                                     .ScreenPosAdd = (POINT)  {.x = 0,     .y = 144 },         //192 176 dest
                                     .WorldPosAdd = (POINT)  {.x = 3856, .y = 400 },
                                     .WorldPos = (UPOINT) {.x = 192,  .y = 32 },
-                                    .SpritesToLoad[0] = FALSE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = FALSE, .SpritesToLoad[3] = FALSE,
-                                    .SpritesToUnload[0] = TRUE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = TRUE, .SpritesToUnload[3] = TRUE };          ////load/unload sprites when teleporting
+                                    .SpritesToLoad[0] = FALSE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = FALSE, .SpritesToLoad[3] = FALSE, .SpritesToLoad[4] = FALSE,
+                                    .SpritesToUnload[0] = TRUE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = TRUE, .SpritesToUnload[3] = TRUE, .SpritesToUnload[4] = TRUE };          ////load/unload sprites when teleporting
 
 
 
@@ -2512,8 +2560,8 @@ void InitializeGlobals(void)
                                     .ScreenPosAdd = (POINT)  {.x = 0,     .y = -144 },         //192 32 dest
                                     .WorldPosAdd = (POINT)  {.x = -3856, .y = -400 },
                                     .WorldPos = (UPOINT) {.x = 4048,  .y = 432 },
-                                    .SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = TRUE, .SpritesToLoad[3] = TRUE,
-                                    .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = FALSE, .SpritesToUnload[3] = FALSE };          ////load/unload sprites when teleporting
+                                    .SpritesToLoad[0] = TRUE, .SpritesToLoad[1] = FALSE, .SpritesToLoad[2] = TRUE, .SpritesToLoad[3] = TRUE, .SpritesToLoad[4] = TRUE,
+                                    .SpritesToUnload[0] = FALSE, .SpritesToUnload[1] = FALSE, .SpritesToUnload[2] = FALSE, .SpritesToUnload[3] = FALSE, .SpritesToUnload[4] = FALSE };          ////load/unload sprites when teleporting
 
     gPortCoords[0] = gTeleport001;
 
@@ -3294,5 +3342,91 @@ void BlitItemDescription(char* description)
     {
         BlitStringToBuffer("MSG UNDEFINED CHECK LOG FILE", &g6x7Font, &COLOR_BLACK, 10, 155);
         LogMessageA(LL_ERROR, "[%s] ERROR: String '%d' was over 224 (32chars * 7rows) characters!", __FUNCTION__, description);
+    }
+}
+
+///////////////////////////////////////////////////////////
+                //buy sell back buttons
+///////////////////////////////////////////////////////////
+
+MENUITEM gBuyButton = { "BUY", 84, 104, TRUE, 1 };
+
+MENUITEM gSellButton = { "SELL", 84, 124, TRUE, 2 };
+
+MENUITEM gBackButton = { "BACK", 84, 144, TRUE, 3 };
+
+MENUITEM* gBuySellBackItems[] = { &gBuyButton, &gSellButton, &gBackButton };
+
+MENU gButtonMenu = { "Selected button", 0, _countof(gBuySellBackItems), gBuySellBackItems };
+
+///////////////////////////////////////////////////////////
+
+void DrawBuySellBackBox(void)
+{
+    DrawWindow(80, 100, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+    DrawWindow(80, 120, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+    DrawWindow(80, 140, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+    BlitStringToBuffer(gBuyButton.Name, &g6x7Font, &COLOR_BLACK, gBuyButton.x, gBuyButton.y);
+
+    BlitStringToBuffer(gSellButton.Name, &g6x7Font, &COLOR_BLACK, gSellButton.x, gSellButton.y);
+
+    BlitStringToBuffer(gBackButton.Name, &g6x7Font, &COLOR_BLACK, gBackButton.x, gBackButton.y);
+
+    BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, gBuySellBackItems[gButtonMenu.SelectedItem]->x - 6, gBuySellBackItems[gButtonMenu.SelectedItem]->y);
+
+}
+
+uint8_t PPI_BuySellBackBox(void)
+{
+    if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed)
+    {
+        if (gButtonMenu.SelectedItem == 2)
+        {
+            PlayGameSound(&gSoundMenuChoose);
+            return(3);
+        }
+        else
+        {
+            gButtonMenu.SelectedItem = 2;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+    }
+    else if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
+    {
+        if (gButtonMenu.SelectedItem > 0)
+        {
+            gButtonMenu.SelectedItem--;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+        else
+        {
+            gButtonMenu.SelectedItem = 2;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+    }
+    else if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+    {
+        if (gButtonMenu.SelectedItem < 2)
+        {
+            gButtonMenu.SelectedItem++;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+        else
+        {
+            gButtonMenu.SelectedItem = 0;
+            PlayGameSound(&gSoundMenuNavigate);
+        }
+    }
+    else if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+    {
+        PlayGameSound(&gSoundMenuChoose);
+        return(gBuySellBackItems[gButtonMenu.SelectedItem]->Action);
+    }
+    else
+    {
+        return(0);
     }
 }

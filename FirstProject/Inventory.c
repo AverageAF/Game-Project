@@ -28,7 +28,9 @@ MENUITEM gMI_Inventory_SelectedItem_Equip = { "Equip", 28 + (48 * 1) + 2, 158, T
 
 MENUITEM gMI_Inventory_SelectedItem_Unequip = { "Remove", 28 + (48 * 2) + 4, 158, TRUE, MenuItem_Inventory_SelectedItem_Unequip };          //only for monsters
 
-MENUITEM* gMI_InventorySelectedItem_Items[] = { &gMI_Inventory_SelectedItem_Back, &gMI_Inventory_SelectedItem_Trash, &gMI_Inventory_SelectedItem_Use, &gMI_Inventory_SelectedItem_Inspect, &gMI_Inventory_SelectedItem_Rename, &gMI_Inventory_SelectedItem_Equip, &gMI_Inventory_SelectedItem_Unequip, };
+MENUITEM gMI_Inventory_SelectedItem_Sell = { "Sell", 28 + (48 * 1) + 2, 152 - 12, TRUE, MenuItem_Inventory_SelectedItem_Sell };            //only for selling items to stores
+
+MENUITEM* gMI_InventorySelectedItem_Items[] = { &gMI_Inventory_SelectedItem_Back, &gMI_Inventory_SelectedItem_Trash, &gMI_Inventory_SelectedItem_Use, &gMI_Inventory_SelectedItem_Inspect, &gMI_Inventory_SelectedItem_Rename, &gMI_Inventory_SelectedItem_Equip, &gMI_Inventory_SelectedItem_Unequip, &gMI_Inventory_SelectedItem_Sell };
 
 MENU gMenu_InventorySelectedItem = { "Selected Item Options", 0, _countof(gMI_InventorySelectedItem_Items), gMI_InventorySelectedItem_Items };
 
@@ -384,6 +386,7 @@ void PPI_InventoryScreen(void)
                 {
                     gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
                     gCurrentGameState = GAMESTATE_OVERWORLD;
+                    gSellingItems = FALSE;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -414,11 +417,19 @@ void PPI_InventoryScreen(void)
                     }
                 }
 
-                if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed && gPlayerPartyCount > 0)
+                if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_MONSTER;
-                    PlayGameSound(&gSoundMenuNavigate);
-                    gSwitchingMonster = 255;
+                    if (gPlayerPartyCount > 0 && gSellingItems == FALSE)
+                    {
+                        gCurrentPockets = POCKETSTATE_MONSTER;
+                        PlayGameSound(&gSoundMenuNavigate);
+                        gSwitchingMonster = 255;
+                    }
+                    else if (gSellingItems == TRUE)
+                    {
+                        gCurrentPockets = POCKETSTATE_VALUABLE;
+                        PlayGameSound(&gSoundMenuNavigate);
+                    }
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
@@ -437,32 +448,53 @@ void PPI_InventoryScreen(void)
             }
             else            ////gHasSelectedInvSlot == TRUE
             {
-                if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
+                if (gSellingItems)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem > 0)
+                    if ((gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed) || (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed))
                     {
-                        gMenu_InventorySelectedItem.SelectedItem--;
-                        PlayGameSound(&gSoundMenuNavigate);
-                    }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
-                    {
-                        gMenu_InventorySelectedItem.SelectedItem = 2;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem == 7)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 7;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
                 }
-                else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
+                else    //gSellingItems == 0
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem < 2)
+                    if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem++;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem > 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem--;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 2;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 0;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem < 2)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem++;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
                 }
+
+                
 
                 if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
                 {
@@ -491,6 +523,7 @@ void PPI_InventoryScreen(void)
                 {
                     gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
                     gCurrentGameState = GAMESTATE_OVERWORLD;
+                    gSellingItems = FALSE;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -543,32 +576,52 @@ void PPI_InventoryScreen(void)
             }
             else
             {
-                if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
+                if (gSellingItems)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem > 0)
+                    if ((gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed) || (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed))
                     {
-                        gMenu_InventorySelectedItem.SelectedItem--;
-                        PlayGameSound(&gSoundMenuNavigate);
-                    }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
-                    {
-                        gMenu_InventorySelectedItem.SelectedItem = 2;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem == 7)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 7;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
                 }
-                else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
+                else    //gSellingItems == 0
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem < 2)
+                    if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem++;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem > 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem--;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 2;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                    else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 0;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem < 2)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem++;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 2)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
                 }
+                
 
                 if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
                 {
@@ -599,6 +652,7 @@ void PPI_InventoryScreen(void)
                 {
                     gPreviousGameState = GAMESTATE_INVENTORYSCREEN;
                     gCurrentGameState = GAMESTATE_OVERWORLD;
+                    gSellingItems = FALSE;
                 }
 
                 if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -634,9 +688,14 @@ void PPI_InventoryScreen(void)
                     gCurrentPockets = POCKETSTATE_USABLE;
                     PlayGameSound(&gSoundMenuNavigate);
                 }
-                else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
+                else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed && gSellingItems == FALSE)
                 {
                     gCurrentPockets = POCKETSTATE_ADVENTURE;
+                    PlayGameSound(&gSoundMenuNavigate);
+                }
+                else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed && gSellingItems == TRUE)
+                {
+                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
                     PlayGameSound(&gSoundMenuNavigate);
                 }
 
@@ -651,32 +710,52 @@ void PPI_InventoryScreen(void)
             }
             else
             {
-                if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
+                if (gSellingItems)
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                    if ((gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed) || (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed))
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 0;
-                        PlayGameSound(&gSoundMenuNavigate);
-                    }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 0)
-                    {
-                        gMenu_InventorySelectedItem.SelectedItem = 1;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem == 7)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 7;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
                 }
-                else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
+                else    //gSellingItems == 0
                 {
-                    if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                    if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 1;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 1;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
-                    else if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                    else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                     {
-                        gMenu_InventorySelectedItem.SelectedItem = 0;
-                        PlayGameSound(&gSoundMenuNavigate);
+                        if (gMenu_InventorySelectedItem.SelectedItem == 0)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 1;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
+                        else if (gMenu_InventorySelectedItem.SelectedItem == 1)
+                        {
+                            gMenu_InventorySelectedItem.SelectedItem = 0;
+                            PlayGameSound(&gSoundMenuNavigate);
+                        }
                     }
                 }
+                
 
                 if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
                 {
@@ -1095,6 +1174,18 @@ void DrawEquipablePocket(void)
     DrawWindow(194, 25 + (10 * 18), 180, 9, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
 
 
+    if (gSellingItems == TRUE)
+    {
+        //// Currency box
+        DrawWindow(310, 10, 56, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+        uint16_t CurrencySize = snprintf(NULL, 0, "$%d", gPlayer.Currency);
+        char* CurrencyString = malloc(CurrencySize + 1);
+        snprintf(CurrencyString, CurrencySize + 1, "$%d", gPlayer.Currency);
+
+        BlitStringToBuffer(CurrencyString, &g6x7Font, &COLOR_BLACK, 312, 12);
+    }
+
     for (uint8_t EquipBox = 0; EquipBox < _countof(gMI_InventoryEquipable_Items); EquipBox++)
     {
         uint16_t SlotLoop = 0x800A;
@@ -1198,6 +1289,18 @@ void DrawUseablePocket(void)
     DrawWindow(194, 25 + (10 * 17), 180, 9, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
     ////  --- \ / --- 
     DrawWindow(194, 25 + (10 * 18), 180, 9, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    if (gSellingItems == TRUE)
+    {
+        //// Currency box
+        DrawWindow(310, 10, 56, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+        uint16_t CurrencySize = snprintf(NULL, 0, "$%d", gPlayer.Currency);
+        char* CurrencyString = malloc(CurrencySize + 1);
+        snprintf(CurrencyString, CurrencySize + 1, "$%d", gPlayer.Currency);
+
+        BlitStringToBuffer(CurrencyString, &g6x7Font, &COLOR_BLACK, 312, 12);
+    }
 
 
     for (uint8_t UseableBox = 0; UseableBox < _countof(gMI_InventoryUseable_Items); UseableBox++)
@@ -1303,6 +1406,16 @@ void DrawValuablePocket(void)
     DrawWindow(194, 25 + (10 * 17), 180, 9, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
     ////  --- \ / --- 
     DrawWindow(194, 25 + (10 * 18), 180, 9, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+
+    //// Currency box
+    DrawWindow(310, 10, 56, 11, &COLOR_BLACK, &COLOR_LIGHT_GRAY, &COLOR_LIGHT_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE);
+
+    uint16_t CurrencySize = snprintf(NULL, 0, "$%d", gPlayer.Currency);
+    char* CurrencyString = malloc(CurrencySize + 1);
+    snprintf(CurrencyString, CurrencySize + 1, "$%d", gPlayer.Currency);
+
+    BlitStringToBuffer(CurrencyString, &g6x7Font, &COLOR_BLACK, 312, 12);
 
 
     for (uint8_t ValuableBox = 0; ValuableBox < _countof(gMI_InventoryValuable_Items); ValuableBox++)
@@ -1457,6 +1570,8 @@ void DrawAdvemturePocket(void)
     }
 
     BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventoryAdventure_Items[gMenu_InventoryAdventure.SelectedItem]->x - 6, gMI_InventoryAdventure_Items[gMenu_InventoryAdventure.SelectedItem]->y);
+
+    BlitItemDescription(gAdventureItems[gAdventureSlotIndex[gMenu_InventoryAdventure.SelectedItem]].Description);
 }
 
 void DrawMonsterParty(void)
@@ -1499,7 +1614,7 @@ void DrawSelectedItemOptions(void)
 
     DrawWindow(20 + (48 * 1) + 2, 152 - 18, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
 
-    if (gCurrentPockets != POCKETSTATE_VALUABLE && gCurrentPockets != POCKETSTATE_ADVENTURE)
+    if (gCurrentPockets != POCKETSTATE_VALUABLE && gCurrentPockets != POCKETSTATE_ADVENTURE && gSellingItems == FALSE)
     {
         DrawWindow(20 + (48 * 2) + 4, 152 - 18, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
     }
@@ -1513,60 +1628,98 @@ void DrawSelectedItemOptions(void)
         DrawWindow(20 + (48 * 2) + 4, 152, 48, 16, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
     }
 
-    switch (gCurrentPockets)
+    if (gSellingItems)
     {
-        case POCKETSTATE_EQUIPABLE:
+        switch (gCurrentPockets)
         {
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);         ////EQUIP jumps to the position of USE when in EQUIPABLE
+            case POCKETSTATE_EQUIPABLE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Sell.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Sell.x, gMI_Inventory_SelectedItem_Sell.y);
 
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
 
-            break;
-        }
-        case POCKETSTATE_USABLE:
-        {
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);
+                break;
+            }
+            case POCKETSTATE_USABLE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Sell.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Sell.x, gMI_Inventory_SelectedItem_Sell.y);
 
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
 
-            break;
-        }
-        case POCKETSTATE_VALUABLE:
-        {
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
+                break;
+            }
+            case POCKETSTATE_VALUABLE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Sell.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Sell.x, gMI_Inventory_SelectedItem_Sell.y);
 
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
 
-            break;
-        }
-        case POCKETSTATE_ADVENTURE:
-        {
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);       ////Use jumps to the position of TRASH while in ADVENTURE
-
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
-
-            break;
-        }
-        case POCKETSTATE_MONSTER:
-        {
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Inspect.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Rename.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Rename.x, gMI_Inventory_SelectedItem_Rename.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Equip.x, gMI_Inventory_SelectedItem_Equip.y);
-            BlitStringToBuffer(gMI_Inventory_SelectedItem_Unequip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Unequip.x, gMI_Inventory_SelectedItem_Unequip.y);
-
-            BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
-
-            break;
+                break;
+            }
         }
     }
+    else    //gSellingItems == 0
+    {
+        switch (gCurrentPockets)
+        {
+            case POCKETSTATE_EQUIPABLE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);         ////EQUIP jumps to the position of USE when in EQUIPABLE
+
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+
+                break;
+            }
+            case POCKETSTATE_USABLE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);
+
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+
+                break;
+            }
+            case POCKETSTATE_VALUABLE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Trash.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
+
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+
+                break;
+            }
+            case POCKETSTATE_ADVENTURE:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);       ////Use jumps to the position of TRASH while in ADVENTURE
+
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+
+                break;
+            }
+            case POCKETSTATE_MONSTER:
+            {
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Back.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Back.x, gMI_Inventory_SelectedItem_Back.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Inspect.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Trash.x, gMI_Inventory_SelectedItem_Trash.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Use.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Use.x, gMI_Inventory_SelectedItem_Use.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Rename.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Rename.x, gMI_Inventory_SelectedItem_Rename.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Equip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Equip.x, gMI_Inventory_SelectedItem_Equip.y);
+                BlitStringToBuffer(gMI_Inventory_SelectedItem_Unequip.Name, &g6x7Font, &COLOR_BLACK, gMI_Inventory_SelectedItem_Unequip.x, gMI_Inventory_SelectedItem_Unequip.y);
+
+                BlitStringToBuffer("�", &g6x7Font, &COLOR_BLACK, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->x - 6, gMI_InventorySelectedItem_Items[gMenu_InventorySelectedItem.SelectedItem]->y);
+
+                break;
+            }
+        }
+    }
+
+    
 }
 
 void DrawEquipUseMonsterText(void)
@@ -2007,6 +2160,20 @@ void MenuItem_Inventory_SelectedItem_Trash(void)
     if (gCurrentPockets == POCKETSTATE_ADVENTURE)
     {
         ////allow whatever adventure item to be used
+        switch (gAdventureSlotIndex[gMenu_InventoryAdventure.SelectedItem])
+        {
+            case INV_ADVENTURE_ITEM_1:
+            {
+                gPlayer.SprintingShoes = !gPlayer.SprintingShoes;
+                gHasSelectedInvSlot = FALSE;
+                break;
+            }
+            case INV_ADVENTURE_ITEM_0:
+            default:
+            {
+                ASSERT(FALSE, "unknown adventure item was used!")
+            }
+        }
     }
     else if (gCurrentPockets != POCKETSTATE_ADVENTURE && gCurrentPockets != POCKETSTATE_MONSTER && gCurrentPockets != POCKETSTATE_MONSTER_SELECT)
     {
@@ -2092,4 +2259,45 @@ void MenuItem_Inventory_SelectedItem_Equip(void)
 void MenuItem_Inventory_SelectedItem_Unequip(void)
 {
     //remove the item from selected monster and increase the count of an equipable item with the same index by one
+}
+
+void MenuItem_Inventory_SelectedItem_Sell(void)
+{
+    switch (gCurrentPockets)
+    {
+        case POCKETSTATE_VALUABLE:
+        {
+            if (gValuableItems[gValuableSlotIndex[gMenu_InventoryValuable.SelectedItem]].Count > 0)     ////TOFIX gValueableSlotIndex will sometimes pass 65535 to ValueableItems and crash because there is only NUM_VALUEABLE_ITEMS in the array when ReSortValueableItems removes a slot box
+            {
+                gValuableItems[gValuableSlotIndex[gMenu_InventoryValuable.SelectedItem]].Count--;
+                gPlayer.Currency += gValuableItems[gValuableSlotIndex[gMenu_InventoryValuable.SelectedItem]].ValueCurrency;
+                ReSortValuableitems();
+            }
+            break;
+        }
+        case POCKETSTATE_USABLE:
+        {
+            if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)        //tofix
+            {
+                gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
+                gPlayer.Currency += gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].ValueCurrency;
+                ReSortUsableitems();
+            }
+            break;
+        }
+        case POCKETSTATE_EQUIPABLE:
+        {
+            if (gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count > 0)      //tofix
+            {
+                gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count--;
+                gPlayer.Currency += gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].ValueCurrency;
+                ReSortEquipableitems();
+            }
+            break;
+        }
+        default:
+        {
+            ASSERT(FALSE, "Unknown pocketstate while selling an item!");
+        }
+    }
 }

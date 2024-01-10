@@ -8,6 +8,7 @@
 #include "InventoryItems.h"
 
 BOOL gFade = FALSE;
+BOOL gPostDialogueMenu = FALSE;
 
 void DrawOverworldScreen(void)
 {
@@ -111,15 +112,20 @@ void DrawOverworldScreen(void)
     {
         for (uint8_t Sprite = 0; Sprite <= NUM_CHAR_SPRITES; Sprite++)
         {
+            if (gCharacterSprite[Sprite].InteractedWith == TRUE && gCharacterSprite[Sprite].Event == EVENT_FLAG_STORE && gPostDialogueMenu == TRUE)
+            {
+                DrawBuySellBackBox();
+            }
+            
             if (gCharacterSprite[Sprite].InteractedWith == TRUE) 
             {
                 DrawDialogueBox(gCharacterSprite[Sprite].Dialogue[gCharacterSprite[Sprite].DialogueFlag], LocalFrameCounter, NULL);
-                goto FoundSprite;
+
+                break;
             }
         }
     }
-FoundSprite:
-
+    
 
 
     if (gGamePerformanceData.DisplayDebugInfo)
@@ -182,6 +188,32 @@ void PPI_Overworld(void)
             gPreviousGameState = gCurrentGameState;
             gCurrentGameState = GAMESTATE_INVENTORYSCREEN;
         }
+
+
+        double SprintEncounter = 1;
+        double ItemEncounter = 1;
+        if (gPlayer.SprintingShoes == TRUE && !gGameInput.CtrlKeyPressed)           //TODO: make sprinting increase the odds of an encounter
+        {
+            gPlayer.Sprinting = TRUE;
+            SprintEncounter = 1.5;
+        }
+        else if (gPlayer.SprintingShoes == FALSE && !gGameInput.CtrlKeyPressed)
+        {
+            gPlayer.Sprinting = FALSE;
+            SprintEncounter = 1;
+        }
+        else if (gPlayer.SprintingShoes == TRUE && gGameInput.CtrlKeyPressed)
+        {
+            gPlayer.Sprinting = FALSE;
+            SprintEncounter = 1;
+        }
+        else if (gPlayer.SprintingShoes == FALSE && gGameInput.CtrlKeyPressed)
+        {
+            gPlayer.Sprinting = TRUE;
+            SprintEncounter = 1.5;
+        }
+
+
 
         //ASSERT(gCamera.x <= gCurrentArea.right - GAME_RES_WIDTH, "Camera went out of bounds!");
 
@@ -441,10 +473,9 @@ void PPI_Overworld(void)
                 }
             }
         }
-        else
+        else if ((gGamePerformanceData.TotalFramesRendered % 3 >= 1) || (gPlayer.Sprinting == TRUE))    ////slows movement down by ~1/3 of framerate unless sprinting       ( gGamePerformanceData.TotalFramesRendered % 2 == 0) would be 1/2 speed of sprint
         {
             gPlayer.MovementRemaining--;
-
 
             if (gPlayer.Direction == DOWN)
             {
@@ -560,6 +591,16 @@ void PPI_Overworld(void)
                 gPlayer.WorldPos.y--;
             }
 
+            for (uint16_t EncounterArea = 1; EncounterArea < NUM_ENCOUNTER_AREAS; EncounterArea++)
+            {
+                if ((gPlayer.WorldPos.x >= gEncounterAreas[EncounterArea].Area.left && gPlayer.WorldPos.x <= gEncounterAreas[EncounterArea].Area.right) && (gPlayer.WorldPos.y >= gEncounterAreas[EncounterArea].Area.top && gPlayer.WorldPos.y <= gEncounterAreas[EncounterArea].Area.bottom))
+                {
+                    gCurrentEncounterArea = gEncounterAreas[EncounterArea];
+                    gPlayer.RandomEncounterPercent = gCurrentEncounterArea.EncounterRate * SprintEncounter * ItemEncounter;
+                    break;
+                }
+            }
+
             switch (gPlayer.MovementRemaining)
             {
                 case 15:
@@ -658,16 +699,8 @@ void PPI_Overworld(void)
 
                                 if (Random > (1000 - gPlayer.RandomEncounterPercent))
                                 {
-
-                                    for (uint8_t EncounterArea = 0; EncounterArea < NUM_ENCOUNTER_AREAS; EncounterArea++)       //TODO: lots of if nested if statements maybe work on that
-                                    {
-                                        if ((gPlayer.WorldPos.x >= gEncounterAreas[EncounterArea].Area.left) && (gPlayer.WorldPos.x <= gEncounterAreas[EncounterArea].Area.right) && (gPlayer.WorldPos.y >= gEncounterAreas[EncounterArea].Area.top) && (gPlayer.WorldPos.y <= gEncounterAreas[EncounterArea].Area.bottom))
-                                        {
-                                            gCurrentEncounterArea = gEncounterAreas[EncounterArea];
-                                            gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
-                                            RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
-                                        }
-                                    }
+                                    gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
+                                    RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
                                 }
                             }
                         }
@@ -697,7 +730,7 @@ void PPI_Overworld(void)
                             {
                                 if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
                                 {
-                                    TrainerEncounter(&gPreviousGameState, &gCurrentGameState);            //TODO: Make trainer battle seperate from wild encounter
+                                    TrainerEncounter(&gPreviousGameState, &gCurrentGameState);            //TODO: Make trainer battle more seperate from wild encounter, possibly check for unique battles/rewards
                                 }
                                 else
                                 {
@@ -765,6 +798,61 @@ void PPI_Overworld(void)
                                 }
                                 break;
                             }
+                            case EVENT_FLAG_STORE:
+                            {
+                                if (gPostDialogueMenu == TRUE)
+                                {
+                                    ///////say a dialogue then ask if player wants to buy/sell/exit 
+                                    uint8_t StoreButtons = PPI_BuySellBackBox();
+
+                                    switch (StoreButtons)
+                                    {
+                                        case 1:
+                                            //buy
+                                            ////create a new store.c file? and send us to that gamestate when buying items?? 
+                                            goto SkipExitingDialogue;
+                                        case 2:
+                                            //sell
+                                            ////go to gamestatepockets->valuablepockets and check a variable to put us in "sell" mode
+                                            gPreviousGameState = gCurrentGameState;
+                                            gCurrentGameState = GAMESTATE_INVENTORYSCREEN;
+                                            gPreviousPockets = gCurrentPockets;
+                                            gCurrentPockets = POCKETSTATE_VALUABLE;
+                                            gSellingItems = TRUE;
+                                            gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                                            gCharacterSprite[Index].InteractedWith = FALSE;
+                                            gPostDialogueMenu = FALSE;
+                                            break;
+                                        case 3:
+                                            //back
+                                            ////reset dialogueflag and beforeloop to give a goodbye message when exiting
+                                            gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                                            gCharacterSprite[Index].InteractedWith = FALSE;
+                                            gPostDialogueMenu = FALSE;
+                                            break;
+                                        case 0:
+                                        default:
+                                        {
+                                            goto SkipExitingDialogue;
+                                        }
+                                    }
+                                }
+                                else if (gPostDialogueMenu == FALSE)
+                                {
+                                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for stores extra dialogue while buy/sell/back
+                                    {
+                                        gPostDialogueMenu = TRUE;
+                                        goto SkipExitingDialogue;
+                                    }
+                                    else
+                                    {
+                                        gCharacterSprite[Index].DialogueFlag++;
+                                        gDialogueControls = FALSE;
+                                        goto SkipExitingDialogue;
+                                    }
+                                }
+                                break;
+                            }
                             default:
                             {
                                 if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
@@ -790,6 +878,14 @@ void PPI_Overworld(void)
             SkipExitingDialogue:        //used to skip the above BOOL globals to keep us in dialogue mode
 
                 gFinishedDialogueTextAnimation = FALSE;
+            }
+            else if (gGameInput.SDownKeyPressed && !gGameInput.SDownKeyAlreadyPressed)
+            {
+                uint8_t StoreButtons = PPI_BuySellBackBox();
+            }
+            else if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
+            {
+                uint8_t StoreButtons = PPI_BuySellBackBox();
             }
         }
         else        //no dialogue or overworld controls
@@ -961,7 +1057,7 @@ void TriggerNPCMovement(_In_ uint64_t Counter)
                         {
                             gCharacterSprite[Index].Direction = RIGHT;
                         }
-                        else
+                        else if (Counter % 2 == 0)
                         {
                             gCharacterSprite[Index].ScreenPos.x--;
                             gCharacterSprite[Index].WorldPos.x--;
@@ -993,7 +1089,7 @@ void TriggerNPCMovement(_In_ uint64_t Counter)
                                 gCharacterSprite[Index].Direction = LEFT;
                             }
                         }
-                        else
+                        else if (Counter % 2 == 0)
                         {
                             gCharacterSprite[Index].ScreenPos.x++;
                             gCharacterSprite[Index].WorldPos.x++;

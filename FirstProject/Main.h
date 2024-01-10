@@ -328,6 +328,7 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 	EVENT_FLAG_ITEM_REPEAT,
 	EVENT_FLAG_MONSTER,
 	EVENT_FLAG_MOVEMENT,
+	EVENT_FLAG_STORE,
 } EVENT_FLAGS;
 
 typedef enum WINDOW_FLAGS
@@ -435,6 +436,7 @@ typedef struct GAMEINPUT
 	int16_t ChooseKeyPressed;
 	int16_t TabKeyPressed;
 	int16_t QKeyPressed;
+	int16_t CtrlKeyPressed;
 
 	int16_t EscapeKeyAlreadyPressed;	////for pulse responces
 	int16_t DebugKeyAlreadyPressed;
@@ -445,6 +447,7 @@ typedef struct GAMEINPUT
 	int16_t ChooseKeyAlreadyPressed;
 	int16_t TabKeyAlreadyPressed;
 	int16_t QKeyAlreadyPressed;
+	int16_t CtrlKeyAlreadyPressed;
 
 } GAMEINPUT;
 
@@ -485,6 +488,8 @@ typedef struct ENCOUNTERAREA
 	char* Name;
 
 	RECT Area;
+
+	uint16_t EncounterRate;
 
 	uint8_t MinLevel;
 
@@ -716,6 +721,7 @@ struct BattleMove
 typedef struct PLAYER
 {
 	char Name[MAX_NAME_LENGTH + 1];
+	uint32_t Currency;
 	uint32_t Seed;
 	GAMEBITMAP Sprite[3][12]; 
 	BOOL Active;
@@ -728,6 +734,10 @@ typedef struct PLAYER
 	uint8_t SpriteIndex;
 	uint64_t StepsTaken;
 	uint64_t StepsSinceLastEncounter;
+
+	//// Adventure items
+	BOOL SprintingShoes;
+	BOOL Sprinting;
 
 	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
 	uint16_t RandomEncounterPercent;
@@ -837,6 +847,8 @@ struct Monster gOpponentParty[MAX_PARTY_SIZE];
 
 GAMEBITMAP gBattleSpriteBack[NUM_MONSTERS];	//////temp while still working on MONSTERINFO struct
 GAMEBITMAP gBattleSpriteFront[NUM_MONSTERS];
+
+BOOL gSellingItems;					//so inventory knows the difference between regular inventory and selling to a shop
 
 GAMEMAP gOverWorld01;
 
@@ -985,3 +997,7 @@ void ClearGameFlag(uint8_t flag);
 void ClearTempGameFlags(void);
 
 void BlitItemDescription(char* description);
+
+void DrawBuySellBackBox(void);
+
+uint8_t PPI_BuySellBackBox(void);
