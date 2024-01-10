@@ -17,11 +17,46 @@
 #define CALCULATE_AVG_FPS_EVERY_X_FRAMES 25			//goal of 120fps
 #define GOAL_MICROSECONDS_PER_FRAME 16667ULL		//16667 = 60fps <8000 for 120fps
 
-#define SIMD
+
+#pragma warning(push, 3)
+
+#include <Windows.h>
+
+#include <xaudio2.h>                // Audio library
+
+#pragma comment(lib, "XAudio2.lib") // Audio library.
+
+#include <stdio.h>                  // String manipulation functions such as sprintf, etc.
+
+#include <psapi.h>                  // Process Status API, e.g. GetProcessMemoryInfo
+
+#include <Xinput.h>                 // Xbox 360 gamepad input
+
+#pragma comment(lib, "XInput.lib")  // Xbox 360 gamepad input.
+
+#include <stdint.h>                 // Nicer data types, e.g., uint8_t, int32_t, etc.
+
+#pragma comment(lib, "Winmm.lib")   // Windows Multimedia library, we use it for timeBeginPeriod to adjust the global system timer resolution.
+
+#define AVX                         // Valid options are SSE2, AVX, or nothing.
+
+#ifdef AVX
+
+#include <immintrin.h>              // AVX (Advanced Vector Extensions)
+
+#elif defined SSE2
+
+#include <emmintrin.h>              // SSE2 (Streaming SIMD Extensions)
+
+#endif
+
+#pragma warning(pop)
 
 #define NUMBER_OF_SFX_SOURCE_VOICES 8
 
 #define FONT_SHEET_CHARACTERS_PER_ROW 98
+
+#define MAX_NAME_LENGTH 8							//8 characters + 1 null
 
 #define SUIT_0 0
 #define SUIT_1 1
@@ -71,6 +106,13 @@ typedef enum GAMESTATE
 	GAMESTATE_EXITYESNO,
 	GAMESTATE_CHARACTERNAME
 } GAMESTATE;
+
+typedef struct UPOINT		//used for character screen position
+{
+	uint16_t x;
+	uint16_t y;
+
+} UPOINT;
 
 typedef struct GAMEINPUT
 {
@@ -129,14 +171,6 @@ typedef struct GAME_PERFORMANCE_DATA
 	int64_t PerfFrequency;
 
 	MONITORINFO MonitorInfo;
-	/*int32_t MonitorWidth;
-	int32_t MonitorHeight;
-	int32_t WindowWidth;
-	int32_t WindowHeight;*/
-
-	/*RECT MonitorRect;
-	RECT WindowRect;*/
-
 	BOOL DisplayDebugInfo;
 	LONG MinimumTimerResolution;		//if warning C4057 make ULONG instead
 	LONG MaximumTimerResolution;		//c4057
@@ -156,11 +190,12 @@ typedef struct GAME_PERFORMANCE_DATA
 
 typedef struct PLAYER
 {
-	char Name[12];
+	char Name[MAX_NAME_LENGTH + 1];
 	GAMEBITMAP Sprite[3][12]; 
 	BOOL Active;
+	UPOINT ScreenPos;/*
 	int16_t ScreenPosX;
-	int16_t ScreenPosY;
+	int16_t ScreenPosY;*/
 	uint8_t MovementRemaining;
 	DIRECTION Direction;
 	uint8_t CurrentSuit;
@@ -182,6 +217,63 @@ typedef struct REGISTRYPARAMS
 
 } REGISTRYPARAMS;
 
+
+typedef struct MENUITEM
+{
+	char* Name;
+
+	int16_t x;
+
+	int16_t y;
+
+	BOOL Enabled;
+
+	void(*Action)(void);
+
+} MENUITEM;
+
+typedef struct MENU
+{
+	char* Name;
+
+	uint8_t SelectedItem;
+
+	uint8_t ItemCount;
+
+	MENUITEM** Items;
+
+} MENU;
+
+
+IXAudio2SourceVoice* gXAudioSFXSourceVoice[NUMBER_OF_SFX_SOURCE_VOICES];
+IXAudio2SourceVoice* gXAudioMusicSourceVoice;
+
+REGISTRYPARAMS gRegistryParams;
+
+GAMEBITMAP gBackBuffer;
+
+GAMEBITMAP g6x7Font;
+
+HWND gGameWindow;
+
+GAME_PERFORMANCE_DATA gGamePerformanceData;
+
+PLAYER gPlayer;
+
+GAMESTATE gCurrentGameState;
+GAMESTATE gPreviousGameState;
+GAMESTATE gDesiredGameState;
+
+GAMEINPUT gGameInput;
+
+uint8_t gSFXVolume;
+uint8_t gMusicVolume;
+
+GAMESOUND gSoundMenuNavigate;
+GAMESOUND gSoundMenuChoose;
+GAMESOUND gSoundSplashScreen;
+
+
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);
 
 DWORD CreateMainGameWindow(void);
@@ -195,6 +287,8 @@ DWORD Load32BppBitmapFromFile(_In_ char* FileName, _Inout_ GAMEBITMAP* GameBitma
 DWORD InitializePlayer(void);
 
 void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ uint16_t y);
+
+void BlitTilemapToBuffer(_In_ GAMEBITMAP* GameBitmap);
 
 void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXEL32* Color, _In_ uint16_t x, _In_ uint16_t y);
 
@@ -214,23 +308,19 @@ DWORD LoadWaveFromFile(_In_ char* FileName, _Inout_ GAMESOUND* GameSound);
 
 void PlayGameSound(_In_ GAMESOUND* GameSound);
 
-#ifdef SIMD
-void ClearScreenColor(_In_ __m128i* Color);
+// This is defined at the beginning of Main.c.
+#ifdef AVX
+void ClearScreen(_In_ __m256i* Color);
+#elif defined SSE2
+void ClearScreen(_In_ __m128i* Color);
 #else
-void ClearScreenColor(_In_ PIXEL32* Color);
+void ClearScreen(_In_ PIXEL32* Color);
+
 #endif
 
-void DrawOpeningSplashScreen(void);
-void DrawTitleScreen(void);
-void DrawOverworldScreen(void);
 void DrawBattleScreen(void);
-void DrawOptionsScreen(void);
-void DrawExitYesNoScreen(void);
-void DrawCharacterNaming(void);
 
-void PPI_OpeningSplashScreen(void);
-void PPI_TitleScreen(void);
+void DrawOverworldScreen(void);
+
 void PPI_Overworld(void);
-void PPI_ExitYesNoScreen(void);
-void PPI_OptionsScreen(void);
-void PPI_CharacterName(void);
+
