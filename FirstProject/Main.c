@@ -625,7 +625,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].Exists = TRUE;
     gCharacterSprite[2].Loaded = TRUE;
     gCharacterSprite[2].Dialogue[0] = "Lets have a battle!";
-    gCharacterSprite[2].Party[0] = 1;
+    gCharacterSprite[2].Party[0].MonsterBaseInfo.MonsterIndex = 1;
 
     //////////////////////////////////////////////////////////////
 
@@ -644,8 +644,93 @@ DWORD InitializePlayer(void)
     gPlayer.Direction = DOWN;
     gPlayer.RandomEncounterPercent = 50;   //50 == a 5% chance
 
-    gPlayer.Party[0] = 1;
+    gPlayer.Party[0].MonsterBaseInfo.MonsterIndex = 1;
 
+    ///////////////////////////////TODO make movenames a char* to hold the whole name instead of letters
+
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[0] = 'P';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[1] = 'o';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[2] = 'u';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[3] = 'n';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[4] = 'c';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[5] = 'e';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[6] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[7] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[8] = 'P';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[9] = ':';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[10] = '3';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[11] = '0';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[12] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[13] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[14] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[15] = 'E';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[16] = ':';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[17] = 'N';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[18] = 'O';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[19] = 'N';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[20] = 'E';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[21] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[22] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[0].Name[23] = ' ';
+
+    ///////////////////////////
+
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[0] = 'G';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[1] = 'r';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[2] = 'o';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[3] = 'w';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[4] = 'l';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[5] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[6] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[7] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[8] = 'P';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[9] = ':';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[10] = '-';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[11] = '-';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[12] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[13] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[14] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[15] = 'E';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[16] = ':';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[17] = 'N';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[18] = 'O';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[19] = 'N';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[20] = 'E';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[21] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[22] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[1].Name[23] = ' ';
+
+    ////////////////////
+
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[0] = 'B';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[1] = 'i';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[2] = 't';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[3] = 'e';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[4] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[5] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[6] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[7] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[8] = 'P';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[9] = ':';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[10] = '5';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[11] = '0';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[12] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[13] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[14] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[15] = 'E';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[16] = ':';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[17] = 'N';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[18] = 'O';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[19] = 'N';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[20] = 'E';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[21] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[22] = ' ';
+    gPlayer.Party[0].LearnedMoveSlot[2].Name[23] = ' ';
+
+    ////////////////////////////
+
+
+    //////leave this as a char[] so letters can be reassigned
     gPlayer.Name[0] = 'M';
     gPlayer.Name[1] = 'a';
     gPlayer.Name[2] = 'p';

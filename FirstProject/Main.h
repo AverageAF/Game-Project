@@ -60,6 +60,13 @@
 #define NUMBER_OF_SFX_SOURCE_VOICES 8
 
 #define FADE_DURATION_FRAMES 20
+
+#define COLOR_BLACK (PIXEL32){ .Bytes = 0xFF000000 }
+#define COLOR_NES_TAN (PIXEL32){ .Bytes = 0xFFfca044 }
+#define COLOR_DARK_RED (PIXEL32){ .Bytes = 0xFFa81000 }
+#define COLOR_FORREST_GREEN (PIXEL32) { .Bytes = 0xFF007800 }
+#define COLOR_DARK_BLUE (PIXEL32){ .Bytes = 0xFF0000bc }
+#define COLOR_LIGHT_BLUE (PIXEL32){ .Bytes = 0xFF3cbcfc }
 #define COLOR_NES_WHITE (PIXEL32){ .Bytes = 0xFFFCFCFC }
 #define COLOR_DARK_WHITE (PIXEL32){ .Bytes = 0xFFDCDCDC }
 #define COLOR_NES_GRAY (PIXEL32){ .Bytes = 0xFF202020 }
@@ -70,10 +77,18 @@
 
 #define MAX_NAME_LENGTH 8							//8 characters + 1 null
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
+#define MAX_MOVE_NAME_LENGTH 23					//23 characters + 1 null
 #define MAX_SPRITE_LOAD 10
 #define MAX_DIALOGUE_BOXES 10
 #define MAX_PARTY_SIZE 6
+#define MAX_NONSIGNATURE_MOVES 4
+
+
+
 #define TOTAL_MONSTERS 10
+#define TOTAL_MOVES 10
+
+
 
 #define SUIT_0 0
 #define SUIT_1 1
@@ -298,57 +313,52 @@ typedef struct GAMEMAP
 
 } GAMEMAP;
 
-typedef struct PLAYER
+
+typedef struct ELEMENTINFO
 {
-	char Name[MAX_NAME_LENGTH + 1];
-	GAMEBITMAP Sprite[3][12]; 
-	BOOL Active;
-	UPOINT ScreenPos;
-	UPOINT WorldPos;
-	BOOL HasMovedSincePort;
-	uint8_t MovementRemaining;
-	DIRECTION Direction;
-	uint8_t CurrentSuit;
-	uint8_t SpriteIndex;
-	uint64_t StepsTaken;
-	uint64_t StepsSinceLastEncounter;
+	uint8_t ElementIndex;
 
-	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
-	uint16_t RandomEncounterPercent;
-	uint8_t Party[MAX_PARTY_SIZE];
+	char Name[10];
 
-} PLAYER;
+	PIXEL32 PrimaryColor;
+	PIXEL32 SecondaryColor;
 
-typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Sprites"
+	MONSTER_ELEMENTS ElementFlag;
+
+	//weakness		TODO
+	//strengths
+
+
+} ELEMENTINFO;
+
+
+
+typedef struct BATTLEMOVEINFO
 {
-	char Name[MAX_NAME_LENGTH + 1];
-	UPOINT WorldPos;
-	POINT ScreenPos;
-	DIRECTION Direction;
-	uint8_t SpriteIndex;
-	GAMEBITMAP Sprite[12];
-	MOVEMENTTYPE Movement;
-	BOOL Visible;
-	BOOL Exists;
-	BOOL Loaded;
-	UPOINT ResetWorldPos;
-	POINT ResetScreenPos;
-	DIRECTION ResetDirection;
-	uint8_t ResetSightRange;
-	uint8_t SightRange;
-	UPOINT MovementRange;
-	char* Dialogue[MAX_DIALOGUE_BOXES];
-	BOOL InteractedWith;
-	BOOL WantsToBattle;
-	uint8_t Party[MAX_PARTY_SIZE];
+	uint16_t MoveIndex;
+	char Name[MAX_MOVE_NAME_LENGTH + 1];
+	////	Attack power
+	uint8_t SlashPower;
+	uint8_t BluntPower;
+	uint8_t PiercePower;
+	//// Psi power
+	uint8_t ThermalPower;
+	uint8_t MentalPower;
+	uint8_t AstralPower;
 
-} INGAMESPRITE;
+	ELEMENTINFO MoveElement;
+
+	////MOVE_EFFECT MoveEffect;		TODO
+
+	BOOL MoveSignature;
+
+} BATTLEMOVEINFO;
 
 
 typedef struct MONSTERINFO			/////this structure will contain all info for all monsters from a general POV, including sprites and base-stats
 {
 	uint8_t MonsterIndex;
-	char Name[MAX_MONSTER_NAME_LENGTH + 1];
+	char* Name;
 	GAMEBITMAP MonsterBattleSpriteFront;
 	GAMEBITMAP MonsterBattleSpriteBack;
 
@@ -359,11 +369,14 @@ typedef struct MONSTERINFO			/////this structure will contain all info for all m
 	uint8_t MonsterBaseResolveStat;
 	uint8_t MonsterBaseSpeedStat;
 	uint16_t MonsterBaseStatTotal;
-	
+
 	MONSTER_ELEMENTS MonsterElement1;
 	MONSTER_ELEMENTS MonsterElement2;
 
+	BATTLEMOVEINFO MonsterMovePool[TOTAL_MOVES];
+
 } MONSTERINFO;
+
 
 
 typedef struct UNIQUEMONSTER
@@ -373,7 +386,11 @@ typedef struct UNIQUEMONSTER
 	uint8_t MonsterCurrentLevel;
 	uint8_t MonsterCurrentXp;
 
+	//TODO
 	///////EQUIPPED_ITEM MonsterEquippedItem; ????
+	// 
+	BATTLEMOVEINFO LearnedMoveSlot[MAX_NONSIGNATURE_MOVES];
+	BATTLEMOVEINFO SignatureMove;
 
 	uint16_t MonsterCurrentHealth;
 	uint16_t MonsterMaxHealth;
@@ -402,6 +419,53 @@ typedef struct UNIQUEMONSTER
 
 } UNIQUEMONSTER;
 
+
+
+typedef struct PLAYER
+{
+	char Name[MAX_NAME_LENGTH + 1];
+	GAMEBITMAP Sprite[3][12]; 
+	BOOL Active;
+	UPOINT ScreenPos;
+	UPOINT WorldPos;
+	BOOL HasMovedSincePort;
+	uint8_t MovementRemaining;
+	DIRECTION Direction;
+	uint8_t CurrentSuit;
+	uint8_t SpriteIndex;
+	uint64_t StepsTaken;
+	uint64_t StepsSinceLastEncounter;
+
+	//10 = 1% chance, 1000 = 100% chance, 0 = 0% chance
+	uint16_t RandomEncounterPercent;
+	UNIQUEMONSTER Party[MAX_PARTY_SIZE];
+
+} PLAYER;
+
+typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Sprites"
+{
+	char Name[MAX_NAME_LENGTH + 1];
+	UPOINT WorldPos;
+	POINT ScreenPos;
+	DIRECTION Direction;
+	uint8_t SpriteIndex;
+	GAMEBITMAP Sprite[12];
+	MOVEMENTTYPE Movement;
+	BOOL Visible;
+	BOOL Exists;
+	BOOL Loaded;
+	UPOINT ResetWorldPos;
+	POINT ResetScreenPos;
+	DIRECTION ResetDirection;
+	uint8_t ResetSightRange;
+	uint8_t SightRange;
+	UPOINT MovementRange;
+	char* Dialogue[MAX_DIALOGUE_BOXES];
+	BOOL InteractedWith;
+	BOOL WantsToBattle;
+	UNIQUEMONSTER Party[MAX_PARTY_SIZE];
+
+} INGAMESPRITE;
 
 typedef struct REGISTRYPARAMS
 {
