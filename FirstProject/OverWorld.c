@@ -810,7 +810,14 @@ void PPI_Overworld(void)
                                         case 1:
                                             //buy
                                             ////create a new store.c file? and send us to that gamestate when buying items?? 
-                                            goto SkipExitingDialogue;
+                                            gPreviousGameState = gCurrentGameState;
+                                            gCurrentGameState = GAMESTATE_STORE;
+                                            gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                                            gCharacterSprite[Index].InteractedWith = FALSE;
+                                            gPostDialogueMenu = FALSE;
+                                            gStoreSpriteIndex = Index;
+                                            break;
+                                            //goto SkipExitingDialogue;
                                         case 2:
                                             //sell
                                             ////go to gamestatepockets->valuablepockets and check a variable to put us in "sell" mode

@@ -1755,7 +1755,7 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
             {
                 case ITEM_USE_EFFECT_HEAL_MONSTER: 
                 {
-                    if (gPlayerParty[gSelectedMonster].Health == gPlayerParty[gSelectedMonster].MaxHealth | gPlayerParty[gSelectedMonster].Health == 0)      ////selected monster has full hp or is knocked out
+                    if (gPlayerParty[gSelectedMonster].Health == gPlayerParty[gSelectedMonster].MaxHealth || gPlayerParty[gSelectedMonster].Health == 0)      ////selected monster has full hp or is knocked out
                     {
                         gCurrentPockets = POCKETSTATE_USABLE;
                         gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
@@ -2091,7 +2091,7 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
         }
         else if (gPreviousPockets == POCKETSTATE_EQUIPABLE && gPlayerParty[gSelectedMonster].DriveMonster.HeldItem == 0)        ////equipping an item onto a monster
         {
-            switch (gEquipItemEffect)
+            switch (gEquipItemEffect)       ////TOFIX: Dont think I will need a switch here, equip effects are used in battlescreen.c probably
             {
                 case ITEM_EQUIP_EFFECT_ELEMENT_BOOST:
                 {
@@ -2102,6 +2102,9 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                     gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
 
                     ReSortEquipableitems();
+
+                    gMenu_InventorySelectedItem.SelectedItem = 0;
+                    gHasSelectedInvSlot = FALSE;
 
                     break;
                 }
@@ -2240,25 +2243,26 @@ void MenuItem_Inventory_SelectedItem_Inspect(void)
 
 void MenuItem_Inventory_SelectedItem_Rename(void)
 {
-    //go to naming screen based on character naming screen
+    //go to renaming screen based on character naming screen
 }
 
 void MenuItem_Inventory_SelectedItem_Equip(void)
 {
-    //go to equip screen without ALeft or DRight
 
-    /*if (gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Effect == ITEM_EQUIP_EFFECT_ELEMENT_BOOST && gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count > 0)
-    {
-        gEquipItemEffect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST;
-        gPreviousPockets = POCKETSTATE_EQUIPABLE;
-        gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
-        gSwitchingMonster = 255;
-    }*/
 }
 
 void MenuItem_Inventory_SelectedItem_Unequip(void)
 {
-    //remove the item from selected monster and increase the count of an equipable item with the same index by one
+    //remove the item from selected monster and increase the .Count of an EquipableItem with the same index by one
+    if (gPlayerParty[gSelectedMonster].DriveMonster.HeldItem != 0) 
+    {
+        gEquipableItems[gPlayerParty[gSelectedMonster].DriveMonster.HeldItem].Count++;
+        gPlayerParty[gSelectedMonster].DriveMonster.HeldItem = 0;
+        ReSortEquipableitems();
+        gMenu_InventorySelectedItem.SelectedItem = 0;
+        gHasSelectedInvSlot = FALSE;
+    }
+
 }
 
 void MenuItem_Inventory_SelectedItem_Sell(void)

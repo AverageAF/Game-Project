@@ -315,6 +315,7 @@ typedef enum GAMESTATE
 	GAMESTATE_DELETESAVEYESNO,
 	GAMESTATE_INVENTORYSCREEN,
 	GAMESTATE_MONSTERSTATS,
+	GAMESTATE_STORE,
 
 } GAMESTATE;
 
@@ -849,6 +850,7 @@ GAMEBITMAP gBattleSpriteBack[NUM_MONSTERS];	//////temp while still working on MO
 GAMEBITMAP gBattleSpriteFront[NUM_MONSTERS];
 
 BOOL gSellingItems;					//so inventory knows the difference between regular inventory and selling to a shop
+uint8_t gStoreSpriteIndex;			//so storescreen.c knows what npc you are buying from | USE uint16_t?????
 
 GAMEMAP gOverWorld01;
 
@@ -1001,3 +1003,5 @@ void BlitItemDescription(char* description);
 void DrawBuySellBackBox(void);
 
 uint8_t PPI_BuySellBackBox(void);
+
+BOOL CanPlayerAffordCurrencyCost(uint32_t currencycost);

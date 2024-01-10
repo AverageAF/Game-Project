@@ -27,6 +27,7 @@
 #include "InventoryItems.h"
 #include "MonsterData.h"
 #include "MonsterStatsScreen.h"
+#include "StoreScreen.h"
 
 
 #pragma comment(lib, "Winmm.lib")
@@ -554,6 +555,11 @@ void ProcessPlayerInput(void)
             PPI_InventoryScreen();
             break;
         }
+        case GAMESTATE_STORE:
+        {
+            PPI_StoreScreen();
+            break;
+        }
         default:
         {
             ASSERT(FALSE, "Unknown GameState for player input!")
@@ -729,6 +735,10 @@ DWORD InitializeSprites(void)
     gCharacterSprite[4].DialogueFlag = DIALOGUE_FLAG_0;
     gCharacterSprite[4].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
     gCharacterSprite[4].DialogueLoopReturn = DIALOGUE_FLAG_0;
+
+    gStoreType[4] = 4;
+
+    sprintf_s(gCharacterSprite[4].Name, sizeof(gCharacterSprite[4].Name), "Items");
 
     //////////////////////////////////////////////////////////////
 
@@ -906,6 +916,11 @@ void RenderFrameGraphics(void)
         case GAMESTATE_INVENTORYSCREEN:
         {
             DrawInventoryScreen();
+            break;
+        }
+        case GAMESTATE_STORE:
+        {
+            DrawStoreScreen();
             break;
         }
         default:
@@ -3349,11 +3364,11 @@ void BlitItemDescription(char* description)
                 //buy sell back buttons
 ///////////////////////////////////////////////////////////
 
-MENUITEM gBuyButton = { "BUY", 84, 104, TRUE, 1 };
+MENUITEM gBuyButton = { "BUY", 90, 104, TRUE, 1 };
 
-MENUITEM gSellButton = { "SELL", 84, 124, TRUE, 2 };
+MENUITEM gSellButton = { "SELL", 90, 124, TRUE, 2 };
 
-MENUITEM gBackButton = { "BACK", 84, 144, TRUE, 3 };
+MENUITEM gBackButton = { "BACK", 90, 144, TRUE, 3 };
 
 MENUITEM* gBuySellBackItems[] = { &gBuyButton, &gSellButton, &gBackButton };
 
@@ -3428,5 +3443,17 @@ uint8_t PPI_BuySellBackBox(void)
     else
     {
         return(0);
+    }
+}
+
+BOOL CanPlayerAffordCurrencyCost(uint32_t currencycost)
+{
+    if (gPlayer.Currency >= currencycost)
+    {
+        return(TRUE);
+    }
+    else
+    {
+        return(FALSE);
     }
 }
