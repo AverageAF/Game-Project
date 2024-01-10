@@ -1,0 +1,14 @@
+
+[07/13/2023 22:59:32.223][INFO][LoadRegistryParameters] LogLevel is 4
+[07/14/2023 11:14:32.978][INFO][LoadRegistryParameters] LogLevel is 4
+[07/14/2023 11:56:20.421][INFO][LoadRegistryParameters] LogLevel is 4
+[07/14/2023 11:56:20.422][INFO][WinMain] Information
+[07/14/2023 11:56:20.422][WARN][WinMain] Warning
+[07/14/2023 11:56:20.423][ERROR][WinMain] Error
+[07/14/2023 11:56:20.423][DEBUG][WinMain] Debug
+[07/14/2023 12:09:19.620][ERROR][WinMain] Error
+[07/14/2023 12:09:40.756][ERROR][WinMain] Error
+[07/14/2023 12:12:36.251][ERROR][LoadRegistryParameters] LogLevel is 1
+[07/14/2023 12:12:36.252][ERROR][WinMain] Error
+[07/14/2023 12:13:26.143][ERROR][INFO] LogLevel is 1233445088
+[07/14/2023 12:13:26.144][ERROR][WinMain] Error

@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef _DEBUG
+	#define ASSERT(Expression) if (!(Expression)) { *(int*)0 = 0; }
+#else
+	#define ASSERT((void),0);
+#endif
+
 #define GAME_NAME "A_Game"
 
 #define GAME_RES_WIDTH 384		//maybe 400
@@ -7,14 +13,18 @@
 #define GAME_BPP 32
 #define GAME_DRAWING_AREA_MEMORY_SIZE (GAME_RES_WIDTH * GAME_RES_HEIGHT * (GAME_BPP/8))
 
-#define CALCULATE_AVG_FPS_EVERY_X_FRAMES 10			//goal of 120fps
+#define CALCULATE_AVG_FPS_EVERY_X_FRAMES 25			//goal of 120fps
 #define GOAL_MICROSECONDS_PER_FRAME 16667ULL		//16667 = 60fps
 
 #define SIMD
 
+
+#define FONT_SHEET_CHARACTERS_PER_ROW 98
+
 #define SUIT_0 0
 #define SUIT_1 1
 #define SUIT_2 2
+
 #define FACING_DOWN_0 0
 #define FACING_DOWN_1 1
 #define FACING_DOWN_2 2
@@ -27,6 +37,26 @@
 #define FACING_UP_0 9
 #define FACING_UP_1 10
 #define FACING_UP_2 11
+
+typedef enum DIRECTION
+{
+	Down = 0,
+	Left = 3,
+	Right = 6,
+	Up = 9
+} DIRECTION;
+
+typedef enum LOGLEVEL
+{
+	None = 0,
+	LogError = 1,
+	Warn = 2,
+	Info = 3,
+	Debug = 4
+} LOGLEVEL;
+
+#define LOG_FILE_NAME GAME_NAME ".log"
+
 
 typedef LONG(NTAPI* _NtQueryTimerResolution) (OUT PULONG MinimumResolution, OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
 
@@ -76,9 +106,19 @@ typedef struct PLAYER
 {
 	char Name[12];
 	GAMEBITMAP Sprite[3][12]; 
-	int32_t ScreenPosX;
-	int32_t ScreenPosY;
+	int16_t ScreenPosX;
+	int16_t ScreenPosY;
+	uint8_t MovementRemaining;
+	DIRECTION Direction;
+	uint8_t CurrentSuit;
+	uint8_t SpriteIndex;
 } PLAYER;
+
+typedef struct REGISTRYPARAMS
+{
+	DWORD LogLevel;
+
+} REGISTRYPARAMS;
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);
 
@@ -94,7 +134,15 @@ DWORD InitializePlayer(void);
 
 void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ uint16_t x, _In_ uint16_t y);
 
+void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXEL32* Color, _In_ uint16_t x, _In_ uint16_t y);
+
 void RenderFrameGraphics(void);
+
+DWORD LoadRegistryParameters(void);
+
+void LogMessageA(_In_ DWORD LogLevel, _In_ char* Message, _In_ ...);
+
+void DrawDebugInfo(void);
 
 #ifdef SIMD
 void ClearScreenColor(_In_ __m128i* Color);
