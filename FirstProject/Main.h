@@ -85,6 +85,7 @@
 #define MAX_DIALOGUE_BOXES 10
 #define MAX_PARTY_SIZE 6
 #define MAX_NONSIGNATURE_MOVES 4
+#define MAX_INCSIGNATURE_MOVES 5
 #define MAX_GENETICS_VALUE 31
 #define LEGENDARY_GENETICS_PERFECT_COUNT 4
 #define USE_RANDOM_GENETICS (MAX_GENETICS_VALUE + 1)
@@ -93,6 +94,7 @@
 #define END_OF_STRING 0xFF
 #define MAX_LEVEL 100
 #define MAX_STAT_CHANGES 6
+#define MAX_DIALOGUE_ROWS 7
 
 
 
@@ -632,6 +634,7 @@ BOOL gGamePaused;							//pauses sprites in background
 BOOL gDialogueControls;						//enables input confirmation after dialogue
 BOOL gOverWorldControls;					//enables overworld controls
 BOOL gFinishedDialogueTextAnimation;		//allows for dialogue text animation to reset between boxes
+BOOL gFinishedBattleTextAnimation;			//same as above but for battles
 
 INGAMESPRITE gCharacterSprite[MAX_SPRITE_LOAD];
 

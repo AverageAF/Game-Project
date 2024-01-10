@@ -2490,7 +2490,7 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
     char* StrPtr[8];
 
     DrawWindow(1, 170, 192, 64, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_DARK_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_BORDERED | WINDOW_FLAG_ROUNDED);
-    if (strlen(Dialogue) <= 32 * 7 && strlen(Dialogue) > 0)
+    if (strlen(Dialogue) <= 32 * MAX_DIALOGUE_ROWS && strlen(Dialogue) > 0)
     {
         strcpy_s(InString, 224, Dialogue);        ////need to define max msg length bc sizeof() and strlen() both result in errors
 
