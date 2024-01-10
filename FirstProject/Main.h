@@ -503,6 +503,8 @@ typedef struct REGISTRYPARAMS
 
 	BOOL FullScreen;
 
+	DWORD TextSpeed;
+
 } REGISTRYPARAMS;
 
 

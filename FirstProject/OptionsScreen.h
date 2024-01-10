@@ -13,3 +13,5 @@ void MenuItem_OptionsScreen_ScreenSize(void);
 void MenuItem_OptionsScreen_Back(void);
 
 void MenuItem_OptionsScreen_FullScreen(void);
+
+void MenuItem_OptionsScreen_TextSpeed(void);

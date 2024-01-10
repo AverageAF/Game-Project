@@ -3,7 +3,12 @@
 
 ///////////////////////////////MISC////////////////////////////////////
 
-
+#define GROWTH_RATE_FAST 0
+#define GROWTH_RATE_VERY_FAST 1
+#define GROWTH_RATE_NORMAL 2
+#define GROWTH_RATE_VERY_SLOW 3
+#define GROWTH_RATE_SLOW 4
+#define GROWTH_RATE_LEGENDARY 5
 
 ///////////////////////////////MISC////////////////////////////////////
 
@@ -62,7 +67,7 @@
 #define BATTLEMOVE_FLORAL_ATTACK 13
 #define BATTLEMOVE_DEADLY_SWIPE 14
 
-#define NUM_BATTLEMOVES (15 - 1)
+#define NUM_BATTLEMOVES 15
 
 ///////////////////////////////MOVES///////////////////////////////////
 

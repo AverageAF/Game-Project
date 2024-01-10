@@ -3,6 +3,8 @@
 
 typedef enum BATTLESTATE
 {
+	BATTLESTATE_OPENING_TEXT,
+	BATTLESTATE_WAIT_INPUT1,
 	BATTLESTATE_RUN_FIGHT,
 	BATTLESTATE_SWITCH_FIGHT,				///////TODO harder difficulties where there is no running or item bag
 	BATTLESTATE_CHOOSE_MOVE,

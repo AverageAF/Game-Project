@@ -39,17 +39,17 @@ MENU gMenu_BattleScreen = { "Battle Menu", 0 , _countof(gMI_BattleScreen_Items),
 
 //////////Menu choices for selecting moves
 
-MENUITEM gMI_MoveScreen_MoveSlot0 = { "Slot1", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 187, TRUE, MenuItem_MoveScreen_MoveSlot0 };
+MENUITEM gMI_MoveScreen_MoveSlot0 = { "Slot1", 72, 187, TRUE, MenuItem_MoveScreen_MoveSlot0 };
 
-MENUITEM gMI_MoveScreen_MoveSlot1 = { "Slot2", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 201, TRUE, MenuItem_MoveScreen_MoveSlot1};
+MENUITEM gMI_MoveScreen_MoveSlot1 = { "Slot2", 72, 201, TRUE, MenuItem_MoveScreen_MoveSlot1};
 
-MENUITEM gMI_MoveScreen_MoveSlot2 = { "Slot3", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 215, TRUE, MenuItem_MoveScreen_MoveSlot2};
+MENUITEM gMI_MoveScreen_MoveSlot2 = { "Slot3", 72, 215, TRUE, MenuItem_MoveScreen_MoveSlot2};
 
-MENUITEM gMI_MoveScreen_MoveSlot3 = { "Slot4", (GAME_RES_WIDTH / 2) - (6 * (MAX_MOVE_NAME_LENGTH) / 2), 229, FALSE, MenuItem_MoveScreen_MoveSlot3};
+MENUITEM gMI_MoveScreen_MoveSlot3 = { "Slot4", 72, 229, TRUE, MenuItem_MoveScreen_MoveSlot3};
 
-MENUITEM gMI_MoveScreen_MoveSlotSignature = { "SlotSig", 276 + (6 * (MAX_MOVE_NAME_LENGTH) / 2), 206, FALSE, MenuItem_MoveScreen_SignatureMove};
+MENUITEM gMI_MoveScreen_MoveSlotSignature = { "Signature", 316 , 206, TRUE, MenuItem_MoveScreen_SignatureMove};
 
-MENUITEM gMI_MoveScreen_BackButton = { "Back", 52 + (6 * 4 / 2), 206, TRUE, MenuItem_MoveScreen_BackButton };
+MENUITEM gMI_MoveScreen_BackButton = { "Back", 1 + (6 * 4 / 2), 206, TRUE, MenuItem_MoveScreen_BackButton };
 
 MENUITEM* gMI_MoveScreen_Items[] = { &gMI_MoveScreen_BackButton, &gMI_MoveScreen_MoveSlot0, &gMI_MoveScreen_MoveSlot1, &gMI_MoveScreen_MoveSlot2, &gMI_MoveScreen_MoveSlot3, &gMI_MoveScreen_MoveSlotSignature };
 
@@ -57,7 +57,9 @@ MENU gMenu_MoveScreen = { "Move Menu", 0, _countof(gMI_MoveScreen_Items), gMI_Mo
 
 //////////
 
+char gBattleTextLine1[40];      //first line of dialogue in combat text
 
+BOOL gSkipToNextText;
 
 
 
@@ -71,13 +73,17 @@ void DrawBattleScreen(void)
 
     static int16_t BrightnessAdjustment = -255;
 
+    static uint16_t BattleTextLine1CharactersToShow = 0;
+
     GAMEBITMAP* BattleScene = NULL;
 
     GAMEBITMAP* PlayerMonsterSprite = NULL;
 
     GAMEBITMAP* OpponentMonsterSprite = NULL;
 
-    uint8_t Opponent = 0;
+    uint8_t Opponent = NULL;
+
+    char BattleTextLine1Scratch[40];
 
     for (uint8_t Index = 0; Index < MAX_SPRITE_LOAD; Index++)
     {
@@ -95,6 +101,15 @@ void DrawBattleScreen(void)
         gCurrentBattleState = 0;
         BrightnessAdjustment = -255;
         gInputEnabled = FALSE;
+        BattleTextLine1CharactersToShow = 0;
+        if (Opponent == NULL)
+        {
+            sprintf_s(gBattleTextLine1, sizeof(gBattleTextLine1), "%s encountered a wild NULL!", gPlayer.Name);
+        }
+        else
+        {
+            sprintf_s(gBattleTextLine1, sizeof(gBattleTextLine1), "%s was challenged by %s", gPlayer.Name, gCharacterSprite[Opponent].Name);
+        }
     }
 
 
@@ -113,9 +128,12 @@ void DrawBattleScreen(void)
             PlayerMonsterSprite = &gBattleSpriteBack[Counter];
         }
 
-        if (gOpponentParty[0].PcMonster.secure.substructs[0].type0.Index == Counter)
+        //if (Opponent != NULL)         //temp removed so game doesnt assert on wild encounters
         {
-            OpponentMonsterSprite = &gBattleSpriteFront[Counter];
+            if (gOpponentParty[0].PcMonster.secure.substructs[0].type0.Index == Counter)
+            {
+                OpponentMonsterSprite = &gBattleSpriteFront[Counter];
+            }
         }
     }
 
@@ -123,10 +141,52 @@ void DrawBattleScreen(void)
 
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
-    DrawWindow(1, 1, 256, 128, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_VERT_CENTERED | WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED);
+    DrawWindow(64, 48, 256, 128, &COLOR_NES_WHITE, NULL, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_SHADOWED);
 
     switch (gCurrentBattleState)
     {
+        case BATTLESTATE_OPENING_TEXT:          //TODO: impliment longer strings with token finder
+        {
+            if (gRegistryParams.TextSpeed == 4)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_WAIT_INPUT1;
+                gSkipToNextText = FALSE;
+            }
+            else
+            {
+                DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+                if (LocalFrameCounter % (gRegistryParams.TextSpeed + 1) == 0)
+                {
+                    if (BattleTextLine1CharactersToShow <= strlen(gBattleTextLine1))
+                    {
+                        BattleTextLine1CharactersToShow++;
+                    }
+                    else if (BattleTextLine1CharactersToShow > strlen(gBattleTextLine1))
+                    {
+                        gPreviousBattleState = gCurrentBattleState;
+                        gCurrentBattleState = BATTLESTATE_WAIT_INPUT1;
+                    }
+                }
+
+                snprintf(BattleTextLine1Scratch, BattleTextLine1CharactersToShow, "%s", gBattleTextLine1);
+
+                BlitStringToBuffer(BattleTextLine1Scratch, &g6x7Font, &COLOR_BLACK, 66, 182);
+            }
+
+            break;
+        }
+        case BATTLESTATE_WAIT_INPUT1:       //TODO: impliment longer strings with a token finder
+        {
+            DrawWindow(64, 180, 256, 56, &COLOR_NES_WHITE, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
+
+            BlitStringToBuffer(gBattleTextLine1, &g6x7Font, &COLOR_BLACK, 66, 182);
+
+            BlitStringToBuffer("»", &g6x7Font, &COLOR_BLACK, 312, 228);
+
+            break;
+        }
         case BATTLESTATE_RUN_FIGHT:
         {
             DrawBattleButtons();
@@ -177,7 +237,7 @@ void DrawBattleScreen(void)
 
     if (BattleScene != 0)
     {
-        Blit32BppBitmapToBuffer(BattleScene, (65), (57), BrightnessAdjustment);
+        Blit32BppBitmapToBuffer(BattleScene, (65), (49), BrightnessAdjustment);
     }
     else
     {
@@ -186,7 +246,7 @@ void DrawBattleScreen(void)
 
     if (PlayerMonsterSprite != 0)
     {
-        Blit32BppBitmapToBuffer(PlayerMonsterSprite, (65), (119), BrightnessAdjustment);
+        Blit32BppBitmapToBuffer(PlayerMonsterSprite, (65), (111), BrightnessAdjustment);
     }
     else
     {
@@ -195,7 +255,7 @@ void DrawBattleScreen(void)
 
     if (OpponentMonsterSprite != 0)
     {
-        Blit32BppBitmapToBuffer(OpponentMonsterSprite, (255), (87), BrightnessAdjustment);
+        Blit32BppBitmapToBuffer(OpponentMonsterSprite, (255), (79), BrightnessAdjustment);
     }
     else
     {
@@ -212,6 +272,24 @@ void PPI_BattleScreen(void)
 {
     switch (gCurrentBattleState)
     {
+        case BATTLESTATE_OPENING_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_WAIT_INPUT1;
+            }
+            break;
+        }
+        case BATTLESTATE_WAIT_INPUT1:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gPreviousBattleState = gCurrentBattleState;
+                gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+            }
+            break;
+        }
         case BATTLESTATE_RUN_FIGHT:
         {
             if (gGameInput.WUpKeyPressed && !gGameInput.WUpKeyAlreadyPressed)
@@ -363,19 +441,25 @@ void DrawBattleButtons(void)
 
 void DrawMoveButtons(void)
 {
-    DrawWindow(1, 185, 190, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_ROUNDED);
+    //slot 1
+    DrawWindow(64, 185, 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_ROUNDED);
 
-    DrawWindow(1, 187 + 12, 190, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_ROUNDED);
+    //slot 2
+    DrawWindow(64, 187 + 12, 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_ROUNDED);
+                       
+    //slot 3
+    DrawWindow(64, 189 + 24, 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_ROUNDED);
+                 
+    //slot 4
+    DrawWindow(64, 191 + 36, 240, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_ROUNDED);
                             
-    DrawWindow(1, 189 + 24, 190, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_ROUNDED);
+    //back button
+    DrawWindow(1, 186, 48, 51, &COLOR_BLACK, &COLOR_DARK_RED, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
                             
-    DrawWindow(1, 191 + 36, 190, 11, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_HORIZ_CENTERED | WINDOW_FLAG_ROUNDED);
-                            
-    DrawWindow(48, 186, 48, 51, &COLOR_BLACK, &COLOR_DARK_RED, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
-                            
-    DrawWindow(288, 186, 48, 51, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
+    //signature move button
+    DrawWindow(306, 186, 48 + 12 + 16, 51, &COLOR_BLACK, &COLOR_DARK_WHITE, &COLOR_NES_GRAY, WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED | WINDOW_FLAG_THICK | WINDOW_FLAG_ROUNDED);
 
-    for (uint8_t Counter = 0; Counter < _countof(gMI_BattleScreen_Items); Counter++)
+    for (uint8_t Counter = 0; Counter < _countof(gMI_MoveScreen_Items); Counter++)
     {
         if (gMI_MoveScreen_Items[Counter]->Enabled == TRUE)
         {

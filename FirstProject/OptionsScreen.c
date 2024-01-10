@@ -11,9 +11,11 @@ MENUITEM gMI_OptionsScreen_ScreenSize = { "ScreenSize:", (GAME_RES_WIDTH / 2) - 
 
 MENUITEM gMI_OptionsScreen_FullScreen = { "Fullscreen:", (GAME_RES_WIDTH / 2) - (6 * 12 / 2), 144, TRUE, MenuItem_OptionsScreen_FullScreen };
 
-MENUITEM gMI_OptionsScreen_Back = { "Back:", (GAME_RES_WIDTH / 2) - (6 * 6 / 2), 160, TRUE, MenuItem_OptionsScreen_Back };
+MENUITEM gMI_OptionsScreen_TextSpeed = { "TextSpeed:", (GAME_RES_WIDTH / 2) - (6 * 11 / 2), 160, TRUE, MenuItem_OptionsScreen_TextSpeed };
 
-MENUITEM* gMI_OptionsScreenItems[] = { &gMI_OptionsScreen_SfxVolume, &gMI_OptionsScreen_MusicVolume, &gMI_OptionsScreen_ScreenSize, &gMI_OptionsScreen_FullScreen, &gMI_OptionsScreen_Back };
+MENUITEM gMI_OptionsScreen_Back = { "Back:", (GAME_RES_WIDTH / 2) - (6 * 6 / 2), 176, TRUE, MenuItem_OptionsScreen_Back };
+
+MENUITEM* gMI_OptionsScreenItems[] = { &gMI_OptionsScreen_SfxVolume, &gMI_OptionsScreen_MusicVolume, &gMI_OptionsScreen_ScreenSize, &gMI_OptionsScreen_FullScreen, &gMI_OptionsScreen_TextSpeed, &gMI_OptionsScreen_Back };
 
 MENU gMenu_OptionsScreen = { "Options", 0, _countof(gMI_OptionsScreenItems), gMI_OptionsScreenItems };
 
@@ -82,6 +84,35 @@ void DrawOptionsScreen(void)
     if (gRegistryParams.FullScreen == TRUE)
     {
         BlitStringToBuffer("x", &g6x7Font, &TextColor, 269, gMI_OptionsScreen_FullScreen.y);
+    }
+
+    switch (gRegistryParams.TextSpeed)
+    {
+        case 0:
+        {
+            BlitStringToBuffer("Very Fast", &g6x7Font, &TextColor, 240, gMI_OptionsScreen_TextSpeed.y);
+            break;
+        }
+        case 1:
+        {
+            BlitStringToBuffer("Fast", &g6x7Font, &TextColor, 240, gMI_OptionsScreen_TextSpeed.y);
+            break;
+        }
+        case 2:
+        {
+            BlitStringToBuffer("Medium", &g6x7Font, &TextColor, 240, gMI_OptionsScreen_TextSpeed.y);
+            break;
+        }
+        case 3:
+        {
+            BlitStringToBuffer("Slow", &g6x7Font, &TextColor, 240, gMI_OptionsScreen_TextSpeed.y);
+            break;
+        }
+        case 4:
+        {
+            BlitStringToBuffer("Instant", &g6x7Font, &TextColor, 240, gMI_OptionsScreen_TextSpeed.y);
+            break;
+        }
     }
 
     snprintf(ScreenSizeString, sizeof(ScreenSizeString), "%dx%d", GAME_RES_WIDTH * gGamePerformanceData.CurrentScaleFactor, GAME_RES_HEIGHT * gGamePerformanceData.CurrentScaleFactor);
@@ -259,11 +290,23 @@ void MenuItem_OptionsScreen_FullScreen(void)
 {
     if (gRegistryParams.FullScreen == FALSE)
     {
-        gRegistryParams.FullScreen++;
+        gRegistryParams.FullScreen = TRUE;
     }
     else
     {
         gRegistryParams.FullScreen = FALSE;
+    }
+}
+
+void MenuItem_OptionsScreen_TextSpeed(void)
+{
+    if (gRegistryParams.TextSpeed < 4)
+    {
+        gRegistryParams.TextSpeed++;
+    }
+    else
+    {
+        gRegistryParams.TextSpeed = 0;
     }
 }
 
