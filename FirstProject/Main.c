@@ -518,10 +518,15 @@ void ProcessPlayerInput(void)
             PPI_Overworld();
             break;
         }
-        case GAMESTATE_BATTLE:
+        case GAMESTATE_BATTLE_MONSTER:
         {
             PPI_BattleScreen();
             break; 
+        }
+        case GAMESTATE_BATTLE_TRAINER:
+        {
+            PPI_BattleScreen();
+            break;
         }
         case GAMESTATE_LOADGAMESAVE:
         {
@@ -816,7 +821,12 @@ void RenderFrameGraphics(void)
             DrawOverworldScreen();
             break;
         }
-        case GAMESTATE_BATTLE:
+        case GAMESTATE_BATTLE_MONSTER:
+        {
+            DrawBattleScreen();
+            break;
+        }
+        case GAMESTATE_BATTLE_TRAINER:
         {
             DrawBattleScreen();
             break;

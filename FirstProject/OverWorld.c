@@ -719,7 +719,7 @@ void PPI_Overworld(void)
                         {
                             case EVENT_FLAG_BATLLE:
                             {
-                                RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                                TrainerEncounter(&gPreviousGameState, &gCurrentGameState);            //TODO: Make trainer battle seperate from wild encounter 
                                 break;
                             }
                             case EVENT_FLAG_MONSTER:
@@ -824,7 +824,13 @@ void TeleportHandler(void)
 void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState)
 {
     PreviousGameState = CurrentGameState;
-    *CurrentGameState = GAMESTATE_BATTLE;
+    *CurrentGameState = GAMESTATE_BATTLE_MONSTER;
+}
+
+void TrainerEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState)
+{
+    PreviousGameState = CurrentGameState;
+    *CurrentGameState = GAMESTATE_BATTLE_TRAINER;
 }
 
 

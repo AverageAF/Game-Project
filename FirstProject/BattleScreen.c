@@ -9,6 +9,10 @@
 #include "Inventory.h"
 #include "OverWorld.h"
 
+///////// escape variables
+
+uint8_t EscapeTriesThisBattle = 0;
+
 ///////// capture monster variables
 
 BOOL gCaptureMonsterSuccess = FALSE;
@@ -291,20 +295,117 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_TURNORDER_CALC:
         {
-            if (Opponent == NULL)
-            {
-                gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
-                gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
-            }
-            else
-            {
-                gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
-                gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
-            }
+
+            GenerateOpponentMove(Opponent);
 
             IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
 
             gCurrentBattleState = BATTLESTATE_FIRSTMOVE_TEXT;
+            break;
+        }
+        case BATTLESTATE_ESCAPESUCCESS_TEXT:
+        {
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s managed to escape!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_ESCAPESUCCESS_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitEscapeSuccess;
+            }
+
+            break;
+        }
+        case BATTLESTATE_ESCAPESUCCESS_WAIT:
+        {
+
+        WaitEscapeSuccess:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
+            break;
+        }
+        case BATTLESTATE_ESCAPEFAIL_TEXT:
+        {
+
+            GenerateOpponentMove(Opponent);
+            IsPlayerMovingFirst = TRUE;
+
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s couldn't escape!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_ESCAPEFAIL_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitEscapeFail;
+            }
+
+            break;
+        }
+        case BATTLESTATE_ESCAPEFAIL_WAIT:
+        {
+
+        WaitEscapeFail:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
+            break;
+        }
+        case BATTLESTATE_NOESCAPE_TEXT:
+        {
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "You've been challenged by %s!", &gCharacterSprite[Opponent].Name);
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "There is no turning back now!");
+            BattleTextLineCount++;
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_NOESCAPE_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitEscapeFail;
+            }
+
+            break;
+        }
+        case BATTLESTATE_NOESCAPE_WAIT:
+        {
+
+        WaitNoEscape:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
             break;
         }
         case BATTLESTATE_FIRSTMOVE_TEXT:
@@ -329,16 +430,6 @@ void DrawBattleScreen(void)
                 sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedOpponentMove]);
                 BattleTextLineCount++;
             }
-            /*
-            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
-            BattleTextLineCount++;*/
-
 
             TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_FIRSTMOVE_WAIT, BattleTextLineCount, LocalFrameCounter);
 
@@ -426,19 +517,19 @@ void DrawBattleScreen(void)
                 if (gLastMoveElementalBonus == ELEMENT_BONUS)
                 {
 
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move dealt bonus", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                     sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_RESIST)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move had no effect!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
 
@@ -453,19 +544,19 @@ void DrawBattleScreen(void)
                 if (gLastMoveElementalBonus == ELEMENT_BONUS)
                 {
 
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move dealt bonus", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                     sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_RESIST)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move had no effect!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
 
@@ -496,6 +587,8 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_SWITCHING_TEXT:
         {
+
+            GenerateOpponentMove(Opponent);
             IsPlayerMovingFirst = TRUE;
 
 
@@ -512,17 +605,6 @@ void DrawBattleScreen(void)
             BattleTextLineCount++;
             sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "Go %s!", &gPlayerParty[gPartyMemberToSwitchIn].DriveMonster.nickname);
             BattleTextLineCount++;
-            
-            /*
-            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
-            BattleTextLineCount++;*/
-
 
             TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SWITCHING_WAIT, BattleTextLineCount, LocalFrameCounter);
 
@@ -559,6 +641,8 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_USEITEM_TEXT:
         {
+
+            GenerateOpponentMove(Opponent);
             IsPlayerMovingFirst = TRUE;
 
 
@@ -575,16 +659,6 @@ void DrawBattleScreen(void)
             BattleTextLineCount++;
             sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s was healed!", &gPlayerParty[gUsableItemSelectedPartyMember].DriveMonster.nickname);
             BattleTextLineCount++;
-
-            /*
-            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
-            BattleTextLineCount++;*/
 
 
             TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SWITCHING_WAIT, BattleTextLineCount, LocalFrameCounter);
@@ -609,6 +683,8 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_CATCH_TEXT:
         {
+
+            GenerateOpponentMove(Opponent);
             IsPlayerMovingFirst = TRUE;
 
             ReSortUsableitems();
@@ -671,7 +747,7 @@ void DrawBattleScreen(void)
             }
 
             BattleTextLineCount = 0;
-            if (Opponent == NULL)           ////NULL if wild encounter, since opponent is the charactersprite index
+            if (Opponent == NULL)           ////NULL if wild encounter, since Opponent is the charactersprite.index
             {
                 sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayer.Name, gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Name);
                 BattleTextLineCount++;
@@ -799,7 +875,7 @@ void DrawBattleScreen(void)
             if (CalculatedExpReward != 0)
             {
 
-                GiveMonsterToPlayer(&gOpponentParty[gCurrentPartyMember]);
+                GiveMonsterToPlayer(&gOpponentParty[gCurrentOpponentPartyMember]);
 
                 BOOL DidMonsterLevelUp = 0;
 
@@ -844,17 +920,6 @@ void DrawBattleScreen(void)
                 sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedOpponentMove]);
                 BattleTextLineCount++;
             }
-            /*
-            sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "It dealt extra element damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[4], sizeof(gBattleTextLine[4]), "It was resisted...");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[5], sizeof(gBattleTextLine[5]), "Devastating damage!");
-            BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[6], sizeof(gBattleTextLine[6]), "Extra devastating element damage!");
-            BattleTextLineCount++;*/
-
-
 
             TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_SECONDMOVE_WAIT, BattleTextLineCount, LocalFrameCounter);
 
@@ -943,19 +1008,19 @@ void DrawBattleScreen(void)
                 if (gLastMoveElementalBonus == ELEMENT_BONUS)
                 {
 
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move dealt bonus", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                     sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_RESIST)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move was resisted...", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move had no effect!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
 
@@ -971,19 +1036,19 @@ void DrawBattleScreen(void)
                 if (gLastMoveElementalBonus == ELEMENT_BONUS)
                 {
 
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move dealt bonus", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move dealt bonus", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                     sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "elemental damage!");
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_RESIST)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move was resisted...", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
                 else if (gLastMoveElementalBonus == ELEMENT_IMMUNE)
                 {
-                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s move had no effect!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+                    sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s's move had no effect!", &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
                     BattleTextLineCount++;
                 }
 
@@ -1263,6 +1328,61 @@ void PPI_BattleScreen(void)
         }
         case BATTLESTATE_TURNORDER_CALC:
         {
+            break;
+        }
+        case BATTLESTATE_ESCAPESUCCESS_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_ESCAPESUCCESS_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_ESCAPESUCCESS_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gPreviousGameState = gCurrentGameState;
+                gCurrentGameState = GAMESTATE_OVERWORLD;
+                EscapeTriesThisBattle = 0;
+                gInputEnabled = FALSE;
+                StopGameMusic();
+                gFinishedBattleTextAnimation = FALSE;
+            }
+            break;
+        }
+        case BATTLESTATE_ESCAPEFAIL_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_ESCAPEFAIL_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_ESCAPEFAIL_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                gFinishedBattleTextAnimation = FALSE;
+            }
+            break;
+        }
+        case BATTLESTATE_NOESCAPE_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_NOESCAPE_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_NOESCAPE_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+                gFinishedBattleTextAnimation = FALSE;
+            }
             break;
         }
         case BATTLESTATE_FIRSTMOVE_TEXT:
@@ -1931,21 +2051,75 @@ void MenuItem_BattleScreen_FightButton(void)
 
 void MenuItem_BattleScreen_EscapeButton(void)
 {
-    for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
+    if ((gCurrentGameState == GAMESTATE_BATTLE_MONSTER) && (gCurrentBattleState == BATTLESTATE_RUN_FIGHT))
     {
-        if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].Event == EVENT_FLAG_BATLLE))
+        uint8_t EscapeChance = 0;
+
+        EscapeTriesThisBattle++;
+        EscapeChance = ((((gPlayerParty[gCurrentPartyMember].Speed * 128) / gOpponentParty[gCurrentOpponentPartyMember].Speed) + 30 * EscapeTriesThisBattle) % 256);
+
+        DWORD Random = 0;
+        rand_s((unsigned int*)&Random);
+        Random %= 256;
+
+        if (EscapeChance > Random)
         {
-            gCharacterSprite[Index].InteractedWith = FALSE;
-            gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
-            gCharacterSprite[Index].SightRange = 0;
-            break;
+            gCurrentBattleState = BATTLESTATE_ESCAPESUCCESS_TEXT;
+        }
+        else
+        {
+            gCurrentBattleState = BATTLESTATE_ESCAPEFAIL_TEXT;
         }
     }
+    else if ((gCurrentGameState == GAMESTATE_BATTLE_MONSTER) && (gCurrentBattleState != BATTLESTATE_RUN_FIGHT))
+    {
+        gPreviousGameState = gCurrentGameState;
+        gCurrentGameState = GAMESTATE_OVERWORLD;
+        EscapeTriesThisBattle = 0;
+        gInputEnabled = FALSE;
+        StopGameMusic();
+    }
+    else if ((gCurrentGameState == GAMESTATE_BATTLE_TRAINER) && (gCurrentBattleState == BATTLESTATE_KO_WAIT))
+    {
+        BOOL PlayerLostBattle = 0;
+        for (uint8_t party = 0; party < MAX_PARTY_SIZE - 1; party++)
+        {
+            if (gPlayerParty[party].Health != 0)
+            {
+                PlayerLostBattle = FALSE;
+                break;
+            }
+            else
+            {
+                PlayerLostBattle = TRUE;
+            }
+        }
 
-    gPreviousGameState = gCurrentGameState;
-    gCurrentGameState = GAMESTATE_OVERWORLD;
-    gInputEnabled = FALSE;
-    StopGameMusic();
+        for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
+        {
+            if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gCharacterSprite[Index].Event == EVENT_FLAG_BATLLE))
+            {
+                gCharacterSprite[Index].InteractedWith = FALSE;
+
+                if (PlayerLostBattle == FALSE)      //only reset EVENT_FLAG_BATTLE and SightRange when player has won the fight, otherwise allow for re-battle
+                {
+                    gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
+                    gCharacterSprite[Index].SightRange = 0;
+                }
+                break;
+            }
+        }
+
+        gPreviousGameState = gCurrentGameState;
+        gCurrentGameState = GAMESTATE_OVERWORLD;
+        gInputEnabled = FALSE;
+        StopGameMusic();
+    }
+    else if(gCurrentGameState == GAMESTATE_BATTLE_TRAINER && gCurrentBattleState == BATTLESTATE_RUN_FIGHT)
+    {
+        gCurrentBattleState = BATTLESTATE_NOESCAPE_TEXT;
+    }
+    
 }
 
 void MenuItem_BattleScreen_SwitchButton(void)
@@ -3318,4 +3492,18 @@ uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonst
 
     return(DamageAfterElement);
 
+}
+
+void GenerateOpponentMove(uint8_t Opponent)
+{
+    if (Opponent == NULL)       ////TODO: make own function so opponent can always generate a move
+    {
+        gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
+        gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
+    }
+    else
+    {
+        gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
+        gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
+    }
 }

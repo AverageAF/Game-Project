@@ -165,7 +165,8 @@ typedef enum GAMESTATE
 	GAMESTATE_OPENINGSPLASH,
 	GAMESTATE_TITLESCREEN,
 	GAMESTATE_OVERWORLD,
-	GAMESTATE_BATTLE,
+	GAMESTATE_BATTLE_MONSTER,
+	GAMESTATE_BATTLE_TRAINER,
 	GAMESTATE_OPTIONS,
 	GAMESTATE_EXITYESNO,
 	GAMESTATE_CHARACTERNAME,
@@ -801,6 +802,7 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
 void InitializeGlobals(void);
 
 void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
+void TrainerEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
 
 void DrawWindow( _In_opt_ uint16_t x, _In_opt_ uint16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_opt_ PIXEL32* BorderColor, _In_opt_ PIXEL32* BackgroundColor, _In_opt_ PIXEL32* ShadowColor, _In_ DWORD Flags);
 
