@@ -18,6 +18,8 @@ uint8_t gStatChangesCurrentPlayerMon[5] = { 7, 7, 7, 7, 7 };       //0Atk 1Def 2
 uint8_t gStatChangesCurrentOpponentMon[5] = { 7, 7, 7, 7, 7 };
 BOOL gStatsChangedFromPlayerMove = FALSE;
 BOOL gStatsChangedFromOpponentMove = FALSE;
+BOOL gIsOpponentUsingAMove = TRUE;
+BOOL gIsPlayerMovingFirst = FALSE;
 
 ///////// escape variables
 
@@ -41,6 +43,7 @@ BOOL gWasMonsterKOed = FALSE;
 BOOL gWasLastMoveCriticalHit = FALSE;
 uint8_t gLastMoveElementalBonus = 0;
 
+uint8_t gOpponentPartyMemberToSwitchIn = 0;
 uint8_t gPartyMemberToSwitchIn = 0;
 uint8_t gCurrentPartyMember = 0;
 uint8_t gCurrentOpponentPartyMember = 0;
@@ -142,7 +145,7 @@ void DrawBattleScreen(void)
     static uint16_t DamageToPlayer = 0;
     static uint16_t DamageToOpponent = 0;
     static uint32_t CalculatedExpReward = 0;
-    static BOOL IsPlayerMovingFirst = FALSE;
+    //static BOOL IsPlayerMovingFirst = FALSE;         ////needed this for PPI BATTLESTATE_OPPONENTSWITCH_WAIT so I made it a global
     static BOOL MonsterHasKOed = FALSE;
 
     uint8_t Opponent = NULL;
@@ -283,7 +286,7 @@ void DrawBattleScreen(void)
                     gCurrentBattleState = BATTLESTATE_KO;
                 }
 
-                goto PlayerNoHP;
+                goto BattleStateKO;
             }
 
             TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_OPENING_WAIT, BattleTextLineCount, LocalFrameCounter);
@@ -305,12 +308,19 @@ void DrawBattleScreen(void)
         }
         case BATTLESTATE_TURNORDER_CALC:
         {
+            gIsOpponentUsingAMove = GenerateOpponentMove(Opponent);
 
-            GenerateOpponentMove(Opponent);
+            if (gIsOpponentUsingAMove == TRUE) //if opponent chooses a move, roll speed, otherwise opponent goes first either switching or using an item
+            {
+                gIsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
+                gCurrentBattleState = BATTLESTATE_FIRSTMOVE_TEXT;
+            }
+            else
+            {
+                gIsPlayerMovingFirst = FALSE;
+                gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_TEXT;
+            }
 
-            IsPlayerMovingFirst = CalculateSpeedPriorityIfPlayerMovesFirst(gPlayerParty[gCurrentPartyMember].Speed, gOpponentParty[gCurrentOpponentPartyMember].Speed);
-
-            gCurrentBattleState = BATTLESTATE_FIRSTMOVE_TEXT;
             break;
         }
         case BATTLESTATE_ESCAPESUCCESS_TEXT:
@@ -349,8 +359,8 @@ void DrawBattleScreen(void)
         case BATTLESTATE_ESCAPEFAIL_TEXT:
         {
 
-            GenerateOpponentMove(Opponent);
-            IsPlayerMovingFirst = TRUE;
+            gIsOpponentUsingAMove = GenerateOpponentMove(Opponent);
+            gIsPlayerMovingFirst = TRUE;
 
             for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
             {
@@ -430,7 +440,7 @@ void DrawBattleScreen(void)
             }
 
             BattleTextLineCount = 0;
-            if (IsPlayerMovingFirst == TRUE)
+            if (gIsPlayerMovingFirst == TRUE)
             {
                 sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedPlayerMove]);
                 BattleTextLineCount++;
@@ -462,7 +472,7 @@ void DrawBattleScreen(void)
         {
             gLastMoveElementalBonus = ELEMENT_NEUTRAL;
 
-            if (IsPlayerMovingFirst == TRUE)
+            if (gIsPlayerMovingFirst == TRUE)
             {
                 DamageToOpponent =
                     CalcDmgFromMonsterAToMonsterB(
@@ -480,7 +490,14 @@ void DrawBattleScreen(void)
 
                 if (gBattleMoves[gSelectedPlayerMove].split != SPLIT_STATUS)
                 {
-                    DamageToOpponent = GetElementaBonusDamage(DamageToOpponent, FALSE);
+                    DamageToOpponent = GetElementaBonusDamage(
+                        DamageToOpponent,
+                        GetElementRelationship(
+                            gBattleMoves[gSelectedPlayerMove].element,
+                            gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1,
+                            gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2
+                        ),
+                        TRUE);
                 }
                 else
                 {
@@ -546,7 +563,7 @@ void DrawBattleScreen(void)
                     }
                 }
 
-                ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE, IsPlayerMovingFirst);
+                ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE, gIsPlayerMovingFirst);
             }
             else
             {
@@ -566,7 +583,14 @@ void DrawBattleScreen(void)
 
                 if (gBattleMoves[gSelectedOpponentMove].split != SPLIT_STATUS)
                 {
-                    DamageToPlayer = GetElementaBonusDamage(DamageToPlayer, TRUE);
+                    DamageToPlayer = GetElementaBonusDamage(
+                        DamageToPlayer,
+                        GetElementRelationship(
+                            gBattleMoves[gSelectedOpponentMove].element,
+                            gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1,
+                            gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2
+                        ),
+                        TRUE);
                 }
                 else
                 {
@@ -632,7 +656,7 @@ void DrawBattleScreen(void)
                     }
                 }
 
-                ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE, IsPlayerMovingFirst);
+                ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE, gIsPlayerMovingFirst);
             }
 
             break;
@@ -648,7 +672,7 @@ void DrawBattleScreen(void)
             }
 
             BattleTextLineCount = 0;
-            if (IsPlayerMovingFirst == TRUE)
+            if (gIsPlayerMovingFirst == TRUE)
             {
                 if (gLastMoveElementalBonus == ELEMENT_BONUS)
                 {
@@ -793,11 +817,11 @@ void DrawBattleScreen(void)
 
         WaitPostFirstMove:
 
-            if (IsPlayerMovingFirst && gStatsChangedFromPlayerMove)
+            if (gIsPlayerMovingFirst && gStatsChangedFromPlayerMove)
             {
                 gStatsChangedFromPlayerMove = FALSE;
             }
-            else if (!IsPlayerMovingFirst && gStatsChangedFromOpponentMove)
+            else if (!gIsPlayerMovingFirst && gStatsChangedFromOpponentMove)
             {
                 gStatsChangedFromOpponentMove = FALSE;
             }
@@ -809,8 +833,8 @@ void DrawBattleScreen(void)
         case BATTLESTATE_SWITCHING_TEXT:
         {
 
-            GenerateOpponentMove(Opponent);
-            IsPlayerMovingFirst = TRUE;
+            gIsOpponentUsingAMove = GenerateOpponentMove(Opponent);
+            gIsPlayerMovingFirst = TRUE;     //player has more priority for switching than opponent
 
 
             for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
@@ -867,8 +891,8 @@ void DrawBattleScreen(void)
         case BATTLESTATE_USEITEM_TEXT:
         {
 
-            GenerateOpponentMove(Opponent);
-            IsPlayerMovingFirst = TRUE;
+            gIsOpponentUsingAMove = GenerateOpponentMove(Opponent);
+            gIsPlayerMovingFirst = TRUE;     //player has more priority for items than opponent
 
 
             for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
@@ -902,15 +926,72 @@ void DrawBattleScreen(void)
 
             BlitBattleStateTextBox_Wait(BattleTextLineCount);
 
-            //TODO: maybe move healing calculation to right here??
+            
+            break;
+        }
+        case BATTLESTATE_OPPONENTSWITCH_TEXT:
+        {
+            gOpponentPartyMemberToSwitchIn = OpponentChoosesMonsterFromParty(gCharacterSprite[Opponent].BattleAiFlag);
 
+            for (uint8_t i = 0; i < MAX_DIALOGUE_ROWS; i++)
+            {
+                for (uint8_t j = 0; j < MAX_DIALOGUE_ROWS; j++)
+                {
+                    gBattleTextLine[i][j] = 0;
+                }
+            }
+
+            BattleTextLineCount = 0;
+            sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s retrieved %s!", &gCharacterSprite[Opponent].Name, &gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+            BattleTextLineCount++;
+            sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s sent out %s!", &gCharacterSprite[Opponent].Name, &gOpponentParty[gOpponentPartyMemberToSwitchIn].DriveMonster.nickname);
+            BattleTextLineCount++;
+
+            TextHasFinished = BlitBattleStateTextBox_Text(BATTLESTATE_OPPONENTSWITCH_WAIT, BattleTextLineCount, LocalFrameCounter);
+
+            if (TextHasFinished == TRUE)
+            {
+                goto WaitOpponentSwitch;
+            }
+
+            break;
+        }
+        case BATTLESTATE_OPPONENTSWITCH_WAIT:
+        {
+
+        WaitOpponentSwitch:
+
+            BlitBattleStateTextBox_Wait(BattleTextLineCount);
+
+            gCurrentOpponentPartyMember = gOpponentPartyMemberToSwitchIn;
+            for (uint8_t stats = 0; stats < 4; stats++)
+            {
+                gStatChangesCurrentOpponentMon[stats] = 7;
+            }
+
+            for (uint8_t Counter = 0; Counter < NUM_MONSTERS; Counter++)
+            {
+                if (gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index == Counter)
+                {
+                    gOpponentMonsterSprite = &gBattleSpriteFront[Counter];
+                }
+            }
+
+            break;
+        }
+        case BATTLESTATE_OPPONENTITEM_TEXT:
+        {
+            break;
+        }
+        case BATTLESTATE_OPPONENTITEM_WAIT:
+        {
             break;
         }
         case BATTLESTATE_CATCH_TEXT:
         {
 
-            GenerateOpponentMove(Opponent);
-            IsPlayerMovingFirst = TRUE;
+            gIsOpponentUsingAMove = GenerateOpponentMove(Opponent);
+            gIsPlayerMovingFirst = TRUE;
 
             ReSortUsableitems();
 
@@ -1134,7 +1215,7 @@ void DrawBattleScreen(void)
 
             BattleTextLineCount = 0;
             
-            if (IsPlayerMovingFirst == FALSE)
+            if (gIsPlayerMovingFirst == FALSE)
             {   
                 //player moving second bc FALSE
                 sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s used %s!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, &gBattleMoveNames[gSelectedPlayerMove]);
@@ -1167,7 +1248,7 @@ void DrawBattleScreen(void)
         {
             gLastMoveElementalBonus = ELEMENT_NEUTRAL;
 
-            if (IsPlayerMovingFirst == FALSE)
+            if (gIsPlayerMovingFirst == FALSE)
             {
                 DamageToOpponent =
                     CalcDmgFromMonsterAToMonsterB(
@@ -1186,7 +1267,14 @@ void DrawBattleScreen(void)
                 if (gBattleMoves[gSelectedPlayerMove].split != SPLIT_STATUS)
                 {
 
-                    DamageToOpponent = GetElementaBonusDamage(DamageToOpponent, FALSE);
+                    DamageToOpponent = GetElementaBonusDamage(
+                        DamageToOpponent,
+                        GetElementRelationship(
+                            gBattleMoves[gSelectedPlayerMove].element,
+                            gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1,
+                            gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2
+                        ),
+                        TRUE);
                 }
                 else
                 {
@@ -1252,7 +1340,7 @@ void DrawBattleScreen(void)
                     }
                 }
 
-                ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE, IsPlayerMovingFirst);
+                ModifyMonsterHealthValueGetKO(DamageToOpponent, FALSE, gIsPlayerMovingFirst);
             }
             else
             {
@@ -1272,7 +1360,14 @@ void DrawBattleScreen(void)
 
                 if (gBattleMoves[gSelectedOpponentMove].split != SPLIT_STATUS)
                 {
-                    DamageToPlayer = GetElementaBonusDamage(DamageToPlayer, TRUE);
+                    DamageToPlayer = GetElementaBonusDamage(
+                        DamageToPlayer,
+                        GetElementRelationship(
+                            gBattleMoves[gSelectedOpponentMove].element,
+                            gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1,
+                            gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2
+                        ),
+                        TRUE);
                 }
                 else
                 {
@@ -1338,7 +1433,7 @@ void DrawBattleScreen(void)
                     }
                 }
 
-                ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE, IsPlayerMovingFirst);
+                ModifyMonsterHealthValueGetKO(DamageToPlayer, TRUE, gIsPlayerMovingFirst);
             }
 
             break;
@@ -1356,7 +1451,7 @@ void DrawBattleScreen(void)
             }
 
             BattleTextLineCount = 0;
-            if (IsPlayerMovingFirst == FALSE)
+            if (gIsPlayerMovingFirst == FALSE)
             {
                 //player moving second bc above FALSE
                 if (gLastMoveElementalBonus == ELEMENT_BONUS)
@@ -1503,11 +1598,11 @@ void DrawBattleScreen(void)
 
         WaitPostSecondMove:
 
-            if (!IsPlayerMovingFirst && gStatsChangedFromPlayerMove)
+            if (!gIsPlayerMovingFirst && gStatsChangedFromPlayerMove)
             {
                 gStatsChangedFromPlayerMove = FALSE;
             }
-            else if (IsPlayerMovingFirst && gStatsChangedFromOpponentMove)
+            else if (gIsPlayerMovingFirst && gStatsChangedFromOpponentMove)
             {
                 gStatsChangedFromOpponentMove = FALSE;
             }
@@ -1521,7 +1616,7 @@ void DrawBattleScreen(void)
             BOOL IsPlayerOutOfMonsters = FALSE;
             BOOL IsPlayerMonsterKOed = FALSE;
 
-        PlayerNoHP:             //if starting combat with no healthy monsters
+        BattleStateKO:             //if starting combat with no healthy monsters
 
             if (gPlayerParty[gCurrentPartyMember].Health == 0)
             {
@@ -1860,6 +1955,10 @@ void PPI_BattleScreen(void)
                 {
                     gCurrentBattleState = BATTLESTATE_KO;
                 }
+                else if (gIsOpponentUsingAMove == FALSE)
+                {
+                    gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_TEXT;  ////TODO: BATTLESTATE_OPPONENTSWITCHING or BATTLESTATE_OPPONENTITEM
+                }
                 else
                 {
                     gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
@@ -1879,15 +1978,18 @@ void PPI_BattleScreen(void)
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
+                gFinishedBattleTextAnimation = FALSE;
                 if (gPreviousBattleState == BATTLESTATE_KO_WAIT)
                 {
                     gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
-                    gFinishedBattleTextAnimation = FALSE;
+                }
+                else if (gIsOpponentUsingAMove == FALSE)
+                {
+                    gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_TEXT;  ////TODO: BATTLESTATE_OPPONENTSWITCHING or BATTLESTATE_OPPONENTITEM
                 }
                 else
                 {
                     gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
-                    gFinishedBattleTextAnimation = FALSE;
                 }
             }
             break;
@@ -1904,26 +2006,74 @@ void PPI_BattleScreen(void)
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
                 gFinishedBattleTextAnimation = FALSE;
+                if (gIsOpponentUsingAMove == FALSE)
+                {
+                    gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_TEXT;  ////TODO: BATTLESTATE_OPPONENTSWITCHING or BATTLESTATE_OPPONENTITEM
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                }
             }
+            break;
+        }
+        case BATTLESTATE_OPPONENTSWITCH_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_OPPONENTSWITCH_WAIT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gFinishedBattleTextAnimation = FALSE;
+                if (gPreviousBattleState == BATTLESTATE_KO_WAIT || gIsPlayerMovingFirst == TRUE)
+                {
+                    gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
+                }
+                else
+                {
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                }
+            }
+            break;
+        }
+        case BATTLESTATE_OPPONENTITEM_TEXT:
+        {
+            if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
+            {
+                gCurrentBattleState = BATTLESTATE_OPPONENTITEM_WAIT;
+            }
+            break;
+        }
+        case BATTLESTATE_OPPONENTITEM_WAIT:
+        {
             break;
         }
         case BATTLESTATE_CATCH_TEXT:
         {
+            //blank on purpose so player has to wait through each dot
             break;
         }
         case BATTLESTATE_CATCH_WAIT:
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                if (gCaptureNumDotsWait > 0)
+                if (gCaptureNumDotsWait == 0)
                 {
-                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
+                    gCurrentBattleState = BATTLESTATE_CATCHSUCCESS_TEXT;
+                }
+                else if (gIsOpponentUsingAMove == FALSE && gCaptureNumDotsWait > 0)
+                {
+                    gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_TEXT;  ////TODO: BATTLESTATE_OPPONENTSWITCHING or BATTLESTATE_OPPONENTITEM
                 }
                 else
                 {
-                    gCurrentBattleState = BATTLESTATE_CATCHSUCCESS_TEXT;
+                    gCurrentBattleState = BATTLESTATE_SECONDMOVE_TEXT;
                 }
                 gFinishedBattleTextAnimation = FALSE;
             }
@@ -1967,7 +2117,6 @@ void PPI_BattleScreen(void)
         {
             break;
         }
-
         case BATTLESTATE_SECONDMOVE_POSTTEXT:
         {
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
@@ -2031,7 +2180,7 @@ void PPI_BattleScreen(void)
                         gPreviousBattleState = BATTLESTATE_KO_WAIT;
                         gCurrentBattleState = BATTLESTATE_CHOOSE_MONSTER;
                         gMenu_SwitchScreen.SelectedItem = 0;
-                        goto PlayerChooseNewMonster;
+                        goto EndofKOWait;
                     }
                 }
 
@@ -2050,24 +2199,14 @@ void PPI_BattleScreen(void)
                         }
                     }
 
-                    if (ContinueBattle == FALSE)        //check for more opponent monsters in party
+                    if (ContinueBattle == FALSE)        //finish battle if no more party members
                     {
                         MenuItem_BattleScreen_EscapeButton();
                     }
-                    else                //TODO: make BATTLESTATE_ENEMYSWITCH_TEXT and BATTLESTATE_ENEMYSWITCH_WAIT for enemy switching monsters
+                    else    
                     {
-
-                    FindNewOpponentMonster:
-
-                        gCurrentOpponentPartyMember++;
-                        if (gOpponentParty[gCurrentOpponentPartyMember].Health == 0)
-                        {
-                            goto FindNewOpponentMonster;
-                        }
-                        else
-                        {
-                            gCurrentBattleState = BATTLESTATE_RUN_FIGHT;
-                        }
+                        gPreviousBattleState = BATTLESTATE_KO_WAIT;
+                        gCurrentBattleState = BATTLESTATE_OPPONENTSWITCH_TEXT;                //TODO: make BATTLESTATE_ENEMYSWITCH_TEXT and BATTLESTATE_ENEMYSWITCH_WAIT for enemy switching monsters
                     }
                 }
                 else
@@ -2078,6 +2217,9 @@ void PPI_BattleScreen(void)
                     }
                 }
             }
+
+        EndofKOWait:
+
             break;
         }
         case BATTLESTATE_RUN_FIGHT:
@@ -2199,8 +2341,6 @@ void PPI_BattleScreen(void)
         case BATTLESTATE_CHOOSE_MONSTER:
         {
 
-    PlayerChooseNewMonster:
-
             if (gGameInput.EscapeKeyPressed && !gGameInput.EscapeKeyAlreadyPressed && gPreviousBattleState != BATTLESTATE_KO_WAIT)
             {
                 if (gMenu_SwitchScreen.SelectedItem == 6)
@@ -2254,7 +2394,7 @@ void PPI_BattleScreen(void)
 
             if (gGameInput.ChooseKeyPressed && !gGameInput.ChooseKeyAlreadyPressed)
             {
-                if (gPreviousBattleState == BATTLESTATE_KO && gMenu_SwitchScreen.SelectedItem == 6)
+                if (gPreviousBattleState == BATTLESTATE_KO_WAIT && gMenu_SwitchScreen.SelectedItem == 6)
                 {
 
                 }
@@ -2600,7 +2740,7 @@ void MenuItem_BattleScreen_EscapeButton(void)
     }
     else if ((gCurrentGameState == GAMESTATE_BATTLE_TRAINER) && (gCurrentBattleState == BATTLESTATE_KO_WAIT))
     {
-        BOOL PlayerLostBattle = 0;
+        BOOL PlayerLostBattle = FALSE;
         for (uint8_t party = 0; party < MAX_PARTY_SIZE - 1; party++)
         {
             if (gPlayerParty[party].Health != 0)
@@ -2663,9 +2803,9 @@ void MenuItem_SwitchScreen_PartySelected(void)
 {
     if (gPreviousBattleState == BATTLESTATE_RUN_FIGHT || gPreviousBattleState == BATTLESTATE_KO_WAIT)
     {
-        if (gCurrentPartyMember == gMenu_SwitchScreen.SelectedItem || gPlayerParty[gMenu_SwitchScreen.SelectedItem].Health == gMenu_SwitchScreen.SelectedItem)
+        if (gCurrentPartyMember == gMenu_SwitchScreen.SelectedItem || gPlayerParty[gMenu_SwitchScreen.SelectedItem].Health == 0)
         {
-            //trying to swap to monster already in battle
+            //trying to swap to monster already in battle or KO'd
         }
         else
         {
@@ -2823,6 +2963,7 @@ void MenuItem_MoveScreen_BackButton(void)
 
 void MenuItem_UseableScreen_SlotSelected(void)
 {
+    //TODO: more item effects, and set them up as a switch or an array[]
     if (gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Effect == ITEM_USE_EFFECT_HEAL_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_UseableScreen.SelectedItem]].Count > 0)
     {
         gUseableItemEffect_SelectedItem = ITEM_USE_EFFECT_HEAL_MONSTER;
@@ -3478,656 +3619,706 @@ FinishedDealingDamage:
     return(FALSE);
 }
 
-uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonsterMoveTarget)
+
+//TODO: remove all of the elemental bonus/resistance checking and instead feed the output of GetElementalRelationship(); into this function along with damageBeforeElement and output modified damage
+//TODO: also include ability/move related immunities?? Examples from pokeemerald: levitate, flash fire, water absorb, lightning rod, etc. 
+// 
+//Bascially this function is where to turn multipliers into damage numbers
+uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, uint8_t elementalRelationship, BOOL isPlayerAttacker )
 {
-    uint16_t DamageAfterElement;
+    uint16_t DamageAfterElement = 0;
 
-    uint8_t DefendingElement_1;
-    uint8_t DefendingElement_2;
+    uint8_t DefendingElement_1 = ELEMENT_NONE;
+    uint8_t DefendingElement_2 = ELEMENT_NULL;
 
-    uint8_t AttackingElement;
+    uint8_t AttackingElement = ELEMENT_NONE;
 
-    if (isPlayerMonsterMoveTarget == TRUE)
+    switch (elementalRelationship)
     {
-        AttackingElement = gBattleMoves[gSelectedOpponentMove].element;
-
-        DefendingElement_1 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1;
-        DefendingElement_2 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2;
-        if (DefendingElement_1 == DefendingElement_2)
+        case ELEMENT_NEUTRAL:
         {
-            DefendingElement_2 = ELEMENT_NULL;
+            DamageAfterElement = damageBeforeElement;
+            gLastMoveElementalBonus = elementalRelationship;
+            break;
         }
-    }
-    else
-    {
-        AttackingElement = gBattleMoves[gSelectedPlayerMove].element;
-
-        DefendingElement_1 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1;
-        DefendingElement_2 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2;
-        if (DefendingElement_1 == DefendingElement_2)
+        case ELEMENT_IMMUNE:
         {
-            DefendingElement_2 = ELEMENT_NULL;
+            DamageAfterElement = 0;
+            gLastMoveElementalBonus = elementalRelationship;
+            break;
         }
-    }
-
-    switch (AttackingElement)
-    {
-        case ELEMENT_NONE:
+        case ELEMENT_BONUS:
         {
-            if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_DEATH)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_SOUL)
-            {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
+            DamageAfterElement = damageBeforeElement * 2;
+            gLastMoveElementalBonus = elementalRelationship;
+            break;
         }
-        case ELEMENT_EARTH:
+        case ELEMENT_4X_BONUS:
         {
-            if (DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_ELECTRIC || DefendingElement_1 == ELEMENT_METAL)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_LIFE)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_AIR)
-            {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
+            DamageAfterElement = damageBeforeElement * 4;
+            gLastMoveElementalBonus = ELEMENT_BONUS;
+            break;
         }
-        case ELEMENT_AIR:
+        case ELEMENT_RESIST:
         {
-            if (DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_LIFE)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_ELECTRIC || DefendingElement_1 == ELEMENT_METAL)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
+            DamageAfterElement = damageBeforeElement / 2;
+            gLastMoveElementalBonus = elementalRelationship;
+            break;
         }
-        case ELEMENT_FIRE:
+        case ELEMENT_4X_RESIST:
         {
-            if (DefendingElement_1 == ELEMENT_NONE || DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_LIFE || DefendingElement_1 == ELEMENT_DEATH)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_WATER)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
-        }
-        case ELEMENT_WATER:
-        {
-            if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_DEATH)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_LIFE)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
-        }
-        case ELEMENT_ELECTRIC:
-        {
-            if (DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_METAL)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_DEATH)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_EARTH)
-            {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
-        }
-        case ELEMENT_METAL:
-        {
-            if (DefendingElement_1 == ELEMENT_DEATH)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_ELECTRIC || DefendingElement_1 == ELEMENT_METAL)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
-        }
-        case ELEMENT_SOUL:
-        {
-            if (DefendingElement_1 == ELEMENT_DEATH || DefendingElement_1 == ELEMENT_SOUL)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_LIFE)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
-        }
-        case ELEMENT_LIFE:
-        {
-            if (DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_SOUL)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_FIRE || DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_LIFE)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
-        }
-        case ELEMENT_DEATH:
-        {
-            if (DefendingElement_1 == ELEMENT_NONE || DefendingElement_1 == ELEMENT_EARTH || DefendingElement_1 == ELEMENT_AIR || DefendingElement_1 == ELEMENT_LIFE)
-            {
-                DamageAfterElement = damageBeforeElement * 2;
-                gLastMoveElementalBonus = ELEMENT_BONUS;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_WATER || DefendingElement_1 == ELEMENT_DEATH)
-            {
-                DamageAfterElement = damageBeforeElement / 2;
-                gLastMoveElementalBonus = ELEMENT_RESIST;
-                break;
-            }
-            else if (DefendingElement_1 == ELEMENT_METAL || DefendingElement_1 == ELEMENT_SOUL)
-            {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
-            }
-            else
-            {
-                DamageAfterElement = damageBeforeElement;
-                break;
-            }
+            DamageAfterElement = damageBeforeElement / 4;
+            gLastMoveElementalBonus = ELEMENT_RESIST;
+            break;
         }
     }
 
-    //////found multipliers for first defensive element now repeat process
-
-    switch (AttackingElement)
+    switch (isPlayerAttacker)
     {
-        case ELEMENT_NONE:
+        case TRUE:
         {
-            if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_DEATH)
+            ////get all elements associated with elementalRelationship
+            AttackingElement = gBattleMoves[gSelectedPlayerMove].element;
+
+            DefendingElement_1 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1;
+            DefendingElement_2 = gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2;
+            if (DefendingElement_1 == DefendingElement_2)
             {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
+                DefendingElement_2 = ELEMENT_NULL;
             }
-            else if (DefendingElement_2 == ELEMENT_SOUL)
+            ////add bonus if attacker and move are same element
+            if (AttackingElement == gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1 || AttackingElement == gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2)
             {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
+                DamageAfterElement *= 1.5;
             }
-            else
+            //////////////////calculate bonuses from elemental boosting equipable items
+            if (AttackingElement == gPlayerParty[gCurrentPartyMember].DriveMonster.HeldItem - 1)        //first 20 equip items (1,2...19,20) are all element boosters and align with the values for elements in order just need to subtract one for NULLEQUIPITEM
             {
-                break;
+                DamageAfterElement *= 1.25;
             }
+            else if (AttackingElement == gPlayerParty[gCurrentPartyMember].DriveMonster.HeldItem - 11)
+            {
+                DamageAfterElement *= 1.1;
+            }
+            ///////////////modify DamageAfterElement by monster abilities here
+
+            //TODO:add monster abilities
+
+            break;
         }
-        case ELEMENT_EARTH:
+        case FALSE:
         {
-            if (DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_ELECTRIC || DefendingElement_2 == ELEMENT_METAL)
+            ////get all elements associated with elementalRelationship
+            AttackingElement = gBattleMoves[gSelectedOpponentMove].element;
+
+            DefendingElement_1 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1;
+            DefendingElement_2 = gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2;
+            if (DefendingElement_1 == DefendingElement_2)
             {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
+                DefendingElement_2 = ELEMENT_NULL;
             }
-            else if (DefendingElement_2 == ELEMENT_LIFE)
+            ////add bonus if attacker and move are same element
+            if (AttackingElement == gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1 || AttackingElement == gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2)
             {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
+                DamageAfterElement *= 1.5;
             }
-            else if (DefendingElement_2 == ELEMENT_AIR)
+            //////////////////calculate bonuses from elemental boosting equipable items
+            if (AttackingElement == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.HeldItem - 1)        //first 20 equip items (1,2...19,20) are all element boosters and align with the values for elements in order just need to subtract one for NULLEQUIPITEM
             {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
+                DamageAfterElement *= 1.25;
             }
-            else
+            else if (AttackingElement == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.HeldItem - 11)
             {
-                break;
+                DamageAfterElement *= 1.1;
             }
-        }
-        case ELEMENT_AIR:
-        {
-            if (DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_LIFE)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_ELECTRIC || DefendingElement_2 == ELEMENT_METAL)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_FIRE:
-        {
-            if (DefendingElement_2 == ELEMENT_NONE || DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_LIFE || DefendingElement_2 == ELEMENT_DEATH)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_WATER)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_WATER:
-        {
-            if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_DEATH)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_LIFE)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_ELECTRIC:
-        {
-            if (DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_METAL)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_DEATH)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_EARTH)
-            {
-                DamageAfterElement = 0;
-                return(DamageAfterElement);
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_METAL:
-        {
-            if (DefendingElement_2 == ELEMENT_DEATH)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_ELECTRIC || DefendingElement_2 == ELEMENT_METAL)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_SOUL:
-        {
-            if (DefendingElement_2 == ELEMENT_DEATH || DefendingElement_2 == ELEMENT_SOUL)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_LIFE)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_LIFE:
-        {
-            if (DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_SOUL)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_FIRE || DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_LIFE)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        case ELEMENT_DEATH:
-        {
-            if (DefendingElement_2 == ELEMENT_NONE || DefendingElement_2 == ELEMENT_EARTH || DefendingElement_2 == ELEMENT_AIR || DefendingElement_2 == ELEMENT_LIFE)
-            {
-                DamageAfterElement *= 2;
-                if (gLastMoveElementalBonus == ELEMENT_RESIST)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_BONUS;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_WATER || DefendingElement_2 == ELEMENT_DEATH)
-            {
-                DamageAfterElement /= 2;
-                if (gLastMoveElementalBonus == ELEMENT_BONUS)
-                {
-                    gLastMoveElementalBonus = ELEMENT_NEUTRAL;
-                }
-                else
-                {
-                    gLastMoveElementalBonus = ELEMENT_RESIST;
-                }
-                break;
-            }
-            else if (DefendingElement_2 == ELEMENT_METAL || DefendingElement_2 == ELEMENT_SOUL)
-            {
-                DamageAfterElement = 0;
-                gLastMoveElementalBonus = ELEMENT_IMMUNE;
-                return(DamageAfterElement);
-            }
-            else
-            {
-                break;
-            }
+            ///////////////modify DamageAfterElement by monster abilities here
+
+            //TODO:add monster abilities
+
+            break;
         }
     }
 
-    ////////////////////calculate bonus when user and move have same element
 
-    if (isPlayerMonsterMoveTarget == TRUE)
-    {
-        if (AttackingElement == gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1 || AttackingElement == gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2)
-        {
-            DamageAfterElement *= 1.5;
-        }
-
-        //////////////////calculate bonuses from elemental boosting equipable items
-        if (AttackingElement == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.HeldItem - 1)        //first 10 equip items (1...10) are all element boosters and align with the values for elements in order
-        {
-            DamageAfterElement *= 1.25;
-        }
-        else if (AttackingElement == gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.HeldItem - 11)
-        {
-            DamageAfterElement *= 1.1;
-        }
-    }
-    else
-    {
-        if (AttackingElement == gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1 || AttackingElement == gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2)
-        {
-            DamageAfterElement *= 1.5;
-        }
-
-        //////////////////calculate bonuses from elemental boosting equipable items
-        if (AttackingElement == gPlayerParty[gCurrentPartyMember].DriveMonster.HeldItem - 1)        //first 10 equip items (1...10) are all element boosters and align with the values for elements in order
-        {
-            DamageAfterElement *= 1.25;
-        }
-        else if (AttackingElement == gPlayerParty[gCurrentPartyMember].DriveMonster.HeldItem - 11)
-        {
-            DamageAfterElement *= 1.1;
-        }
-    }
 
     return(DamageAfterElement);
 }
-
-void GenerateOpponentMove(uint8_t Opponent)
+    
+////Outputs False if opponent chooses not to use a move
+BOOL GenerateOpponentMove(uint8_t Opponent)
 {
-    if (Opponent == NULL)       ////TODO: make own function so opponent can always generate a move
+    uint8_t PlayerOffenseElementRelation1 = GetElementRelationship(
+        gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1,
+        gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1,
+        gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2
+    );
+    uint8_t PlayerOffenseElementRelation2 = GetElementRelationship(
+        gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2,
+        gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1,
+        gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2
+    );
+
+    uint8_t OpponentOffenseElementRelation1 = GetElementRelationship(
+        gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element1,
+        gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1,
+        gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2
+    );
+    uint8_t OpponentOffenseElementRelation2 = GetElementRelationship(
+        gBaseStats[gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Index].element2,
+        gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1,
+        gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2
+    );
+
+    BOOL WillOpponentUseAMove = TRUE;
+    if (Opponent == NULL)
     {
         gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(FLAG_NPCAI_RANDOM);
         gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
+    }
+    else if (gCharacterSprite[Opponent].BattleAiFlag == FLAG_NPCAI_SWITCHDEFENSIVE && ((PlayerOffenseElementRelation1 == ELEMENT_BONUS || PlayerOffenseElementRelation1 == ELEMENT_4X_BONUS) || (PlayerOffenseElementRelation2 == ELEMENT_BONUS || PlayerOffenseElementRelation2 == ELEMENT_4X_BONUS)))
+    {
+        WillOpponentUseAMove = FALSE;
+    }
+    else if (gCharacterSprite[Opponent].BattleAiFlag == FLAG_NPCAI_SWITCHOFFENSIVE && ((OpponentOffenseElementRelation1 == ELEMENT_RESIST || OpponentOffenseElementRelation1 == ELEMENT_4X_RESIST || OpponentOffenseElementRelation1 == ELEMENT_IMMUNE) && (OpponentOffenseElementRelation2 == ELEMENT_RESIST || OpponentOffenseElementRelation2 == ELEMENT_4X_RESIST || OpponentOffenseElementRelation2 == ELEMENT_IMMUNE)))
+    {
+        WillOpponentUseAMove = FALSE;
     }
     else
     {
         gSelectedOpponentMoveSlot = CalculateOpponentMoveChoice(gCharacterSprite[Opponent].BattleAiFlag);
         gSelectedOpponentMove = gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.Moves[gSelectedOpponentMoveSlot];
+    }
+
+    return(WillOpponentUseAMove);
+}
+
+uint8_t OpponentChoosesMonsterFromParty(uint32_t flag_NPCAI)   //TODO: make FLAG_NPCAI impact what monster is chosen, instead of going numerically
+{
+    uint8_t BestPartyMember = 0;
+    uint8_t PartyValue[MAX_PARTY_SIZE] = { 0 };
+
+    uint8_t PartyMemberValue1[MAX_PARTY_SIZE] = { 0 };
+    uint8_t PartyMemberValue2[MAX_PARTY_SIZE] = { 0 };
+
+    uint8_t Element1BestMember = 0;
+    uint8_t Element2BestMember = 0;
+
+    switch (flag_NPCAI)
+    {
+        case FLAG_NPCAI_SWITCHOFFENSIVE:
+        {
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE; partymember++)
+            {
+                if (gOpponentParty[partymember].Health > 0)
+                {
+                    uint8_t ElementRelationOffense1 = GetElementRelationship(gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element1, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2);
+                    uint8_t ElementRelationOffense2 = GetElementRelationship(gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element2, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2);
+                    //uint8_t ElementRelationDefense1 = GetElementRelationship(gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element1, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element2);
+                    //uint8_t ElementRelationDefense2 = GetElementRelationship(gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element1, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element2);
+
+                    switch (ElementRelationOffense1)
+                    {
+                        case ELEMENT_4X_BONUS:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 6)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 6;
+                            break;
+                        }
+                        case ELEMENT_BONUS:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 5)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 5;
+                            break;
+                        }
+                        case ELEMENT_NEUTRAL:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 3)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 3;
+                            break;
+                        }
+                        case ELEMENT_RESIST:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 2)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 2;
+                        }
+                        case ELEMENT_4X_RESIST:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 1)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 1;
+                            break;
+                        }
+                        case ELEMENT_IMMUNE:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 1)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 0;
+                            break;
+                        }
+                    }
+
+                    switch (ElementRelationOffense2)
+                    {
+                        case ELEMENT_4X_BONUS:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 6)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 6;
+                            break;
+                        }
+                        case ELEMENT_BONUS:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 5)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 5;
+                            break;
+                        }
+                        case ELEMENT_NEUTRAL:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 3)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 3;
+                            break;
+                        }
+                        case ELEMENT_RESIST:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 2)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 2;
+                        }
+                        case ELEMENT_4X_RESIST:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 1)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 1;
+                            break;
+                        }
+                        case ELEMENT_IMMUNE:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 1)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 0;
+                            break;
+                        }
+                    }
+                }
+                PartyValue[partymember] = PartyMemberValue1[partymember] + PartyMemberValue2[partymember];  //get the best result between both elements
+            }
+
+            uint8_t BestValue = 0;
+
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE - 1; partymember++)          //sort highest value
+            {
+                if (partymember == 0)
+                {
+                    BestValue = max(PartyValue[partymember], PartyValue[partymember + 1]);
+                }
+                else
+                {
+                    BestValue = max(BestValue, PartyValue[partymember + 1]);
+                }
+            }
+
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE; partymember++)          //reassociate value with partymember
+            {
+                if (PartyValue[partymember] == BestValue)
+                {
+                    BestPartyMember = partymember;
+                    break;
+                }
+            }
+            
+            return(BestPartyMember);
+
+        }
+        case FLAG_NPCAI_SWITCHDEFENSIVE:
+        {
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE; partymember++)
+            {
+                if (gOpponentParty[partymember].Health > 0)
+                {
+                    //uint8_t ElementRelationOffense1 = GetElementRelationship(gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element1, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2);
+                    //uint8_t ElementRelationOffense2 = GetElementRelationship(gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element2, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1, gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2);
+                    uint8_t ElementRelationDefense1 = GetElementRelationship(gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element1, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element1, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element2);
+                    uint8_t ElementRelationDefense2 = GetElementRelationship(gBaseStats[gPlayerParty[gCurrentPartyMember].DriveMonster.Index].element2, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element1, gBaseStats[gOpponentParty[partymember].DriveMonster.Index].element2);
+
+                    switch (ElementRelationDefense1)
+                    {
+                        case ELEMENT_IMMUNE:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 6)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 6;
+                            break;
+                        }
+                        case ELEMENT_4X_RESIST:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 5)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 5;
+                            break;
+                        }
+                        case ELEMENT_RESIST:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 3)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 3;
+                            break;
+                        }
+                        case ELEMENT_NEUTRAL:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 2)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 2;
+                        }
+                        case ELEMENT_BONUS:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 1)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 1;
+                            break;
+                        }
+                        case ELEMENT_4X_BONUS:
+                        {
+                            if (PartyMemberValue1[Element1BestMember] < 1)
+                            {
+                                Element1BestMember = partymember;
+                            }
+                            PartyMemberValue1[partymember] = 0;
+                            break;
+                        }
+                    }
+
+                    switch (ElementRelationDefense2)
+                    {
+                        case ELEMENT_IMMUNE:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 6)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 6;
+                            break;
+                        }
+                        case ELEMENT_4X_RESIST:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 5)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 5;
+                            break;
+                        }
+                        case ELEMENT_RESIST:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 3)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 3;
+                            break;
+                        }
+                        case ELEMENT_NEUTRAL:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 2)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 2;
+                        }
+                        case ELEMENT_BONUS:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 1)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 1;
+                            break;
+                        }
+                        case ELEMENT_4X_BONUS:
+                        {
+                            if (PartyMemberValue2[Element2BestMember] < 1)
+                            {
+                                Element2BestMember = partymember;
+                            }
+                            PartyMemberValue2[partymember] = 0;
+                            break;
+                        }
+                    }
+                }
+                PartyValue[partymember] = PartyMemberValue1[partymember] + PartyMemberValue2[partymember];  //get the best result between both elements
+            }
+
+            uint8_t BestValue = 0;
+
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE - 1; partymember++)      //sort highest value
+            {
+                if (partymember == 0)
+                {
+                    BestValue = max(PartyValue[partymember], PartyValue[partymember + 1]);
+                }
+                else
+                {
+                    BestValue = max(BestValue, PartyValue[partymember + 1]);
+                }
+            }
+
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE; partymember++)      //reassociate value with partymember
+            {
+                if (PartyValue[partymember] == BestValue)
+                {
+                    BestPartyMember = partymember;
+                    break;
+                }
+            }
+
+            return(BestPartyMember);
+        }
+        default:
+        {
+            for (uint8_t partymember = 0; partymember < MAX_PARTY_SIZE; partymember++)
+            {
+                if (gOpponentParty[partymember].Health > 0)
+                {
+                    return(partymember);
+                }
+            }
+        }
+    }
+
+}
+
+//This is where all combination of element resistances bonuses and immunities are held
+//outputs one of the following: ELEMENT_NEUTRAL, ELEMENT_IMMUNE, ELEMENT_BONUS, ELEMENT_4X_BONUS, ELEMENT_RESIST, ELEMENT_4X_RESIST
+uint8_t GetElementRelationship(_In_ uint8_t ElementOffense, _In_ uint8_t ElementDefendingReq, _In_opt_ uint8_t ElementDefendingOpt)
+{
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t NoneTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_IMMUNE,  ELEMENT_NEUTRAL,  ELEMENT_RESIST };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t EarthTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_NEUTRAL,  ELEMENT_IMMUNE,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_NEUTRAL };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t AirTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_NEUTRAL };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t FireTypeOffense[ELEMENT_COUNT] = { ELEMENT_BONUS, ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_BONUS };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t WaterTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_BONUS };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t ElectricTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_IMMUNE,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_RESIST };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t MetalTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_RESIST,  ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_BONUS };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t SoulTypeOffense[ELEMENT_COUNT] = { ELEMENT_IMMUNE, ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_NEUTRAL,  ELEMENT_BONUS,  ELEMENT_RESIST,  ELEMENT_NEUTRAL };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t LifeTypeOffense[ELEMENT_COUNT] = { ELEMENT_NEUTRAL, ELEMENT_BONUS,  ELEMENT_RESIST,  ELEMENT_RESIST,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_BONUS,  ELEMENT_RESIST,  ELEMENT_NEUTRAL };
+
+    //                                                  //none          //earth         //air               //fire          //water             //electric          //metal         //soul          //life              //death
+    static uint8_t DeathTypeOffense[ELEMENT_COUNT] = { ELEMENT_BONUS, ELEMENT_BONUS,  ELEMENT_BONUS,  ELEMENT_NEUTRAL,  ELEMENT_RESIST,  ELEMENT_NEUTRAL,  ELEMENT_IMMUNE,  ELEMENT_IMMUNE,  ELEMENT_BONUS,  ELEMENT_RESIST };
+
+    uint8_t ElementRelationship1 = ELEMENT_NEUTRAL;
+
+    uint8_t ElementRelationship2 = ELEMENT_NEUTRAL;
+
+    switch (ElementOffense)
+    {
+        case ELEMENT_NONE:
+        {
+            ElementRelationship1 = NoneTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = NoneTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_EARTH:
+        {
+            ElementRelationship1 = EarthTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = EarthTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_AIR:
+        {
+            ElementRelationship1 = AirTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = AirTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_FIRE:
+        {
+            ElementRelationship1 = FireTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = FireTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_WATER:
+        {
+            ElementRelationship1 = WaterTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = WaterTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_ELECTRIC:
+        {
+            ElementRelationship1 = ElectricTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = ElectricTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_METAL:
+        {
+            ElementRelationship1 = MetalTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = MetalTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_SOUL:
+        {
+            ElementRelationship1 = SoulTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = SoulTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_LIFE:
+        {
+            ElementRelationship1 = LifeTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = LifeTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+        case ELEMENT_DEATH:
+        {
+            ElementRelationship1 = DeathTypeOffense[ElementDefendingReq];
+            if (ElementDefendingOpt != NULL && ElementDefendingOpt != ELEMENT_NULL && ElementDefendingReq != ElementDefendingOpt)
+            {
+                ElementRelationship2 = DeathTypeOffense[ElementDefendingOpt];
+            }
+            break;
+        }
+    }
+
+    //
+    ///////////return based on above pairing of elemental relationships
+    //
+
+    if (ElementRelationship1 == ELEMENT_NEUTRAL && ElementRelationship2 == ELEMENT_NEUTRAL)
+    {
+        return(ELEMENT_NEUTRAL);
+    }
+    else
+    {
+        if (ElementRelationship2 == ELEMENT_IMMUNE)     //this just removes a lot of cases from the below switches inside of a switch because it will always be x0
+        {
+            return(ELEMENT_IMMUNE);
+        }
+
+        switch (ElementRelationship1)
+        {
+            case ELEMENT_IMMUNE:
+            {
+                return(ELEMENT_IMMUNE);     //x0 always = 0
+            }
+            case ELEMENT_NEUTRAL:
+            {
+                return(ElementRelationship2);   //ElementRelationship2 != ELEMENT_NEUTRAL, therefore return whatever effect relationship2 is as it will just be multiplied by 1
+            }
+            case ELEMENT_RESIST:
+            {
+                switch (ElementRelationship2)
+                {
+                    case ELEMENT_NEUTRAL:
+                    {
+                        return(ElementRelationship1);     //relationship1 carries over
+                    }
+                    case ELEMENT_BONUS:
+                    {
+                        return(ELEMENT_NEUTRAL);    //bonus and resist cancel to make neutral
+                    }
+                    case ELEMENT_RESIST:
+                    {
+                        return(ELEMENT_4X_RESIST);  //resistances multiply together
+                    }
+                }
+            }
+            case ELEMENT_BONUS:
+            {
+                switch (ElementRelationship2)
+                {
+                    case ELEMENT_NEUTRAL:
+                    {
+                        return(ElementRelationship1);     //relationship1 carries over
+                    }
+                    case ELEMENT_BONUS:
+                    {
+                        return(ELEMENT_4X_BONUS);    //bonuses muliply together
+                    }
+                    case ELEMENT_RESIST:
+                    {
+                        return(ELEMENT_NEUTRAL);  //resistance and bonus cancel each other to make neutral
+                    }
+                }
+            }
+        }
     }
 }

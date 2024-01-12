@@ -179,10 +179,15 @@
 #define ELEMENT_NULL 255
 #define ELEMENT_STATUS 254
 
+//elemental relationships
+
 #define ELEMENT_NEUTRAL 0
 #define ELEMENT_RESIST 1
 #define ELEMENT_BONUS 2
 #define ELEMENT_IMMUNE 3
+
+#define ELEMENT_4X_BONUS 4
+#define ELEMENT_4X_RESIST 5
 
 /////////////////////////////ELEMENTS//////////////////////////////////
 

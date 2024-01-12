@@ -586,16 +586,10 @@ DWORD InitializeSprites(void)
 {
     /////////////////////////////////////////temporary init of character sprites/////////////////////
 
-    //gCharacterSprite[0].ScreenPos.x = 256;
-    //gCharacterSprite[0].ScreenPos.y = 144;
     gCharacterSprite[0].WorldPos.x = 352;
     gCharacterSprite[0].WorldPos.y = 4544;
-    //gCharacterSprite[0].ResetScreenPos.x = 256;
-    //gCharacterSprite[0].ResetScreenPos.y = 144;
     gCharacterSprite[0].ResetWorldPos.x = 352;
     gCharacterSprite[0].ResetWorldPos.x = 4544;
-    //gCharacterSprite[0].ResetOriginScreenPos.x = 256;
-    //gCharacterSprite[0].ResetOriginScreenPos.y = 144;
     gCharacterSprite[0].ResetOriginWorldPos.x = 352;
     gCharacterSprite[0].ResetOriginWorldPos.y = 4544;
     gCharacterSprite[0].Direction = LEFT;
@@ -617,16 +611,10 @@ DWORD InitializeSprites(void)
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
 
-    //gCharacterSprite[1].ScreenPos.x = 16;
-    //gCharacterSprite[1].ScreenPos.y = 16;
     gCharacterSprite[1].WorldPos.x = 3872;
     gCharacterSprite[1].WorldPos.y = 16;
-    //gCharacterSprite[1].ResetScreenPos.x = 16;
-    //gCharacterSprite[1].ResetScreenPos.y = 16;
     gCharacterSprite[1].ResetWorldPos.x = 3872;
     gCharacterSprite[1].ResetWorldPos.y = 16;
-    //gCharacterSprite[1].ResetOriginScreenPos.x = 16;
-    //gCharacterSprite[1].ResetOriginScreenPos.y = 16;
     gCharacterSprite[1].ResetOriginWorldPos.x = 3872;
     gCharacterSprite[1].ResetOriginWorldPos.y = 16;
     gCharacterSprite[1].Direction = DOWN;
@@ -647,16 +635,10 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    //gCharacterSprite[2].ScreenPos.x = 608;
-    //gCharacterSprite[2].ScreenPos.y = 16;
     gCharacterSprite[2].WorldPos.x = 1136;
     gCharacterSprite[2].WorldPos.y = 4496;
-    //gCharacterSprite[2].ResetScreenPos.x = 608;
-    //gCharacterSprite[2].ResetScreenPos.y = 16;
     gCharacterSprite[2].ResetWorldPos.x = 1136;
     gCharacterSprite[2].ResetWorldPos.y = 4496;
-    //gCharacterSprite[2].ResetOriginScreenPos.x = 608;
-    //gCharacterSprite[2].ResetOriginScreenPos.y = 16;
     gCharacterSprite[2].ResetOriginWorldPos.x = 1136;
     gCharacterSprite[2].ResetOriginWorldPos.y = 4496;
     gCharacterSprite[2].Direction = DOWN;
@@ -674,24 +656,21 @@ DWORD InitializeSprites(void)
     gCharacterSprite[2].DialogueFlag = DIALOGUE_FLAG_0;
     gCharacterSprite[2].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
     gCharacterSprite[2].DialogueLoopReturn = DIALOGUE_FLAG_1;
-    gCharacterSprite[2].BattleAiFlag = FLAG_NPCAI_HIGHESTPOWER;
+    gCharacterSprite[2].BattleAiFlag = FLAG_NPCAI_SWITCHDEFENSIVE;
 
     sprintf_s(gCharacterSprite[2].Name, sizeof(gCharacterSprite[2].Name), "Jerry");
 
-    gCharacterSprite[2].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(1, 5, 0);
+    gCharacterSprite[2].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(MONSTER_WOLF, 6, 0);
+    gCharacterSprite[2].MonsterParty[1] = GenerateMonsterForCharacterSpriteBattle(MONSTER_AIRWOLF, 7, 0);
+    gCharacterSprite[2].MonsterParty[2] = GenerateMonsterForCharacterSpriteBattle(MONSTER_EARTHWOLF, 7, 0);
+    gCharacterSprite[2].MonsterParty[3] = GenerateMonsterForCharacterSpriteBattle(MONSTER_WATERWOLF, 8, 0);
 
     //////////////////////////////////////////////////////////////
 
-    //gCharacterSprite[3].ScreenPos.x = 256 + 32;
-    //gCharacterSprite[3].ScreenPos.y = 144 + 32;
     gCharacterSprite[3].WorldPos.x = 352 + 32;
     gCharacterSprite[3].WorldPos.y = 4544 + 32;
-    //gCharacterSprite[3].ResetScreenPos.x = 256 + 32;
-    //gCharacterSprite[3].ResetScreenPos.y = 144 + 32;
     gCharacterSprite[3].ResetWorldPos.x = 352 + 32;
     gCharacterSprite[3].ResetWorldPos.x = 4544 + 32;
-    //gCharacterSprite[3].ResetOriginScreenPos.x = 256 + 32;
-    //gCharacterSprite[3].ResetOriginScreenPos.y = 144 + 32;
     gCharacterSprite[3].ResetOriginWorldPos.x = 352 + 32;
     gCharacterSprite[3].ResetOriginWorldPos.y = 4544 + 32;
     gCharacterSprite[3].Direction = DOWN;
@@ -713,16 +692,10 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    //gCharacterSprite[4].ScreenPos.x = 192;
-    //gCharacterSprite[4].ScreenPos.y = 192;
     gCharacterSprite[4].WorldPos.x = 192;
     gCharacterSprite[4].WorldPos.y = 192;
-    //gCharacterSprite[4].ResetScreenPos.x = 192;
-    //gCharacterSprite[4].ResetScreenPos.y = 192;
     gCharacterSprite[4].ResetWorldPos.x = 192;
     gCharacterSprite[4].ResetWorldPos.x = 192;
-    //gCharacterSprite[4].ResetOriginScreenPos.x = 192;
-    //gCharacterSprite[4].ResetOriginScreenPos.y = 192;
     gCharacterSprite[4].ResetOriginWorldPos.x = 192;
     gCharacterSprite[4].ResetOriginWorldPos.y = 192;
     gCharacterSprite[4].Direction = DOWN;
@@ -746,16 +719,10 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    //gCharacterSprite[5].ScreenPos.x = 256 + 64;
-    //gCharacterSprite[5].ScreenPos.y = 144 + 64;
     gCharacterSprite[5].WorldPos.x = 352 + 64;
     gCharacterSprite[5].WorldPos.y = 4544 + 64;
-    //gCharacterSprite[5].ResetScreenPos.x = 256 + 64;
-    //gCharacterSprite[5].ResetScreenPos.y = 144 + 64;
     gCharacterSprite[5].ResetWorldPos.x = 352 + 64;
     gCharacterSprite[5].ResetWorldPos.x = 4544 + 64;
-    //gCharacterSprite[5].ResetOriginScreenPos.x = 256 + 64;
-    //gCharacterSprite[5].ResetOriginScreenPos.y = 144 + 64;
     gCharacterSprite[5].ResetOriginWorldPos.x = 352 + 64;
     gCharacterSprite[5].ResetOriginWorldPos.y = 4544 + 64;
     gCharacterSprite[5].Direction = DOWN;
@@ -776,16 +743,10 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    //gCharacterSprite[6].ScreenPos.x = 0;
-    //gCharacterSprite[6].ScreenPos.y = 0;
     gCharacterSprite[6].WorldPos.x = 608;
     gCharacterSprite[6].WorldPos.y = 4464;
-    //gCharacterSprite[6].ResetScreenPos.x = 0;
-    //gCharacterSprite[6].ResetScreenPos.y = 0;
     gCharacterSprite[6].ResetWorldPos.x = 608;
     gCharacterSprite[6].ResetWorldPos.x = 4464;
-    //gCharacterSprite[6].ResetOriginScreenPos.x = 0;
-    //gCharacterSprite[6].ResetOriginScreenPos.y = 0;
     gCharacterSprite[6].ResetOriginWorldPos.x = 608;
     gCharacterSprite[6].ResetOriginWorldPos.y = 4464;
     gCharacterSprite[6].Direction = DOWN;
@@ -803,6 +764,39 @@ DWORD InitializeSprites(void)
     gCharacterSprite[6].DialogueLoopReturn = DIALOGUE_FLAG_0;
     gCharacterSprite[6].EventItemsIndex[0] = INV_USABLE_ITEM_0;
     gCharacterSprite[6].EventItemsCount[0] = 5;
+
+    //////////////////////////////////////////////////////////////
+
+    gCharacterSprite[7].WorldPos.x = 896;
+    gCharacterSprite[7].WorldPos.y = 4464;
+    gCharacterSprite[7].ResetWorldPos.x = 896;
+    gCharacterSprite[7].ResetWorldPos.y = 4464;
+    gCharacterSprite[7].ResetOriginWorldPos.x = 896;
+    gCharacterSprite[7].ResetOriginWorldPos.y = 4464;
+    gCharacterSprite[7].Direction = DOWN;
+    gCharacterSprite[7].ResetDirection = DOWN;
+    gCharacterSprite[7].SightRange = 3;
+    gCharacterSprite[7].ResetSightRange = 3;
+    gCharacterSprite[7].Event = EVENT_FLAG_BATLLE;
+    gCharacterSprite[7].Movement = MOVEMENT_STILL;
+    gCharacterSprite[7].Visible = FALSE;
+    gCharacterSprite[7].Exists = TRUE;
+    gCharacterSprite[7].Loaded = FALSE;
+    gCharacterSprite[7].GameAreaIndex = 3;
+    gCharacterSprite[7].Dialogue[DIALOGUE_FLAG_0] = "Are you going into the forest?";
+    gCharacterSprite[7].Dialogue[DIALOGUE_FLAG_1] = "Battle me before you go in!";
+    gCharacterSprite[7].Dialogue[DIALOGUE_FLAG_2] = "Maybe I should train more...";
+    gCharacterSprite[7].DialogueFlag = DIALOGUE_FLAG_0;
+    gCharacterSprite[7].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
+    gCharacterSprite[7].DialogueLoopReturn = DIALOGUE_FLAG_2;
+    gCharacterSprite[7].BattleAiFlag = FLAG_NPCAI_SWITCHOFFENSIVE;
+
+    sprintf_s(gCharacterSprite[7].Name, sizeof(gCharacterSprite[7].Name), "Jimmy");
+
+    gCharacterSprite[7].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(MONSTER_DEATHWOLF, 5, 0);
+    gCharacterSprite[7].MonsterParty[1] = GenerateMonsterForCharacterSpriteBattle(MONSTER_LIFEWOLF, 6, 0);
+    gCharacterSprite[7].MonsterParty[2] = GenerateMonsterForCharacterSpriteBattle(MONSTER_WATERWOLF, 7, 0);
+    gCharacterSprite[7].MonsterParty[3] = GenerateMonsterForCharacterSpriteBattle(MONSTER_FIREWOLF, 8, 0);
 
     //////////////////////////////////////////////////////////////
 
@@ -2485,6 +2479,15 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_0] },
         {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_1] },
         {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_2] },
+        { "ManFacingDown0.bmpx", &gCharacterSprite[7].Sprite[FACING_DOWN_0] },
+        { "ManFacingDown1.bmpx", &gCharacterSprite[7].Sprite[FACING_DOWN_1] },
+        { "ManFacingDown2.bmpx", &gCharacterSprite[7].Sprite[FACING_DOWN_2] },
+        { "ManFacingLeft0.bmpx", &gCharacterSprite[7].Sprite[FACING_LEFT_0] },
+        { "ManFacingLeft1.bmpx", &gCharacterSprite[7].Sprite[FACING_LEFT_1] },
+        { "ManFacingLeft2.bmpx", &gCharacterSprite[7].Sprite[FACING_LEFT_2] },
+        { "ManFacingRight0.bmpx", &gCharacterSprite[7].Sprite[FACING_RIGHT_0] },
+        { "ManFacingRight1.bmpx", &gCharacterSprite[7].Sprite[FACING_RIGHT_1] },
+        { "ManFacingRight2.bmpx", &gCharacterSprite[7].Sprite[FACING_RIGHT_2] },
         {   "SmallBag.bmpx", &gLootPickup },
         {   "EmptySprite.bmpx", &gEmptySprite },
         {   "Sparkle01(3).bmpx", &gSparkle01[3]},

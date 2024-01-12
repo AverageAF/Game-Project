@@ -40,14 +40,27 @@ typedef enum BATTLESTATE
 	BATTLESTATE_ESCAPEFAIL_WAIT,
 	BATTLESTATE_ESCAPESUCCESS_TEXT,
 	BATTLESTATE_ESCAPESUCCESS_WAIT,
+	BATTLESTATE_OPPONENTSWITCH_TEXT,
+	BATTLESTATE_OPPONENTSWITCH_WAIT,
+	BATTLESTATE_OPPONENTITEM_TEXT,
+	BATTLESTATE_OPPONENTITEM_WAIT,
 
 } BATTLESTATE;
 
-typedef enum NPC_AI_FLAG
+typedef enum NPC_AI_FLAG	//probably want to be able to apply multiple AI's to battle opponents for a variety of NPC strategies, hence doubling
 {
-	FLAG_NPCAI_RANDOM,
-	FLAG_NPCAI_NEVERSTATUS,
-	FLAG_NPCAI_HIGHESTPOWER,
+	FLAG_NPCAI_RANDOM = 0,
+	FLAG_NPCAI_NEVERSTATUS = 1,
+	FLAG_NPCAI_ONLYSTATUS = 2,
+	FLAG_NPCAI_STATUSFIRSTTURN = 4,
+	FLAG_NPCAI_HIGHESTPOWER = 8,
+	FLAG_NPCAI_ITEMFIRSTTURN = 16,
+	FLAG_NPCAI_SWITCHDEFENSIVE = 32,
+	FLAG_NPCAI_SWITCHOFFENSIVE = 64,
+	FLAG_NPCAI_SWITCHSTRATEGIC = 128,
+	FLAG_NPCAI_SEEPLAYERMOVES = 256,
+	FLAG_NPCAI_CHAMPION = 512,
+
 } NPC_AI_FLAG;
 
 BATTLESTATE gPreviousBattleState;
@@ -127,6 +140,11 @@ uint16_t CalcDmgFromMonsterAToMonsterB(uint8_t AMonLevel, uint16_t AMonAtk, uint
 
 void ModifyMonsterHealthValueGetKO(uint16_t damageToMonster, BOOL isPlayerSideMonster, BOOL wasLastMoveCrit);
 
-uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, BOOL isPlayerMonsterMoveTarget);
+uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, uint8_t elementalRelationship, BOOL isPlayerAttacker);
 
-void GenerateOpponentMove(uint8_t Opponent);
+BOOL GenerateOpponentMove(uint8_t Opponent);
+
+uint8_t OpponentChoosesMonsterFromParty(uint32_t flag_NPCAI);
+
+
+uint8_t GetElementRelationship(_In_ uint8_t ElementOffense, _In_ uint8_t ElementDefendingReq, _In_opt_ uint8_t ElementDefendingOpt);
