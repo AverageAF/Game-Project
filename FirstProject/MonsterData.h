@@ -44,6 +44,8 @@ void SetBattleMonsterMoveSlot(struct BattleMonster* bMonster, uint16_t move, uin
 
 uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove);
 
+void CopyMonster( void* destination, void* source, size_t size);
+
 void CopyMonsterToPlayerParty(uint8_t partyIndex, struct Monster source);
 
 void CopyMonsterToOpponentParty(uint8_t partyIndex, struct Monster source);
@@ -72,7 +74,7 @@ struct Monster GenerateMonsterForCharacterSpriteBattle(uint8_t index, uint8_t le
 
 uint8_t GiveMonsterToPlayer(struct Monster* monster);
 
-uint8_t SendMonsterToPC(struct Monster* monster);
+BOOL SendMonsterToDrive(struct Monster* monster);
 
 void GetMonsterNameFromIndex(uint8_t* name, uint8_t index);
 

@@ -6,6 +6,10 @@
 #include "ExperienceTables.h"
 
 #include "MonsterData.h"
+#include "MonsterStorage.h"
+
+#include "variables.h"
+#include "flags.h"
 
 #include "OverWorld.h"
 
@@ -711,6 +715,11 @@ uint16_t MonsterTryLearningNewMove(struct Monster* monster, BOOL firstMove)
     return(value);
 }
 
+void CopyMonster( void *destination, void* source, size_t size)
+{
+    memcpy(destination, source, size);
+}
+
 void CopyMonsterToPlayerParty(uint8_t partyIndex, struct Monster source)
 {
     gPlayerParty[partyIndex] = source;
@@ -1200,10 +1209,9 @@ uint8_t GiveMonsterToPlayer(struct Monster* monster)
         }
     }
 
-    if (i > MAX_PARTY_SIZE)         //TODO:FINISH
+    if (i >= MAX_PARTY_SIZE)
     {
-        ASSERT(FALSE, "MonsterDrive system not added yet! player added too many party members!")
-        //return(SendMonsterToPC(monster));
+        return(SendMonsterToDrive(monster));
     }
 
     CopyMonsterToPlayerParty(i, *monster);
@@ -1211,10 +1219,48 @@ uint8_t GiveMonsterToPlayer(struct Monster* monster)
     return(0);
 }
 
-uint8_t SendMonsterToPC(struct Monster* monster)            //TODO: FINISH
+//returns TRUE if successfully added to a drive, FALSE if drives are all full
+BOOL SendMonsterToDrive(struct Monster* monster)
 {
-    //int32_t ;
-    //SetPCStorageToSendMonster();
+    uint8_t driveId, drivePos;
+
+    SetDriveToSendMonster(GetGameVar(VAR_DRIVE_ID_TO_SEND_MONSTER));
+    driveId = StorageGetCurrentDrive();     //TODO:nullpointer
+    do
+    {
+        for (drivePos = 0; drivePos < TOTAL_IN_DRIVE; drivePos++)
+        {
+            struct DriveMonster* checkmonster = GetDriveMonPtr(driveId, drivePos);
+            if (GetDriveMonsterData(checkmonster, MONSTER_DATA_INDEX, NULL) == MONSTER_NULL)
+            {
+                //uint8_t level = 5;
+                //uint32_t experience = gExperienceTables[gBaseStats[GetMonsterData(monster, MONSTER_DATA_INDEX, NULL)].growthRate][level];
+                //SetMonsterData(monster, MONSTER_DATA_EXPERIENCE, &experience);
+                //CalculateMonsterStats(monster);
+
+                //RestoreMoveUsage      //do I want moves to have charges??
+
+                CopyMonster(checkmonster, &monster->DriveMonster, sizeof(monster->DriveMonster));
+                SetGameVar(VAR_MONSTER_DRIVE_ID, driveId);
+                SetGameVar(VAR_MONSTER_DRIVE_POS, drivePos);
+
+                if (GetDriveToSendMonster() != driveId)
+                {
+                    SetGameFlag(FLAG_DRIVE_IS_FULL_MSG);      //TOUSE: let the player know one of their drives filled up
+                }
+                SetGameVar(VAR_DRIVE_ID_TO_SEND_MONSTER, driveId);      //set this drive as the next to be sent to
+                return (TRUE);
+            }
+        }
+        driveId++;
+        if (driveId == TOTAL_STORAGE_DRIVES)
+        {
+            driveId = 0;
+        }
+
+    } while (driveId != StorageGetCurrentDrive());  //keeps searching until it goes back to original drive
+
+    return (FALSE);
 
 }
 

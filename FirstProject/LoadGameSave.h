@@ -18,3 +18,5 @@ void MenuItem_LoadGameSave_DeleteSlot1(void);
 void MenuItem_LoadGameSave_DeleteSlot2(void);
 
 void MenuItem_LoadGameSave_DeleteSlot3(void);
+
+void SetSaveBlockPointers(uint16_t offset);

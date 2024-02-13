@@ -341,7 +341,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
         .HasItem = FALSE,
         .Count = 1,
         .Description = "A common medicine to heal \nmonsters, heals 20HP",
-        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,    //TODO: setup simple healing mechanic for one party member
+        .Effect = ITEM_USE_EFFECT_HEAL_MONSTER,
         .Name = "HP Useable [MKI]",
         .Sprite = 0,
         .Favorite = FALSE,
@@ -430,7 +430,7 @@ InventoryItem gUseableItems[NUM_USABLE_ITEMS] = {
     {
         .ValueCurrency = 1600,
         .HasItem = TRUE,
-        .Count = 1,
+        .Count = 100,
         .Description = "Grand capture device",
         .Effect = ITEM_USE_EFFECT_CAPTURE,
         .Name = "Capture Device C",

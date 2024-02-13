@@ -139,145 +139,6 @@
 #define FACING_RIGHT_1 10
 #define FACING_RIGHT_2 11
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-//possibly give this its own flags.c
-BOOL gGameFlags[0x80];
-
-#define START_OF_FLAGS 0x0
-#define TEMP_FLAGS_START 0x0
-#define FLAG_TEMP_1 0x1
-#define FLAG_TEMP_2 0x2
-#define FLAG_TEMP_3 0x3
-#define FLAG_TEMP_4 0x4
-#define FLAG_TEMP_5 0x5
-#define FLAG_TEMP_6 0x6
-#define FLAG_TEMP_7 0x7
-#define FLAG_TEMP_8 0x8
-#define FLAG_TEMP_9 0x9
-#define FLAG_TEMP_A 0xA
-#define FLAG_TEMP_B 0xB
-#define FLAG_TEMP_C 0xC
-#define FLAG_TEMP_D 0xD
-#define FLAG_TEMP_E 0xE
-#define FLAG_TEMP_F 0xF
-#define FLAG_TEMP_10 0x10
-#define FLAG_TEMP_11 0x11
-#define FLAG_TEMP_12 0x12
-#define FLAG_TEMP_13 0x13
-#define FLAG_TEMP_14 0x14
-#define FLAG_TEMP_15 0x15
-#define FLAG_TEMP_16 0x16
-#define FLAG_TEMP_17 0x17
-#define FLAG_TEMP_18 0x18
-#define FLAG_TEMP_19 0x19
-#define FLAG_TEMP_1A 0x1A
-#define FLAG_TEMP_1B 0x1B
-#define FLAG_TEMP_1C 0x1C
-#define FLAG_TEMP_1D 0x1D
-#define FLAG_TEMP_1E 0x1E
-#define FLAG_TEMP_1F 0x1F
-#define TEMP_FLAGS_END FLAG_TEMP_1F
-
-#define FLAG_UNUSED_0x20 0x20
-#define FLAG_UNUSED_0x21 0x21
-#define FLAG_UNUSED_0x22 0x22
-#define FLAG_UNUSED_0x23 0x23
-#define FLAG_UNUSED_0x24 0x24
-#define FLAG_UNUSED_0x25 0x25
-#define FLAG_UNUSED_0x26 0x26
-#define FLAG_UNUSED_0x27 0x27
-#define FLAG_UNUSED_0x28 0x28
-#define FLAG_UNUSED_0x29 0x29
-#define FLAG_UNUSED_0x2A 0x2A
-#define FLAG_UNUSED_0x2B 0x2B
-#define FLAG_UNUSED_0x2C 0x2C
-#define FLAG_UNUSED_0x2D 0x2D
-#define FLAG_UNUSED_0x2E 0x2E
-#define FLAG_UNUSED_0x2F 0x2F
-#define FLAG_UNUSED_0x30 0x30
-#define FLAG_UNUSED_0x31 0x31
-#define FLAG_UNUSED_0x32 0x32
-#define FLAG_UNUSED_0x33 0x33
-#define FLAG_UNUSED_0x34 0x34
-#define FLAG_UNUSED_0x35 0x35
-#define FLAG_UNUSED_0x36 0x36
-#define FLAG_UNUSED_0x37 0x37
-#define FLAG_UNUSED_0x38 0x38
-#define FLAG_UNUSED_0x39 0x39
-#define FLAG_UNUSED_0x3A 0x3A
-#define FLAG_UNUSED_0x3B 0x3B
-#define FLAG_UNUSED_0x3C 0x3C
-#define FLAG_UNUSED_0x3D 0x3D
-#define FLAG_UNUSED_0x3E 0x3E
-#define FLAG_UNUSED_0x3F 0x3F
-#define FLAG_UNUSED_0x40 0x40
-#define FLAG_UNUSED_0x41 0x41
-#define FLAG_UNUSED_0x42 0x42
-#define FLAG_UNUSED_0x43 0x43
-#define FLAG_UNUSED_0x44 0x44
-#define FLAG_UNUSED_0x45 0x45
-#define FLAG_UNUSED_0x46 0x46
-#define FLAG_UNUSED_0x47 0x47
-#define FLAG_UNUSED_0x48 0x48
-#define FLAG_UNUSED_0x49 0x49
-#define FLAG_UNUSED_0x4A 0x4A
-#define FLAG_UNUSED_0x4B 0x4B
-#define FLAG_UNUSED_0x4C 0x4C
-#define FLAG_UNUSED_0x4D 0x4D
-#define FLAG_UNUSED_0x4E 0x4E
-#define FLAG_UNUSED_0x4F 0x4F
-#define FLAG_UNUSED_0x50 0x50
-#define FLAG_UNUSED_0x51 0x51
-#define FLAG_UNUSED_0x52 0x52
-#define FLAG_UNUSED_0x53 0x53
-#define FLAG_UNUSED_0x54 0x54
-#define FLAG_UNUSED_0x55 0x55
-#define FLAG_UNUSED_0x56 0x56
-#define FLAG_UNUSED_0x57 0x57
-#define FLAG_UNUSED_0x58 0x58
-#define FLAG_UNUSED_0x59 0x59
-#define FLAG_UNUSED_0x5A 0x5A
-#define FLAG_UNUSED_0x5B 0x5B
-#define FLAG_UNUSED_0x5C 0x5C
-#define FLAG_UNUSED_0x5D 0x5D
-#define FLAG_UNUSED_0x5E 0x5E
-#define FLAG_UNUSED_0x5F 0x5F
-#define FLAG_UNUSED_0x60 0x60
-#define FLAG_UNUSED_0x61 0x61
-#define FLAG_UNUSED_0x62 0x62
-#define FLAG_UNUSED_0x63 0x63
-#define FLAG_UNUSED_0x64 0x64
-#define FLAG_UNUSED_0x65 0x65
-#define FLAG_UNUSED_0x66 0x66
-#define FLAG_UNUSED_0x67 0x67
-#define FLAG_UNUSED_0x68 0x68
-#define FLAG_UNUSED_0x69 0x69
-#define FLAG_UNUSED_0x6A 0x6A
-#define FLAG_UNUSED_0x6B 0x6B
-#define FLAG_UNUSED_0x6C 0x6C
-#define FLAG_UNUSED_0x6D 0x6D
-#define FLAG_UNUSED_0x6E 0x6E
-#define FLAG_UNUSED_0x6F 0x6F
-#define FLAG_UNUSED_0x70 0x70
-#define FLAG_UNUSED_0x71 0x71
-#define FLAG_UNUSED_0x72 0x72
-#define FLAG_UNUSED_0x73 0x73
-#define FLAG_UNUSED_0x74 0x74
-#define FLAG_UNUSED_0x75 0x75
-#define FLAG_UNUSED_0x76 0x76
-#define FLAG_UNUSED_0x77 0x77
-#define FLAG_UNUSED_0x78 0x78
-#define FLAG_UNUSED_0x79 0x79
-#define FLAG_UNUSED_0x7A 0x7A
-#define FLAG_UNUSED_0x7B 0x7B
-#define FLAG_UNUSED_0x7C 0x7C
-#define FLAG_UNUSED_0x7D 0x7D
-#define FLAG_UNUSED_0x7E 0x7E
-#define FLAG_UNUSED_0x7F 0x7F
-
-#define END_OF_FLAGS FLAG_UNUSED_0x7F	
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef enum DIRECTION
 {
@@ -1017,10 +878,10 @@ void ReSortAdventureitems(void);
 
 void ReSortLearnableMovesFromMonster(struct DriveMonster* driveMonster);
 
-void SetGameFlag(uint8_t flag);
-void ClearGameFlag(uint8_t flag);
-void ClearTempGameFlags(void);
-
 void BlitItemDescription(char* description);
 
 BOOL CanPlayerAffordCurrencyCost(uint32_t currencycost);
+
+uint8_t* StringCopy(uint8_t* dest, const uint8_t* source);
+
+uint16_t Random16(void);

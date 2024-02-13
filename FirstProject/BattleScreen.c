@@ -9,6 +9,9 @@
 #include "Inventory.h"
 #include "OverWorld.h"
 
+#include "flags.h"
+#include "variables.h"
+
 ///////// combat variables
 
 //uint8_t StatusEffectPlayer = 0;           ////shouldnt store these here, because we want to retain these out of combat
@@ -1159,7 +1162,15 @@ void DrawBattleScreen(void)
             BattleTextLineCount = 0;
             sprintf_s((char*)gBattleTextLine[1], sizeof(gBattleTextLine[1]), "%s caught %s!", &gPlayer.Name, gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
             BattleTextLineCount++;
-            sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s was added to the party!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+            if (gPlayerPartyCount == MAX_PARTY_SIZE)
+            {
+                //ClearGameFlag(FLAG_DRIVE_IS_FULL_MSG);
+                sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s was sent to a drive!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+            }
+            else
+            {
+                sprintf_s((char*)gBattleTextLine[2], sizeof(gBattleTextLine[2]), "%s was added to the party!", gOpponentParty[gCurrentOpponentPartyMember].DriveMonster.nickname);
+            }
             BattleTextLineCount++;
             sprintf_s((char*)gBattleTextLine[3], sizeof(gBattleTextLine[3]), "%s gained %d Exp!", &gPlayerParty[gCurrentPartyMember].DriveMonster.nickname, CalculatedExpReward);
             BattleTextLineCount++;
@@ -3620,7 +3631,6 @@ FinishedDealingDamage:
 }
 
 
-//TODO: remove all of the elemental bonus/resistance checking and instead feed the output of GetElementalRelationship(); into this function along with damageBeforeElement and output modified damage
 //TODO: also include ability/move related immunities?? Examples from pokeemerald: levitate, flash fire, water absorb, lightning rod, etc. 
 // 
 //Bascially this function is where to turn multipliers into damage numbers
@@ -3792,7 +3802,7 @@ BOOL GenerateOpponentMove(uint8_t Opponent)
     return(WillOpponentUseAMove);
 }
 
-uint8_t OpponentChoosesMonsterFromParty(uint32_t flag_NPCAI)   //TODO: make FLAG_NPCAI impact what monster is chosen, instead of going numerically
+uint8_t OpponentChoosesMonsterFromParty(uint32_t flag_NPCAI)
 {
     uint8_t BestPartyMember = 0;
     uint8_t PartyValue[MAX_PARTY_SIZE] = { 0 };

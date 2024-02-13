@@ -27,7 +27,10 @@
 #include "InventoryItems.h"
 #include "MonsterData.h"
 #include "MonsterStatsScreen.h"
+#include "MonsterStorage.h"
 #include "StoreScreen.h"
+#include "variables.h"
+#include "flags.h"
 
 
 #pragma comment(lib, "Winmm.lib")
@@ -1108,7 +1111,7 @@ void Blit32BppBitmapToBuffer(_In_ GAMEBITMAP* GameBitmap, _In_ int16_t x, _In_ i
 
             memcpy_s(&BitmapPixel, sizeof(PIXEL32), (PIXEL32*)GameBitmap->Memory + BitmapOffset, sizeof(PIXEL32));     //copy contents of bitmap pixel
 
-            if (BitmapPixel.Colors.Alpha > 0)      ////not alpha blending, only drawing non 0 alpha pixels
+            if (BitmapPixel.Colors.Alpha > 0)      ////not alpha blending, only drawing non 0 alpha pixels TOUSE: alphablending possibly?? 
             {
                 BitmapPixel.Colors.Red = min(255, max((BitmapPixel.Colors.Red + BrightnessAdjustment), 0));
                 BitmapPixel.Colors.Green = min(255, max((BitmapPixel.Colors.Green + BrightnessAdjustment), 0));
@@ -2565,11 +2568,11 @@ Exit:
 
 void InitializeGlobals(void)
 {
+    SetSaveBlockPointers(sizeof(gPlayer.Seed));
 
-    for (uint8_t flags = START_OF_FLAGS; flags < END_OF_FLAGS + 1; flags++) //clear all flags
-    {
-        gGameFlags[flags] = FALSE;
-    }
+    ResetDriveStorageSystem();
+
+    ClearAllGameFlags();
 
     ASSERT(_countof(gPassableTiles) == NUM_PASSABLE_TILES, "The gPassableTiles array is the wrong size!");
 
@@ -2912,7 +2915,6 @@ void InitializeGlobals(void)
 // BorderColor is ignored and may be NULL if WINDOW_FLAG_BORDERED is not set.
 // Either the BORDERED or the OPAQUE flag needs to be set, or both, or else the window would just be
 // transparent and invisible. The window border will cut into the inside of the window area.
-// TODO: Implement a WINDOW_FLAG_ROUNDED?
 void DrawWindow(
     _In_opt_ uint16_t x,
     _In_opt_ uint16_t y,
@@ -3077,7 +3079,7 @@ void EnterDialogue(void)
 }
 
 //MAX characters per row = 32, MAX rows = 7, only input needed is text
-//TODO: use character "\n" with no spaces behind for next row (spaces after will indent)
+//Use character "\n" with no spaces behind for next row (spaces after will indent)
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags)
 {
     static uint8_t DialogueCharactersToShow;
@@ -3604,23 +3606,6 @@ void ReSortLearnableMovesFromMonster(struct DriveMonster* driveMonster)
     }
 }
 
-void SetGameFlag(uint8_t flag)
-{
-    gGameFlags[flag] = TRUE;
-}
-
-void ClearGameFlag(uint8_t flag)
-{
-    gGameFlags[flag] = FALSE;
-}
-
-void ClearTempGameFlags(void)
-{
-    for (uint8_t tempflag = FLAG_TEMP_1; tempflag < TEMP_FLAGS_END; tempflag++)
-    {
-        gGameFlags[tempflag] = FALSE;
-    }
-}
 
 void BlitItemDescription(char* description)
 {
@@ -3688,4 +3673,27 @@ BOOL CanPlayerAffordCurrencyCost(uint32_t currencycost)
     {
         return(FALSE);
     }
+}
+
+uint8_t* StringCopy(uint8_t* dest, const uint8_t* source)
+{
+    while (*source != END_OF_STRING)
+    {
+        *dest = *source; 
+        dest++;
+        source++;
+    }
+
+    *dest = END_OF_STRING;
+    return dest;
+}
+
+//returns a random 16 bit unsigned int
+uint16_t Random16(void)
+{
+    DWORD Random;
+    uint16_t Random16;
+    rand_s((unsigned int*)&Random);
+    Random16 = (uint16_t)Random;
+    return (Random16);
 }

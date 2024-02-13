@@ -193,7 +193,7 @@ void PPI_Overworld(void)
 
         double SprintEncounter = 1;
         double ItemEncounter = 1;
-        if (gPlayer.SprintingShoes == TRUE && !gGameInput.CtrlKeyPressed)           //TODO: make sprinting increase the odds of an encounter
+        if (gPlayer.SprintingShoes == TRUE && !gGameInput.CtrlKeyPressed)
         {
             gPlayer.Sprinting = TRUE;
             SprintEncounter = 1.5;
@@ -1149,7 +1149,7 @@ void TriggerNPCMovement(_In_ uint64_t Counter)
                 case (MOVEMENT_SPARKLE):
                 {
 
-                    ////TODO: Make this a function so we can call it for gSparkle02 and gSparkle03 and possibly others      //prob needs INGAMESPRITE and Counter as inputs to function
+                    ////TODO: MOVEMENT_SPARKLE02, MOVEMENT_SPARKLE_03, etc for more animations
 
                     gCharacterSprite[Index] = CharSpriteSparkleAnim(gCharacterSprite[Index], Counter, gSparkle01);
 
@@ -1365,7 +1365,7 @@ uint8_t PPI_BuySellBackBox(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-
+//TODO: Void returns 0??? should make this function return a bool and then test if the function returns error while attempting to transition so we can LOG/ASSERT
 void MapTransition(void)
 {
     uint8_t TransitionAreaIndex = gCurrentArea.Index;
@@ -1553,7 +1553,7 @@ INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ characterspr
     return(charactersprite);
 }
 
-
+//This will be used for item pickups that dissappear after aquiring them.
 //// ITEMTYPE_EQUIP = 0, ITEMTYPE_USE = 1, ITEMTYPE_VALUE = 2, ITEMTYPE_ADVENTURE = 3
 INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype)
 {

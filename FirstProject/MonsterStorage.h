@@ -11,18 +11,29 @@
 
 #define DRIVE_BACKGROUND_COUNT 8
 
-
+#define MOVE_BLOCK_RANGE 0x80
 
 struct MonsterStorage
 {
 	uint8_t CurrentDrive;
-	struct DriveMonster Drives[TOTAL_STORAGE_DRIVES][TOTAL_IN_DRIVE];
+	struct DriveMonster DriveSlots[TOTAL_STORAGE_DRIVES][TOTAL_IN_DRIVE];
 	uint8_t DriveName[TOTAL_STORAGE_DRIVES][DRIVE_NAME_LENGTH + 1];
 	uint8_t DriveBackground[TOTAL_STORAGE_DRIVES];
 
 };
 
+//address space layout randomization
+struct MonsterStorageASLR
+{
+	struct MonsterStorage block;
+	uint8_t aslr[MOVE_BLOCK_RANGE];
+};
+
 extern struct MonsterStorage *gMonsterStoragePtr;
+extern struct MonsterStorageASLR gMonsterStorageASLR;
+
+void SetDriveToSendMonster(uint8_t driveId);
+uint8_t GetDriveToSendMonster(void);
 
 uint8_t StorageGetCurrentDrive(void);
 
@@ -67,3 +78,5 @@ int16_t AdvanceStorageMonsterIndex(struct DriveMonster* driveMonster, uint8_t cu
 BOOL CheckFreeMonsterDriveSpace(void);
 
 uint32_t CountAllStorageMonsters(void);
+
+void ResetDriveStorageSystem(void);

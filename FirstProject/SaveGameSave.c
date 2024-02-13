@@ -2,6 +2,10 @@
 #include "SaveGameSave.h"
 #include "OverWorld.h"
 #include "InventoryItems.h"
+#include "MonsterStorage.h"
+
+#include "flags.h"
+#include "variables.h"
 
 MENUITEM gMI_SaveGameSave_Back = { "Back",(GAME_RES_WIDTH / 2) - (6 * 5 / 2) - 150, (GAME_RES_HEIGHT - 14), TRUE, MenuItem_SaveGameSave_Back };
 
@@ -247,23 +251,35 @@ void MenuItem_SaveGameSave_Slot1(void)
     char* item = malloc(20);
     for (uint8_t equip = 0; equip < NUM_EQUIP_ITEMS; equip++)
     {
-        snprintf(item, 20, "Equip%d", equip);
-        cJSON_AddNumberToObject(json, item, gEquipableItems[equip].Count);
+        if (gEquipableItems[equip].Count > 0 && gEquipableItems[equip].HasItem == TRUE)
+        {
+            snprintf(item, 20, "Equip%d", equip);
+            cJSON_AddNumberToObject(json, item, gEquipableItems[equip].Count);
+        }
     }
     for (uint8_t use = 0; use < NUM_USABLE_ITEMS; use++)
     {
-        snprintf(item, 20, "Use%d", use);
-        cJSON_AddNumberToObject(json, item, gUseableItems[use].Count);
+        if (gUseableItems[use].Count > 0 && gUseableItems[use].HasItem == TRUE)
+        {
+            snprintf(item, 20, "Use%d", use);
+            cJSON_AddNumberToObject(json, item, gUseableItems[use].Count);
+        }
     }
     for (uint8_t value = 0; value < NUM_VALUABLE_ITEMS; value++)
     {
-        snprintf(item, 20, "Value%d", value);
-        cJSON_AddNumberToObject(json, item, gValuableItems[value].Count);
+        if (gValuableItems[value].Count > 0 && gValuableItems[value].HasItem == TRUE)
+        {
+            snprintf(item, 20, "Value%d", value);
+            cJSON_AddNumberToObject(json, item, gValuableItems[value].Count);
+        }
     }
     for (uint8_t adventure = 0; adventure < NUM_ADVENTURE_ITEMS; adventure++)
     {
-        snprintf(item, 20, "Adventure%d", adventure);
-        cJSON_AddNumberToObject(json, item, gAdventureItems[adventure].Count);
+        if (gAdventureItems[adventure].Count > 0 && gAdventureItems[adventure].HasItem == TRUE)
+        {
+            snprintf(item, 20, "Adventure%d", adventure);
+            cJSON_AddNumberToObject(json, item, gAdventureItems[adventure].Count);
+        }
     }
 
     char* flag = malloc(16);
@@ -279,24 +295,34 @@ void MenuItem_SaveGameSave_Slot1(void)
     // convert the cJSON object to a JSON string 
     char* json_str = cJSON_Print(json);
 
+    ///////////////////////////////     needs function for writing large strings
+  
 
-    // write the JSON string to a file 
-    FILE* fp;
-#pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
-    fp = fopen("saveslot1.json", "w");
-#pragma warning(pop)
-    if (fp == NULL) {
-        ASSERT(FALSE, "Error: Unable to open the save file saveslot1.json for writing");
-        //return 1;
-    }
+        // write the JSON string to a file 
+//    FILE* fp;
+//#pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
+//    fp = fopen("saveslot1.json", "w");
+//#pragma warning(pop)
+//    if (fp == NULL) {
+//        ASSERT(FALSE, "Error: Unable to open the save file saveslot1.json for writing");
+//        //return 1;
+//    }
+//    printf("%s\n", json_str);
+//    fputs(json_str, fp);                            //BUG: fputs(); stops at buffer size 256, need to work around this
+//    fclose;
+//    
+//    // free the JSON string and cJSON object 
+//    cJSON_free(json_str);
+//    cJSON_Delete(json);
+
+
+    //////////////////////////////
+
+    //this function seems to do the job
     printf("%s\n", json_str);
-    fputs(json_str, fp);
-    fclose;
-    
-    // free the JSON string and cJSON object 
-    cJSON_free(json_str);
-    cJSON_Delete(json);
-    //return 0;
+    WriteLargeStringToJson(json_str);
+    //
+
     PlayGameSound(&gSoundMenuChoose);
 }
 
@@ -310,4 +336,62 @@ void MenuItem_SaveGameSave_Slot2(void)
 void MenuItem_SaveGameSave_Slot3(void)
 {
 
+}
+
+//#define CHUNK_SIZE  4096
+
+void WriteLargeStringToJson(char* string)
+{
+    size_t StringLength = strlen(string);
+
+    SYSTEMTIME Time = { 0 };
+
+    HANDLE FileHandle = INVALID_HANDLE_VALUE;
+
+    DWORD EndOfFile = 0;
+
+    DWORD NumberOfBytesWritten = 0;
+
+    //char FormattedString[4096] = { 0 };
+
+    int Error = 0;
+
+    //size_t chunks = StringLength / CHUNK_SIZE;
+    //size_t lastChunk_size = StringLength % CHUNK_SIZE;
+
+    if ((FileHandle = CreateFileA("saveslot1.json", FILE_APPEND_DATA, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
+    {
+        ASSERT(FALSE, "Failed to access save file!");
+    }
+
+    EndOfFile = SetFilePointer(FileHandle, 0, NULL, FILE_END);
+
+    WriteFile(FileHandle, string, (DWORD)StringLength, &NumberOfBytesWritten, NULL);
+
+    if (FileHandle != INVALID_HANDLE_VALUE)
+    {
+        CloseHandle(FileHandle);
+    }
+
+    //ideas for when strings get REALLY big...
+    /*while (chunks--)
+    {
+        if (write(STDOUT_FILENO, string, CHUNK_SIZE) < 0)
+        {
+            return 0;
+        }
+        string += CHUNK_SIZE;
+    }
+
+    if (write(STDOUT_FILENO, string, lastChunk_size) < 0)
+    {
+        return 0;
+    }
+
+    return 1;*/
+}
+
+uint16_t GetSaveBlockPointersBaseOffset(void)       ///TODO: if i need to offset save data pointer information
+{
+    uint16_t i, slotOffset;
 }

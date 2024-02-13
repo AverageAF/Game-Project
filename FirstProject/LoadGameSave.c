@@ -3,6 +3,10 @@
 #include "OverWorld.h"
 #include "MonsterData.h"
 #include "InventoryItems.h"
+#include "MonsterStorage.h"
+
+#include "flags.h"
+#include "variables.h"
 
 MENUITEM gMI_LoadGameSave_Back = { "Back",(GAME_RES_WIDTH / 2) - (6 * 5 / 2) - 150, (GAME_RES_HEIGHT - 14), TRUE, MenuItem_LoadGameSave_Back };
 
@@ -148,7 +152,7 @@ void MenuItem_LoadGameSave_Slot1(void)
     }
 
     //read the file contents into a string
-    char buffer[8192] = { 0 };
+    char buffer[16384] = { 0 };                         //TODO: move data to heap instead of asking for large stack, need to spend time messing around with heapalloc() to learn more about it
     int len = fread(buffer, 1, sizeof(buffer), fp);
     fclose(fp);
 
@@ -160,7 +164,6 @@ void MenuItem_LoadGameSave_Slot1(void)
             ASSERT(FALSE, "Error: %s\n", error_ptr);
         }
         cJSON_Delete(json);
-        //return 1;
     }
 
     // access the JSON data 
@@ -489,7 +492,7 @@ void MenuItem_LoadGameSave_Slot1(void)
     {
         snprintf(ItemIndex, 20, "Equip%d", equip);
         Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
-        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        if (cJSON_IsNumber(Item) && (Item->valueint != NULL))
         {
             gEquipableItems[equip].Count = Item->valueint;
             gEquipableItems[equip].HasItem = TRUE;
@@ -504,7 +507,7 @@ void MenuItem_LoadGameSave_Slot1(void)
     {
         snprintf(ItemIndex, 20, "Use%d", use);
         Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
-        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        if (cJSON_IsNumber(Item) && (Item->valueint != NULL))
         {
             gUseableItems[use].Count = Item->valueint;
             gUseableItems[use].HasItem = TRUE;
@@ -519,7 +522,7 @@ void MenuItem_LoadGameSave_Slot1(void)
     {
         snprintf(ItemIndex, 20, "Value%d", value);
         Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
-        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        if (cJSON_IsNumber(Item) && (Item->valueint != NULL))
         {
             gValuableItems[value].Count = Item->valueint;
             gValuableItems[value].HasItem = TRUE;
@@ -534,7 +537,7 @@ void MenuItem_LoadGameSave_Slot1(void)
     {
         snprintf(ItemIndex, 20, "Adventure%d", adventure);
         Item = cJSON_GetObjectItemCaseSensitive(json, ItemIndex);
-        if (cJSON_IsNumber(Item) && (Item->valueint != 0))
+        if (cJSON_IsNumber(Item) && (Item->valueint != NULL))
         {
             gAdventureItems[adventure].Count = Item->valueint;
             gAdventureItems[adventure].HasItem = TRUE;
@@ -560,12 +563,6 @@ void MenuItem_LoadGameSave_Slot1(void)
 
     //delete the JSON object
     cJSON_Delete(json);
-    //return 0;
-
-    /*if (buffer)
-    {
-        free(buffer);
-    }*/
 
     PlayGameSound(&gSoundMenuChoose);
 
@@ -597,4 +594,18 @@ void MenuItem_LoadGameSave_DeleteSlot2(void)
 void MenuItem_LoadGameSave_DeleteSlot3(void)
 {
 
+}
+
+//in pokeemerald offset is the sum of player's trainer ID bytes
+void SetSaveBlockPointers(uint16_t offset)          //TODO: if I use saveblocks for saving data, right now its just to set up empty monster storage boxes
+{
+    //struct SaveBlock1** save1_localVar = &gSaveBlockPtr;
+
+    offset = (offset + Random16()) & (MOVE_BLOCK_RANGE - 4);
+
+    //gSaveBlock2Ptr = (void*)(&gSaveBlock2) + offset;
+    //*save1_localVar = (void*)(&gSaveBlock1) + offset;
+    gMonsterStoragePtr = /*(void*)*/(&gMonsterStorageASLR) /*+ offset*/;
+
+    //SetInventoryItemPointers();
 }

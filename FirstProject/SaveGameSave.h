@@ -17,3 +17,5 @@ void MenuItem_SaveGameSave_Slot3(void);
 //void MenuItem_SaveGameSave_DeleteSlot2(void);
 //
 //void MenuItem_SaveGameSave_DeleteSlot3(void);
+
+void WriteLargeStringToJson(char* string);
