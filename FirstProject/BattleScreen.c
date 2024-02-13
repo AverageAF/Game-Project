@@ -3093,8 +3093,8 @@ BOOL CalculateSpeedPriorityIfPlayerMovesFirst(uint16_t speedStatPlayer, uint16_t
 
 uint16_t CalcDmgFromMonsterAToMonsterB(uint8_t AMonLevel, uint16_t AMonAtk, uint16_t BMonDef, uint16_t AMonPsi, uint16_t BMonRes, uint8_t AMovePower1, uint8_t AMovePower2, uint8_t AMovePower3, uint8_t AMoveSplit, BOOL IsMonAPlayer)
 {
-    DWORD Random;
-    uint16_t Random16;
+    //DWORD Random;
+    //uint16_t Random16;
 
     uint16_t PotentialDmg;
     uint16_t HighestRoll;
@@ -3534,17 +3534,10 @@ uint16_t CalcDmgFromMonsterAToMonsterB(uint8_t AMonLevel, uint16_t AMonAtk, uint
     HighestRoll = Power1 + Power2 + Power3;
     LowestRoll = HighestRoll * 0.85;
 
-    rand_s((unsigned int*)&Random);
-    Random16 = (uint16_t*)Random;
+    PotentialDmg = (Random16() % (HighestRoll - LowestRoll + 1)) + LowestRoll;
 
-    PotentialDmg = (Random16 % (HighestRoll - LowestRoll + 1)) + LowestRoll;
+    gWasLastMoveCriticalHit = FALSE;        ///old spot for crits, but need to reset here still because otherwise SPLIT_STATUS moves can cause buggy crits
 
-    gWasLastMoveCriticalHit = FALSE;
-    if (Random16 % 16 == 0 && AMoveSplit != SPLIT_STATUS && gLastMoveElementalBonus != ELEMENT_IMMUNE)
-    {
-        gWasLastMoveCriticalHit = TRUE;
-        PotentialDmg *= 1.5;
-    }
     return (PotentialDmg);
 }
 
@@ -3749,7 +3742,11 @@ uint16_t GetElementaBonusDamage(uint16_t damageBeforeElement, uint8_t elementalR
         }
     }
 
-
+    if (Random16() % 16 == 0 /*&& AMoveSplit != SPLIT_STATUS*/ && gLastMoveElementalBonus != ELEMENT_IMMUNE)        //moved crits here because they are required to have SPLIT_PHYS or SPLIT_PSI before this point
+    {
+        gWasLastMoveCriticalHit = TRUE;
+        DamageAfterElement *= 1.5;
+    }
 
     return(DamageAfterElement);
 }

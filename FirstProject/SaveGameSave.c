@@ -391,7 +391,7 @@ void WriteLargeStringToJson(char* string)
     return 1;*/
 }
 
-uint16_t GetSaveBlockPointersBaseOffset(void)       ///TODO: if i need to offset save data pointer information
-{
-    uint16_t i, slotOffset;
-}
+//uint16_t GetSaveBlockPointersBaseOffset(void)       ///TODO: if i need to offset save data pointer information
+//{
+//    uint16_t i, slotOffset;
+//}

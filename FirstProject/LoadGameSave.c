@@ -142,19 +142,85 @@ void MenuItem_LoadGameSave_Back(void)
 
 void MenuItem_LoadGameSave_Slot1(void)
 {
-    // open the file 
-#pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
+    char* buffer = NULL;
+
+    #pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
     FILE* fp = fopen("saveslot1.json", "r");
-#pragma warning(pop)
-    if (fp == NULL) {
+    #pragma warning(pop)
+
+    if (fp == NULL)
+    {
+        LogMessageA(LL_ERROR, "Unable to open save file saveslot1.json for reading");
         ASSERT(FALSE, "Unable to open save file saveslot1.json for reading");
-        //return 1;
+    }
+    else
+    {
+        //goto end of file
+        if (fseek(fp, 0L, SEEK_END) == 0)
+        {
+            //get size of file
+            long buffsize = ftell(fp);
+            if (buffsize == -1)
+            {
+                LogMessageA(LL_ERROR, "Unable to read file size, possible lack of null-terminator");
+                ASSERT(FALSE, "Unable to read file size, possible lack of null-terminator");
+            }
+            //allocate buffer to that size
+            buffer = malloc(sizeof(char) * (buffsize + 1));
+
+            //goto start of file
+            if (fseek(fp, 0L, SEEK_SET) != 0)
+            {
+                LogMessageA(LL_ERROR, "File pointer did not return to the start of the save file's contents");
+                ASSERT(FALSE, "File pointer did not return to the start of the save file's contents");
+            }
+
+            //read entire file into memory
+            size_t newLength = fread(buffer, sizeof(char), buffsize, fp);
+            if (ferror(fp) != 0)
+            {
+                LogMessageA(LL_ERROR, "Error attributing newLength of file in LoadGameSave.c");
+                ASSERT(FALSE, "Error attributing newLength of file in LoadGameSave.c");
+            }
+            else
+            {
+                //make sure to end with null-terminator
+                buffer[newLength++] = '\0';
+            }
+        }
+        //close the file
+        fclose(fp);
     }
 
-    //read the file contents into a string
-    char buffer[16384] = { 0 };                         //TODO: move data to heap instead of asking for large stack, need to spend time messing around with heapalloc() to learn more about it
-    int len = fread(buffer, 1, sizeof(buffer), fp);
-    fclose(fp);
+
+
+
+
+
+
+    //////////////////////////////                        //TODO: move data to heap instead of asking for large stack, need to spend time messing around with heapalloc() to learn more about it
+
+//    // open the file 
+//#pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
+//    FILE* fp = fopen("saveslot1.json", "r");
+//#pragma warning(pop)
+//    if (fp == NULL) {
+//        ASSERT(FALSE, "Unable to open save file saveslot1.json for reading");
+//        //return 1;
+//    }
+//
+//    //read the file contents into a string
+//    char buffer[16384] = { 0 }; 
+//    int len = fread(buffer, 1, sizeof(buffer), fp);
+//    fclose(fp);
+
+    //////////////////////////////
+
+
+
+
+
+
 
     // parse the JSON data 
     cJSON* json = cJSON_Parse(buffer);
@@ -563,6 +629,12 @@ void MenuItem_LoadGameSave_Slot1(void)
 
     //delete the JSON object
     cJSON_Delete(json);
+
+
+
+    //free malloc'ed buffer
+    free(buffer);
+
 
     PlayGameSound(&gSoundMenuChoose);
 
