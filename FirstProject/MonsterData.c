@@ -854,6 +854,11 @@ uint32_t GetDriveMonsterData(struct DriveMonster* driveMonster, int32_t field, u
             GetValue = driveMonster->Index;
             break;
         }
+        case MONSTER_DATA_HAS_INDEX:
+        {
+            GetValue = driveMonster->hasIndex;
+            break;
+        }
         case MONSTER_DATA_HELDITEM:
         {
             GetValue = driveMonster->HeldItem;

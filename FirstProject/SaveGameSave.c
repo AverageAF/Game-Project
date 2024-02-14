@@ -202,6 +202,89 @@ void MenuItem_SaveGameSave_Slot1(void)
         cJSON_AddNumberToObject(json, monsterinfo, gPlayerParty[Monster].DriveMonster.Moves[3]);
     }
 
+    if (CountAllStorageMonsters() != 0)
+    {
+        char* drivemonsterinfo = malloc(24);
+
+        for (uint8_t drive = 0; drive < TOTAL_STORAGE_DRIVES; drive++)
+        {
+            for (uint8_t driveslot = 0; driveslot < TOTAL_IN_DRIVE; driveslot++)
+            {
+                if (GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_HAS_INDEX) != FALSE && GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_INDEX) != MONSTER_NULL)
+                {
+                    uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1];
+                    GetDriveMonsterNicknameAt(drive, driveslot, nickname);
+                    uint8_t OTName[MAX_NAME_LENGTH + 1];
+                    GetDriveMonsterOTNameAt(drive, driveslot, OTName);
+                    snprintf(drivemonsterinfo, 24, "NicknameDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddStringToObject(json, drivemonsterinfo, nickname);
+                    snprintf(drivemonsterinfo, 24, "PlyrNameDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddStringToObject(json, drivemonsterinfo, OTName);
+
+
+                    snprintf(drivemonsterinfo, 24, "IndexDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_INDEX));
+                    snprintf(drivemonsterinfo, 24, "ExpDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_EXPERIENCE));
+                    snprintf(drivemonsterinfo, 24, "FriendDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_FRIENDSHIP));
+                    snprintf(drivemonsterinfo, 24, "PlyrSeedDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PLAYER_SEED));
+                    snprintf(drivemonsterinfo, 24, "MonsSeedDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MONSTER_SEED));
+                    snprintf(drivemonsterinfo, 24, "MetLvlDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MET_LEVEL));
+                    snprintf(drivemonsterinfo, 24, "MetLocDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MET_LOCATION));
+
+
+                    snprintf(drivemonsterinfo, 24, "HpGenesDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_HP_GENETICS));
+                    snprintf(drivemonsterinfo, 24, "AtkGenesDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_ATTACK_GENETICS));
+                    snprintf(drivemonsterinfo, 24, "DefGenesDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_DEFENSE_GENETICS));
+                    snprintf(drivemonsterinfo, 24, "PsiGenesDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PSI_GENETICS));
+                    snprintf(drivemonsterinfo, 24, "ResGenesDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_RESOLVE_GENETICS));
+                    snprintf(drivemonsterinfo, 24, "SpeGenesDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_SPEED_GENETICS));
+
+
+                    snprintf(drivemonsterinfo, 24, "HpTrainDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_HP_TRAINING));
+                    snprintf(drivemonsterinfo, 24, "AtkTrainDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_ATTACK_TRAINING));
+                    snprintf(drivemonsterinfo, 24, "DefTrainDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_DEFENSE_TRAINING));
+                    snprintf(drivemonsterinfo, 24, "PsiTrainDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PSI_TRAINING));
+                    snprintf(drivemonsterinfo, 24, "ResTrainDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_RESOLVE_TRAINING));
+                    snprintf(drivemonsterinfo, 24, "SpeTrainDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_SPEED_TRAINING));
+
+
+                    snprintf(drivemonsterinfo, 24, "SigMoveDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_SIGNATURE_MOVE));
+                    snprintf(drivemonsterinfo, 24, "AbilityDrive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_ABILITY_NUMBER));
+                    snprintf(drivemonsterinfo, 24, "Move1Drive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_1));
+                    snprintf(drivemonsterinfo, 24, "Move2Drive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_2));
+                    snprintf(drivemonsterinfo, 24, "Move3Drive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_3));
+                    snprintf(drivemonsterinfo, 24, "Move4Drive%dSlot%d", drive, driveslot);
+                    cJSON_AddNumberToObject(json, drivemonsterinfo, GetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_4));
+
+                }
+            }
+        }
+
+    }
+
     for (uint8_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
     {
         char* SpriteInfo = malloc(16);
@@ -295,33 +378,10 @@ void MenuItem_SaveGameSave_Slot1(void)
     // convert the cJSON object to a JSON string 
     char* json_str = cJSON_Print(json);
 
-    ///////////////////////////////     needs function for writing large strings
-  
-
-        // write the JSON string to a file 
-//    FILE* fp;
-//#pragma warning(suppress: 4996)         //compiler doesnt like fopen, but most programers online seem to agree its fairly safe
-//    fp = fopen("saveslot1.json", "w");
-//#pragma warning(pop)
-//    if (fp == NULL) {
-//        ASSERT(FALSE, "Error: Unable to open the save file saveslot1.json for writing");
-//        //return 1;
-//    }
-//    printf("%s\n", json_str);
-//    fputs(json_str, fp);                            //BUG: fputs(); stops at buffer size 256, need to work around this
-//    fclose;
-//    
-//    // free the JSON string and cJSON object 
-//    cJSON_free(json_str);
-//    cJSON_Delete(json);
-
-
-    //////////////////////////////
-
     //this function seems to do the job
     printf("%s\n", json_str);
     WriteLargeStringToJson(json_str);
-    //
+    ////
 
     PlayGameSound(&gSoundMenuChoose);
 }

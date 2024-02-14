@@ -16,7 +16,7 @@
 struct MonsterStorage
 {
 	uint8_t CurrentDrive;
-	struct DriveMonster DriveSlots[TOTAL_STORAGE_DRIVES][TOTAL_IN_DRIVE];
+	struct DriveMonster Drive[TOTAL_STORAGE_DRIVES][TOTAL_IN_DRIVE];
 	uint8_t DriveName[TOTAL_STORAGE_DRIVES][DRIVE_NAME_LENGTH + 1];
 	uint8_t DriveBackground[TOTAL_STORAGE_DRIVES];
 
@@ -48,6 +48,8 @@ uint32_t GetCurrentDriveMonsterData(uint8_t drivePos, int32_t field);
 void SetCurrentDriveMonsterData(uint8_t drivePos, int32_t field, const void* value);
 
 void GetDriveMonsterNicknameAt(uint8_t driveId, uint8_t drivePos, uint8_t* dest);
+
+void GetDriveMonsterOTNameAt(uint8_t driveId, uint8_t drivePos, uint8_t* dest);
 
 uint32_t GetDriveMonsterLevelAt(uint8_t driveId, uint8_t drivePos);
 

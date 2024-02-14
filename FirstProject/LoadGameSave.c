@@ -474,6 +474,189 @@ void MenuItem_LoadGameSave_Slot1(void)
         }
     }
 
+    for (uint8_t drive = 0; drive < TOTAL_STORAGE_DRIVES; drive++)
+    {
+        for (uint8_t driveslot = 0; driveslot < TOTAL_IN_DRIVE; driveslot++)
+        {
+            char* driveinfo = malloc(24);
+            cJSON* loadedinfo;
+            //uint8_t one = 1;
+
+            snprintf(driveinfo, 24, "NicknameDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsString(loadedinfo) && (loadedinfo->valuestring != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_NICKNAME, loadedinfo->valuestring);
+            }
+            snprintf(driveinfo, 24, "PlyrNameDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsString(loadedinfo) && (loadedinfo->valuestring != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PLAYER_NAME, loadedinfo->valuestring);
+            }
+
+
+            
+            snprintf(driveinfo, 24, "IndexDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_INDEX, &loadedinfo->valueint);
+                //SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_HAS_INDEX, &one);
+            }
+            snprintf(driveinfo, 24, "ExpDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_EXPERIENCE, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "FriendDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_FRIENDSHIP, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "PlyrSeedDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PLAYER_SEED, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "MonsSeedDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MONSTER_SEED, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "MetLvlDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MET_LEVEL, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "MetLocDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MET_LOCATION, &loadedinfo->valueint);
+            }
+
+
+            snprintf(driveinfo, 24, "HpGenesDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_HP_GENETICS, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "AtkGenesDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_ATTACK_GENETICS, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "DefGenesDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_DEFENSE_GENETICS, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "PsiGenesDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PSI_GENETICS, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "ResGenesDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_RESOLVE_GENETICS, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "SpeGenesDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_SPEED_GENETICS, &loadedinfo->valueint);
+            }
+
+
+            snprintf(driveinfo, 24, "HpTrainDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_HP_TRAINING, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "AtkTrainDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_ATTACK_TRAINING, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "DefTrainDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_DEFENSE_TRAINING, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "PsiTrainDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_PSI_TRAINING, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "ResTrainDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_RESOLVE_TRAINING, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "SpeTrainDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_SPEED_TRAINING, &loadedinfo->valueint);
+            }
+
+
+            snprintf(driveinfo, 24, "SigMoveDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_SIGNATURE_MOVE, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "AbilityDrive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_ABILITY_NUMBER, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "Move1Drive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_1, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "Move2Drive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_2, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "Move3Drive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_3, &loadedinfo->valueint);
+            }
+            snprintf(driveinfo, 24, "Move4Drive%dSlot%d", drive, driveslot);
+            loadedinfo = cJSON_GetObjectItemCaseSensitive(json, driveinfo);
+            if (cJSON_IsNumber(loadedinfo) && (loadedinfo->valueint != NULL))
+            {
+                SetDriveMonsterDataAt(drive, driveslot, MONSTER_DATA_MOVE_4, &loadedinfo->valueint);
+            }
+        }
+    }
+
     char* InfoName = malloc(16);
     cJSON* SpriteInfo;
     for (uint8_t sprite = 0; sprite < NUM_CHAR_SPRITES; sprite++)
