@@ -87,3 +87,5 @@ void MonsterToBattleMonster(struct Monster* source, struct BattleMonster* dest);
 uint8_t* StringCopy_NickName(uint8_t* dest, const uint8_t* source);
 
 BOOL TryIncrementMonsterLevel(struct Monster* monster);
+
+int8_t CompactPlayerPartySlots(void);

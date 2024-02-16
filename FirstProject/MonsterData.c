@@ -1411,3 +1411,32 @@ BOOL TryIncrementMonsterLevel(struct Monster* monster)
         return(TRUE);
     }
 }
+
+//returns -1 if no slots were compacted
+int8_t CompactPlayerPartySlots(void)
+{
+    int8_t returnvalue = -1;
+    uint8_t partyslot, lastslot;
+
+    for (partyslot = 0, lastslot = 0; partyslot < MAX_PARTY_SIZE; partyslot++)
+    {
+        uint16_t monindex = GetMonsterData(&gPlayerParty[partyslot], MONSTER_DATA_INDEX, NULL);
+        if (monindex != MONSTER_NULL)
+        {
+            if (partyslot != lastslot)
+            {
+                gPlayerParty[lastslot] = gPlayerParty[partyslot];
+            }
+            lastslot++;
+        }
+        else if (returnvalue == -1)
+        {
+            returnvalue = partyslot;
+        }
+    }
+    for (; lastslot < MAX_PARTY_SIZE; lastslot++)
+    {
+        ZeroMonsterData(&gPlayerParty[lastslot]);
+    }
+    return(returnvalue);
+}
