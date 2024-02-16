@@ -1230,7 +1230,7 @@ BOOL SendMonsterToDrive(struct Monster* monster)
     uint8_t driveId, drivePos;
 
     SetDriveToSendMonster(GetGameVar(VAR_DRIVE_ID_TO_SEND_MONSTER));
-    driveId = StorageGetCurrentDrive();     //TODO:nullpointer
+    driveId = StorageGetCurrentDrive();
     do
     {
         for (drivePos = 0; drivePos < TOTAL_IN_DRIVE; drivePos++)

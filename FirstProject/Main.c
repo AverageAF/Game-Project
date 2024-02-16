@@ -29,6 +29,8 @@
 #include "MonsterStatsScreen.h"
 #include "MonsterStorage.h"
 #include "StoreScreen.h"
+#include "DriveStorageMenu.h"
+
 #include "variables.h"
 #include "flags.h"
 
@@ -563,6 +565,11 @@ void ProcessPlayerInput(void)
             PPI_StoreScreen();
             break;
         }
+        case GAMESTATE_DRIVE_STORAGE:
+        {
+            PPI_StorageMenu();
+            break;
+        }
         default:
         {
             ASSERT(FALSE, "Unknown GameState for player input!")
@@ -695,30 +702,32 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    gCharacterSprite[4].WorldPos.x = 192;
-    gCharacterSprite[4].WorldPos.y = 192;
-    gCharacterSprite[4].ResetWorldPos.x = 192;
-    gCharacterSprite[4].ResetWorldPos.x = 192;
-    gCharacterSprite[4].ResetOriginWorldPos.x = 192;
-    gCharacterSprite[4].ResetOriginWorldPos.y = 192;
+    gCharacterSprite[4].WorldPos.x = 288;
+    gCharacterSprite[4].WorldPos.y = 4480;
+    gCharacterSprite[4].ResetWorldPos.x = 288;
+    gCharacterSprite[4].ResetWorldPos.x = 4480;
+    gCharacterSprite[4].ResetOriginWorldPos.x = 288;
+    gCharacterSprite[4].ResetOriginWorldPos.y = 4480;
     gCharacterSprite[4].Direction = DOWN;
     gCharacterSprite[4].ResetDirection = DOWN;
-    gCharacterSprite[4].Event = EVENT_FLAG_STORE;
+    gCharacterSprite[4].Event = EVENT_FLAG_DRIVE_STORAGE;
     gCharacterSprite[4].Movement = MOVEMENT_STILL;
     gCharacterSprite[4].Visible = FALSE;
     gCharacterSprite[4].Exists = TRUE;
     gCharacterSprite[4].Loaded = FALSE;
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_0] = "Do you want to buy something?";
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_1] = "I have all sorts of wares!";
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_2] = "Buy something!";
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_9] = "Come again!";
+    gCharacterSprite[4].GameAreaIndex = 2;
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_0] = "You opened up the\nMonster Drive Storage System!";
     gCharacterSprite[4].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[4].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
+    gCharacterSprite[4].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
     gCharacterSprite[4].DialogueLoopReturn = DIALOGUE_FLAG_0;
 
-    gStoreType[4] = 4;
+    /*gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_0] = "Do you want to buy something?";
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_1] = "I have all sorts of wares!";
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_2] = "Buy something!";
+    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_9] = "Come again!";*/
 
-    sprintf_s(gCharacterSprite[4].Name, sizeof(gCharacterSprite[4].Name), "Items");
+    //gStoreType[4] = 4;
+    //sprintf_s(gCharacterSprite[4].Name, sizeof(gCharacterSprite[4].Name), "Items");
 
     //////////////////////////////////////////////////////////////
 
@@ -982,6 +991,11 @@ void RenderFrameGraphics(void)
         case GAMESTATE_STORE:
         {
             DrawStoreScreen();
+            break;
+        }
+        case GAMESTATE_DRIVE_STORAGE:
+        {
+            DrawStorageMenuScreen();
             break;
         }
         default:

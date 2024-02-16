@@ -285,7 +285,7 @@ void DrawInventoryScreen(void)
 
     BlitBackgroundToBuffer(&gOverWorld01.GameBitmap, BrightnessAdjustment);
 
-    if ((gCurrentPockets == POCKETSTATE_MONSTER) || (gCurrentPockets == POCKETSTATE_MONSTER_SELECT))
+    if ((gCurrentPockets == POCKETSTATE_MONSTER) || (gCurrentPockets == POCKETSTATE_MONSTER_SELECT))    //main menu window
     {
         DrawWindow(192, 1, 184, 192, &COLOR_NES_WHITE, &COLOR_FORREST_GREEN, &COLOR_DARK_GRAY, WINDOW_FLAG_VERT_CENTERED | WINDOW_FLAG_BORDERED | WINDOW_FLAG_OPAQUE | WINDOW_FLAG_SHADOWED);
     }

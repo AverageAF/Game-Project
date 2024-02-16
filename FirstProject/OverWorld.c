@@ -885,7 +885,7 @@ void PPI_Overworld(void)
                                             gCurrentGameState = GAMESTATE_INVENTORYSCREEN;
                                             gPreviousPockets = gCurrentPockets;
                                             gCurrentPockets = POCKETSTATE_VALUABLE;
-                                            gSellingItems = TRUE;
+                                            gSellingItems = TRUE;       //sell mode
                                             gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
                                             gCharacterSprite[Index].InteractedWith = FALSE;
                                             gGamePaused = FALSE;
@@ -922,6 +922,27 @@ void PPI_Overworld(void)
                                         gCharacterSprite[Index].DialogueFlag++;
                                         gDialogueControls = FALSE;
                                     }
+                                }
+                                break;
+                            }
+                            case EVENT_FLAG_DRIVE_STORAGE:
+                            {
+                                if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for extra dialogue while booting storage
+                                {
+                                    
+                                    gPreviousGameState = gCurrentGameState;
+                                    gCurrentGameState = GAMESTATE_DRIVE_STORAGE;
+                                    gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                                    gCharacterSprite[Index].InteractedWith = FALSE;
+                                    gGamePaused = FALSE;
+                                    gDialogueControls = FALSE;
+                                    gOverWorldControls = TRUE;
+                                    gPostDialogueMenu = FALSE;
+                                }
+                                else
+                                {
+                                    gCharacterSprite[Index].DialogueFlag++;
+                                    gDialogueControls = FALSE;
                                 }
                                 break;
                             }
