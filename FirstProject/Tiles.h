@@ -278,14 +278,190 @@
 
 #define TILE_ROCK_05 138
 
+#define TILE_HOUSE_WALL_04 139
+
+#define TILE_HOUSE_WALL_05 140
+
+#define TILE_HOUSE_WALL_06 141
+
+#define TILE_HOUSE_WALL_07 142
+
+#define TILE_HOUSE_WALL_08 143
+
+#define TILE_HOUSE_WALL_09 144
+
+#define TILE_HOUSE_WALL_03 145
+
+#define TILE_WOODFLOOR_21 146		//passable
+
+#define TILE_WOODFLOOR_22 147		//passable
+
+#define TILE_WOODFLOOR_15 148
+
+#define TILE_WOODFLOOR_16 149
+
+#define TILE_WOODFLOOR_17 150		//passable
+
+#define TILE_WOODFLOOR_18 151		//passable
+
+#define TILE_WOODFLOOR_23 152		//passable
+
+#define TILE_WOODFLOOR_24 153		//passable
+
+#define TILE_WOODFLOOR_27 154
+
+#define TILE_WOODFLOOR_28 155
+
+#define TILE_WOODFLOOR_25 156
+
+#define TILE_WOODFLOOR_26 157
+
+#define TILE_WOODFLOOR_31 158
+
+#define TILE_WOODFLOOR_32 159
+
+#define TILE_WOODFLOOR_33 160
+
+#define TILE_WOODFLOOR_34 161
+
+#define TILE_WOODFLOOR_35 162		//passable		//teleport
+
+#define TILE_HOUSE_WALL_10 163
+
+#define TILE_LAB_WALL_01 164		//passable
+
+#define TILE_LAB_WALL_02 165
+
+#define TILE_LAB_WALL_03 166
+
+#define TILE_LAB_WALL_04 167
+
+#define TILE_LAB_WALL_05 168
+
+#define TILE_LAB_WALL_06 169
+
+#define TILE_LAB_WALL_07 170
+
+#define TILE_LAB_WALL_08 171
+
+#define TILE_LAB_WALL_09 172
+
+#define TILE_LAB_WALL_10 173
+
+#define TILE_LAB_WALL_11 174
+
+#define TILE_LAB_WALL_12 175
+
+#define TILE_LAB_WALL_13 176
+
+#define TILE_LAB_FLOOR_01 177		//passable
+
+#define TILE_LAB_FLOOR_02 178		//passable
+
+#define TILE_LAB_FLOOR_03 179		//passable
+
+#define TILE_LAB_FLOOR_04 180		//passable
+
+#define TILE_LAB_FLOOR_05 181
+
+#define TILE_LAB_FLOOR_06 182		//passable
+
+#define TILE_LAB_FLOOR_07 183		//passable
+
+#define TILE_LAB_FLOOR_08 184		//passable
+
+#define TILE_LAB_FLOOR_09 185
+
+#define TILE_LAB_FLOOR_10 186
+
+#define TILE_LAB_FLOOR_11 187
+
+#define TILE_LAB_FLOOR_12 188
+
+#define TILE_LAB_FLOOR_13 189		//passable
+
+#define TILE_LAB_FLOOR_14 190		//passable
+
+#define TILE_LAB_FLOOR_15 191		//passable
+
+#define TILE_LAB_FLOOR_16 192		//passable
+
+#define TILE_LAB_FLOOR_17 193		//passable
+
+#define TILE_LAB_FLOOR_18 194
+
+#define TILE_LAB_FLOOR_19 195
+
+#define TILE_LAB_FLOOR_20 196
+
+#define TILE_LAB_FLOOR_21 197
+
+#define TILE_LAB_FLOOR_24 198
+
+#define TILE_LAB_FLOOR_25 199
+
+#define TILE_LAB_FLOOR_26 200
+
+#define TILE_LAB_FLOOR_27 201
+
+#define TILE_LAB_FLOOR_28 202
+
+#define TILE_LAB_FLOOR_29 203
+
+#define TILE_LAB_FLOOR_30 204
+
+#define TILE_LAB_FLOOR_31 205
+
+#define TILE_LAB_FLOOR_32 206
+
+#define TILE_LAB_FLOOR_33 207
+
+#define TILE_LAB_WALL_14 208
+
+#define TILE_LAB_WALL_15 209
+
+#define TILE_LAB_FLOOR_34 210		//passable
+
+#define TILE_LAB_FLOOR_35 211		//passable
+
+#define TILE_LAB_FLOOR_36 212
+
+#define TILE_LAB_FLOOR_37 213
+
+#define TILE_HOUSE_WALL_11 214
+
+#define TILE_WOODFLOOR_36 215		//passable			//teleport
+
+#define TILE_WOODFLOOR_52 216		//passable
+
+#define TILE_WOODFLOOR_51 217		//passable
+
+#define TILE_WOODFLOOR_50 218
+
+#define TILE_WOODFLOOR_49 219		//passable
+
+#define TILE_WOODFLOOR_48 220		//passable
+
+#define TILE_WOODFLOOR_47 221
+
+#define TILE_WOODFLOOR_46 222		//passable
+
+#define TILE_WOODFLOOR_45 223		//passable
+
+#define TILE_WOODFLOOR_43 224		//passable
+
+#define TILE_WOODFLOOR_19 225
+
+#define TILE_WOODFLOOR_20 226
 
 
-#define NUM_TILES 138
 
-#define NUM_PASSABLE_TILES 43
+#define NUM_TILES 226
+
+#define NUM_PASSABLE_TILES 74
 
 #define NUM_ENCOUNTER_TILES 2
 
 #define NUM_CLIFF_TILES 2
 
-#define NUM_TELEPORT_TILES 3
+#define NUM_TELEPORT_TILES 5

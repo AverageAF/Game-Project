@@ -933,6 +933,7 @@ void PPI_Overworld(void)
                                     gPreviousGameState = gCurrentGameState;
                                     gCurrentGameState = GAMESTATE_DRIVE_STORAGE;
                                     gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                                    gCharacterSprite[Index].Direction = gCharacterSprite[Index].ResetDirection;
                                     gCharacterSprite[Index].InteractedWith = FALSE;
                                     gGamePaused = FALSE;
                                     gDialogueControls = FALSE;
@@ -1225,7 +1226,7 @@ void TeleportPlayerBlackOut(void)
 {
     StopGameMusic();
 
-    gCurrentArea = gHome01Area;
+    gCurrentArea = gHomeArea;
     LoadUnloadSpritesVIAGameArea();
 
     gPlayer.ScreenPos.x = 192; 

@@ -98,6 +98,14 @@
 [+] File size 1078
 [+] FileName: ManFacingUp2.bmpx
 [+] File ManFacingUp2.bmpx Successfully added to archive Assets.dat.
+[+] File .\Assets\StorageComputerOff.bmpx opened for reading.
+[+] File size 1078
+[+] FileName: StorageComputerOff.bmpx
+[+] File StorageComputerOff.bmpx Successfully added to archive Assets.dat.
+[+] File .\Assets\StorageComputerOn.bmpx opened for reading.
+[+] File size 1078
+[+] FileName: StorageComputerOn.bmpx
+[+] File StorageComputerOn.bmpx Successfully added to archive Assets.dat.
 [+] File .\Assets\SmallBag.bmpx opened for reading.
 [+] File size 1078
 [+] FileName: SmallBag.bmpx
@@ -287,6 +295,6 @@
 [+] FileName: SplashNoise2.wav
 [+] File SplashNoise2.wav Successfully added to archive Assets.dat.
 [+] File .\Assets\Maps\Overworld01.tmx opened for reading.
-[+] File size 191011
+[+] File size 196316
 [+] FileName: Overworld01.tmx
 [+] File Overworld01.tmx Successfully added to archive Assets.dat.

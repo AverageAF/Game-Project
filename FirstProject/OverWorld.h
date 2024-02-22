@@ -47,7 +47,7 @@ TransitionArea gTransitionAreas[NUM_TRANS_AREAS][MAX_TRANS_PERMAP];	//5 is possi
 
 BOOL gHasPlayerTransitioned;
 
-#define UNIQUE_TELEPADS_COUNT 8
+#define UNIQUE_TELEPADS_COUNT 12
 
 PORTCOORDS gPortCoords[UNIQUE_TELEPADS_COUNT];
 
@@ -59,15 +59,19 @@ PORTCOORDS gTeleport004;
 PORTCOORDS gTeleport005;
 PORTCOORDS gTeleport006;
 PORTCOORDS gTeleport007;
+PORTCOORDS gTeleport008;
+PORTCOORDS gTeleport009;
+PORTCOORDS gTeleport010;
+PORTCOORDS gTeleport011;
 
-#define NUM_GAME_AREAS 9
+#define NUM_GAME_AREAS 10
 
 GAMEAREA gCurrentArea;
 
 GAMEAREA gOverworldArea;	////TODO change to fit new gamemap size, used to know the size of the whole map
 
 
-GAMEAREA gHome01Area;
+GAMEAREA gHomeArea;
 
 GAMEAREA gStartingTownArea;
 
@@ -83,7 +87,9 @@ GAMEAREA gBattleTown02Area;
 
 GAMEAREA gGameAreas[NUM_GAME_AREAS];
 
-GAMEAREA gDungeon01Area;
+GAMEAREA gStartingLabArea;
+
+GAMEAREA gBedroomArea;
 
 #define NUM_ENCOUNTER_AREAS 9
 

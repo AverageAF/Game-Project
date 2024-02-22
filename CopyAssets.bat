@@ -33,6 +33,8 @@ MyMiniz.exe Assets.dat + .\Assets\ManFacingRight2.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp0.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp1.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\ManFacingUp2.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\StorageComputerOff.bmpx >> CopyAssets.log
+MyMiniz.exe Assets.dat + .\Assets\StorageComputerOn.bmpx >> CopyAssets.log
 MyMiniz.exe Assets.dat + .\Assets\SmallBag.bmpx >> CopyAssets.log
 
 REM	-sparkle sprites-

@@ -708,8 +708,8 @@ DWORD InitializeSprites(void)
     gCharacterSprite[4].ResetWorldPos.x = 4480;
     gCharacterSprite[4].ResetOriginWorldPos.x = 288;
     gCharacterSprite[4].ResetOriginWorldPos.y = 4480;
-    gCharacterSprite[4].Direction = DOWN;
-    gCharacterSprite[4].ResetDirection = DOWN;
+    gCharacterSprite[4].Direction = UP;
+    gCharacterSprite[4].ResetDirection = UP;
     gCharacterSprite[4].Event = EVENT_FLAG_DRIVE_STORAGE;
     gCharacterSprite[4].Movement = MOVEMENT_STILL;
     gCharacterSprite[4].Visible = FALSE;
@@ -2460,18 +2460,18 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "ManFacingUp0.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_0] },
         {   "ManFacingUp1.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_1] },
         {   "ManFacingUp2.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_2] },
-        {   "ManFacingDown0.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_0] },
-        {   "ManFacingDown1.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_1] },
-        {   "ManFacingDown2.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_2] },
-        {   "ManFacingLeft0.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_0] },
-        {   "ManFacingLeft1.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_1] },
-        {   "ManFacingLeft2.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_2] },
-        {   "ManFacingRight0.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingRight1.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_1] },
-        {   "ManFacingRight2.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_2] },
-        {   "ManFacingUp0.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_0] },
-        {   "ManFacingUp1.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_1] },
-        {   "ManFacingUp2.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_2] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_0] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_1] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_2] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_0] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_1] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_2] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_0] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_1] },
+        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_2] },
+        {   "StorageComputerOff.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_0] },
+        {   "StorageComputerOff.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_1] },
+        {   "StorageComputerOff.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_2] },
         {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_0] },
         {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_1] },
         {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_2] },
@@ -2636,6 +2636,37 @@ void InitializeGlobals(void)
     gPassableTiles[40] = TILE_SLOPE_56;
     gPassableTiles[41] = TILE_TELEPORT03;
     gPassableTiles[42] = TILE_STONEFLOOR_02;
+    gPassableTiles[43] = TILE_WOODFLOOR_21;
+    gPassableTiles[44] = TILE_WOODFLOOR_22;
+    gPassableTiles[45] = TILE_WOODFLOOR_17;
+    gPassableTiles[46] = TILE_WOODFLOOR_18;
+    gPassableTiles[47] = TILE_WOODFLOOR_23;
+    gPassableTiles[48] = TILE_WOODFLOOR_24;
+    gPassableTiles[49] = TILE_WOODFLOOR_35;
+    gPassableTiles[50] = TILE_LAB_FLOOR_01;
+    gPassableTiles[51] = TILE_LAB_FLOOR_02;
+    gPassableTiles[52] = TILE_LAB_FLOOR_03;
+    gPassableTiles[53] = TILE_LAB_FLOOR_04;
+    gPassableTiles[54] = TILE_LAB_FLOOR_06;
+    gPassableTiles[55] = TILE_LAB_FLOOR_07;
+    gPassableTiles[56] = TILE_LAB_FLOOR_08;
+    gPassableTiles[57] = TILE_LAB_FLOOR_13;
+    gPassableTiles[58] = TILE_LAB_FLOOR_14;
+    gPassableTiles[59] = TILE_LAB_FLOOR_15;
+    gPassableTiles[60] = TILE_LAB_FLOOR_16;
+    gPassableTiles[61] = TILE_LAB_FLOOR_17;
+    gPassableTiles[62] = TILE_LAB_FLOOR_34;
+    gPassableTiles[63] = TILE_LAB_FLOOR_35;
+    gPassableTiles[64] = TILE_WOODFLOOR_36;
+    gPassableTiles[65] = TILE_WOODFLOOR_52;
+    gPassableTiles[66] = TILE_WOODFLOOR_51;
+    gPassableTiles[67] = TILE_WOODFLOOR_49;
+    gPassableTiles[68] = TILE_WOODFLOOR_48;
+    gPassableTiles[69] = TILE_WOODFLOOR_46;
+    gPassableTiles[70] = TILE_WOODFLOOR_45;
+    gPassableTiles[71] = TILE_WOODFLOOR_43;
+    gPassableTiles[72] = TILE_WOODFLOOR_02;
+    gPassableTiles[73] = TILE_LAB_WALL_01;
 
     gEncounterTiles[0] = TILE_TALLGRASS_01;
     gEncounterTiles[1] = TILE_STONEBRICKS_FLOOR_01;
@@ -2646,6 +2677,8 @@ void InitializeGlobals(void)
     gTeleportTiles[0] = TILE_TELEPORT01;
     gTeleportTiles[1] = TILE_HOUSEOUTSIDE_03;
     gTeleportTiles[2] = TILE_TELEPORT03;
+    gTeleportTiles[3] = TILE_WOODFLOOR_35;
+    gTeleportTiles[4] = TILE_WOODFLOOR_36;
 
 
     gOverworldArea = (GAMEAREA){ .Name = "Overworld",
@@ -2654,7 +2687,7 @@ void InitializeGlobals(void)
                                  .Index = 0 };
 
     //spawn point
-    gHome01Area = (GAMEAREA){ .Name = "Home",
+    gHomeArea = (GAMEAREA){ .Name = "Home",
                                  .Area = (RECT){.left = 3856, .top = 256, .right = 4240, .bottom = 496 },
                                  .Music = &gMusicOverWorld01,
                                  .Index = 1 };
@@ -2694,22 +2727,28 @@ void InitializeGlobals(void)
 
     //"inside" locations i.e. caves, houses, etc
 
-    gDungeon01Area = (GAMEAREA){ .Name = "Dungeon 01",
+    gStartingLabArea = (GAMEAREA){ .Name = "Labratory",
                                  .Area = (RECT){.left = 3856, .top = 0, .right = 4240, .bottom = 240 },
-                                 .Music = &gMusicDungeon01,
+                                 .Music = &gMusicOverWorld01,
                                  .Index = 8 };   
 
-    gCurrentArea = gHome01Area;
+    gBedroomArea = (GAMEAREA){ .Name = "Your bedroom",
+                                 .Area = (RECT){.left = 3856, .top = 512, .right = 4240, .bottom = 752 },
+                                 .Music = &gMusicOverWorld01,
+                                 .Index = 9 };
+
+    gCurrentArea = gHomeArea;
 
     gGameAreas[0] = gOverworldArea;
-    gGameAreas[1] = gHome01Area;
+    gGameAreas[1] = gHomeArea;
     gGameAreas[2] = gStartingTownArea;
     gGameAreas[3] = gRoute01Area;
     gGameAreas[4] = gBattleTown01Area;
     gGameAreas[5] = gForest01Area;
     gGameAreas[6] = gRoute02Area;
     gGameAreas[7] = gBattleTown02Area;
-    gGameAreas[8] = gDungeon01Area;
+    gGameAreas[8] = gStartingLabArea;
+    gGameAreas[9] = gBedroomArea;
 
     ASSERT(_countof(gGameAreas) == NUM_GAME_AREAS, "Array gGameAreas is the wrong size!");
  
@@ -2865,7 +2904,7 @@ void InitializeGlobals(void)
 
 
     ////from starttown to home
-    gTeleport002 = (PORTCOORDS){ .AreaDest = gHome01Area,
+    gTeleport002 = (PORTCOORDS){ .AreaDest = gHomeArea,
                                     .CameraDest = (UPOINT)  {.x = 3856, .y = 256 },    //3856, 256 dest
                                     .PortDestIndex = 3,       //4048, 432
                                     .WorldPos = (UPOINT) {.x = 256,  .y = 4496 },     
@@ -2911,6 +2950,38 @@ void InitializeGlobals(void)
                                     .WorldPos = (UPOINT) {.x = 368,  .y = 4304 },
     };
 
+
+    ////from home to bedroom
+    gTeleport008 = (PORTCOORDS){ .AreaDest = gBedroomArea,
+                                    .CameraDest = (UPOINT)  {.x = 3856, .y = 512 },
+                                    .PortDestIndex = 9,
+                                    .WorldPos = (UPOINT) {.x = 4112,  .y = 320 },   //4048, 592
+    };
+
+
+    ////from bedroom to home
+    gTeleport009 = (PORTCOORDS){ .AreaDest = gHomeArea,
+                                    .CameraDest = (UPOINT)  {.x = 3856, .y = 256 },
+                                    .PortDestIndex = 8,
+                                    .WorldPos = (UPOINT) {.x = 4080,  .y = 592 },   //4112, 320
+    };
+
+
+    ////from starttown to lab
+    gTeleport010 = (PORTCOORDS){ .AreaDest = gStartingLabArea,
+                                    .CameraDest = (UPOINT)  {.x = 3856, .y = 0 },
+                                    .PortDestIndex = 11,
+                                    .WorldPos = (UPOINT) {.x = 416,  .y = 4528 },   //3952, 272
+    };
+
+
+    ////from lab to starttown
+    gTeleport011 = (PORTCOORDS){ .AreaDest = gStartingTownArea,
+                                    .CameraDest = (UPOINT)  {.x = 176, .y = 4400 },  //96, 4400
+                                    .PortDestIndex = 10,
+                                    .WorldPos = (UPOINT) {.x = 3952,  .y = 208 },   //416, 4528
+    };
+
     gPortCoords[0] = gTeleport000;
     gPortCoords[1] = gTeleport001;
     gPortCoords[2] = gTeleport002;
@@ -2919,6 +2990,10 @@ void InitializeGlobals(void)
     gPortCoords[5] = gTeleport005;
     gPortCoords[6] = gTeleport006;
     gPortCoords[7] = gTeleport007;
+    gPortCoords[8] = gTeleport008;
+    gPortCoords[9] = gTeleport009;
+    gPortCoords[10] = gTeleport010;
+    gPortCoords[11] = gTeleport011;
 
 }
 
