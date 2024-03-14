@@ -620,6 +620,8 @@ typedef struct PLAYER
 
 } PLAYER;
 
+#define NUM_SPRITES_PALLET 12
+
 typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Sprites"
 {
 	char Name[MAX_NAME_LENGTH + 1];
@@ -627,7 +629,7 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	POINT ScreenPos;
 	DIRECTION Direction;
 	uint8_t SpriteIndex;
-	GAMEBITMAP Sprite[12];
+	GAMEBITMAP Sprite[NUM_SPRITES_PALLET];
 	MOVEMENTTYPE Movement;
 	uint8_t MovementRemaining;
 	BOOL Visible;

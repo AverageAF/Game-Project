@@ -621,27 +621,39 @@ DWORD InitializeSprites(void)
 
     ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
 
-    gCharacterSprite[1].WorldPos.x = 3872;
-    gCharacterSprite[1].WorldPos.y = 16;
-    gCharacterSprite[1].ResetWorldPos.x = 3872;
-    gCharacterSprite[1].ResetWorldPos.y = 16;
-    gCharacterSprite[1].ResetOriginWorldPos.x = 3872;
-    gCharacterSprite[1].ResetOriginWorldPos.y = 16;
+    gCharacterSprite[1].WorldPos.x = 4032;
+    gCharacterSprite[1].WorldPos.y = 656;
+    gCharacterSprite[1].ResetWorldPos.x = 4032;
+    gCharacterSprite[1].ResetWorldPos.y = 656;
+    gCharacterSprite[1].ResetOriginWorldPos.x = 4032;
+    gCharacterSprite[1].ResetOriginWorldPos.y = 656;
     gCharacterSprite[1].Direction = DOWN;
     gCharacterSprite[1].ResetDirection = DOWN;
-    gCharacterSprite[1].Movement = MOVEMENT_SPIN;
+    gCharacterSprite[1].Movement = MOVEMENT_STILL;
     gCharacterSprite[1].Visible = FALSE;
     gCharacterSprite[1].Exists = TRUE;
     gCharacterSprite[1].Loaded = FALSE;
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_0] = "Wow!\nThis place is dark!";
+    gCharacterSprite[1].GameAreaIndex = 9;
+    gCharacterSprite[1].Event = EVENT_FLAG_HEAL;
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_0] = "You decided to rest for a while.";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_1] = "...";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_2] = "...";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_3] = "...";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_4] = "...";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_5] = "...";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_6] = "...";
+    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_7] = "After sleeping a while \nyour party feels better!";
     gCharacterSprite[1].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[1].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
+    gCharacterSprite[1].DialoguesBeforeLoop = DIALOGUE_FLAG_7;
     gCharacterSprite[1].DialogueLoopReturn = DIALOGUE_FLAG_0;
 
+    //TODO: make this a function EmptyCharSprite();
 
-    gCharacterSprite[1].Event = EVENT_FLAG_MONSTER;
-    gCharacterSprite[1].EventMonsterIndex = MONSTER_EARTHWOLF;
-    gCharacterSprite[1].EventMonsterLevel = 14;
+    /*for (uint8_t spritevalue = 0; spritevalue < NUM_SPRITES_PALLET; spritevalue++)
+    {
+        gCharacterSprite[1].Sprite[spritevalue] = gEmptySprite;
+    }*/
+
 
     //////////////////////////////////////////////////////////////
 
@@ -688,7 +700,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[3].Event = EVENT_FLAG_HEAL;
     gCharacterSprite[3].Movement = MOVEMENT_STILL;
     gCharacterSprite[3].Visible = FALSE;
-    gCharacterSprite[3].Exists = TRUE;
+    gCharacterSprite[3].Exists = FALSE;
     gCharacterSprite[3].Loaded = FALSE;
     gCharacterSprite[3].GameAreaIndex = 2;
     gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_0] = "Let me heal your monsters!";
@@ -817,12 +829,12 @@ DWORD InitializeSprites(void)
 
 DWORD InitializePlayer(void)
 {
-    gPlayer.ScreenPos.x = 192;      //368 positions for top right corner            //192 for top left corner                   x192 y69
-    gPlayer.ScreenPos.y = 96;       //0                                             //32
-    gPlayer.WorldPos.x = 4048;       //3824                                          //192                                      x4048 y352 new spawn
-    gPlayer.WorldPos.y = 352;        //0                                             //32
+    gPlayer.ScreenPos.x = 208;      //368 positions for top right corner            //192 for top left corner                   x192 y69
+    gPlayer.ScreenPos.y = 128;       //0                                             //32
+    gPlayer.WorldPos.x = 4064;       //3824                                          //192                                      x4048 y352 new spawn
+    gPlayer.WorldPos.y = 640;        //0                                             //32
     gCamera.x = 3856;                  //3456                                          //0                                         x3856 y256 camera pos new spawn
-    gCamera.y = 256;                  //0                                             //0
+    gCamera.y = 512;                  //0                                             //0
     gPlayer.CurrentSuit = SUIT_0;
     gPlayer.Direction = DOWN;
     gPlayer.RandomEncounterPercent = 200;   //50 == a 5% chance
@@ -2424,18 +2436,18 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "ManFacingUp0.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_0] },
         {   "ManFacingUp1.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_1] },
         {   "ManFacingUp2.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_2] },
-        {   "ManFacingDown0.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_0] },
-        {   "ManFacingDown1.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_1] },
-        {   "ManFacingDown2.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_2] },
-        {   "ManFacingLeft0.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_0] },
-        {   "ManFacingLeft1.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_1] },
-        {   "ManFacingLeft2.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_2] },
-        {   "ManFacingRight0.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingRight1.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_1] },
-        {   "ManFacingRight2.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_2] },
-        {   "ManFacingUp0.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_0] },
-        {   "ManFacingUp1.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_1] },
-        {   "ManFacingUp2.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_2] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_0] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_1] },
+        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_2] },
         {   "ManFacingDown0.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_0] },
         {   "ManFacingDown1.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_1] },
         {   "ManFacingDown2.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_2] },
@@ -2541,6 +2553,7 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "Wolf64Front09.bmpx", &gBattleSpriteFront[MONSTER_LIFEWOLF] },
         {   "Wolf64Back10.bmpx", &gBattleSpriteBack[MONSTER_DEATHWOLF] },
         {   "Wolf64Front10.bmpx", &gBattleSpriteFront[MONSTER_DEATHWOLF] },
+        {   "EmptySprite.bmpx", &gEmptySprite },
     };
 
     int FinalEssentialAssetIndex = 1;
@@ -2737,7 +2750,7 @@ void InitializeGlobals(void)
                                  .Music = &gMusicOverWorld01,
                                  .Index = 9 };
 
-    gCurrentArea = gHomeArea;
+    gCurrentArea = gBedroomArea;
 
     gGameAreas[0] = gOverworldArea;
     gGameAreas[1] = gHomeArea;
