@@ -2773,7 +2773,7 @@ void MenuItem_BattleScreen_EscapeButton(void)
 
                 if (PlayerLostBattle == FALSE)      //only reset EVENT_FLAG_BATTLE and SightRange when player has won the fight, otherwise allow for re-battle
                 {
-                    gCharacterSprite[Index].Event = EVENT_FLAG_NONE;
+                    gCharacterSprite[Index].Event = EVENT_FLAG_TALK;
                     gCharacterSprite[Index].SightRange = 0;
                     gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
                 }

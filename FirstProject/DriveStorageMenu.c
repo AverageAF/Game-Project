@@ -391,7 +391,8 @@ void PPI_StorageMenu(void)
             {
                 //switch marked party with selected drive
 
-                //TODO:
+                //TODO: works right now
+
                 struct Monster TempMonster = gPlayerParty[gMarkedPartySlot];
 
                 ConvDriveMonsterAtToMonster(gCurrentDrive, gSelectedDriveSlot64, &gPlayerParty[gMarkedPartySlot]);
@@ -416,7 +417,7 @@ void PPI_StorageMenu(void)
         {
             //switch marked drive with selected party
 
-            //TODO:
+            //TODO: works right now
 
             struct Monster TempMonster = gPlayerParty[gSelectedPartySlot];
 

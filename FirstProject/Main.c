@@ -1,6 +1,7 @@
 
 #pragma warning(push, 3)
 #include <stdio.h>
+//#include <stdarg.h>
 #include <windows.h>
 #include <psapi.h>
 #include <emmintrin.h>
@@ -489,7 +490,7 @@ void ProcessPlayerInput(void)
     }
     
 
-    if ((gInputEnabled == FALSE) || (gWindowHasFocus == FALSE))
+    if ((gInputEnabled == FALSE) /*|| (gWindowHasFocus == FALSE)*/)
     {
         goto InputDisabled;
     }
@@ -607,8 +608,8 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].Event = EVENT_FLAG_MONSTER;
     gCharacterSprite[0].EventMonsterIndex = MONSTER_WOLF;
     gCharacterSprite[0].EventMonsterLevel = 6;
-    gCharacterSprite[0].Movement = MOVEMENT_WALK_LEFT_RIGHT;
-    gCharacterSprite[0].MovementRange.y = 5;
+    gCharacterSprite[0].Movement = MOVEMENT_WALK_UP_DOWN;
+    gCharacterSprite[0].MovementRange.y = 3;
     gCharacterSprite[0].MovementRange.x = 5;
     gCharacterSprite[0].Visible = FALSE;
     gCharacterSprite[0].Exists = TRUE;
@@ -689,15 +690,15 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    gCharacterSprite[3].WorldPos.x = 352 + 32;
-    gCharacterSprite[3].WorldPos.y = 4544 + 32;
-    gCharacterSprite[3].ResetWorldPos.x = 352 + 32;
-    gCharacterSprite[3].ResetWorldPos.x = 4544 + 32;
-    gCharacterSprite[3].ResetOriginWorldPos.x = 352 + 32;
-    gCharacterSprite[3].ResetOriginWorldPos.y = 4544 + 32;
+    gCharacterSprite[3].WorldPos.x = 528;
+    gCharacterSprite[3].WorldPos.y = 4624;
+    gCharacterSprite[3].ResetWorldPos.x = 528;
+    gCharacterSprite[3].ResetWorldPos.x = 4624;
+    gCharacterSprite[3].ResetOriginWorldPos.x = 528;
+    gCharacterSprite[3].ResetOriginWorldPos.y = 4624;
     gCharacterSprite[3].Direction = DOWN;
     gCharacterSprite[3].ResetDirection = DOWN;
-    gCharacterSprite[3].Event = EVENT_FLAG_HEAL;
+    gCharacterSprite[3].Event = EVENT_FLAG_TALK;
     gCharacterSprite[3].Movement = MOVEMENT_STILL;
     gCharacterSprite[3].Visible = FALSE;
     gCharacterSprite[3].Exists = FALSE;
@@ -824,6 +825,23 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
+    gCharacterSprite[8].WorldPos.x = 352;
+    gCharacterSprite[8].WorldPos.y = 4544;
+    gCharacterSprite[8].ResetWorldPos.x = 352;
+    gCharacterSprite[8].ResetWorldPos.x = 4544;
+    gCharacterSprite[8].ResetOriginWorldPos.x = 352;
+    gCharacterSprite[8].ResetOriginWorldPos.y = 4544;
+    gCharacterSprite[8].Direction = DOWN;
+    gCharacterSprite[8].ResetDirection = DOWN;
+    gCharacterSprite[8].Event = EVENT_FLAG_TRIGGER_ONCE;
+    gCharacterSprite[8].Movement = MOVEMENT_TRIGGER;
+    gCharacterSprite[8].Visible = FALSE;
+    gCharacterSprite[8].Exists = TRUE;
+    gCharacterSprite[8].Loaded = FALSE;
+    gCharacterSprite[8].GameAreaIndex = 2;
+
+    //////////////////////////////////////////////////////////////
+
     return (0);
 }
 
@@ -879,7 +897,7 @@ void BlitStringToBuffer(_In_ char* String, _In_ GAMEBITMAP* FontSheet, _In_ PIXE
 
 
     uint16_t CharWidth = (uint16_t)FontSheet->BitmapInfo.bmiHeader.biWidth / FONT_SHEET_CHARACTERS_PER_ROW;
-    uint16_t CharHeight = (uint16_t)FontSheet->BitmapInfo.bmiHeader.biHeight;      // only one row
+    uint16_t CharHeight = (uint16_t)FontSheet->BitmapInfo.bmiHeader.biHeight;      // only one row, otherwise: biHeight / FONT_SHEET_CHARACHTERS_PER_COLUMN
     uint16_t BytesPerCharacter = (CharWidth * CharHeight * (FontSheet->BitmapInfo.bmiHeader.biBitCount / 8));
     uint16_t StringLength = (uint16_t)strlen(String);
 
@@ -2405,7 +2423,7 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
 
     ASSET Assets[] = {
         {   "PixelFont(6x7).bmpx", &g6x7Font },
-        {   "SplashNoise.wav", &gSoundSplashScreen },           // last essential asset
+        {   "SplashNoise.wav", &gSoundSplashScreen },           // last essential asset before main menu
         {   "Overworld01.bmpx", &gOverWorld01.GameBitmap },
         {   "Overworld01.tmx", &gOverWorld01.TileMap },
         {   "menu.wav", &gSoundMenuNavigate },
@@ -2595,6 +2613,7 @@ Exit:
 
 void InitializeGlobals(void)
 {
+    //TODO: saveblocks and pointers
     SetSaveBlockPointers(sizeof(gPlayer.Seed));
 
     ResetDriveStorageSystem();
@@ -2693,7 +2712,7 @@ void InitializeGlobals(void)
     gTeleportTiles[3] = TILE_WOODFLOOR_35;
     gTeleportTiles[4] = TILE_WOODFLOOR_36;
 
-
+    //whole game map
     gOverworldArea = (GAMEAREA){ .Name = "Overworld",
                                  .Area = (RECT){.left = 0, .top = 0, .right = 4240, .bottom = 4800 },
                                  .Music = &gMusicOverWorld01,
@@ -3175,6 +3194,7 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
 
 void EnterDialogue(void)
 {
+    //&gSoundSurprised or something
     PlayGameSound(&gSoundMenuChoose);
     gGamePaused = TRUE;
     gOverWorldControls = FALSE;

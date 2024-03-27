@@ -1,6 +1,29 @@
 #pragma once
 
+#define MAX_MOVEMENT_SCRIPTS 16
 
+typedef enum MOVEMENT_SCRIPT
+{
+	MOVE_NULL,
+	FACE_DOWN,	//only changes direction
+	FACE_LEFT,
+	FACE_UP,
+	FACE_RIGHT,
+	WALK_DOWN,	//changes direction and adds movement for 1 tile
+	WALK_LEFT,
+	WALK_UP,
+	WALK_RIGHT,
+	WALK_BW_DOWN,	//does NOT change direction but applies movement
+	WALK_BW_LEFT,
+	WALK_BW_UP,
+	WALK_BW_RIGHT,
+	DELAY_16,		//does nothing for specified number of frames (60fps locked)
+	DELAY_32,
+	DELAY_48,
+	DELAY_64,
+	DIALOGUE_TRIGGER,	//triggers a dialogue box to appear, when dialogue is finished allow player to press 'E' to advance to next dialogue, or if it the last, advance to the next script
+
+}MOVEMENT_SCRIPT;
 
 typedef struct PORTCOORDS
 {
@@ -152,3 +175,11 @@ INGAMESPRITE CharSpriteSparkleAnim(INGAMESPRITE _Inout_ charactersprite, uint16_
 INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
 
 INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
+
+void CharSpriteDrawHandler(uint16_t BrightnessAdjustment);
+
+void CharSpriteInteractionHandler(uint64_t LocalFrameCounter);
+
+void DisplayDebugTiles(void);
+
+BOOL ApplyMovementSprite(_In_ uint8_t spriteId, _In_ MOVEMENT_SCRIPT* movementscriptarray, _In_ uint16_t xstart, _In_ uint16_t ystart, _In_ BOOL removeSpriteAfterScript);
