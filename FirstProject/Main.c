@@ -241,6 +241,13 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
         goto Exit;
     }
 
+    if (InitializeTriggers() != ERROR_SUCCESS)
+    {
+        LogMessageA(LL_ERROR, "[%s] Failed to initialize Script Triggers!", __FUNCTION__);
+        MessageBoxA(NULL, "Failed to Initialize Script Triggers!", "Error!", MB_ICONERROR | MB_OK);
+        goto Exit;
+    }
+
     while (gGameIsRunning == TRUE) //basic message loop
     {
         QueryPerformanceCounter((LARGE_INTEGER*)&FrameStart);
@@ -490,7 +497,7 @@ void ProcessPlayerInput(void)
     }
     
 
-    if ((gInputEnabled == FALSE) /*|| (gWindowHasFocus == FALSE)*/)
+    if ((gInputEnabled == FALSE) || (gWindowHasFocus == FALSE))
     {
         goto InputDisabled;
     }
@@ -600,7 +607,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[0].WorldPos.x = 352;
     gCharacterSprite[0].WorldPos.y = 4544;
     gCharacterSprite[0].ResetWorldPos.x = 352;
-    gCharacterSprite[0].ResetWorldPos.x = 4544;
+    gCharacterSprite[0].ResetWorldPos.y = 4544;
     gCharacterSprite[0].ResetOriginWorldPos.x = 352;
     gCharacterSprite[0].ResetOriginWorldPos.y = 4544;
     gCharacterSprite[0].Direction = LEFT;
@@ -693,12 +700,12 @@ DWORD InitializeSprites(void)
     gCharacterSprite[3].WorldPos.x = 528;
     gCharacterSprite[3].WorldPos.y = 4624;
     gCharacterSprite[3].ResetWorldPos.x = 528;
-    gCharacterSprite[3].ResetWorldPos.x = 4624;
+    gCharacterSprite[3].ResetWorldPos.y = 4624;
     gCharacterSprite[3].ResetOriginWorldPos.x = 528;
     gCharacterSprite[3].ResetOriginWorldPos.y = 4624;
     gCharacterSprite[3].Direction = DOWN;
     gCharacterSprite[3].ResetDirection = DOWN;
-    gCharacterSprite[3].Event = EVENT_FLAG_TALK;
+    gCharacterSprite[3].Event = EVENT_FLAG_HEAL;
     gCharacterSprite[3].Movement = MOVEMENT_STILL;
     gCharacterSprite[3].Visible = FALSE;
     gCharacterSprite[3].Exists = FALSE;
@@ -718,7 +725,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[4].WorldPos.x = 288;
     gCharacterSprite[4].WorldPos.y = 4480;
     gCharacterSprite[4].ResetWorldPos.x = 288;
-    gCharacterSprite[4].ResetWorldPos.x = 4480;
+    gCharacterSprite[4].ResetWorldPos.y = 4480;
     gCharacterSprite[4].ResetOriginWorldPos.x = 288;
     gCharacterSprite[4].ResetOriginWorldPos.y = 4480;
     gCharacterSprite[4].Direction = UP;
@@ -747,7 +754,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[5].WorldPos.x = 352 + 64;
     gCharacterSprite[5].WorldPos.y = 4544 + 64;
     gCharacterSprite[5].ResetWorldPos.x = 352 + 64;
-    gCharacterSprite[5].ResetWorldPos.x = 4544 + 64;
+    gCharacterSprite[5].ResetWorldPos.y = 4544 + 64;
     gCharacterSprite[5].ResetOriginWorldPos.x = 352 + 64;
     gCharacterSprite[5].ResetOriginWorldPos.y = 4544 + 64;
     gCharacterSprite[5].Direction = DOWN;
@@ -771,7 +778,7 @@ DWORD InitializeSprites(void)
     gCharacterSprite[6].WorldPos.x = 608;
     gCharacterSprite[6].WorldPos.y = 4464;
     gCharacterSprite[6].ResetWorldPos.x = 608;
-    gCharacterSprite[6].ResetWorldPos.x = 4464;
+    gCharacterSprite[6].ResetWorldPos.y = 4464;
     gCharacterSprite[6].ResetOriginWorldPos.x = 608;
     gCharacterSprite[6].ResetOriginWorldPos.y = 4464;
     gCharacterSprite[6].Direction = DOWN;
@@ -825,10 +832,13 @@ DWORD InitializeSprites(void)
 
     //////////////////////////////////////////////////////////////
 
-    gCharacterSprite[8].WorldPos.x = 352;
+    //trigger tile
+    //TODO: make trigger tiles instead of using invisible NPC's as trigger tiles
+
+    /*gCharacterSprite[8].WorldPos.x = 352;
     gCharacterSprite[8].WorldPos.y = 4544;
     gCharacterSprite[8].ResetWorldPos.x = 352;
-    gCharacterSprite[8].ResetWorldPos.x = 4544;
+    gCharacterSprite[8].ResetWorldPos.y = 4544;
     gCharacterSprite[8].ResetOriginWorldPos.x = 352;
     gCharacterSprite[8].ResetOriginWorldPos.y = 4544;
     gCharacterSprite[8].Direction = DOWN;
@@ -838,11 +848,28 @@ DWORD InitializeSprites(void)
     gCharacterSprite[8].Visible = FALSE;
     gCharacterSprite[8].Exists = TRUE;
     gCharacterSprite[8].Loaded = FALSE;
-    gCharacterSprite[8].GameAreaIndex = 2;
+    gCharacterSprite[8].GameAreaIndex = 2;*/
 
     //////////////////////////////////////////////////////////////
 
     return (0);
+}
+
+DWORD InitializeTriggers(void)
+{
+    gTriggerTiles[0].WorldPos.x = 352;
+    gTriggerTiles[0].WorldPos.y = 4544;
+    gTriggerTiles[0].Flag = TRIGGER_FLAG_ONCE;
+    gTriggerTiles[0].Exists = TRUE;
+    gTriggerTiles[0].Loaded = FALSE;
+    gTriggerTiles[0].Interactive = FALSE;
+    gTriggerTiles[0].GameAreaIndex = 2;
+
+    /////////////////////////////////////////////////
+
+
+
+    return(0);
 }
 
 DWORD InitializePlayer(void)
@@ -3191,13 +3218,19 @@ void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Ino
     TextColor->Colors.Green = (uint8_t)(min(255, max(0, DefaultTextColor.Colors.Green + LocalBrightnessAdjustment)));
 }
 
-
 void EnterDialogue(void)
 {
     //&gSoundSurprised or something
     PlayGameSound(&gSoundMenuChoose);
     gGamePaused = TRUE;
     gOverWorldControls = FALSE;
+}
+
+void ExitDialogue(void)
+{
+    gGamePaused = FALSE;
+    gDialogueControls = FALSE;
+    gOverWorldControls = TRUE;
 }
 
 //MAX characters per row = 32, MAX rows = 7, only input needed is text

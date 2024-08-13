@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_MOVEMENT_SCRIPTS 16
+#define MAX_MOVEMENT_SCRIPTS 255
 
 typedef enum MOVEMENT_SCRIPT
 {
@@ -22,8 +22,19 @@ typedef enum MOVEMENT_SCRIPT
 	DELAY_48,
 	DELAY_64,
 	DIALOGUE_TRIGGER,	//triggers a dialogue box to appear, when dialogue is finished allow player to press 'E' to advance to next dialogue, or if it the last, advance to the next script
+	START_OF_SCRIPT,
+	END_OF_SCRIPT,
 
 }MOVEMENT_SCRIPT;
+
+
+typedef struct SCENE_SCRIPT
+{
+	MOVEMENT_SCRIPT Script;
+	uint8_t Actor;
+
+} SCENE_SCRIPT;
+
 
 typedef struct PORTCOORDS
 {
@@ -166,9 +177,10 @@ void ModifyCharVisibility(void);
 void DrawBuySellBackBox(void);
 uint8_t PPI_BuySellBackBox(void);
 
-void MapTransition(void);
+BOOL MapTransition(void);
 
 void LoadUnloadSpritesVIAGameArea(void);
+void LoadUnloadTriggerVIAGameArea(void);
 
 INGAMESPRITE CharSpriteSparkleAnim(INGAMESPRITE _Inout_ charactersprite, uint16_t _In_ counter, GAMEBITMAP _In_ sparkletype[]);
 
@@ -178,8 +190,28 @@ INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ characte
 
 void CharSpriteDrawHandler(uint16_t BrightnessAdjustment);
 
-void CharSpriteInteractionHandler(uint64_t LocalFrameCounter);
+BOOL CharSpriteInteractionHandler(uint64_t LocalFrameCounter);
 
 void DisplayDebugTiles(void);
 
-BOOL ApplyMovementSprite(_In_ uint8_t spriteId, _In_ MOVEMENT_SCRIPT* movementscriptarray, _In_ uint16_t xstart, _In_ uint16_t ystart, _In_ BOOL removeSpriteAfterScript);
+BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xstart, _In_ uint16_t ystart, _In_ BOOL removeSpriteAfterScript);
+
+BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId);
+
+void InitiateDialogueAndCutscene(uint64_t counter);
+
+void TurnNPCToPlayerStartDialogue(void);
+
+void HandlePlayerCollision(void);
+
+void HandleCameraPlayerMovementAndCharVisibility(void);
+
+void HandleTileFunctions(void);
+
+void HandleNPCEvent(void);
+
+BOOL IsPlayerOnTrigger(uint8_t index);
+
+BOOL TriggerInteractionHandler(void);
+
+BOOL InteractWithTrigger(void);

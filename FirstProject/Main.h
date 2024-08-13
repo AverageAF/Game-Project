@@ -105,6 +105,7 @@
 #define MAX_MONSTER_NAME_LENGTH 12					//12 characters + 1 null
 #define MAX_MOVE_NAME_LENGTH 23					//23 characters + 1 null
 #define NUM_CHAR_SPRITES 16						//total sprites
+#define NUM_TRIGGERS 16							//total trigger tiles in the game
 #define MAX_DIALOGUE_BOXES 10
 #define MAX_PARTY_SIZE 6
 #define MAX_NONSIGNATURE_MOVES 4
@@ -188,8 +189,8 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 	EVENT_FLAG_BATLLE,
 	EVENT_FLAG_HEAL,
 	//TODO TRIGGER_INFINITE vs TRIGGER_ONCE
-	EVENT_FLAG_TRIGGER_INFINITE,
-	EVENT_FLAG_TRIGGER_ONCE,
+	//EVENT_FLAG_TRIGGER_INFINITE,
+	//EVENT_FLAG_TRIGGER_ONCE,
 	EVENT_FLAG_EQUIPITEM_ONCE,
 	EVENT_FLAG_USEITEM_ONCE,
 	EVENT_FLAG_VALUEITEM_ONCE,
@@ -207,6 +208,18 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 	EVENT_FLAG_ADVENTUREITEM_NOSPRITE,
 	EVENT_FLAG_DRIVE_STORAGE,
 } EVENT_FLAGS;
+
+typedef enum TRIGGER_FLAGS
+{
+	//TODO:
+	TRIGGER_FLAG_NULL,
+	TRIGGER_FLAG_BLANK,
+	TRIGGER_FLAG_ONCE,
+	TRIGGER_FLAG_INFINITE,
+	TRIGGER_FLAG_COOLDOWN,
+	//TRIGGER_FLAG_STORY????
+
+} TRIGGER_FLAGS;
 
 typedef enum WINDOW_FLAGS
 {
@@ -245,7 +258,7 @@ typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 	MOVEMENT_WALK_LEFT_RIGHT,
 	MOVEMENT_SPARKLE,
 	MOVEMENT_ITEMPICKUP,
-	MOVEMENT_TRIGGER,
+	//MOVEMENT_TRIGGER,
 
 } MOVEMENTTYPE;
 
@@ -655,16 +668,30 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	uint8_t DialogueLoopReturn;
 	uint8_t AnimationFrame;
 	BOOL InteractedWith;
-	uint8_t Event;
+	EVENT_FLAGS Event;
 	uint16_t EventItemsIndex[MAX_ITEMS_GIVE];
 	uint16_t EventItemsCount[MAX_ITEMS_GIVE];
 	uint8_t EventMonsterIndex;
 	uint8_t EventMonsterLevel;
 	uint16_t EventMonsterItem;
+
+	//TODO: get rid of this and instead have a giant array of all opponent parties in the game and reference that list when battling
 	struct Monster MonsterParty[MAX_PARTY_SIZE];
 	uint8_t BattleAiFlag;
 
 } INGAMESPRITE;
+
+typedef struct TRIGGER_TILE
+{
+	UPOINT WorldPos;
+	BOOL Exists;
+	BOOL Loaded;
+	BOOL Interactive;			//can the player press "e" on it? or do they walk over it to trigger the event
+	uint16_t GameAreaIndex;
+	BOOL InteractedWith;
+	TRIGGER_FLAGS Flag;
+
+} TRIGGER_TILE;
 
 typedef struct REGISTRYPARAMS
 {
@@ -752,6 +779,7 @@ BOOL gFinishedDialogueTextAnimation;		//allows for dialogue text animation to re
 BOOL gFinishedBattleTextAnimation;			//same as above but for battles
 
 INGAMESPRITE gCharacterSprite[NUM_CHAR_SPRITES];
+TRIGGER_TILE gTriggerTiles[NUM_TRIGGERS];
 
 GAMEBITMAP gLootPickup;
 
@@ -867,6 +895,8 @@ void DrawWindow( _In_opt_ uint16_t x, _In_opt_ uint16_t y, _In_ int16_t Width, _
 void ApplyFadeIn(_In_ uint64_t FrameCounter, _In_ PIXEL32 DefaultTextColor, _Inout_ PIXEL32* TextColor, _Inout_opt_ int16_t* BrightnessAdjustment);
 
 void EnterDialogue(void);
+
+void ExitDialogue(void);
 
 void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DWORD Flags);
 
