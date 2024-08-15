@@ -311,6 +311,31 @@ enum MONSTER_DATA
 
 };
 
+typedef enum MOVEMENT_SCRIPT
+{
+	MOVE_NULL,
+	FACE_DOWN,	//only changes direction
+	FACE_LEFT,
+	FACE_UP,
+	FACE_RIGHT,
+	WALK_DOWN,	//changes direction and adds movement for 1 tile
+	WALK_LEFT,
+	WALK_UP,
+	WALK_RIGHT,
+	WALK_BW_DOWN,	//does NOT change direction but applies movement
+	WALK_BW_LEFT,
+	WALK_BW_UP,
+	WALK_BW_RIGHT,
+	DELAY_16,		//does nothing for specified number of frames (60fps locked)
+	DELAY_32,
+	DELAY_48,
+	DELAY_64,
+	DIALOGUE_TRIGGER,	//triggers a dialogue box to appear, when dialogue is finished allow player to press 'E' to advance to next dialogue, or if it the last, advance to the next script
+	START_OF_SCRIPT,
+	END_OF_SCRIPT,
+
+}MOVEMENT_SCRIPT;
+
 typedef struct UPOINT		//used for character screen position
 {
 	uint16_t x;
@@ -406,6 +431,15 @@ typedef union PIXEL32
 	DWORD Bytes;
 
 } PIXEL32;
+
+#define MAX_MOVEMENT_SCRIPTS 255
+
+typedef struct SCENE_SCRIPT
+{
+	MOVEMENT_SCRIPT Script;
+	uint8_t Actor;
+
+} SCENE_SCRIPT;
 
 typedef struct GAME_PERFORMANCE_DATA
 {
@@ -822,6 +856,7 @@ const struct BattleMove gBattleMoves[NUM_BATTLEMOVES];
 const struct BaseStats gBaseStats[];
 const uint32_t gExperienceTables[][MAX_LEVEL + 1];
 const struct LevelUpMove* const gLevelUpMoves[NUM_MONSTERS];
+const SCENE_SCRIPT const gSceneScriptTable[TOTAL_SCENE_SCRIPTS][MAX_MOVEMENT_SCRIPTS];
 
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);

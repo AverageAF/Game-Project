@@ -28,11 +28,9 @@ BOOL gFade = FALSE;
 BOOL gPostDialogueMenu = FALSE;
 BOOL gScriptActive = FALSE;
 
-//TOREMOVE: make the script a hold multiple rows of arrays to store information like the sprite to take the action
-//uint8_t gScriptSprite = 3;
-//SCENE_SCRIPT gMovementScriptArray[MAX_MOVEMENT_SCRIPTS] = { START_OF_SCRIPT, WALK_LEFT, WALK_LEFT, WALK_LEFT, WALK_LEFT, FACE_UP, DELAY_64, WALK_LEFT, WALK_LEFT, WALK_LEFT, DIALOGUE_TRIGGER, WALK_RIGHT, WALK_RIGHT, WALK_RIGHT, WALK_RIGHT, WALK_RIGHT, WALK_RIGHT, END_OF_SCRIPT };
 
-SCENE_SCRIPT gSceneScriptArray[MAX_MOVEMENT_SCRIPTS] = { {.Script = START_OF_SCRIPT, .Actor = 0}, {.Script = WALK_LEFT, .Actor = 3}, {.Script = WALK_LEFT, .Actor = 3}, {.Script = WALK_LEFT, .Actor = 3}, {.Script = WALK_LEFT, .Actor = 3}, {.Script = FACE_UP, .Actor = 3}, {.Script = DELAY_64, .Actor = 3}, {.Script = WALK_LEFT, .Actor = 3}, {.Script = WALK_LEFT, .Actor = 3}, {.Script = DIALOGUE_TRIGGER, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_DOWN, .Actor = 3}, {.Script = WALK_DOWN, .Actor = 3}, {.Script = WALK_DOWN, .Actor = 3}, {.Script = WALK_DOWN, .Actor = 3}, {.Script = WALK_DOWN, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = WALK_RIGHT, .Actor = 3}, {.Script = FACE_DOWN, .Actor = 3}, {.Script = END_OF_SCRIPT, .Actor = 3}};
+//TODO: make more of these
+SCENE_SCRIPT gSceneScriptArray[MAX_MOVEMENT_SCRIPTS] = { 0 };
 //
 
 //used to check the current queued script
@@ -1432,6 +1430,11 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
             //delay increasing gCurrentScript until player input
             break;
         }
+        case START_OF_SCRIPT:
+        case END_OF_SCRIPT:
+        {
+            break;
+        }
         default: 
         {
             LogMessageA(LL_ERROR, "[%s] Error, Working script was unknown value in ApplyMovementScript! Value of %d!", __FUNCTION__, WorkingScript);
@@ -2241,7 +2244,7 @@ BOOL TriggerInteractionHandler(void)
     
     for (uint8_t tile = 0; tile < NUM_TRIGGERS; tile++)
     {
-        if (gTriggerTiles[tile].InteractedWith = TRUE)
+        if (gTriggerTiles[tile].InteractedWith == TRUE)
         {
             workingtile = gTriggerTiles[tile];
             tileindex = tile;
@@ -2267,10 +2270,15 @@ BOOL TriggerInteractionHandler(void)
             ///TODO: case TRIGGER_FLAG_COOLDOWN: ....etc
 
             gTriggerTiles[tileindex].InteractedWith = FALSE;
+
+            PopulateSceneScriptArray(tileindex);        //create a function that populates array based on the trigger tile selected, possibly looks at a table for preprogrammed cutscenes
+
             gScriptActive = TRUE;
             break;
+
             case TRIGGER_FLAG_BLANK:
             {
+                result = FALSE;
                 break;
             }
 
@@ -2349,4 +2357,62 @@ BOOL InteractWithTrigger(void)
         }
     }
     return(result);
+}
+
+void PopulateSceneScriptArray(uint8_t triggertileindex)
+{
+    ClearSceneScriptArray();
+
+    switch (triggertileindex)
+    {
+        case INTRO_SCRIPT:
+        case HOME_SCRIPT:
+        {
+            break;
+        }
+        case PROFESSOR_SCRIPT:
+        {
+            for (uint8_t i = 0; i < MAX_MOVEMENT_SCRIPTS; i++)
+            {
+                gSceneScriptArray[i].Actor = gSceneScriptTable[PROFESSOR_SCRIPT][i].Actor;
+                gSceneScriptArray[i].Script = gSceneScriptTable[PROFESSOR_SCRIPT][i].Script;
+                if (gSceneScriptTable[PROFESSOR_SCRIPT][i].Script == END_OF_SCRIPT)
+                {
+                    break;
+                }
+            }
+            break;
+        }
+        case RIVAL_1_SCRIPT:
+        {
+            break;
+        }
+        default:
+        {
+            LogMessageA(LL_ERROR, "[%s] ERROR! Function in Overworld.c encountered an unknown value for triggertileindex! value = %d !", __FUNCTION__,triggertileindex);
+            break;
+        }
+    }
+}
+
+void ClearSceneScriptArray(void)
+{
+    for (uint8_t i = 0; i < MAX_MOVEMENT_SCRIPTS; i++)
+    {
+        if (i == 0)
+        {
+            gSceneScriptArray[i].Script = START_OF_SCRIPT;
+            gSceneScriptArray[i].Actor = 0xFF;
+        }
+        else if (i == 1)
+        {
+            gSceneScriptArray[i].Script = END_OF_SCRIPT;
+            gSceneScriptArray[i].Actor = 0xFF;
+        }
+        else
+        {
+            gSceneScriptArray[i].Script = NULL_SCRIPT;
+            gSceneScriptArray[i].Actor = 0;
+        }
+    }
 }

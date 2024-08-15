@@ -857,13 +857,13 @@ DWORD InitializeSprites(void)
 
 DWORD InitializeTriggers(void)
 {
-    gTriggerTiles[0].WorldPos.x = 352;
-    gTriggerTiles[0].WorldPos.y = 4544;
-    gTriggerTiles[0].Flag = TRIGGER_FLAG_ONCE;
-    gTriggerTiles[0].Exists = TRUE;
-    gTriggerTiles[0].Loaded = FALSE;
-    gTriggerTiles[0].Interactive = FALSE;
-    gTriggerTiles[0].GameAreaIndex = 2;
+    gTriggerTiles[PROFESSOR_SCRIPT].WorldPos.x = 352;
+    gTriggerTiles[PROFESSOR_SCRIPT].WorldPos.y = 4544;
+    gTriggerTiles[PROFESSOR_SCRIPT].Flag = TRIGGER_FLAG_ONCE;
+    gTriggerTiles[PROFESSOR_SCRIPT].Exists = TRUE;
+    gTriggerTiles[PROFESSOR_SCRIPT].Loaded = FALSE;
+    gTriggerTiles[PROFESSOR_SCRIPT].Interactive = FALSE;
+    gTriggerTiles[PROFESSOR_SCRIPT].GameAreaIndex = 2;
 
     /////////////////////////////////////////////////
 
