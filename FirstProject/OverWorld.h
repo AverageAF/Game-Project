@@ -150,7 +150,13 @@ INGAMESPRITE CharSpriteSparkleAnim(INGAMESPRITE _Inout_ charactersprite, uint16_
 
 INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
 
+void GiveItemAndRemoveSprite(uint8_t spriteIndex);
+
+void GiveItemChangeNPCEvent(uint8_t spriteIndex);
+
 INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
+
+void RemoveCharSprite(uint8_t Index);
 
 void CharSpriteDrawHandler(uint16_t BrightnessAdjustment);
 
@@ -174,7 +180,7 @@ void HandleTileFunctions(void);
 
 void HandleNPCEvent(void);
 
-BOOL IsPlayerOnTrigger(uint8_t index);
+BOOL IsPlayerOnActiveTrigger(uint8_t index);
 
 BOOL TriggerInteractionHandler(void);
 

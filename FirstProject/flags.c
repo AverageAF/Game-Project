@@ -29,3 +29,9 @@ void ClearAllGameFlags(void)
         gGameFlags[flags] = FALSE;
     }
 }
+
+//returns true if flag is present
+BOOL CheckGameFlag(uint8_t flag)
+{
+    return (gGameFlags[flag]);
+}

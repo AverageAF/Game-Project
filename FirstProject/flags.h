@@ -4,7 +4,9 @@
 
 BOOL gGameFlags[0x80];
 
+#define FLAG_NULL 0x0
 #define START_OF_FLAGS 0x0
+
 #define TEMP_FLAGS_START 0x0
 #define FLAG_TEMP_1 0x1
 #define FLAG_TEMP_2 0x2
@@ -145,3 +147,5 @@ void ClearGameFlag(uint8_t flag);
 void ClearTempGameFlags(void);
 
 void ClearAllGameFlags(void);
+
+BOOL CheckGameFlag(uint8_t flag);

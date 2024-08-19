@@ -1,11 +1,13 @@
 #include "Main.h"
+#include "flags.h"
 
 #include "OverWorld.h"
-
+#include "Dialogue.h"
 #include "MonsterData.h"
 
 #include "Inventory.h"
 #include "InventoryItems.h"
+#include "NPCData.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -53,6 +55,7 @@ void DrawOverworldScreen(void)
         BrightnessAdjustment = -255;
         gInputEnabled = FALSE;
         gOverWorldControls = TRUE;
+        gScriptActive = FALSE;
     }
 
     if (gPlayerParty[0].DriveMonster.hasIndex == TRUE && gPlayerParty[0].Health == 0 && gPlayerParty[1].Health == 0 && gPlayerParty[2].Health == 0 && gPlayerParty[3].Health == 0 && gPlayerParty[4].Health == 0 && gPlayerParty[5].Health == 0)
@@ -223,17 +226,24 @@ void PPI_Overworld(void)
 
                 if (gScriptActive)
                 {
-                    if (gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialoguesBeforeLoop <= gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag)
+                    if (CheckIfLastDialogueNPC(gSceneScriptArray[gCurrentScript].Actor))
                     {
-                        gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag = gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueLoopReturn;
                         gCurrentScript++;
-                        gDialogueControls = FALSE;
                     }
-                    else
-                    {
-                        gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag++;
-                        gDialogueControls = FALSE;
-                    }
+                    GoToNextDialogueNPC(gSceneScriptArray[gCurrentScript].Actor);
+                    gDialogueControls = FALSE;
+
+                    //if (gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialoguesBeforeLoop <= gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag)
+                    //{
+                    //    gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag = gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueLoopReturn;
+                    //    gCurrentScript++;
+                    //    gDialogueControls = FALSE;
+                    //}
+                    //else
+                    //{
+                    //    gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag++;
+                    //    gDialogueControls = FALSE;
+                    //}
                 }
 
                 gFinishedDialogueTextAnimation = FALSE;
@@ -306,19 +316,7 @@ void TeleportHandler(void)
 }
 
 
-void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState)
-{
-    PreviousGameState = CurrentGameState;
-    *CurrentGameState = GAMESTATE_BATTLE_MONSTER;
-}
-
-void TrainerEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState)
-{
-    PreviousGameState = CurrentGameState;
-    *CurrentGameState = GAMESTATE_BATTLE_TRAINER;
-}
-
-//TODO: better movement please!
+//TODO: better movement please! this is full of if statements!!!
 void TriggerNPCMovement(_In_ uint64_t Counter)
 {
     for (uint8_t Index = 0; Index <= NUM_CHAR_SPRITES; Index++)
@@ -898,93 +896,222 @@ INGAMESPRITE CharSpriteSparkleAnim( INGAMESPRITE _Inout_ charactersprite, uint16
     return(charactersprite);
 }
 
-INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype)
+
+////TOREMOVE: better function in GiveItemChangeNPCEvent()
+//INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype)
+//{
+//    if (charactersprite.DialoguesBeforeLoop <= charactersprite.DialogueFlag)
+//    {
+//        for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+//        {
+//            switch (itemtype)
+//            {
+//                case 0:
+//                    //equip
+//                    GivePlayerEquipItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                case 1:
+//                    //use
+//                    GivePlayerUseItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                case 2:
+//                    //value
+//                    GivePlayerValueItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                case 3:
+//                    //adventure
+//                    GivePlayerAdventureItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                default:
+//                {
+//                    ASSERT(itemtype <= 3, "ERROR, Unknown itemtype in GivePlayerItemFromCharSpriteEvent");
+//                }
+//            }
+//        }
+//        charactersprite.Event = EVENT_FLAG_TALK;
+//        charactersprite.InteractedWith = FALSE;
+//        gGamePaused = FALSE;
+//        gDialogueControls = FALSE;
+//        gOverWorldControls = TRUE;
+//    }
+//    else
+//    {
+//        charactersprite.DialogueFlag++;
+//        gDialogueControls = FALSE;
+//    }
+//    return(charactersprite);
+//}
+
+//used for items on the ground the player can pickup
+void GiveItemAndRemoveSprite(uint8_t spriteIndex)
 {
-    if (charactersprite.DialoguesBeforeLoop <= charactersprite.DialogueFlag)
+    switch (GetEventFlagFromSpriteIndex(spriteIndex))
     {
-        for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+        case EVENT_FLAG_EQUIPITEM_REPEAT:
+        case EVENT_FLAG_EQUIPITEM_ONCE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have an event without a dissappearing sprite inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_EQUIPITEM_NOSPRITE:
         {
-            switch (itemtype)
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
             {
-                case 0:
-                    //equip
-                    GivePlayerEquipItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                case 1:
-                    //use
-                    GivePlayerUseItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                case 2:
-                    //value
-                    GivePlayerValueItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                case 3:
-                    //adventure
-                    GivePlayerAdventureItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                default:
-                {
-                    ASSERT(itemtype <= 3, "ERROR, Unknown itemtype in GivePlayerItemFromCharSpriteEvent");
-                }
+                GivePlayerEquipItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
             }
+            break;
         }
-        charactersprite.Event = EVENT_FLAG_TALK;
-        charactersprite.InteractedWith = FALSE;
-        gGamePaused = FALSE;
-        gDialogueControls = FALSE;
-        gOverWorldControls = TRUE;
+        case EVENT_FLAG_USEITEM_REPEAT:
+        case EVENT_FLAG_USEITEM_ONCE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have an event without a dissappearing sprite inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_USEITEM_NOSPRITE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerUseItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        case EVENT_FLAG_VALUEITEM_REPEAT:
+        case EVENT_FLAG_VALUEITEM_ONCE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have an event without a dissappearing sprite inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_VALUEITEM_NOSPRITE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerValueItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        case EVENT_FLAG_ADVENTUREITEM_REPEAT:
+        case EVENT_FLAG_ADVENTUREITEM_ONCE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have an event without a dissappearing sprite inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_ADVENTUREITEM_NOSPRITE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerAdventureItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        default:
+        {
+            LogMessageA(LL_ERROR, "[%s] ERROR! CharacterSprite[%d] had an unusable value as an event flag! Event = %d !", __FUNCTION__, spriteIndex, GetEventFlagFromSpriteIndex(spriteIndex));
+            break;
+        }
     }
-    else
-    {
-        charactersprite.DialogueFlag++;
-        gDialogueControls = FALSE;
-    }
-    return(charactersprite);
+    RemoveCharSprite(spriteIndex);
 }
 
+void GiveItemChangeNPCEvent(uint8_t spriteIndex)
+{
+    switch (GetEventFlagFromSpriteIndex(spriteIndex))
+    {
+        case EVENT_FLAG_EQUIPITEM_REPEAT:
+        case EVENT_FLAG_EQUIPITEM_NOSPRITE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have the wrong kind of event inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_EQUIPITEM_ONCE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerEquipItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        case EVENT_FLAG_USEITEM_REPEAT:
+        case EVENT_FLAG_USEITEM_NOSPRITE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have the wrong kind of event inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_USEITEM_ONCE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerUseItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        case EVENT_FLAG_VALUEITEM_REPEAT:
+        case EVENT_FLAG_VALUEITEM_NOSPRITE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have the wrong kind of event inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_VALUEITEM_ONCE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerValueItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        case EVENT_FLAG_ADVENTUREITEM_REPEAT:
+        case EVENT_FLAG_ADVENTUREITEM_NOSPRITE:
+            LogMessageA(LL_WARNING, "[%s] Warning! CharacterSprite[%d] was found to have the wrong kind of event inside of this function!", __FUNCTION__, spriteIndex);
+        case EVENT_FLAG_ADVENTUREITEM_ONCE:
+        {
+            for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+            {
+                GivePlayerAdventureItem(gNPCEventTable[spriteIndex].EventItemsIndex[i], gNPCEventTable[spriteIndex].EventItemsCount[i]);
+            }
+            break;
+        }
+        default:
+        {
+            LogMessageA(LL_ERROR, "[%s] ERROR! CharacterSprite[%d] had an unusable value as an event flag! Event = %d !", __FUNCTION__, spriteIndex, GetEventFlagFromSpriteIndex(spriteIndex));
+            break;
+        }
+    }
+    gNPCEventTable[spriteIndex].Event = EVENT_FLAG_TALK;
+    gCharacterSprite[spriteIndex].InteractedWith = FALSE;
+}
+
+//...TOREMOVE: better function is GiveItemAndRemoveSprite()
+//
 //This will be used for item pickups that dissappear after aquiring them.
 //// ITEMTYPE_EQUIP = 0, ITEMTYPE_USE = 1, ITEMTYPE_VALUE = 2, ITEMTYPE_ADVENTURE = 3
-INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype)
+//INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype)
+//{
+//    if (charactersprite.DialoguesBeforeLoop <= charactersprite.DialogueFlag)
+//    {
+//        for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
+//        {
+//            switch (itemtype)
+//            {
+//                case 0:
+//                    GivePlayerEquipItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                case 1:
+//                    GivePlayerUseItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                case 2:
+//                    GivePlayerValueItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                case 3:
+//                    GivePlayerAdventureItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
+//                    break;
+//                default:
+//                {
+//                    ASSERT(itemtype <= 3, "ERROR, Unknown itemtype in GivePlayerItemFromCharSpriteEvent");
+//                }
+//            }
+//        }
+//        charactersprite.Event = EVENT_FLAG_NULL;
+//        charactersprite.InteractedWith = FALSE;
+//        charactersprite.Exists = FALSE;
+//        charactersprite.Loaded = FALSE;
+//        charactersprite.Visible = FALSE;
+//        gGamePaused = FALSE;
+//        gDialogueControls = FALSE;
+//        gOverWorldControls = TRUE;
+//    }
+//    else
+//    {
+//        charactersprite.DialogueFlag++;
+//        gDialogueControls = FALSE;
+//    }
+//    return(charactersprite);
+//}
+
+void RemoveCharSprite(uint8_t Index)
 {
-    if (charactersprite.DialoguesBeforeLoop <= charactersprite.DialogueFlag)
-    {
-        for (uint8_t i = 0; i < MAX_ITEMS_GIVE; i++)
-        {
-            switch (itemtype)
-            {
-                case 0:
-                    GivePlayerEquipItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                case 1:
-                    GivePlayerUseItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                case 2:
-                    GivePlayerValueItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                case 3:
-                    GivePlayerAdventureItem(charactersprite.EventItemsIndex[i], charactersprite.EventItemsCount[i]);
-                    break;
-                default:
-                {
-                    ASSERT(itemtype <= 3, "ERROR, Unknown itemtype in GivePlayerItemFromCharSpriteEvent");
-                }
-            }
-        }
-        charactersprite.Event = EVENT_FLAG_NULL;
-        charactersprite.InteractedWith = FALSE;
-        charactersprite.Exists = FALSE;
-        charactersprite.Loaded = FALSE;
-        charactersprite.Visible = FALSE;
-        gGamePaused = FALSE;
-        gDialogueControls = FALSE;
-        gOverWorldControls = TRUE;
-    }
-    else
-    {
-        charactersprite.DialogueFlag++;
-        gDialogueControls = FALSE;
-    }
-    return(charactersprite);
+    gNPCEventTable[Index].Event = EVENT_FLAG_NULL;
+    gCharacterSprite[Index].InteractedWith = FALSE;
+    gCharacterSprite[Index].Exists = FALSE;
+    gCharacterSprite[Index].Loaded = FALSE;
+    gCharacterSprite[Index].Visible = FALSE;
 }
 
 void CharSpriteDrawHandler(uint16_t BrightnessAdjustment)
@@ -1070,7 +1197,7 @@ BOOL CharSpriteInteractionHandler(uint64_t LocalFrameCounter)
     {
         if (gCharacterSprite[Sprite].InteractedWith == TRUE)
         {
-            WorkingEvent = gCharacterSprite[Sprite].Event;
+            WorkingEvent = gNPCEventTable[Sprite].Event;
             WorkingSprite = Sprite;
             result = TRUE;
             break;
@@ -1088,26 +1215,11 @@ BOOL CharSpriteInteractionHandler(uint64_t LocalFrameCounter)
                     break;
                 }
             }
-
-            //TODO: make own function for TRIGGER_TILES and the scenes they trigger
-
-            /*case EVENT_FLAG_TRIGGER_INFINITE:
-            case EVENT_FLAG_TRIGGER_ONCE:
-            {
-                if (gCharacterSprite[WorkingSprite].Event == EVENT_FLAG_TRIGGER_ONCE)
-                {
-                    gCharacterSprite[WorkingSprite].Event = EVENT_FLAG_NULL;
-                    gCharacterSprite[WorkingSprite].Exists = FALSE;
-                }
-                gCharacterSprite[WorkingSprite].InteractedWith = FALSE;
-                gScriptActive = TRUE;
-                break;
-            }*/
             default:
             {
-                if (gCharacterSprite[WorkingSprite].Event != EVENT_FLAG_NULL)
+                if (gNPCEventTable[WorkingSprite].Event != EVENT_FLAG_NULL)
                 {
-                    DrawDialogueBox(gCharacterSprite[WorkingSprite].Dialogue[gCharacterSprite[WorkingSprite].DialogueFlag], LocalFrameCounter, NULL);
+                    DrawDialogueBox(GetCurrentDialogueFromNPC(WorkingSprite), LocalFrameCounter, NULL);
                 }
                 else
                 {
@@ -1468,7 +1580,7 @@ BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId)
         {
             case DOWN:
             {
-                if (((gCharacterSprite[spriteId].WorldPos.y + (gCharacterSprite[spriteId].SightRange * 16) >= gPlayer.WorldPos.y) && gCharacterSprite[spriteId].WorldPos.y <= gPlayer.WorldPos.y) && (gCharacterSprite[spriteId].WorldPos.x == gPlayer.WorldPos.x) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gCharacterSprite[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
+                if (((gCharacterSprite[spriteId].WorldPos.y + (gCharacterSprite[spriteId].SightRange * 16) >= gPlayer.WorldPos.y) && gCharacterSprite[spriteId].WorldPos.y <= gPlayer.WorldPos.y) && (gCharacterSprite[spriteId].WorldPos.x == gPlayer.WorldPos.x) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gNPCEventTable[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
                 {
                     gPlayer.Direction = UP;
                     result = TRUE;
@@ -1477,7 +1589,7 @@ BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId)
             }
             case LEFT:
             {
-                if (((gCharacterSprite[spriteId].WorldPos.x - (gCharacterSprite[spriteId].SightRange * 16) <= gPlayer.WorldPos.x) && gCharacterSprite[spriteId].WorldPos.x >= gPlayer.WorldPos.x) && (gCharacterSprite[spriteId].WorldPos.y == gPlayer.WorldPos.y) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gCharacterSprite[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
+                if (((gCharacterSprite[spriteId].WorldPos.x - (gCharacterSprite[spriteId].SightRange * 16) <= gPlayer.WorldPos.x) && gCharacterSprite[spriteId].WorldPos.x >= gPlayer.WorldPos.x) && (gCharacterSprite[spriteId].WorldPos.y == gPlayer.WorldPos.y) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gNPCEventTable[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
                 {
                     gPlayer.Direction = RIGHT;
                     result = TRUE;
@@ -1486,7 +1598,7 @@ BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId)
             }
             case RIGHT:
             {
-                if (((gCharacterSprite[spriteId].WorldPos.x + (gCharacterSprite[spriteId].SightRange * 16) >= gPlayer.WorldPos.x) && gCharacterSprite[spriteId].WorldPos.x <= gPlayer.WorldPos.x) && (gCharacterSprite[spriteId].WorldPos.y == gPlayer.WorldPos.y) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gCharacterSprite[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
+                if (((gCharacterSprite[spriteId].WorldPos.x + (gCharacterSprite[spriteId].SightRange * 16) >= gPlayer.WorldPos.x) && gCharacterSprite[spriteId].WorldPos.x <= gPlayer.WorldPos.x) && (gCharacterSprite[spriteId].WorldPos.y == gPlayer.WorldPos.y) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gNPCEventTable[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
                 {
                     gPlayer.Direction = LEFT;
                     result = TRUE;
@@ -1495,7 +1607,7 @@ BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId)
             }
             case UP:
             {
-                if (((gCharacterSprite[spriteId].WorldPos.y - (gCharacterSprite[spriteId].SightRange * 16) <= gPlayer.WorldPos.y) && gCharacterSprite[spriteId].WorldPos.y >= gPlayer.WorldPos.y) && (gCharacterSprite[spriteId].WorldPos.x == gPlayer.WorldPos.x) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gCharacterSprite[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
+                if (((gCharacterSprite[spriteId].WorldPos.y - (gCharacterSprite[spriteId].SightRange * 16) <= gPlayer.WorldPos.y) && gCharacterSprite[spriteId].WorldPos.y >= gPlayer.WorldPos.y) && (gCharacterSprite[spriteId].WorldPos.x == gPlayer.WorldPos.x) && !(gCharacterSprite[spriteId].Movement == MOVEMENT_SPARKLE || gCharacterSprite[spriteId].Movement == MOVEMENT_ITEMPICKUP || gNPCEventTable[spriteId].Event == EVENT_FLAG_NULL) && gCharacterSprite[spriteId].Loaded == TRUE)
                 {
                     gPlayer.Direction = DOWN;
                     result = TRUE;
@@ -1521,7 +1633,7 @@ void InitiateDialogueAndCutscene(uint64_t counter)
         {
             //TODO: make better way of knowing what scene is what and what actor is what, this is prone to mistakes
 
-            DrawDialogueBox(gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].Dialogue[gCharacterSprite[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag], counter, NULL);
+            DrawDialogueBox(gNPCDialogue[gSceneScriptArray[gCurrentScript].Actor].Dialogue[gNPCDialogue[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag], counter, NULL);
         }
     }
 }
@@ -1967,7 +2079,7 @@ void HandleTileFunctions(void)
     for (uint8_t triggers = 0; triggers < NUM_TRIGGERS; triggers++)
     {
 
-        BOOL TriggerActivated = IsPlayerOnTrigger(triggers);
+        BOOL TriggerActivated = IsPlayerOnActiveTrigger(triggers);
 
         if (TriggerActivated)
         {
@@ -1992,7 +2104,7 @@ void HandleTileFunctions(void)
             if (Random > (1000 - gPlayer.RandomEncounterPercent))
             {
                 gPlayer.StepsSinceLastEncounter = gPlayer.StepsTaken;
-                RandomMonsterEncounter(&gPreviousGameState, &gCurrentGameState);
+                GoToDestGamestate(GAMESTATE_BATTLE_MONSTER);
             }
             break;
         }
@@ -2010,106 +2122,92 @@ void HandleNPCEvent(void)
     {
         if (gCharacterSprite[Index].InteractedWith == TRUE)
         {
-            switch (gCharacterSprite[Index].Event)
+            switch (GetEventFlagFromSpriteIndex(Index))
             {
-                case EVENT_FLAG_BATLLE:
+                case EVENT_FLAG_TALK:
                 {
-                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
+                    if (CheckIfLastDialogueNPC(Index))
                     {
-                        TrainerEncounter(&gPreviousGameState, &gCurrentGameState);
+                        gCharacterSprite[Index].InteractedWith = FALSE;
                         gGamePaused = FALSE;
-                        gDialogueControls = FALSE;
                         gOverWorldControls = TRUE;
                     }
-                    else
-                    {
-                        gCharacterSprite[Index].DialogueFlag++;
-                        gDialogueControls = FALSE;
-                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
-                case EVENT_FLAG_MONSTER:
+                case EVENT_FLAG_BATTLE:
                 {
-                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
+                    if (CheckIfLastDialogueNPC(Index))
                     {
-                        if (gCharacterSprite[Index].EventMonsterIndex == 0 || gCharacterSprite[Index].EventMonsterLevel == 0)           //give player first index at level 1 if sprite is set up incorrectly
-                        {
-                            gCharacterSprite[Index].EventMonsterIndex = 1;
-                            gCharacterSprite[Index].EventMonsterLevel = 1;
-                            LogMessageA(LL_WARNING, "[%s] gCharacterSprite[%d] tried to give a monster to player with either 0 index or 0 level!", __FUNCTION__, Index);
-                        }
-                        ScriptGiveMonster(gCharacterSprite[Index].EventMonsterIndex, gCharacterSprite[Index].EventMonsterLevel, gCharacterSprite[Index].EventMonsterItem);
-                        gCharacterSprite[Index].Event = EVENT_FLAG_TALK;
-                        gCharacterSprite[Index].InteractedWith = FALSE;
-                        gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                        //TrainerEncounter(&gPreviousGameState, &gCurrentGameState);    //TOREMOVE:
+                        GoToDestGamestate(GAMESTATE_BATTLE_TRAINER);
+                        //gCharacterSprite[Index].InteractedWith = FALSE;           //turn off after battle has been won, so that we can reset battle if lost
                         gGamePaused = FALSE;
-                        gDialogueControls = FALSE;
                         gOverWorldControls = TRUE;
                     }
-                    else
-                    {
-                        gCharacterSprite[Index].DialogueFlag++;
-                        gDialogueControls = FALSE;
-                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
                 case EVENT_FLAG_HEAL:
                 {
-                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)        //for when dialogues are longer than one box
+                    if (CheckIfLastDialogueNPC(Index))
                     {
-                        HealPlayerParty();  //call heal
+                        HealPlayerParty();
                         gCharacterSprite[Index].InteractedWith = FALSE;
-                        gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
                         gGamePaused = FALSE;
-                        gDialogueControls = FALSE;
                         gOverWorldControls = TRUE;
                     }
-                    else
-                    {
-                        gCharacterSprite[Index].DialogueFlag++;
-                        gDialogueControls = FALSE;
-                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
                 case EVENT_FLAG_EQUIPITEM_ONCE:
-                {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_EQUIP);
-                    break;
-                }
                 case EVENT_FLAG_USEITEM_ONCE:
-                {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_USE);
-                    break;
-                }
                 case EVENT_FLAG_VALUEITEM_ONCE:
-                {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_VALUE);
-                    break;
-                }
                 case EVENT_FLAG_ADVENTUREITEM_ONCE:
                 {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_ADVENTURE);
+                    if (CheckIfLastDialogueNPC(Index))
+                    {
+                        GiveItemChangeNPCEvent(Index);
+                        gGamePaused = FALSE;
+                        gOverWorldControls = TRUE;
+                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
-                case EVENT_FLAG_EQUIPITEM_NOSPRITE:
+                case EVENT_FLAG_EQUIPITEM_REPEAT:
+                case EVENT_FLAG_USEITEM_REPEAT:
+                case EVENT_FLAG_VALUEITEM_REPEAT:
+                case EVENT_FLAG_ADVENTUREITEM_REPEAT:
                 {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_EQUIP);
+                    //TODO: add .Cooldown to NPC_EVENT_DATA??? so that events can be repeatable on a cooldown
+                }
+                case EVENT_FLAG_MONSTER:
+                {
+                    if (CheckIfLastDialogueNPC(Index))
+                    {
+                        if (gNPCEventTable[Index].EventMonsterIndex == 0 || gNPCEventTable[Index].EventMonsterLevel == 0)           //give player first index at level 1 if sprite is set up incorrectly
+                        {
+                            gNPCEventTable[Index].EventMonsterIndex = 1;
+                            gNPCEventTable[Index].EventMonsterLevel = 1;
+                            LogMessageA(LL_WARNING, "[%s] gNPCEventTable[%d] tried to give a monster to player with either 0 index or 0 level!", __FUNCTION__, Index);
+                        }
+                        ScriptGiveMonster(gNPCEventTable[Index].EventMonsterIndex, gNPCEventTable[Index].EventMonsterLevel, gNPCEventTable[Index].EventMonsterItem);
+                        gNPCEventTable[Index].Event = EVENT_FLAG_TALK;
+                        gCharacterSprite[Index].InteractedWith = FALSE;
+                        gGamePaused = FALSE;
+                        gOverWorldControls = TRUE;
+                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
-                case EVENT_FLAG_USEITEM_NOSPRITE:
+                case EVENT_FLAG_MOVEMENT:
                 {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_USE);
-                    break;
-                }
-                case EVENT_FLAG_VALUEITEM_NOSPRITE:
-                {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_VALUE);
-                    break;
-                }
-                case EVENT_FLAG_ADVENTUREITEM_NOSPRITE:
-                {
-                    gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_ADVENTURE);
-                    break;
+                    //TODO:... start a script???
                 }
                 case EVENT_FLAG_STORE:
                 {
@@ -2123,9 +2221,9 @@ void HandleNPCEvent(void)
                             case 1:
                                 //buy
                                 ////create a new store.c file? and send us to that gamestate when buying items?? 
-                                gPreviousGameState = gCurrentGameState;
-                                gCurrentGameState = GAMESTATE_STORE;
-                                gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                                GoToDestGamestate(GAMESTATE_STORE);
+
+                                //gNPCEventTable[Index].DialogueFlag = gNPCEventTable[Index].DialogueLoopReturn;
                                 gCharacterSprite[Index].InteractedWith = FALSE;
                                 gGamePaused = FALSE;
                                 gDialogueControls = FALSE;
@@ -2136,12 +2234,12 @@ void HandleNPCEvent(void)
                             case 2:
                                 //sell
                                 ////go to gamestatepockets->valuablepockets and check a variable to put us in "sell" mode
-                                gPreviousGameState = gCurrentGameState;
-                                gCurrentGameState = GAMESTATE_INVENTORYSCREEN;
+                                GoToDestGamestate(GAMESTATE_INVENTORYSCREEN);
                                 gPreviousPockets = gCurrentPockets;
                                 gCurrentPockets = POCKETSTATE_VALUABLE;
                                 gSellingItems = TRUE;       //sell mode
-                                gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+
+                                //gNPCEventTable[Index].DialogueFlag = gNPCEventTable[Index].DialogueLoopReturn;
                                 gCharacterSprite[Index].InteractedWith = FALSE;
                                 gGamePaused = FALSE;
                                 gDialogueControls = FALSE;
@@ -2151,7 +2249,8 @@ void HandleNPCEvent(void)
                             case 3:
                                 //back
                                 ////reset dialogueflag and beforeloop to give a goodbye message when exiting
-                                gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+
+                                //gNPCEventTable[Index].DialogueFlag = gNPCEventTable[Index].DialogueLoopReturn;
                                 gCharacterSprite[Index].InteractedWith = FALSE;
                                 gGamePaused = FALSE;
                                 gDialogueControls = FALSE;
@@ -2164,71 +2263,278 @@ void HandleNPCEvent(void)
                                 break;
                             }
                         }
+                        GoToNextDialogueNPC(Index);
                     }
                     else if (gPostDialogueMenu == FALSE)
                     {
-                        if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for stores extra dialogue while buy/sell/back
-                        {
-                            gPostDialogueMenu = TRUE;
-                            gCharacterSprite[Index].DialogueFlag++;
-                        }
-                        else
-                        {
-                            gCharacterSprite[Index].DialogueFlag++;
-                            gDialogueControls = FALSE;
-                        }
+                        gPostDialogueMenu = CheckIfLastDialogueNPC(Index);
+                        GoToNextDialogueNPC(Index);
                     }
+                    break;
+                }
+                case EVENT_FLAG_EQUIPITEM_NOSPRITE:
+                case EVENT_FLAG_USEITEM_NOSPRITE:
+                case EVENT_FLAG_VALUEITEM_NOSPRITE:
+                case EVENT_FLAG_ADVENTUREITEM_NOSPRITE:
+                {
+                    if (CheckIfLastDialogueNPC(Index))
+                    {
+                        GiveItemAndRemoveSprite(Index);
+                        gGamePaused = FALSE;
+                        gOverWorldControls = TRUE;
+                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
                 case EVENT_FLAG_DRIVE_STORAGE:
                 {
-                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for extra dialogue while booting storage
+                    if (CheckIfLastDialogueNPC(Index))
                     {
-
-                        gPreviousGameState = gCurrentGameState;
-                        gCurrentGameState = GAMESTATE_DRIVE_STORAGE;
-                        gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+                        GoToDestGamestate(GAMESTATE_DRIVE_STORAGE);
                         gCharacterSprite[Index].Direction = gCharacterSprite[Index].ResetDirection;
                         gCharacterSprite[Index].InteractedWith = FALSE;
                         gGamePaused = FALSE;
-                        gDialogueControls = FALSE;
                         gOverWorldControls = TRUE;
-                        gPostDialogueMenu = FALSE;
                     }
-                    else
-                    {
-                        gCharacterSprite[Index].DialogueFlag++;
-                        gDialogueControls = FALSE;
-                    }
+                    gDialogueControls = FALSE;
+                    GoToNextDialogueNPC(Index);
                     break;
                 }
-                ////Just a normal dialogue
+                case EVENT_FLAG_NULL:
                 default:
                 {
-                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
-                    {
-                        gCharacterSprite[Index].InteractedWith = FALSE;
-                        gGamePaused = FALSE;
-                        gDialogueControls = FALSE;
-                        gOverWorldControls = TRUE;
-                    }
-                    else
-                    {
-                        gCharacterSprite[Index].DialogueFlag++;
-                        gDialogueControls = FALSE;
-                    }
+                    LogMessageA(LL_ERROR, "[%s] ERROR! EVENT_FLAG associated with gCharacterSprite[%d] was EVENT_FLAG_NULL or unrecognized! EVENT_FLAG = %d !", __FUNCTION__, Index, GetEventFlagFromSpriteIndex(Index));
                     break;
                 }
-                break;      //break out of for loop searching for more sprites interacted with, obviously if we just interacted with one there shouldn't be more
             }
         }
     }
+
+    //for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
+    //{
+    //    if (gCharacterSprite[Index].InteractedWith == TRUE)
+    //    {
+    //        switch (gCharacterSprite[Index].Event)
+    //        {
+    //            case EVENT_FLAG_BATTLE:
+    //            {
+    //                if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
+    //                {
+    //                    TrainerEncounter(&gPreviousGameState, &gCurrentGameState);
+    //                    gGamePaused = FALSE;
+    //                    gDialogueControls = FALSE;
+    //                    gOverWorldControls = TRUE;
+    //                }
+    //                else
+    //                {
+    //                    gCharacterSprite[Index].DialogueFlag++;
+    //                    gDialogueControls = FALSE;
+    //                }
+    //                break;
+    //            }
+    //            case EVENT_FLAG_MONSTER:
+    //            {
+    //                if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
+    //                {
+    //                    if (gCharacterSprite[Index].EventMonsterIndex == 0 || gCharacterSprite[Index].EventMonsterLevel == 0)           //give player first index at level 1 if sprite is set up incorrectly
+    //                    {
+    //                        gCharacterSprite[Index].EventMonsterIndex = 1;
+    //                        gCharacterSprite[Index].EventMonsterLevel = 1;
+    //                        LogMessageA(LL_WARNING, "[%s] gCharacterSprite[%d] tried to give a monster to player with either 0 index or 0 level!", __FUNCTION__, Index);
+    //                    }
+    //                    ScriptGiveMonster(gCharacterSprite[Index].EventMonsterIndex, gCharacterSprite[Index].EventMonsterLevel, gCharacterSprite[Index].EventMonsterItem);
+    //                    gCharacterSprite[Index].Event = EVENT_FLAG_TALK;
+    //                    gCharacterSprite[Index].InteractedWith = FALSE;
+    //                    gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+    //                    gGamePaused = FALSE;
+    //                    gDialogueControls = FALSE;
+    //                    gOverWorldControls = TRUE;
+    //                }
+    //                else
+    //                {
+    //                    gCharacterSprite[Index].DialogueFlag++;
+    //                    gDialogueControls = FALSE;
+    //                }
+    //                break;
+    //            }
+    //            case EVENT_FLAG_HEAL:
+    //            {
+    //                if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)        //for when dialogues are longer than one box
+    //                {
+    //                    HealPlayerParty();  //call heal
+    //                    gCharacterSprite[Index].InteractedWith = FALSE;
+    //                    gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+    //                    gGamePaused = FALSE;
+    //                    gDialogueControls = FALSE;
+    //                    gOverWorldControls = TRUE;
+    //                }
+    //                else
+    //                {
+    //                    gCharacterSprite[Index].DialogueFlag++;
+    //                    gDialogueControls = FALSE;
+    //                }
+    //                break;
+    //            }
+    //            case EVENT_FLAG_EQUIPITEM_ONCE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_EQUIP);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_USEITEM_ONCE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_USE);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_VALUEITEM_ONCE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_VALUE);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_ADVENTUREITEM_ONCE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharSpriteEvent(gCharacterSprite[Index], ITEMTYPE_ADVENTURE);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_EQUIPITEM_NOSPRITE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_EQUIP);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_USEITEM_NOSPRITE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_USE);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_VALUEITEM_NOSPRITE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_VALUE);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_ADVENTUREITEM_NOSPRITE:
+    //            {
+    //                gCharacterSprite[Index] = GivePlayerItemFromCharAndRemoveSprite(gCharacterSprite[Index], ITEMTYPE_ADVENTURE);
+    //                break;
+    //            }
+    //            case EVENT_FLAG_STORE:
+    //            {
+    //                if (gPostDialogueMenu == TRUE)
+    //                {
+    //                    ///////say a dialogue then ask if player wants to buy/sell/exit 
+    //                    uint8_t StoreButtons = PPI_BuySellBackBox();
+
+    //                    switch (StoreButtons)
+    //                    {
+    //                        case 1:
+    //                            //buy
+    //                            ////create a new store.c file? and send us to that gamestate when buying items?? 
+    //                            gPreviousGameState = gCurrentGameState;
+    //                            gCurrentGameState = GAMESTATE_STORE;
+    //                            gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+    //                            gCharacterSprite[Index].InteractedWith = FALSE;
+    //                            gGamePaused = FALSE;
+    //                            gDialogueControls = FALSE;
+    //                            gOverWorldControls = TRUE;
+    //                            gPostDialogueMenu = FALSE;
+    //                            gStoreSpriteIndex = Index;
+    //                            break;
+    //                        case 2:
+    //                            //sell
+    //                            ////go to gamestatepockets->valuablepockets and check a variable to put us in "sell" mode
+    //                            gPreviousGameState = gCurrentGameState;
+    //                            gCurrentGameState = GAMESTATE_INVENTORYSCREEN;
+    //                            gPreviousPockets = gCurrentPockets;
+    //                            gCurrentPockets = POCKETSTATE_VALUABLE;
+    //                            gSellingItems = TRUE;       //sell mode
+    //                            gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+    //                            gCharacterSprite[Index].InteractedWith = FALSE;
+    //                            gGamePaused = FALSE;
+    //                            gDialogueControls = FALSE;
+    //                            gOverWorldControls = TRUE;
+    //                            gPostDialogueMenu = FALSE;
+    //                            break;
+    //                        case 3:
+    //                            //back
+    //                            ////reset dialogueflag and beforeloop to give a goodbye message when exiting
+    //                            gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+    //                            gCharacterSprite[Index].InteractedWith = FALSE;
+    //                            gGamePaused = FALSE;
+    //                            gDialogueControls = FALSE;
+    //                            gOverWorldControls = TRUE;
+    //                            gPostDialogueMenu = FALSE;
+    //                            break;
+    //                        case 0:
+    //                        default:
+    //                        {
+    //                            break;
+    //                        }
+    //                    }
+    //                }
+    //                else if (gPostDialogueMenu == FALSE)
+    //                {
+    //                    if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for stores extra dialogue while buy/sell/back
+    //                    {
+    //                        gPostDialogueMenu = TRUE;
+    //                        gCharacterSprite[Index].DialogueFlag++;
+    //                    }
+    //                    else
+    //                    {
+    //                        gCharacterSprite[Index].DialogueFlag++;
+    //                        gDialogueControls = FALSE;
+    //                    }
+    //                }
+    //                break;
+    //            }
+    //            case EVENT_FLAG_DRIVE_STORAGE:
+    //            {
+    //                if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)     //not <= for extra dialogue while booting storage
+    //                {
+
+    //                    gPreviousGameState = gCurrentGameState;
+    //                    gCurrentGameState = GAMESTATE_DRIVE_STORAGE;
+    //                    gCharacterSprite[Index].DialogueFlag = gCharacterSprite[Index].DialogueLoopReturn;
+    //                    gCharacterSprite[Index].Direction = gCharacterSprite[Index].ResetDirection;
+    //                    gCharacterSprite[Index].InteractedWith = FALSE;
+    //                    gGamePaused = FALSE;
+    //                    gDialogueControls = FALSE;
+    //                    gOverWorldControls = TRUE;
+    //                    gPostDialogueMenu = FALSE;
+    //                }
+    //                else
+    //                {
+    //                    gCharacterSprite[Index].DialogueFlag++;
+    //                    gDialogueControls = FALSE;
+    //                }
+    //                break;
+    //            }
+    //            ////Just a normal dialogue
+    //            default:
+    //            {
+    //                if (gCharacterSprite[Index].DialoguesBeforeLoop <= gCharacterSprite[Index].DialogueFlag)
+    //                {
+    //                    gCharacterSprite[Index].InteractedWith = FALSE;
+    //                    gGamePaused = FALSE;
+    //                    gDialogueControls = FALSE;
+    //                    gOverWorldControls = TRUE;
+    //                }
+    //                else
+    //                {
+    //                    gCharacterSprite[Index].DialogueFlag++;
+    //                    gDialogueControls = FALSE;
+    //                }
+    //                break;
+    //            }
+    //        }
+    //    }
+    //    break;      //break out of for loop searching for more sprites interacted with, obviously if we just interacted with one there shouldn't be more
+    //}
+
 }
 
-BOOL IsPlayerOnTrigger(uint8_t index)
+BOOL IsPlayerOnActiveTrigger(uint8_t index)
 {
     BOOL result = FALSE;
-    if (gTriggerTiles[index].Loaded && gTriggerTiles[index].Exists && (gTriggerTiles[index].WorldPos.x == gPlayer.WorldPos.x) && (gTriggerTiles[index].WorldPos.y == gPlayer.WorldPos.y))
+    if (gTriggerTiles[index].Loaded && gTriggerTiles[index].Exists && (gTriggerTiles[index].WorldPos.x == gPlayer.WorldPos.x) && (gTriggerTiles[index].WorldPos.y == gPlayer.WorldPos.y) && CheckGameFlag(gTriggerTiles[index].GameFlag))
     {
         result = TRUE;
     }
@@ -2255,28 +2561,28 @@ BOOL TriggerInteractionHandler(void)
 
     if (result)
     {
-        switch (workingtile.Flag)
+        switch (workingtile.Type)
         {
-            case TRIGGER_FLAG_INFINITE:
-            case TRIGGER_FLAG_ONCE:
+            case TRIGGER_TYPE_INFINITE:
+            case TRIGGER_TYPE_ONCE:
             {
-                if (workingtile.Flag == TRIGGER_FLAG_ONCE)
+                if (workingtile.Type == TRIGGER_TYPE_ONCE)
                 {
-                     gTriggerTiles[tileindex].Flag = TRIGGER_FLAG_BLANK;
+                     gTriggerTiles[tileindex].Type = TRIGGER_TYPE_BLANK;
                      gTriggerTiles[tileindex].Exists = FALSE;
                 }
             }
 
-            ///TODO: case TRIGGER_FLAG_COOLDOWN: ....etc
+            ///TODO: case TRIGGER_TYPE_COOLDOWN: ....etc
 
             gTriggerTiles[tileindex].InteractedWith = FALSE;
 
-            PopulateSceneScriptArray(tileindex);        //create a function that populates array based on the trigger tile selected, possibly looks at a table for preprogrammed cutscenes
+            PopulateSceneScriptArray(tileindex);
 
             gScriptActive = TRUE;
             break;
 
-            case TRIGGER_FLAG_BLANK:
+            case TRIGGER_TYPE_BLANK:
             {
                 result = FALSE;
                 break;
@@ -2285,11 +2591,11 @@ BOOL TriggerInteractionHandler(void)
             default: 
             {
                 //assuming NULL or BLANK flags were accidentially triggered
-                LogMessageA(LL_ERROR, "[%s] ERROR! TRIGGER_FLAG_NULL or unrecognized value for workingtile.flag in OverWorld.c! Value = %d", __FUNCTION__, workingtile.Flag);
+                LogMessageA(LL_ERROR, "[%s] ERROR! TRIGGER_TYPE_NULL or unrecognized value for workingtile.type in OverWorld.c! Value = %d", __FUNCTION__, workingtile.Type);
                 if (workingtile.Exists == TRUE && gTriggerTiles[tileindex].Exists == TRUE)
                 {
                     gTriggerTiles[tileindex].Exists = FALSE;
-                    LogMessageA(LL_ERROR, "[%s] Success! workingtile.flag was found to be enabled while NULL or using an unrecognized value, successfully disabled tile with .exists = FALSE!", __FUNCTION__);
+                    LogMessageA(LL_ERROR, "[%s] Success! workingtile.type was found to be enabled while NULL or using an unrecognized value, successfully disabled tile with .exists = FALSE!", __FUNCTION__);
                 }
                 
                 gTriggerTiles[tileindex].InteractedWith = FALSE;
@@ -2399,20 +2705,26 @@ void ClearSceneScriptArray(void)
 {
     for (uint8_t i = 0; i < MAX_MOVEMENT_SCRIPTS; i++)
     {
-        if (i == 0)
+        switch (i)
         {
-            gSceneScriptArray[i].Script = START_OF_SCRIPT;
-            gSceneScriptArray[i].Actor = 0xFF;
-        }
-        else if (i == 1)
-        {
-            gSceneScriptArray[i].Script = END_OF_SCRIPT;
-            gSceneScriptArray[i].Actor = 0xFF;
-        }
-        else
-        {
-            gSceneScriptArray[i].Script = NULL_SCRIPT;
-            gSceneScriptArray[i].Actor = 0;
+            case 0:
+            {
+                gSceneScriptArray[i].Script = START_OF_SCRIPT;
+                gSceneScriptArray[i].Actor = 0xFF;
+                break;
+            }
+            case 1:
+            {
+                gSceneScriptArray[i].Script = END_OF_SCRIPT;
+                gSceneScriptArray[i].Actor = 0xFF;
+                break;
+            }
+            default:
+            {
+                gSceneScriptArray[i].Script = NULL_SCRIPT;
+                gSceneScriptArray[i].Actor = 0;
+                break;
+            }
         }
     }
 }

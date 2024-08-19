@@ -303,31 +303,31 @@ void MenuItem_SaveGameSave_Slot1(void)
             snprintf(SpriteInfo, 16, "RWorldPosY%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].ResetWorldPos.y);
             snprintf(SpriteInfo, 16, "Direction%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Direction);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Direction);/*
             snprintf(SpriteInfo, 16, "Event%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);*/
             snprintf(SpriteInfo, 16, "Exists%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Exists);
             snprintf(SpriteInfo, 16, "Loaded%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Loaded);
             snprintf(SpriteInfo, 16, "SightRange%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);/*
             snprintf(SpriteInfo, 16, "DialogueFlag%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);*/
 
         }
         else
-        {
+        {/*
             snprintf(SpriteInfo, 16, "Event%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Event);*/
             snprintf(SpriteInfo, 16, "Exists%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Exists);
             snprintf(SpriteInfo, 16, "Loaded%d", sprite);
             cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].Loaded);
             snprintf(SpriteInfo, 16, "SightRange%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].SightRange);/*
             snprintf(SpriteInfo, 16, "DialogueFlag%d", sprite);
-            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);
+            cJSON_AddNumberToObject(json, SpriteInfo, gCharacterSprite[sprite].DialogueFlag);*/
         }
     }
 

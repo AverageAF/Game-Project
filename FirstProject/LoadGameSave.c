@@ -702,13 +702,13 @@ void MenuItem_LoadGameSave_Slot1(void)
         if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
         {
             gCharacterSprite[sprite].Direction = SpriteInfo->valueint;
-        }
+        }/*
         snprintf(InfoName, 16, "Event%d", sprite);
         SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
         if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
         {
             gCharacterSprite[sprite].Event = SpriteInfo->valueint;
-        }
+        }*/
         snprintf(InfoName, 16, "Exists%d", sprite);
         SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
         if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo != NULL))
@@ -726,13 +726,13 @@ void MenuItem_LoadGameSave_Slot1(void)
         if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
         {
             gCharacterSprite[sprite].SightRange = SpriteInfo->valueint;
-        }
+        }/*
         snprintf(InfoName, 16, "DialogueFlag%d", sprite);
         SpriteInfo = cJSON_GetObjectItemCaseSensitive(json, InfoName);
         if (cJSON_IsNumber(SpriteInfo) && (SpriteInfo->valueint != NULL))
         {
             gCharacterSprite[sprite].DialogueFlag = SpriteInfo->valueint;
-        }
+        }*/
     }
 
     char* ItemIndex = malloc(20);

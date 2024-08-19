@@ -1082,6 +1082,7 @@ void CalculateMonsterStats(struct Monster* monster)
 
 }
 
+//TOUSE:???
 uint8_t CountAliveMonstersInBattle(uint8_t caseId)
 {
 
@@ -1185,6 +1186,8 @@ struct Monster GenerateRandMonsterForWildEncounter(uint8_t maxLevel, uint8_t min
     return(monster);
 }
 
+
+//TODO: add effects for difficulty, better genetics, training, etc...
 struct Monster GenerateMonsterForCharacterSpriteBattle(uint8_t index, uint8_t level, uint16_t item)
 {
     uint8_t heldItem[2];
@@ -1273,11 +1276,12 @@ void GetMonsterNameFromIndex(uint8_t* name, uint8_t index)
 {
     int32_t i;
 
-    for (i = 0; i <= MAX_MONSTER_NAME_LENGTH; i++)
+    for (i = 0; i < MAX_MONSTER_NAME_LENGTH + 1; i++)
     {
-        if (index > NUM_MONSTERS)
+        if (index > NUM_MONSTERS - 1)
         {
             name[i] = gMonsterNames[MONSTER_NULL][i];
+            LogMessageA(LL_ERROR, "[%s] Error! Attempted to retrieve a gMonsterName from an unknown index! Index = %d !", __FUNCTION__, index);
         }
         else
         {

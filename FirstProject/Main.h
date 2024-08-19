@@ -186,11 +186,8 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 {
 	EVENT_FLAG_NULL,
 	EVENT_FLAG_TALK,
-	EVENT_FLAG_BATLLE,
+	EVENT_FLAG_BATTLE,
 	EVENT_FLAG_HEAL,
-	//TODO TRIGGER_INFINITE vs TRIGGER_ONCE
-	//EVENT_FLAG_TRIGGER_INFINITE,
-	//EVENT_FLAG_TRIGGER_ONCE,
 	EVENT_FLAG_EQUIPITEM_ONCE,
 	EVENT_FLAG_USEITEM_ONCE,
 	EVENT_FLAG_VALUEITEM_ONCE,
@@ -207,19 +204,66 @@ typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events a
 	EVENT_FLAG_VALUEITEM_NOSPRITE,
 	EVENT_FLAG_ADVENTUREITEM_NOSPRITE,
 	EVENT_FLAG_DRIVE_STORAGE,
+
 } EVENT_FLAGS;
 
-typedef enum TRIGGER_FLAGS
+typedef enum BATTLESTATE
+{
+	BATTLESTATE_OPENING_TEXT,
+	BATTLESTATE_OPENING_WAIT,
+	BATTLESTATE_TURNORDER_CALC,
+	BATTLESTATE_FIRSTMOVE_TEXT,
+	BATTLESTATE_FIRSTMOVE_WAIT,
+	BATTLESTATE_FIRSTMOVE_CALC,
+	BATTLESTATE_POSTFIRSTMOVE_TEXT,			//unused
+	BATTLESTATE_SECONDMOVE_TEXT,
+	BATTLESTATE_SECONDMOVE_WAIT,
+	BATTLESTATE_SECONDMOVE_CALC,
+	BATTLESTATE_POSTSECONDMOVE_TEXT,		//unused
+	BATTLESTATE_KO,
+	BATTLESTATE_KO_WAIT,
+	BATTLESTATE_REWARD,
+	BATTLESTATE_RUN_FIGHT,
+	BATTLESTATE_SWITCH_FIGHT,				///////TOUSE: harder difficulties where there is no running or item bag
+	BATTLESTATE_CHOOSE_MOVE,
+	BATTLESTATE_CHOOSE_MONSTER,
+	BATTLESTATE_CHOOSE_ITEM,
+	BATTLESTATE_SWITCHING_TEXT,
+	BATTLESTATE_SWITCHING_WAIT,
+	BATTLESTATE_FIRSTMOVE_POSTTEXT,
+	BATTLESTATE_FIRSTMOVE_POSTWAIT,
+	BATTLESTATE_SECONDMOVE_POSTTEXT,
+	BATTLESTATE_SECONDMOVE_POSTWAIT,
+	BATTLESTATE_USEITEM_TEXT,
+	BATTLESTATE_USEITEM_WAIT,
+	BATTLESTATE_CATCH_TEXT,
+	BATTLESTATE_CATCH_WAIT,
+	BATTLESTATE_CATCHSUCCESS_TEXT,
+	BATTLESTATE_CATCHSUCCESS_WAIT,
+	BATTLESTATE_NOESCAPE_TEXT,
+	BATTLESTATE_NOESCAPE_WAIT,
+	BATTLESTATE_ESCAPEFAIL_TEXT,
+	BATTLESTATE_ESCAPEFAIL_WAIT,
+	BATTLESTATE_ESCAPESUCCESS_TEXT,
+	BATTLESTATE_ESCAPESUCCESS_WAIT,
+	BATTLESTATE_OPPONENTSWITCH_TEXT,
+	BATTLESTATE_OPPONENTSWITCH_WAIT,
+	BATTLESTATE_OPPONENTITEM_TEXT,
+	BATTLESTATE_OPPONENTITEM_WAIT,
+
+} BATTLESTATE;
+
+typedef enum TRIGGER_TYPES
 {
 	//TODO:
-	TRIGGER_FLAG_NULL,
-	TRIGGER_FLAG_BLANK,
-	TRIGGER_FLAG_ONCE,
-	TRIGGER_FLAG_INFINITE,
-	TRIGGER_FLAG_COOLDOWN,
-	//TRIGGER_FLAG_STORY????
+	TRIGGER_TYPE_NULL,
+	TRIGGER_TYPE_BLANK,
+	TRIGGER_TYPE_ONCE,
+	TRIGGER_TYPE_INFINITE,
+	TRIGGER_TYPE_COOLDOWN,
+	//TRIGGER_TYPE_STORY????
 
-} TRIGGER_FLAGS;
+} TRIGGER_TYPES;
 
 typedef enum WINDOW_FLAGS
 {
@@ -233,6 +277,7 @@ typedef enum WINDOW_FLAGS
 
 } WINDOW_FLAGS;
 
+//TOREMOVE: dont need these when we have Dialogue.c
 typedef enum DIALOGUE_FLAGS
 {
 	DIALOGUE_FLAG_0,
@@ -247,6 +292,7 @@ typedef enum DIALOGUE_FLAGS
 	DIALOGUE_FLAG_9,
 
 } DIALOGUE_FLAGS;
+//
 
 typedef enum MOVEMENTTYPE		//////describes how npcs move within the game
 {
@@ -571,9 +617,9 @@ struct BattleMonster
 	uint32_t SpeedGenetics : 5;
 	uint32_t PsiGenetics : 5;
 	uint32_t ResolveGenetics : 5;
-	uint32_t AbilityNumber : 2;
+	uint32_t AbilityNumber : 2;		//??? remove?
 	int8_t StatChanges[MAX_STAT_CHANGES];
-	uint16_t Ability;
+	uint16_t Ability;	//ability index
 	uint8_t Element1;
 	uint8_t Element2;
 	uint8_t Level;
@@ -586,6 +632,7 @@ struct BattleMonster
 	uint32_t Status2;
 	uint32_t MonsterSeed;
 	uint32_t PlayerSeed;
+	BOOL EarnedExp;		//tags the monster so it may earn experience at the end of combat
 };
 
 struct LevelUpMove
@@ -688,30 +735,36 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	BOOL Loaded;
 	uint16_t GameAreaIndex;
 	UPOINT ResetWorldPos;
-	//POINT ResetScreenPos;
 	DIRECTION ResetDirection;
 	UPOINT ResetOriginWorldPos;
-	//POINT ResetOriginScreenPos;
 	DIRECTION ResetOriginDirection;
 	uint8_t ResetSightRange;
 	uint8_t SightRange;
 	UPOINT MovementRange;
-	char* Dialogue[MAX_DIALOGUE_BOXES];
-	uint8_t DialogueFlag;
-	uint8_t DialoguesBeforeLoop;
-	uint8_t DialogueLoopReturn;
+	//TODO: add this
+	//uint8_t GameFlag;				//associated with gGameFlags[]
+
 	uint8_t AnimationFrame;
 	BOOL InteractedWith;
-	EVENT_FLAGS Event;
+
+	//TODO: get rid of these and reference a table instead
+	/*char* Dialogue[MAX_DIALOGUE_BOXES];
+	uint8_t DialogueFlag;
+	uint8_t DialoguesBeforeLoop;
+	uint8_t DialogueLoopReturn;*/
+
+	//TODO: move these to a reference table
+	/*EVENT_FLAGS Event;
 	uint16_t EventItemsIndex[MAX_ITEMS_GIVE];
 	uint16_t EventItemsCount[MAX_ITEMS_GIVE];
 	uint8_t EventMonsterIndex;
 	uint8_t EventMonsterLevel;
-	uint16_t EventMonsterItem;
+	uint16_t EventMonsterItem;*/
 
 	//TODO: get rid of this and instead have a giant array of all opponent parties in the game and reference that list when battling
-	struct Monster MonsterParty[MAX_PARTY_SIZE];
-	uint8_t BattleAiFlag;
+	//struct Monster MonsterParty[MAX_PARTY_SIZE];
+	//uint8_t BattleAiFlag;
+
 
 } INGAMESPRITE;
 
@@ -723,7 +776,8 @@ typedef struct TRIGGER_TILE
 	BOOL Interactive;			//can the player press "e" on it? or do they walk over it to trigger the event
 	uint16_t GameAreaIndex;
 	BOOL InteractedWith;
-	TRIGGER_FLAGS Flag;
+	TRIGGER_TYPES Type;
+	uint8_t GameFlag;				//associated with gGameFlags[]
 
 } TRIGGER_TILE;
 
@@ -791,6 +845,9 @@ uint8_t gOpponentPartyCount;
 struct Monster gPlayerParty[MAX_PARTY_SIZE];
 struct Monster gOpponentParty[MAX_PARTY_SIZE];
 
+struct BattleMonster gPlayerBattleParty[MAX_PARTY_SIZE];
+struct BattleMonster gOpponentBattleParty[MAX_PARTY_SIZE];
+
 GAMEBITMAP gBattleSpriteBack[NUM_MONSTERS];	//////temp while still working on MONSTERINFO struct
 GAMEBITMAP gBattleSpriteFront[NUM_MONSTERS];
 
@@ -813,6 +870,7 @@ BOOL gFinishedDialogueTextAnimation;		//allows for dialogue text animation to re
 BOOL gFinishedBattleTextAnimation;			//same as above but for battles
 
 INGAMESPRITE gCharacterSprite[NUM_CHAR_SPRITES];
+INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES];
 TRIGGER_TILE gTriggerTiles[NUM_TRIGGERS];
 
 GAMEBITMAP gLootPickup;
@@ -897,7 +955,6 @@ HRESULT InitializeSoundEngine(void);
 
 DWORD LoadWaveFromMem(_In_ void* Buffer, _Inout_ GAMESOUND* GameSound);
 
-
 void PlayGameSound(_In_ GAMESOUND* GameSound);
 void PlayGameMusic(_In_ GAMESOUND* GameSound, _In_ BOOL Looping, _In_ BOOL Immediate);
 
@@ -908,7 +965,6 @@ BOOL MusicIsPlaying(void);
 
 DWORD LoadAssetFromArchive(_In_ char* Archive, _In_ char* AssetFileName, _Inout_ void* Resource);
 
-
 //DWORD LoadTileMapFromFile(_In_ char* FileName, _Inout_ TILEMAP* TileMap);
 
 DWORD LoadTileMapFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ TILEMAP* TileMap);
@@ -917,13 +973,9 @@ DWORD LoadTileMapFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ TI
 
 DWORD LoadOggFromMem(_In_ void* Buffer, _In_ uint32_t BufferSize, _Inout_ GAMESOUND* GameSound);
 
-
 DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam);
 
 void InitializeGlobals(void);
-
-void RandomMonsterEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
-void TrainerEncounter(_In_ GAMESTATE* PreviousGameState, _Inout_ GAMESTATE* CurrentGameState);
 
 void DrawWindow( _In_opt_ uint16_t x, _In_opt_ uint16_t y, _In_ int16_t Width, _In_ int16_t Height, _In_opt_ PIXEL32* BorderColor, _In_opt_ PIXEL32* BackgroundColor, _In_opt_ PIXEL32* ShadowColor, _In_ DWORD Flags);
 
@@ -937,7 +989,7 @@ void DrawDialogueBox(_In_ char* Dialogue, _In_opt_ uint64_t Counter, _In_opt_ DW
 
 void DrawMonsterHpBar(uint16_t x, uint16_t y, uint8_t percentHp100, uint8_t percentExp100, uint8_t monsterLevel, char* monsterNickname, BOOL showExpBar);
 
-BOOL BlitBattleStateTextBox_Text(enum BATTLESTATE battlestate_wait, uint8_t battleTextLineCount, uint64_t frameCounter);
+BOOL BlitBattleStateTextBox_Text(BATTLESTATE battlestate_wait, uint8_t battleTextLineCount, uint64_t frameCounter);
 
 void BlitBattleStateTextBox_Wait(uint8_t battleTextLineCount);
 
@@ -958,3 +1010,7 @@ BOOL CanPlayerAffordCurrencyCost(uint32_t currencycost);
 uint8_t* StringCopy(uint8_t* dest, const uint8_t* source);
 
 uint16_t Random16(void);
+
+void GoToDestGamestate(GAMESTATE destination);
+
+void GoToPrevGamestate(void);

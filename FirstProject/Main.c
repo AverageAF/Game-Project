@@ -31,6 +31,7 @@
 #include "MonsterStorage.h"
 #include "StoreScreen.h"
 #include "DriveStorageMenu.h"
+#include "NPCData.h"
 
 #include "variables.h"
 #include "flags.h"
@@ -227,12 +228,12 @@ int WinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PreviousInstance, _In_ P
 
     __stosd(gBackBuffer.Memory, 0xFF000000, GAME_DRAWING_AREA_MEMORY_SIZE / sizeof(DWORD));
 
-    if (InitializeSprites() != ERROR_SUCCESS)
-    {
-        LogMessageA(LL_ERROR, "[%s] Failed to initialize NPC sprites!", __FUNCTION__);
-        MessageBoxA(NULL, "Failed to Initialize NPC sprites!", "Error!", MB_ICONERROR | MB_OK);
-        goto Exit;
-    }
+    //if (InitializeSprites() != ERROR_SUCCESS)
+    //{
+    //    LogMessageA(LL_ERROR, "[%s] Failed to initialize NPC sprites!", __FUNCTION__);
+    //    MessageBoxA(NULL, "Failed to Initialize NPC sprites!", "Error!", MB_ICONERROR | MB_OK);
+    //    goto Exit;
+    //}
 
     if (InitializePlayer() != ERROR_SUCCESS)
     {
@@ -602,255 +603,10 @@ InputDisabled:
 
 DWORD InitializeSprites(void)
 {
-    /////////////////////////////////////////temporary init of character sprites/////////////////////
-
-    gCharacterSprite[0].WorldPos.x = 352;
-    gCharacterSprite[0].WorldPos.y = 4544;
-    gCharacterSprite[0].ResetWorldPos.x = 352;
-    gCharacterSprite[0].ResetWorldPos.y = 4544;
-    gCharacterSprite[0].ResetOriginWorldPos.x = 352;
-    gCharacterSprite[0].ResetOriginWorldPos.y = 4544;
-    gCharacterSprite[0].Direction = LEFT;
-    gCharacterSprite[0].ResetDirection = LEFT;
-    gCharacterSprite[0].Event = EVENT_FLAG_MONSTER;
-    gCharacterSprite[0].EventMonsterIndex = MONSTER_WOLF;
-    gCharacterSprite[0].EventMonsterLevel = 6;
-    gCharacterSprite[0].Movement = MOVEMENT_WALK_UP_DOWN;
-    gCharacterSprite[0].MovementRange.y = 3;
-    gCharacterSprite[0].MovementRange.x = 5;
-    gCharacterSprite[0].Visible = FALSE;
-    gCharacterSprite[0].Exists = TRUE;
-    gCharacterSprite[0].Loaded = FALSE;
-    gCharacterSprite[0].GameAreaIndex = 2;
-    gCharacterSprite[0].Dialogue[DIALOGUE_FLAG_0] = "Here have a Monster!\nI don't really need one";
-    gCharacterSprite[0].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[0].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
-    gCharacterSprite[0].DialogueLoopReturn = DIALOGUE_FLAG_0;
-
-    ///////////////////////for right now only numeric sprites, TODO #define sprite names to be used in gCharacterSprite[name]
-
-    gCharacterSprite[1].WorldPos.x = 4032;
-    gCharacterSprite[1].WorldPos.y = 656;
-    gCharacterSprite[1].ResetWorldPos.x = 4032;
-    gCharacterSprite[1].ResetWorldPos.y = 656;
-    gCharacterSprite[1].ResetOriginWorldPos.x = 4032;
-    gCharacterSprite[1].ResetOriginWorldPos.y = 656;
-    gCharacterSprite[1].Direction = DOWN;
-    gCharacterSprite[1].ResetDirection = DOWN;
-    gCharacterSprite[1].Movement = MOVEMENT_STILL;
-    gCharacterSprite[1].Visible = FALSE;
-    gCharacterSprite[1].Exists = TRUE;
-    gCharacterSprite[1].Loaded = FALSE;
-    gCharacterSprite[1].GameAreaIndex = 9;
-    gCharacterSprite[1].Event = EVENT_FLAG_HEAL;
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_0] = "You decided to rest for a while.";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_1] = "...";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_2] = "...";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_3] = "...";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_4] = "...";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_5] = "...";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_6] = "...";
-    gCharacterSprite[1].Dialogue[DIALOGUE_FLAG_7] = "After sleeping a while \nyour party feels better!";
-    gCharacterSprite[1].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[1].DialoguesBeforeLoop = DIALOGUE_FLAG_7;
-    gCharacterSprite[1].DialogueLoopReturn = DIALOGUE_FLAG_0;
-
-    //TODO: make this a function EmptyCharSprite();
-
-    /*for (uint8_t spritevalue = 0; spritevalue < NUM_SPRITES_PALLET; spritevalue++)
+    for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
     {
-        gCharacterSprite[1].Sprite[spritevalue] = gEmptySprite;
-    }*/
-
-
-    //////////////////////////////////////////////////////////////
-
-    gCharacterSprite[2].WorldPos.x = 1136;
-    gCharacterSprite[2].WorldPos.y = 4496;
-    gCharacterSprite[2].ResetWorldPos.x = 1136;
-    gCharacterSprite[2].ResetWorldPos.y = 4496;
-    gCharacterSprite[2].ResetOriginWorldPos.x = 1136;
-    gCharacterSprite[2].ResetOriginWorldPos.y = 4496;
-    gCharacterSprite[2].Direction = DOWN;
-    gCharacterSprite[2].ResetDirection = DOWN;
-    gCharacterSprite[2].SightRange = 3;
-    gCharacterSprite[2].ResetSightRange = 3;
-    gCharacterSprite[2].Event = EVENT_FLAG_BATLLE;
-    gCharacterSprite[2].Movement = MOVEMENT_STILL;
-    gCharacterSprite[2].Visible = FALSE;
-    gCharacterSprite[2].Exists = TRUE;
-    gCharacterSprite[2].Loaded = FALSE;
-    gCharacterSprite[2].GameAreaIndex = 3;
-    gCharacterSprite[2].Dialogue[DIALOGUE_FLAG_0] = "Lets have a battle!";
-    gCharacterSprite[2].Dialogue[DIALOGUE_FLAG_1] = "Wow! You're strong!";
-    gCharacterSprite[2].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[2].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
-    gCharacterSprite[2].DialogueLoopReturn = DIALOGUE_FLAG_1;
-    gCharacterSprite[2].BattleAiFlag = FLAG_NPCAI_SWITCHDEFENSIVE;
-
-    sprintf_s(gCharacterSprite[2].Name, sizeof(gCharacterSprite[2].Name), "Jerry");
-
-    gCharacterSprite[2].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(MONSTER_WOLF, 6, 0);
-    gCharacterSprite[2].MonsterParty[1] = GenerateMonsterForCharacterSpriteBattle(MONSTER_AIRWOLF, 7, 0);
-    gCharacterSprite[2].MonsterParty[2] = GenerateMonsterForCharacterSpriteBattle(MONSTER_EARTHWOLF, 7, 0);
-    gCharacterSprite[2].MonsterParty[3] = GenerateMonsterForCharacterSpriteBattle(MONSTER_WATERWOLF, 8, 0);
-
-    //////////////////////////////////////////////////////////////
-
-    gCharacterSprite[3].WorldPos.x = 528;
-    gCharacterSprite[3].WorldPos.y = 4624;
-    gCharacterSprite[3].ResetWorldPos.x = 528;
-    gCharacterSprite[3].ResetWorldPos.y = 4624;
-    gCharacterSprite[3].ResetOriginWorldPos.x = 528;
-    gCharacterSprite[3].ResetOriginWorldPos.y = 4624;
-    gCharacterSprite[3].Direction = DOWN;
-    gCharacterSprite[3].ResetDirection = DOWN;
-    gCharacterSprite[3].Event = EVENT_FLAG_HEAL;
-    gCharacterSprite[3].Movement = MOVEMENT_STILL;
-    gCharacterSprite[3].Visible = FALSE;
-    gCharacterSprite[3].Exists = FALSE;
-    gCharacterSprite[3].Loaded = FALSE;
-    gCharacterSprite[3].GameAreaIndex = 2;
-    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_0] = "Let me heal your monsters!";
-    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_1] = "...";
-    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_2] = "...";
-    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_3] = "...";
-    gCharacterSprite[3].Dialogue[DIALOGUE_FLAG_4] = "There! They seem much better!";
-    gCharacterSprite[3].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[3].DialoguesBeforeLoop = DIALOGUE_FLAG_4;
-    gCharacterSprite[3].DialogueLoopReturn = DIALOGUE_FLAG_0;
-
-    //////////////////////////////////////////////////////////////
-
-    gCharacterSprite[4].WorldPos.x = 288;
-    gCharacterSprite[4].WorldPos.y = 4480;
-    gCharacterSprite[4].ResetWorldPos.x = 288;
-    gCharacterSprite[4].ResetWorldPos.y = 4480;
-    gCharacterSprite[4].ResetOriginWorldPos.x = 288;
-    gCharacterSprite[4].ResetOriginWorldPos.y = 4480;
-    gCharacterSprite[4].Direction = UP;
-    gCharacterSprite[4].ResetDirection = UP;
-    gCharacterSprite[4].Event = EVENT_FLAG_DRIVE_STORAGE;
-    gCharacterSprite[4].Movement = MOVEMENT_STILL;
-    gCharacterSprite[4].Visible = FALSE;
-    gCharacterSprite[4].Exists = TRUE;
-    gCharacterSprite[4].Loaded = FALSE;
-    gCharacterSprite[4].GameAreaIndex = 2;
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_0] = "You opened up the\nMonster Drive Storage System!";
-    gCharacterSprite[4].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[4].DialoguesBeforeLoop = DIALOGUE_FLAG_0;
-    gCharacterSprite[4].DialogueLoopReturn = DIALOGUE_FLAG_0;
-
-    /*gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_0] = "Do you want to buy something?";
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_1] = "I have all sorts of wares!";
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_2] = "Buy something!";
-    gCharacterSprite[4].Dialogue[DIALOGUE_FLAG_9] = "Come again!";*/
-
-    //gStoreType[4] = 4;
-    //sprintf_s(gCharacterSprite[4].Name, sizeof(gCharacterSprite[4].Name), "Items");
-
-    //////////////////////////////////////////////////////////////
-
-    gCharacterSprite[5].WorldPos.x = 352 + 64;
-    gCharacterSprite[5].WorldPos.y = 4544 + 64;
-    gCharacterSprite[5].ResetWorldPos.x = 352 + 64;
-    gCharacterSprite[5].ResetWorldPos.y = 4544 + 64;
-    gCharacterSprite[5].ResetOriginWorldPos.x = 352 + 64;
-    gCharacterSprite[5].ResetOriginWorldPos.y = 4544 + 64;
-    gCharacterSprite[5].Direction = DOWN;
-    gCharacterSprite[5].ResetDirection = DOWN;
-    gCharacterSprite[5].Event = EVENT_FLAG_USEITEM_NOSPRITE;
-    gCharacterSprite[5].Movement = MOVEMENT_SPARKLE;
-    gCharacterSprite[5].Visible = FALSE;
-    gCharacterSprite[5].Exists = TRUE;
-    gCharacterSprite[5].Loaded = FALSE;
-    gCharacterSprite[5].GameAreaIndex = 2;
-    gCharacterSprite[5].Dialogue[DIALOGUE_FLAG_0] = "You found a hidden item!";
-    gCharacterSprite[5].Dialogue[DIALOGUE_FLAG_1] = "You put it away \ninto your backpack.";
-    gCharacterSprite[5].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[5].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
-    gCharacterSprite[5].DialogueLoopReturn = DIALOGUE_FLAG_0;
-    gCharacterSprite[5].EventItemsIndex[0] = INV_USABLE_ITEM_0;
-    gCharacterSprite[5].EventItemsCount[0] = 5;
-
-    //////////////////////////////////////////////////////////////
-
-    gCharacterSprite[6].WorldPos.x = 608;
-    gCharacterSprite[6].WorldPos.y = 4464;
-    gCharacterSprite[6].ResetWorldPos.x = 608;
-    gCharacterSprite[6].ResetWorldPos.y = 4464;
-    gCharacterSprite[6].ResetOriginWorldPos.x = 608;
-    gCharacterSprite[6].ResetOriginWorldPos.y = 4464;
-    gCharacterSprite[6].Direction = DOWN;
-    gCharacterSprite[6].ResetDirection = DOWN;
-    gCharacterSprite[6].Event = EVENT_FLAG_USEITEM_NOSPRITE;
-    gCharacterSprite[6].Movement = MOVEMENT_ITEMPICKUP;
-    gCharacterSprite[6].Visible = FALSE;
-    gCharacterSprite[6].Exists = TRUE;
-    gCharacterSprite[6].Loaded = FALSE;
-    gCharacterSprite[6].GameAreaIndex = 3;
-    gCharacterSprite[6].Dialogue[DIALOGUE_FLAG_0] = "You found an item!";
-    gCharacterSprite[6].Dialogue[DIALOGUE_FLAG_1] = "You put it away \ninto your backpack.";
-    gCharacterSprite[6].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[6].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
-    gCharacterSprite[6].DialogueLoopReturn = DIALOGUE_FLAG_0;
-    gCharacterSprite[6].EventItemsIndex[0] = INV_USABLE_ITEM_0;
-    gCharacterSprite[6].EventItemsCount[0] = 5;
-
-    //////////////////////////////////////////////////////////////
-
-    gCharacterSprite[7].WorldPos.x = 896;
-    gCharacterSprite[7].WorldPos.y = 4464;
-    gCharacterSprite[7].ResetWorldPos.x = 896;
-    gCharacterSprite[7].ResetWorldPos.y = 4464;
-    gCharacterSprite[7].ResetOriginWorldPos.x = 896;
-    gCharacterSprite[7].ResetOriginWorldPos.y = 4464;
-    gCharacterSprite[7].Direction = DOWN;
-    gCharacterSprite[7].ResetDirection = DOWN;
-    gCharacterSprite[7].SightRange = 3;
-    gCharacterSprite[7].ResetSightRange = 3;
-    gCharacterSprite[7].Event = EVENT_FLAG_BATLLE;
-    gCharacterSprite[7].Movement = MOVEMENT_STILL;
-    gCharacterSprite[7].Visible = FALSE;
-    gCharacterSprite[7].Exists = TRUE;
-    gCharacterSprite[7].Loaded = FALSE;
-    gCharacterSprite[7].GameAreaIndex = 3;
-    gCharacterSprite[7].Dialogue[DIALOGUE_FLAG_0] = "Are you going into the forest?";
-    gCharacterSprite[7].Dialogue[DIALOGUE_FLAG_1] = "Battle me before you go in!";
-    gCharacterSprite[7].Dialogue[DIALOGUE_FLAG_2] = "Maybe I should train more...";
-    gCharacterSprite[7].DialogueFlag = DIALOGUE_FLAG_0;
-    gCharacterSprite[7].DialoguesBeforeLoop = DIALOGUE_FLAG_1;
-    gCharacterSprite[7].DialogueLoopReturn = DIALOGUE_FLAG_2;
-    gCharacterSprite[7].BattleAiFlag = FLAG_NPCAI_SWITCHOFFENSIVE;
-
-    sprintf_s(gCharacterSprite[7].Name, sizeof(gCharacterSprite[7].Name), "Jimmy");
-
-    gCharacterSprite[7].MonsterParty[0] = GenerateMonsterForCharacterSpriteBattle(MONSTER_DEATHWOLF, 5, 0);
-    gCharacterSprite[7].MonsterParty[1] = GenerateMonsterForCharacterSpriteBattle(MONSTER_LIFEWOLF, 6, 0);
-    gCharacterSprite[7].MonsterParty[2] = GenerateMonsterForCharacterSpriteBattle(MONSTER_WATERWOLF, 7, 0);
-    gCharacterSprite[7].MonsterParty[3] = GenerateMonsterForCharacterSpriteBattle(MONSTER_FIREWOLF, 8, 0);
-
-    //////////////////////////////////////////////////////////////
-
-    //trigger tile
-    //TODO: make trigger tiles instead of using invisible NPC's as trigger tiles
-
-    /*gCharacterSprite[8].WorldPos.x = 352;
-    gCharacterSprite[8].WorldPos.y = 4544;
-    gCharacterSprite[8].ResetWorldPos.x = 352;
-    gCharacterSprite[8].ResetWorldPos.y = 4544;
-    gCharacterSprite[8].ResetOriginWorldPos.x = 352;
-    gCharacterSprite[8].ResetOriginWorldPos.y = 4544;
-    gCharacterSprite[8].Direction = DOWN;
-    gCharacterSprite[8].ResetDirection = DOWN;
-    gCharacterSprite[8].Event = EVENT_FLAG_TRIGGER_ONCE;
-    gCharacterSprite[8].Movement = MOVEMENT_TRIGGER;
-    gCharacterSprite[8].Visible = FALSE;
-    gCharacterSprite[8].Exists = TRUE;
-    gCharacterSprite[8].Loaded = FALSE;
-    gCharacterSprite[8].GameAreaIndex = 2;*/
-
-    //////////////////////////////////////////////////////////////
+        gCharacterSprite[Index] = gInitSprite[Index];
+    }
 
     return (0);
 }
@@ -859,15 +615,14 @@ DWORD InitializeTriggers(void)
 {
     gTriggerTiles[PROFESSOR_SCRIPT].WorldPos.x = 352;
     gTriggerTiles[PROFESSOR_SCRIPT].WorldPos.y = 4544;
-    gTriggerTiles[PROFESSOR_SCRIPT].Flag = TRIGGER_FLAG_ONCE;
+    gTriggerTiles[PROFESSOR_SCRIPT].Type = TRIGGER_TYPE_ONCE;
     gTriggerTiles[PROFESSOR_SCRIPT].Exists = TRUE;
     gTriggerTiles[PROFESSOR_SCRIPT].Loaded = FALSE;
     gTriggerTiles[PROFESSOR_SCRIPT].Interactive = FALSE;
     gTriggerTiles[PROFESSOR_SCRIPT].GameAreaIndex = 2;
+    gTriggerTiles[PROFESSOR_SCRIPT].GameFlag = FLAG_AQUIRED_MONSTER;
 
     /////////////////////////////////////////////////
-
-
 
     return(0);
 }
@@ -2469,99 +2224,102 @@ DWORD AssetLoadingThreadProc(_In_ LPVOID lpParam)
         {   "Suit0FacingUp0.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_0] },
         {   "Suit0FacingUp1.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_1] },
         {   "Suit0FacingUp2.bmpx", &gPlayer.Sprite[SUIT_0][FACING_UP_2] },
-        {   "ManFacingDown0.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_0] },
-        {   "ManFacingDown1.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_1] },
-        {   "ManFacingDown2.bmpx", &gCharacterSprite[0].Sprite[FACING_DOWN_2] },
-        {   "ManFacingLeft0.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_0] },
-        {   "ManFacingLeft1.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_1] },
-        {   "ManFacingLeft2.bmpx", &gCharacterSprite[0].Sprite[FACING_LEFT_2] },
-        {   "ManFacingRight0.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingRight1.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_1] },
-        {   "ManFacingRight2.bmpx", &gCharacterSprite[0].Sprite[FACING_RIGHT_2] },
-        {   "ManFacingUp0.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_0] },
-        {   "ManFacingUp1.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_1] },
-        {   "ManFacingUp2.bmpx", &gCharacterSprite[0].Sprite[FACING_UP_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_DOWN_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_LEFT_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_RIGHT_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[1].Sprite[FACING_UP_2] },
-        {   "ManFacingDown0.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_0] },
-        {   "ManFacingDown1.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_1] },
-        {   "ManFacingDown2.bmpx", &gCharacterSprite[2].Sprite[FACING_DOWN_2] },
-        {   "ManFacingLeft0.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_0] },
-        {   "ManFacingLeft1.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_1] },
-        {   "ManFacingLeft2.bmpx", &gCharacterSprite[2].Sprite[FACING_LEFT_2] },
-        {   "ManFacingRight0.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingRight1.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_1] },
-        {   "ManFacingRight2.bmpx", &gCharacterSprite[2].Sprite[FACING_RIGHT_2] },
-        {   "ManFacingUp0.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_0] },
-        {   "ManFacingUp1.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_1] },
-        {   "ManFacingUp2.bmpx", &gCharacterSprite[2].Sprite[FACING_UP_2] },
-        {   "ManFacingDown0.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_0] },
-        {   "ManFacingDown1.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_1] },
-        {   "ManFacingDown2.bmpx", &gCharacterSprite[3].Sprite[FACING_DOWN_2] },
-        {   "ManFacingLeft0.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_0] },
-        {   "ManFacingLeft1.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_1] },
-        {   "ManFacingLeft2.bmpx", &gCharacterSprite[3].Sprite[FACING_LEFT_2] },
-        {   "ManFacingRight0.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_0] },
-        {   "ManFacingRight1.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_1] },
-        {   "ManFacingRight2.bmpx", &gCharacterSprite[3].Sprite[FACING_RIGHT_2] },
-        {   "ManFacingUp0.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_0] },
-        {   "ManFacingUp1.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_1] },
-        {   "ManFacingUp2.bmpx", &gCharacterSprite[3].Sprite[FACING_UP_2] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_0] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_1] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_DOWN_2] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_0] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_1] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_LEFT_2] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_0] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_1] },
-        {   "StorageComputerOn.bmpx", &gCharacterSprite[4].Sprite[FACING_RIGHT_2] },
-        {   "StorageComputerOff.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_0] },
-        {   "StorageComputerOff.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_1] },
-        {   "StorageComputerOff.bmpx", &gCharacterSprite[4].Sprite[FACING_UP_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_DOWN_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_LEFT_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_LEFT_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_LEFT_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_RIGHT_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_RIGHT_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_RIGHT_2] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_UP_0] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_UP_1] },
-        {   "EmptySprite.bmpx", &gCharacterSprite[5].Sprite[FACING_UP_2] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_DOWN_0] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_DOWN_1] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_DOWN_2] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_LEFT_0] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_LEFT_1] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_LEFT_2] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_RIGHT_0] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_RIGHT_1] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_RIGHT_2] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_0] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_1] },
-        {   "SmallBag.bmpx", &gCharacterSprite[6].Sprite[FACING_UP_2] },
-        { "ManFacingDown0.bmpx", &gCharacterSprite[7].Sprite[FACING_DOWN_0] },
-        { "ManFacingDown1.bmpx", &gCharacterSprite[7].Sprite[FACING_DOWN_1] },
-        { "ManFacingDown2.bmpx", &gCharacterSprite[7].Sprite[FACING_DOWN_2] },
-        { "ManFacingLeft0.bmpx", &gCharacterSprite[7].Sprite[FACING_LEFT_0] },
-        { "ManFacingLeft1.bmpx", &gCharacterSprite[7].Sprite[FACING_LEFT_1] },
-        { "ManFacingLeft2.bmpx", &gCharacterSprite[7].Sprite[FACING_LEFT_2] },
-        { "ManFacingRight0.bmpx", &gCharacterSprite[7].Sprite[FACING_RIGHT_0] },
-        { "ManFacingRight1.bmpx", &gCharacterSprite[7].Sprite[FACING_RIGHT_1] },
-        { "ManFacingRight2.bmpx", &gCharacterSprite[7].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingDown0.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gInitSprite[NPC_PROF].Sprite[FACING_UP_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_DOWN_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_DOWN_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_DOWN_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_LEFT_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_LEFT_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_LEFT_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_RIGHT_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_RIGHT_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_RIGHT_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_UP_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_UP_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_BED_01].Sprite[FACING_UP_2] },
+        {   "ManFacingDown0.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gInitSprite[NPC_JIMMY].Sprite[FACING_UP_2] },
+        {   "ManFacingDown0.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_DOWN_0] },
+        {   "ManFacingDown1.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_DOWN_1] },
+        {   "ManFacingDown2.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_DOWN_2] },
+        {   "ManFacingLeft0.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_LEFT_0] },
+        {   "ManFacingLeft1.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_LEFT_1] },
+        {   "ManFacingLeft2.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_LEFT_2] },
+        {   "ManFacingRight0.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_RIGHT_0] },
+        {   "ManFacingRight1.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_RIGHT_1] },
+        {   "ManFacingRight2.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_RIGHT_2] },
+        {   "ManFacingUp0.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_UP_0] },
+        {   "ManFacingUp1.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_UP_1] },
+        {   "ManFacingUp2.bmpx", &gInitSprite[NPC_JERRY].Sprite[FACING_UP_2] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_DOWN_0] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_DOWN_1] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_DOWN_2] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_LEFT_0] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_LEFT_1] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_LEFT_2] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_RIGHT_0] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_RIGHT_1] },
+        {   "StorageComputerOn.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_RIGHT_2] },
+        {   "StorageComputerOff.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_UP_0] },
+        {   "StorageComputerOff.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_UP_1] },
+        {   "StorageComputerOff.bmpx", &gInitSprite[NPC_STORAGE_01].Sprite[FACING_UP_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_DOWN_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_DOWN_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_DOWN_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_LEFT_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_LEFT_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_LEFT_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_RIGHT_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_RIGHT_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_RIGHT_2] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_UP_0] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_UP_1] },
+        {   "EmptySprite.bmpx", &gInitSprite[NPC_HIDDENITEM_01].Sprite[FACING_UP_2] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_DOWN_0] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_DOWN_1] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_DOWN_2] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_LEFT_0] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_LEFT_1] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_LEFT_2] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_RIGHT_0] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_RIGHT_1] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_RIGHT_2] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_UP_0] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_UP_1] },
+        {   "SmallBag.bmpx", &gInitSprite[NPC_ITEM_01].Sprite[FACING_UP_2] },
+        { "ManFacingDown0.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_DOWN_0] },
+        { "ManFacingDown1.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_DOWN_1] },
+        { "ManFacingDown2.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_DOWN_2] },
+        { "ManFacingLeft0.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_LEFT_0] },
+        { "ManFacingLeft1.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_LEFT_1] },
+        { "ManFacingLeft2.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_LEFT_2] },
+        { "ManFacingRight0.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_RIGHT_0] },
+        { "ManFacingRight1.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_RIGHT_1] },
+        { "ManFacingRight2.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_RIGHT_2] },
+        { "ManFacingUp0.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_UP_0] },
+        { "ManFacingUp1.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_UP_1] },
+        { "ManFacingUp2.bmpx", &gInitSprite[NPC_HEAL_01].Sprite[FACING_UP_2] },
         {   "SmallBag.bmpx", &gLootPickup },
         {   "EmptySprite.bmpx", &gEmptySprite },
         {   "Sparkle01(3).bmpx", &gSparkle01[3]},
@@ -3851,4 +3609,28 @@ uint16_t Random16(void)
     rand_s((unsigned int*)&Random);
     Random16 = (uint16_t)Random;
     return (Random16);
+}
+
+void GoToDestGamestate(GAMESTATE destination)
+{
+    //store destination
+    gDesiredGameState = destination;
+
+    //store where we just were
+    gPreviousGameState = gCurrentGameState;
+
+    //transition
+    gCurrentGameState = gDesiredGameState;
+}
+
+void GoToPrevGamestate(void)
+{
+    //store destination
+    gDesiredGameState = gPreviousGameState;
+
+    //store where we just were
+    gPreviousGameState = gCurrentGameState;
+
+    //transition
+    gCurrentGameState = gDesiredGameState;
 }

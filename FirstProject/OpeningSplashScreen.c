@@ -72,6 +72,13 @@ void DrawOpeningSplashScreen(void)
                 DWORD ThreadExitCode = ERROR_SUCCESS;
                 GetExitCodeThread(gAssetLoadingThreadHandle, &ThreadExitCode);
 
+                //////Moved this action from main.c to here so that we dont accidentially initiallize before the other thread decompresses assets
+                if (InitializeSprites() != ERROR_SUCCESS)
+                {
+                    LogMessageA(LL_ERROR, "[%s] Failed to initialize NPC sprites!", __FUNCTION__);
+                    MessageBoxA(NULL, "Failed to Initialize NPC sprites!", "Error!", MB_ICONERROR | MB_OK);
+                }
+
                 if (ThreadExitCode != ERROR_SUCCESS)
                 {
                     LogMessageA(LL_ERROR, "[%s] Asset loading thread failed with 0x%08lx!", __FUNCTION__, ThreadExitCode);
