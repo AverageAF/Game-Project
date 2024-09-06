@@ -5,6 +5,8 @@
 #include "Inventory.h"
 #include "BattleScreen.h"
 #include "MonsterData.h"
+
+#include "flags.h"
 //#include "ExperienceTables.h"
 //#include "BaseStats.h"
 
@@ -26,8 +28,11 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 		.ResetDirection = DOWN,
 		.ResetOriginDirection = DOWN,
 
-		//.Sprite[0] =	//set up a function here
-		
+		//.Sprite[0] =	//set up a function here for loading sprite pallets into specific sprites
+
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
@@ -59,6 +64,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = TRUE,
@@ -90,6 +98,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_AQUIRED_MONSTER,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
@@ -101,7 +112,7 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 		.SightRange = 0,
 		.ResetSightRange = 0,
 
-		.MovementRange = 1,
+		.MovementRange = 0,
 
 	},
 	[NPC_HEAL_01] =
@@ -121,6 +132,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
@@ -152,6 +166,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
@@ -183,6 +200,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
@@ -214,6 +234,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
@@ -245,6 +268,9 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_ITEMPICKUP,
 
 		.Visible = FALSE,
@@ -276,7 +302,44 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 
 		//.Sprite
 
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_NULL,
+		.SetFlag = FLAG_NULL,
 		.Movement = MOVEMENT_SPARKLE,
+
+		.Visible = FALSE,
+		.Loaded = FALSE,
+		.Exists = TRUE,
+
+		.GameAreaIndex = 2,
+
+		.SightRange = 0,
+		.ResetSightRange = 0,
+
+		.MovementRange = 0,
+
+	},
+	[NPC_BLOCK_01] =
+	{
+		.Name = "Blocker",
+
+		.WorldPos.x = 528,
+		.WorldPos.y = 4640,
+		.ResetWorldPos.x = 528,
+		.ResetWorldPos.y = 4640,
+		.ResetOriginWorldPos.x = 528,
+		.ResetOriginWorldPos.y = 4640,
+
+		.Direction = RIGHT,
+		.ResetDirection = RIGHT,
+		.ResetOriginDirection = RIGHT,
+
+		//.Sprite
+
+		.CheckFlag = FLAG_NULL,
+		.GameFlag = FLAG_AQUIRED_MONSTER,
+		.SetFlag = FLAG_NULL,
+		.Movement = MOVEMENT_STILL,
 
 		.Visible = FALSE,
 		.Loaded = FALSE,
@@ -296,7 +359,7 @@ INGAMESPRITE gInitSprite[NUM_CHAR_SPRITES] = {
 NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 {
 	[NPC_NULL] = {
-		.Event = EVENT_FLAG_NULL,
+		.Event = EVENT_NULL,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
@@ -304,7 +367,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_BED_01] = {
-		.Event = EVENT_FLAG_HEAL,
+		.Event = EVENT_HEAL,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
@@ -312,7 +375,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_PROF] = {
-		.Event = EVENT_FLAG_MONSTER,
+		.Event = EVENT_MONSTER,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = MONSTER_WOLF,
@@ -320,7 +383,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 5,
 	},
 	[NPC_HEAL_01] = {
-		.Event = EVENT_FLAG_HEAL,
+		.Event = EVENT_HEAL,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
@@ -328,7 +391,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_JIMMY] = {
-		.Event = EVENT_FLAG_BATTLE,
+		.Event = EVENT_BATTLE,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
@@ -336,7 +399,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_JERRY] = {
-		.Event = EVENT_FLAG_BATTLE,
+		.Event = EVENT_BATTLE,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
@@ -344,7 +407,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_STORAGE_01] = {
-		.Event = EVENT_FLAG_DRIVE_STORAGE,
+		.Event = EVENT_DRIVE_STORAGE,
 		.EventItemsCount = 0,
 		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
@@ -352,7 +415,7 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_ITEM_01] = {
-		.Event = EVENT_FLAG_USEITEM_NOSPRITE,
+		.Event = EVENT_USEITEM_NOSPRITE,
 		.EventItemsCount[0] = 5,
 		.EventItemsIndex[0] = INV_USABLE_ITEM_0,
 		.EventMonsterIndex = 0,
@@ -360,9 +423,17 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES] =
 		.EventMonsterLevel = 0,
 	},
 	[NPC_HIDDENITEM_01] = {
-		.Event = EVENT_FLAG_USEITEM_NOSPRITE,
+		.Event = EVENT_USEITEM_NOSPRITE,
 		.EventItemsCount[0] = 5,
 		.EventItemsIndex[0] = INV_USABLE_ITEM_0,
+		.EventMonsterIndex = 0,
+		.EventMonsterItem = 0,
+		.EventMonsterLevel = 0,
+	},
+	[NPC_BLOCK_01] = {
+		.Event = EVENT_TALK,
+		.EventItemsCount = 0,
+		.EventItemsIndex = 0,
 		.EventMonsterIndex = 0,
 		.EventMonsterItem = 0,
 		.EventMonsterLevel = 0,
@@ -1432,11 +1503,129 @@ NPC_BATTLE_DATA gNPCBattleTable[NUM_CHAR_SPRITES] =
 			.DriveMonster.ResolveGenetics = 0,
 			.DriveMonster.SpeedGenetics = 0,
 		},
-	}
+	},
+	[NPC_BLOCK_01] = {
+		.BaseReward = 0,
+		.BattleAiFlag = FLAG_NPCAI_RANDOM,
+		.Party[0] =
+		{
+			.DriveMonster.Index = MONSTER_NULL,
+			.Level = 1,
+			.DriveMonster.AbilityNumber = ABILITY_NONE,
+			.DriveMonster.HeldItem = 0,
+
+			.DriveMonster.Moves[0] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[1] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[2] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[3] = BATTLEMOVE_NULL,
+
+			.DriveMonster.HpGenetics = 0,
+			.DriveMonster.AttackGenetics = 0,
+			.DriveMonster.DefenseGenetics = 0,
+			.DriveMonster.PsiGenetics = 0,
+			.DriveMonster.ResolveGenetics = 0,
+			.DriveMonster.SpeedGenetics = 0,
+		},
+		.Party[1] =
+		{
+			.DriveMonster.Index = MONSTER_NULL,
+			.Level = 1,
+			.DriveMonster.AbilityNumber = ABILITY_NONE,
+			.DriveMonster.HeldItem = 0,
+
+			.DriveMonster.Moves[0] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[1] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[2] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[3] = BATTLEMOVE_NULL,
+
+			.DriveMonster.HpGenetics = 0,
+			.DriveMonster.AttackGenetics = 0,
+			.DriveMonster.DefenseGenetics = 0,
+			.DriveMonster.PsiGenetics = 0,
+			.DriveMonster.ResolveGenetics = 0,
+			.DriveMonster.SpeedGenetics = 0,
+		},
+		.Party[2] =
+		{
+			.DriveMonster.Index = MONSTER_NULL,
+			.Level = 1,
+			.DriveMonster.AbilityNumber = ABILITY_NONE,
+			.DriveMonster.HeldItem = 0,
+
+			.DriveMonster.Moves[0] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[1] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[2] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[3] = BATTLEMOVE_NULL,
+
+			.DriveMonster.HpGenetics = 0,
+			.DriveMonster.AttackGenetics = 0,
+			.DriveMonster.DefenseGenetics = 0,
+			.DriveMonster.PsiGenetics = 0,
+			.DriveMonster.ResolveGenetics = 0,
+			.DriveMonster.SpeedGenetics = 0,
+		},
+		.Party[3] =
+		{
+			.DriveMonster.Index = MONSTER_NULL,
+			.Level = 1,
+			.DriveMonster.AbilityNumber = ABILITY_NONE,
+			.DriveMonster.HeldItem = 0,
+
+			.DriveMonster.Moves[0] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[1] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[2] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[3] = BATTLEMOVE_NULL,
+
+			.DriveMonster.HpGenetics = 0,
+			.DriveMonster.AttackGenetics = 0,
+			.DriveMonster.DefenseGenetics = 0,
+			.DriveMonster.PsiGenetics = 0,
+			.DriveMonster.ResolveGenetics = 0,
+			.DriveMonster.SpeedGenetics = 0,
+		},
+		.Party[4] =
+		{
+			.DriveMonster.Index = MONSTER_NULL,
+			.Level = 1,
+			.DriveMonster.AbilityNumber = ABILITY_NONE,
+			.DriveMonster.HeldItem = 0,
+
+			.DriveMonster.Moves[0] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[1] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[2] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[3] = BATTLEMOVE_NULL,
+
+			.DriveMonster.HpGenetics = 0,
+			.DriveMonster.AttackGenetics = 0,
+			.DriveMonster.DefenseGenetics = 0,
+			.DriveMonster.PsiGenetics = 0,
+			.DriveMonster.ResolveGenetics = 0,
+			.DriveMonster.SpeedGenetics = 0,
+		},
+		.Party[5] =
+		{
+			.DriveMonster.Index = MONSTER_NULL,
+			.Level = 1,
+			.DriveMonster.AbilityNumber = ABILITY_NONE,
+			.DriveMonster.HeldItem = 0,
+
+			.DriveMonster.Moves[0] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[1] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[2] = BATTLEMOVE_NULL,
+			.DriveMonster.Moves[3] = BATTLEMOVE_NULL,
+
+			.DriveMonster.HpGenetics = 0,
+			.DriveMonster.AttackGenetics = 0,
+			.DriveMonster.DefenseGenetics = 0,
+			.DriveMonster.PsiGenetics = 0,
+			.DriveMonster.ResolveGenetics = 0,
+			.DriveMonster.SpeedGenetics = 0,
+		},
+	},
 };
 
 
-EVENT_FLAGS GetEventFlagFromSpriteIndex(uint8_t SpriteIndex)
+EVENT_TYPE GetEventTypeFromSpriteIndex(uint8_t SpriteIndex)
 {
 	return (gNPCEventTable[SpriteIndex].Event);
 }

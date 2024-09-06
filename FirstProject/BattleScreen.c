@@ -176,7 +176,7 @@ void DrawBattleScreen(void)
 
         for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
         {
-            if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gNPCEventTable[Index].Event == EVENT_FLAG_BATTLE))
+            if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gNPCEventTable[Index].Event == EVENT_BATTLE))
             {
                 Opponent = Index;
                 break;
@@ -2777,13 +2777,13 @@ void MenuItem_BattleScreen_EscapeButton(void)
 
         for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
         {
-            if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gNPCEventTable[Index].Event == EVENT_FLAG_BATTLE))
+            if ((gCharacterSprite[Index].InteractedWith == TRUE) && (gNPCEventTable[Index].Event == EVENT_BATTLE))
             {
                 gCharacterSprite[Index].InteractedWith = FALSE;
 
                 if (PlayerLostBattle == FALSE)      //only reset EVENT_FLAG_BATTLE and SightRange when player has won the fight, otherwise allow for re-battle
                 {
-                    gNPCEventTable[Index].Event = EVENT_FLAG_TALK;
+                    gNPCEventTable[Index].Event = EVENT_TALK;
                     gCharacterSprite[Index].SightRange = 0;
                     if (CheckIfLastDialogueNPC(Index))
                     {

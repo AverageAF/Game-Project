@@ -15,8 +15,8 @@ static const uint8_t dRestHealing7[] = "...";
 static const uint8_t dRestHealing8[] = "Your party feels refreshed,\nafter a quick nap!";
 
 static const uint8_t dFirstMonster1[] = "Hello and welcome to my lab!\nI can see you are interested\nin aquiring an elemental\nmonster to help you on\nyour new journey!";
-static const uint8_t dFirstMonster2[] = "Would you be interested in\nhelping me with my research\nin exchange for one of the\n four I have here?";
-static const uint8_t dFirstMonster3[] = "Wonderful! I knew I could\n count on you to help me\nlearn more about them! Now,\nplease have this one!";
+static const uint8_t dFirstMonster2[] = "Would you be interested in\nhelping me with my research\nin exchange for one of the\nfour I have here?";
+static const uint8_t dFirstMonster3[] = "Wonderful! I knew I could\ncount on you to help me\nlearn more about them! Now,\nplease have this one!";
 
 static const uint8_t dHospitalWorker1[] = "I can heal your party to full\n health, just one moment!";
 static const uint8_t dHospitalWorker2[] = "...";
@@ -24,20 +24,22 @@ static const uint8_t dHospitalWorker3[] = "...";
 static const uint8_t dHospitalWorker4[] = "...";
 static const uint8_t dHospitalWorker5[] = "There! Your party has healed\n to their full health!";
 
-static const uint8_t dJimmyBattle1[] = "Are you about to go into the\n forest too?";
+static const uint8_t dJimmyBattle1[] = "Are you about to go into the\nforest too?";
 static const uint8_t dJimmyBattle2[] = "Battle me first to see if you\nare ready for the wild\nmonsters in there!";
 static const uint8_t dJimmyBattle3[] = "Maybe I am the one who needs\nto train more...";
 
 static const uint8_t dJerryBattle1[] = "I see you! That means I am\nchallenging you to a battle!";
 static const uint8_t dJerryBattle2[] = "Wow! You are much stronger\nthan you look!";
 
-static const uint8_t dStorageSystem[] = "You booted up the monster DSS,\n accessing your party and caught monsters.";
+static const uint8_t dStorageSystem[] = "You booted up the monster DSS,\naccessing your party and caught monsters.";
 
 static const uint8_t dSmallItem01[] = "You found some HP items!";
 static const uint8_t dSmallItem02[] = "You put them into the USABLE\npocket of your bag.";
 
 static const uint8_t dHiddenItem01[] = "You found some hidden HP items!";
 static const uint8_t dHiddenItem02[] = "You put them into the USABLE\npocket of your bag.";
+
+static const uint8_t dBlock01[] = "I heard from the professor he\nwanted to see you, you should go\nto his lab and see him!";
 
 const uint8_t* const gDialoguePointers[NUM_OF_DIALOGUES] = {
 
@@ -77,6 +79,7 @@ const uint8_t* const gDialoguePointers[NUM_OF_DIALOGUES] = {
 	[DIALOGUE_HIDDENITEM_01] = dHiddenItem01,
 	[DIALOGUE_HIDDENITEM_02] = dHiddenItem02,
 
+	[DIALOGUE_BLOCK_01] = dBlock01,
 
 };
 
@@ -135,6 +138,12 @@ NPC_DIALOGUE gNPCDialogue[NUM_CHAR_SPRITES] =
 		.DialogueFlag = DIALOGUE_HIDDENITEM_01,
 		.DialogueLoopReturn = DIALOGUE_HIDDENITEM_01,
 		.DialoguesBeforeLoop = DIALOGUE_HIDDENITEM_02,
+	},
+	[NPC_BLOCK_01] =
+	{
+		.DialogueFlag = DIALOGUE_BLOCK_01,
+		.DialogueLoopReturn = DIALOGUE_BLOCK_01,
+		.DialoguesBeforeLoop = DIALOGUE_BLOCK_01,
 	},
 
 };

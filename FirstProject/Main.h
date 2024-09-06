@@ -182,30 +182,30 @@ typedef enum GAMESTATE
 
 } GAMESTATE;
 
-typedef enum EVENT_FLAGS		////flags for gCharacterSprite.Event, creates events after dialogue
+typedef enum EVENT_TYPE		////flags for gCharacterSprite.Event, creates events after dialogue
 {
-	EVENT_FLAG_NULL,
-	EVENT_FLAG_TALK,
-	EVENT_FLAG_BATTLE,
-	EVENT_FLAG_HEAL,
-	EVENT_FLAG_EQUIPITEM_ONCE,
-	EVENT_FLAG_USEITEM_ONCE,
-	EVENT_FLAG_VALUEITEM_ONCE,
-	EVENT_FLAG_ADVENTUREITEM_ONCE,
-	EVENT_FLAG_EQUIPITEM_REPEAT,
-	EVENT_FLAG_USEITEM_REPEAT,
-	EVENT_FLAG_VALUEITEM_REPEAT,
-	EVENT_FLAG_ADVENTUREITEM_REPEAT,
-	EVENT_FLAG_MONSTER,
-	EVENT_FLAG_MOVEMENT,
-	EVENT_FLAG_STORE,
-	EVENT_FLAG_EQUIPITEM_NOSPRITE,
-	EVENT_FLAG_USEITEM_NOSPRITE,
-	EVENT_FLAG_VALUEITEM_NOSPRITE,
-	EVENT_FLAG_ADVENTUREITEM_NOSPRITE,
-	EVENT_FLAG_DRIVE_STORAGE,
+	EVENT_NULL,
+	EVENT_TALK,
+	EVENT_BATTLE,
+	EVENT_HEAL,
+	EVENT_EQUIPITEM_ONCE,
+	EVENT_USEITEM_ONCE,
+	EVENT_VALUEITEM_ONCE,
+	EVENT_ADVENTUREITEM_ONCE,
+	EVENT_EQUIPITEM_REPEAT,
+	EVENT_USEITEM_REPEAT,
+	EVENT_VALUEITEM_REPEAT,
+	EVENT_ADVENTUREITEM_REPEAT,
+	EVENT_MONSTER,
+	EVENT_MOVEMENT,
+	EVENT_STORE,
+	EVENT_EQUIPITEM_NOSPRITE,
+	EVENT_USEITEM_NOSPRITE,
+	EVENT_VALUEITEM_NOSPRITE,
+	EVENT_ADVENTUREITEM_NOSPRITE,
+	EVENT_DRIVE_STORAGE,
 
-} EVENT_FLAGS;
+} EVENT_TYPE;
 
 typedef enum BATTLESTATE
 {
@@ -741,8 +741,9 @@ typedef struct INGAMESPRITE			///// for sprites other than the player "NPCs Spri
 	uint8_t ResetSightRange;
 	uint8_t SightRange;
 	UPOINT MovementRange;
-	//TODO: add this
-	//uint8_t GameFlag;				//associated with gGameFlags[]
+	uint8_t CheckFlag;				//Checks gGameFlags[] for a required flag before setting a new flag
+	uint8_t GameFlag;				//Does not exist when gGameFlags[.GameFlag] is TRUE
+	uint8_t SetFlag;				//flag set upon a successful interaction and a required flag
 
 	uint8_t AnimationFrame;
 	BOOL InteractedWith;
@@ -777,7 +778,8 @@ typedef struct TRIGGER_TILE
 	uint16_t GameAreaIndex;
 	BOOL InteractedWith;
 	TRIGGER_TYPES Type;
-	uint8_t GameFlag;				//associated with gGameFlags[]
+	uint8_t GameFlag;				//Does not exist when gGameFlags[.GameFlag] is TRUE
+	uint8_t SetFlag;				//flag set upon a successful interaction
 
 } TRIGGER_TILE;
 

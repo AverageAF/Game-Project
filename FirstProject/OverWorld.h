@@ -148,13 +148,13 @@ void LoadUnloadTriggerVIAGameArea(void);
 
 INGAMESPRITE CharSpriteSparkleAnim(INGAMESPRITE _Inout_ charactersprite, uint16_t _In_ counter, GAMEBITMAP _In_ sparkletype[]);
 
-INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
+//INGAMESPRITE GivePlayerItemFromCharSpriteEvent(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
 
 void GiveItemAndRemoveSprite(uint8_t spriteIndex);
 
 void GiveItemChangeNPCEvent(uint8_t spriteIndex);
 
-INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
+//INGAMESPRITE GivePlayerItemFromCharAndRemoveSprite(INGAMESPRITE _Inout_ charactersprite, uint8_t _In_ itemtype);
 
 void RemoveCharSprite(uint8_t Index);
 

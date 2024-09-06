@@ -9,11 +9,12 @@
 #define NPC_STORAGE_01 6 
 #define NPC_ITEM_01 7
 #define NPC_HIDDENITEM_01 8
+#define NPC_BLOCK_01 9
 
 
 typedef struct NPC_EVENT_DATA
 {
-	EVENT_FLAGS Event;
+	EVENT_TYPE Event;
 	uint16_t EventItemsIndex[MAX_ITEMS_GIVE];
 	uint16_t EventItemsCount[MAX_ITEMS_GIVE];
 	uint8_t EventMonsterIndex;
@@ -37,4 +38,4 @@ NPC_EVENT_DATA gNPCEventTable[NUM_CHAR_SPRITES];
 NPC_BATTLE_DATA gNPCBattleTable[NUM_CHAR_SPRITES];
 
 
-EVENT_FLAGS GetEventFlagFromSpriteIndex(uint8_t SpriteIndex);
+EVENT_TYPE GetEventTypeFromSpriteIndex(uint8_t SpriteIndex);

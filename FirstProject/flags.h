@@ -5,9 +5,9 @@
 BOOL gGameFlags[0x80];
 
 #define FLAG_NULL 0x0
-#define START_OF_FLAGS 0x0
+#define START_OF_FLAGS 0x1
 
-#define TEMP_FLAGS_START 0x0
+#define TEMP_FLAGS_START 0x1
 #define FLAG_TEMP_1 0x1
 #define FLAG_TEMP_2 0x2
 #define FLAG_TEMP_3 0x3
