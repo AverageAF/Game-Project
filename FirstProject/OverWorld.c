@@ -33,9 +33,12 @@ BOOL gScriptActive = FALSE;
 
 //TODO: make more of these
 SCENE_SCRIPT gSceneScriptArray[MAX_MOVEMENT_SCRIPTS] = { 0 };
+
+//Currently activated cutscene
+uint8_t gCurrentScene = 0;
 //
 
-//used to check the current queued script
+//used to check the current queued script in scenescriptarray[]
 uint8_t gCurrentScript = 0;
 
 void DrawOverworldScreen(void)
@@ -78,7 +81,7 @@ void DrawOverworldScreen(void)
 
     if (gGamePaused == FALSE)
     {
-        TriggerNPCMovement(LocalFrameCounter, MOVEMENT_SPIN);
+        TriggerNPCMovement(LocalFrameCounter);
     }
 
     ModifyCharVisibility();
@@ -256,6 +259,8 @@ void PPI_Overworld(void)
             
             if (gScriptActive)
             {
+                //TOFIX!
+                //xstart and ystart are temp, they only work for the professor script
                 BOOL ScriptActive = ApplyMovementScriptSprite(gSceneScriptArray, gPlayer.WorldPos.x + 128, gPlayer.WorldPos.y, FALSE);
 
                 if (!ScriptActive)
@@ -537,7 +542,7 @@ uint8_t ScriptGiveMonster(uint8_t index, uint8_t level, uint16_t item)
     struct Monster monster;
     //uint16_t targetIndex;         TODO:later when monsters have extra forms
 
-    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
@@ -1069,7 +1074,7 @@ void CharSpriteDrawHandler(uint16_t BrightnessAdjustment)
         {
             Blit32BppBitmapToBuffer(&gCharacterSprite[Index].Sprite[gCharacterSprite[Index].SpriteIndex + gCharacterSprite[Index].Direction], gCharacterSprite[Index].ScreenPos.x, gCharacterSprite[Index].ScreenPos.y, BrightnessAdjustment);
         }
-        //Reset sprites that are offscreen plust extra
+        //Reset sprites that are offscreen by four tiles
         else if ((gCharacterSprite[Index].Visible == FALSE) && !(((gCharacterSprite[Index].ScreenPos.x >= -64) && (gCharacterSprite[Index].ScreenPos.x < GAME_RES_WIDTH + 48)) && ((gCharacterSprite[Index].ScreenPos.y >= -64) && (gCharacterSprite[Index].ScreenPos.y < GAME_RES_HEIGHT + 48))))        ///////reset any sprite off screen
         {
             gCharacterSprite[Index].WorldPos = gCharacterSprite[Index].ResetWorldPos;
@@ -1172,26 +1177,99 @@ void DisplayDebugTiles(void)
     BlitStringToBuffer("Press ~ to leave debug", &g6x7Font, &(PIXEL32) { 0xFF, 0xFF, 0xFF, 0xFF }, 2, GAME_RES_HEIGHT - 9);
 }
 
+//TODO: this function needs a lot of work!
+// 
+// 
+//TODO:new list of movement scripts
+//TOFIX TOTEST: need to make an xstart and ystart for every new npc controlled by the script!
+//TODO DONE use table gSceneStartingPosition to set up
+//TODO DONE if gSceneStartingPosition has a x,y of 0,0 then use the existing npc coordinates from gCharacterSprite, just as QOL
+// 
+//TODO:make this function accept a value that then forces the player to move while controls are disabled
+// currently it would need to create a giant if statement that wou ld swap gCharacter sprite movement with gPlayer movement
+//  ||
+//  \/
+ 
+ 
 //returns FALSE when last script has finished executing and function has reset for the next array of scripts to be passed into it
 BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xstart, _In_ uint16_t ystart, _In_ BOOL removeSpriteAfterScript)
 {
-
     ///this function will be called every frame, yet I want it to queue up actions to be done at 30 frame intervals but updated & displayed every frame.
+    
+    static uint16_t localframecounter;
+    static uint8_t actorsthisscene[MAX_NPCS_PER_SCRIPT];
 
-    static uint16_t localframecounter = 0;
+    uint8_t CurrentActorID = 0;
 
-    uint8_t CurrentActor = scriptarray[gCurrentScript].Actor;
+newactor:
 
-    //new list of movement scripts
+    CurrentActorID = scriptarray[gCurrentScript].Actor;
+
+    //test for if CurrentActorID is the player
+    if (CurrentActorID == 0xFF)
+    {
+        
+    }
+
+
+    //if current actor is applying movement first time this scene then store it
+    for (uint8_t actororder = 0; actororder < MAX_NPCS_PER_SCRIPT; actororder++)
+    {
+        if (actorsthisscene[actororder] == 0)
+        {
+            if (scriptarray[gCurrentScript].Script == START_OF_SCRIPT)   //catches the exception where start_of_script uses the player's identifier
+            {
+                break;
+            }
+
+            //store
+            actorsthisscene[actororder] = CurrentActorID;
+
+            if (gSceneStartingPosition[gCurrentScene][actororder].Actor != CurrentActorID)
+            {
+                //we somehow are out of sync between gSceneStartingPosition and gSceneScriptArray(which reads from gSceneScriptTable)
+                LogMessageA(LL_ERROR, "[%s] ERROR! gSceneStartingPostition and gSceneScriptArray are out of sync! %d vs %d !", __FUNCTION__, gSceneStartingPosition[gCurrentScene][actororder].Actor, CurrentActorID);
+            }
+            else
+            {
+                if (gSceneStartingPosition[gCurrentScene][actororder].Pos.x == 0)
+                {
+                    //leave gCharacterSprite with its normal x coordinates
+                }
+                else
+                {
+                    gCharacterSprite[CurrentActorID].WorldPos.x = gSceneStartingPosition[gCurrentScene][actororder].Pos.x;
+                }
+
+                if (gSceneStartingPosition[gCurrentScene][actororder].Pos.y == 0)
+                {
+                    //leave gCharacterSprite with its normal y coordinates
+                }
+                else
+                {
+                    gCharacterSprite[CurrentActorID].WorldPos.y = gSceneStartingPosition[gCurrentScene][actororder].Pos.y;
+                }
+
+                gCharacterSprite[CurrentActorID].Exists = TRUE;
+                gCharacterSprite[CurrentActorID].Loaded = TRUE;
+                gCharacterSprite[CurrentActorID].Visible = TRUE;
+            }
+
+            break;
+        }
+        else if (actorsthisscene[actororder] == CurrentActorID)
+        {
+            break;
+        }
+    }
+
     if (scriptarray[gCurrentScript].Script == START_OF_SCRIPT)
     {
         gCurrentScript++;
-        CurrentActor = scriptarray[gCurrentScript].Actor;
-        gCharacterSprite[CurrentActor].WorldPos.x = xstart;
-        gCharacterSprite[CurrentActor].WorldPos.y = ystart;
-        gCharacterSprite[CurrentActor].Exists = TRUE;
-        gCharacterSprite[CurrentActor].Loaded = TRUE;
-        gCharacterSprite[CurrentActor].Visible = TRUE;
+        localframecounter = 1;
+
+        //restarts function after being initialized
+        goto newactor;
     }
 
     MOVEMENT_SCRIPT WorkingScript = scriptarray[gCurrentScript].Script;
@@ -1216,7 +1294,7 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
             }
             else if (localframecounter % 16 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = DOWN;
+                gCharacterSprite[CurrentActorID].Direction = DOWN;
             }
             break;
         }
@@ -1228,7 +1306,7 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
             }
             else if (localframecounter % 16 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = LEFT;
+                gCharacterSprite[CurrentActorID].Direction = LEFT;
             }
             break;
         }
@@ -1240,7 +1318,7 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
             }
             else if (localframecounter % 16 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = UP;
+                gCharacterSprite[CurrentActorID].Direction = UP;
             }
             break;
         }
@@ -1252,23 +1330,23 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
             }
             else if (localframecounter % 16 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = RIGHT;
+                gCharacterSprite[CurrentActorID].Direction = RIGHT;
             }
             break;
         }
         case WALK_DOWN:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = DOWN;
-                gCharacterSprite[CurrentActor].WorldPos.y++;
-                gCharacterSprite[CurrentActor].ScreenPos.y = gCharacterSprite[CurrentActor].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = DOWN;
+                gCharacterSprite[CurrentActorID].WorldPos.y++;
+                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1277,17 +1355,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_LEFT:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = LEFT;
-                gCharacterSprite[CurrentActor].WorldPos.x--;
-                gCharacterSprite[CurrentActor].ScreenPos.x = gCharacterSprite[CurrentActor].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = LEFT;
+                gCharacterSprite[CurrentActorID].WorldPos.x--;
+                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1296,17 +1374,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_UP:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = UP;
-                gCharacterSprite[CurrentActor].WorldPos.y--;
-                gCharacterSprite[CurrentActor].ScreenPos.y = gCharacterSprite[CurrentActor].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = UP;
+                gCharacterSprite[CurrentActorID].WorldPos.y--;
+                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1315,17 +1393,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_RIGHT:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = RIGHT;
-                gCharacterSprite[CurrentActor].WorldPos.x++;
-                gCharacterSprite[CurrentActor].ScreenPos.x = gCharacterSprite[CurrentActor].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = RIGHT;
+                gCharacterSprite[CurrentActorID].WorldPos.x++;
+                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1334,17 +1412,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_BW_DOWN:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = UP;
-                gCharacterSprite[CurrentActor].WorldPos.y++;
-                gCharacterSprite[CurrentActor].ScreenPos.y = gCharacterSprite[CurrentActor].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = UP;
+                gCharacterSprite[CurrentActorID].WorldPos.y++;
+                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1353,17 +1431,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_BW_LEFT:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = RIGHT;
-                gCharacterSprite[CurrentActor].WorldPos.x--;
-                gCharacterSprite[CurrentActor].ScreenPos.x = gCharacterSprite[CurrentActor].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = RIGHT;
+                gCharacterSprite[CurrentActorID].WorldPos.x--;
+                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1372,17 +1450,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_BW_UP:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = DOWN;
-                gCharacterSprite[CurrentActor].WorldPos.y--;
-                gCharacterSprite[CurrentActor].ScreenPos.y = gCharacterSprite[CurrentActor].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = DOWN;
+                gCharacterSprite[CurrentActorID].WorldPos.y--;
+                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1391,17 +1469,17 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
         }
         case WALK_BW_RIGHT:
         {
-            if (!gCharacterSprite[CurrentActor].MovementRemaining)
+            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
             {
-                gCharacterSprite[CurrentActor].MovementRemaining = 16;
+                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
             }
             else if (localframecounter % 2 == 0)
             {
-                gCharacterSprite[CurrentActor].Direction = LEFT;
-                gCharacterSprite[CurrentActor].WorldPos.x++;
-                gCharacterSprite[CurrentActor].ScreenPos.x = gCharacterSprite[CurrentActor].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActor].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActor].MovementRemaining)
+                gCharacterSprite[CurrentActorID].Direction = LEFT;
+                gCharacterSprite[CurrentActorID].WorldPos.x++;
+                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                gCharacterSprite[CurrentActorID].MovementRemaining--;
+                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
                 {
                     gCurrentScript++;
                 }
@@ -1461,12 +1539,18 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
     {
         if (removeSpriteAfterScript)
         {
-            gCharacterSprite[CurrentActor].Exists = FALSE;
-            gCharacterSprite[CurrentActor].Loaded = FALSE;
-            gCharacterSprite[CurrentActor].Visible = FALSE;
+            //TODO: this only removes the last sprite, not all of them
+            gCharacterSprite[CurrentActorID].Exists = FALSE;
+            gCharacterSprite[CurrentActorID].Loaded = FALSE;
+            gCharacterSprite[CurrentActorID].Visible = FALSE;
         }
         gCurrentScript = 0;
         localframecounter = 0;
+        //reset how i keep track of the actors this scene
+        for (uint8_t i = 0; i < MAX_NPCS_PER_SCRIPT; i++)
+        {
+            actorsthisscene[i] = 0;
+        }
         return(FALSE);
     }
 
@@ -1477,7 +1561,6 @@ BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xs
 BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId)
 {
     BOOL result = FALSE;
-    //for (uint8_t Index = 0; Index < NUM_CHAR_SPRITES; Index++)
     if (gNPCEventTable[spriteId].Event == EVENT_BATTLE)
     {
         switch (gCharacterSprite[spriteId].Direction)
@@ -1531,13 +1614,15 @@ void InitiateDialogueAndCutscene(uint64_t counter)
 {
     if (gOverWorldControls == FALSE && gGamePaused == TRUE)
     {
+
+        //not using this return value???
         CharSpriteInteractionHandler(counter);
 
         if (gScriptActive && gSceneScriptArray[gCurrentScript].Script == DIALOGUE_TRIGGER)
         {
             //TODO: make better way of knowing what scene is what and what actor is what, this is prone to mistakes
 
-            DrawDialogueBox(/*gNPCDialogue[gSceneScriptArray[gCurrentScript].Actor].Dialogue[gNPCDialogue[gSceneScriptArray[gCurrentScript].Actor].DialogueFlag]*/GetCurrentDialogueFromNPC(gSceneScriptArray[gCurrentScript].Actor), counter, NULL);
+            DrawDialogueBox(GetCurrentDialogueFromNPC(gSceneScriptArray[gCurrentScript].Actor), counter, NULL);
         }
     }
 }
@@ -1630,7 +1715,7 @@ void HandlePlayerCollision(void)
                 break;
             }
 
-            if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])
+            if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16) + 1][gPlayer.WorldPos.x / 16] == gPassableTiles[Counter])    //for preventing the player from walking to a passable tile above the cliff tile
             {
                 for (uint8_t Cliff = 0; Cliff < _countof(gCliffEdgeTiles); Cliff++)
                 {
@@ -1956,7 +2041,7 @@ void HandleCameraPlayerMovementAndCharVisibility(void)
 
 void HandleTileFunctions(void)
 {
-    for (uint8_t telepads = 0; telepads < NUM_TELEPORT_TILES; telepads++)
+    for (uint8_t telepads = 0; telepads < NUM_TELEPORT_TILES; telepads++)   //Teleport tiles
     {
         if (gOverWorld01.TileMap.Map[(gPlayer.WorldPos.y / 16)][(gPlayer.WorldPos.x / 16)] == gTeleportTiles[telepads])
         {
@@ -1968,7 +2053,7 @@ void HandleTileFunctions(void)
         }
     }
 
-    for (uint8_t index = 0; index < NUM_CHAR_SPRITES; index++)
+    for (uint8_t index = 0; index < NUM_CHAR_SPRITES; index++)      ////NPC sees Player
     {
         BOOL PlayerInLOS = CheckNPCHasLOSWithPlayer(index);
 
@@ -1980,7 +2065,7 @@ void HandleTileFunctions(void)
         }
     }
 
-    for (uint8_t triggers = 0; triggers < NUM_TRIGGERS; triggers++)
+    for (uint8_t triggers = 0; triggers < NUM_TRIGGERS; triggers++)     //Trigger tiles
     {
 
         BOOL TriggerActivated = IsPlayerOnActiveTrigger(triggers);
@@ -1995,7 +2080,7 @@ void HandleTileFunctions(void)
 
     }
 
-    for (uint8_t EncounterTile = 0; EncounterTile < _countof(gEncounterTiles); EncounterTile++)
+    for (uint8_t EncounterTile = 0; EncounterTile < _countof(gEncounterTiles); EncounterTile++)     ///Wild encounter tile
     {
         if ((gOverWorld01.TileMap.Map[gPlayer.WorldPos.y / 16][(gPlayer.WorldPos.x / 16)] == gEncounterTiles[EncounterTile]) && (gPlayer.StepsTaken - gPlayer.StepsSinceLastEncounter > BATTLE_ENCOUNTER_GRACE_PERIOD))
         {
@@ -2026,6 +2111,8 @@ void HandleNPCEvent(void)
     {
         if (gCharacterSprite[Index].InteractedWith == TRUE)
         {
+            ///TODO: GetEventFlagReq();     /// this will check if the sprite has an alternate event/dialogue locked behind a gGameFlag[]
+
             switch (GetEventTypeFromSpriteIndex(Index))
             {
                 case EVENT_TALK:
@@ -2035,6 +2122,7 @@ void HandleNPCEvent(void)
                         gCharacterSprite[Index].InteractedWith = FALSE;
                         gGamePaused = FALSE;
                         gOverWorldControls = TRUE;
+                        ///TODO: GetEventFlagToSet();
                     }
                     gDialogueControls = FALSE;
                     GoToNextDialogueNPC(Index);
@@ -2044,11 +2132,11 @@ void HandleNPCEvent(void)
                 {
                     if (CheckIfLastDialogueNPC(Index))
                     {
-                        //TrainerEncounter(&gPreviousGameState, &gCurrentGameState);    //TOREMOVE:
                         GoToDestGamestate(GAMESTATE_BATTLE_TRAINER);
-                        //gCharacterSprite[Index].InteractedWith = FALSE;           //turn off after battle has been won, so that we can reset battle if lost
+                        //gCharacterSprite[Index].InteractedWith = FALSE;           //turn off after battle has been won instead of here, so that we can reset battle if player loses
                         gGamePaused = FALSE;
                         gOverWorldControls = TRUE;
+                        ///TODO: GetEventFlagToSet();
                     }
                     gDialogueControls = FALSE;
                     GoToNextDialogueNPC(Index);
@@ -2062,6 +2150,7 @@ void HandleNPCEvent(void)
                         gCharacterSprite[Index].InteractedWith = FALSE;
                         gGamePaused = FALSE;
                         gOverWorldControls = TRUE;
+                        ///TODO: GetEventFlagToSet();       ///the only time healing should set a flag is to unlock the city/map as a fast travel destination
                     }
                     gDialogueControls = FALSE;
                     GoToNextDialogueNPC(Index);
@@ -2077,6 +2166,7 @@ void HandleNPCEvent(void)
                         GiveItemChangeNPCEvent(Index);
                         gGamePaused = FALSE;
                         gOverWorldControls = TRUE;
+                        ///TODO: GetEventFlagToSet();
                     }
                     gDialogueControls = FALSE;
                     GoToNextDialogueNPC(Index);
@@ -2104,6 +2194,7 @@ void HandleNPCEvent(void)
                         gCharacterSprite[Index].InteractedWith = FALSE;
                         gGamePaused = FALSE;
                         gOverWorldControls = TRUE;
+                        ///TODO: GetEventFlagToSet();
                     }
                     gDialogueControls = FALSE;
                     GoToNextDialogueNPC(Index);
@@ -2456,12 +2547,15 @@ BOOL TriggerInteractionHandler(void)
     {
         if (gTriggerTiles[tile].InteractedWith == TRUE)
         {
+            //TODO: move this so it happens at the end of a scene or interaction instead of at the beginning////////////////////
             //set flag upon stepping on a non null trigger
             if (gTriggerTiles[tile].SetFlag != FLAG_NULL)
             {
                 SetGameFlag(gTriggerTiles[tile].SetFlag);
                 gTriggerTiles[tile].SetFlag = FLAG_NULL;
             }
+            //////////////////////////////////////////////
+
             workingtile = gTriggerTiles[tile];
             tileindex = tile;
             result = TRUE;
@@ -2505,7 +2599,7 @@ BOOL TriggerInteractionHandler(void)
                 if (workingtile.Exists == TRUE && gTriggerTiles[tileindex].Exists == TRUE)
                 {
                     gTriggerTiles[tileindex].Exists = FALSE;
-                    LogMessageA(LL_ERROR, "[%s] Success! workingtile.type was found to be enabled while NULL or using an unrecognized value, successfully disabled tile with .exists = FALSE!", __FUNCTION__);
+                    LogMessageA(LL_ERROR, "[%s] Success! workingtile.type was found to be enabled while NULL or using an unrecognized value, successfully disabled tile with .exists = FALSE! Index = %d!", __FUNCTION__, tileindex);
                 }
                 
                 gTriggerTiles[tileindex].InteractedWith = FALSE;
@@ -2575,37 +2669,18 @@ BOOL InteractWithTrigger(void)
     return(result);
 }
 
-void PopulateSceneScriptArray(uint8_t triggertileindex)
+void PopulateSceneScriptArray(uint8_t currentscene)
 {
     ClearSceneScriptArray();
 
-    switch (triggertileindex)
+    gCurrentScene = currentscene;
+
+    for (uint8_t i = 0; i < MAX_MOVEMENT_SCRIPTS; i++)
     {
-        case INTRO_SCRIPT:
-        case HOME_SCRIPT:
+        gSceneScriptArray[i].Actor = gSceneScriptTable[currentscene][i].Actor;
+        gSceneScriptArray[i].Script = gSceneScriptTable[currentscene][i].Script;
+        if (gSceneScriptTable[currentscene][i].Script == END_OF_SCRIPT)
         {
-            break;
-        }
-        case PROFESSOR_SCRIPT:
-        {
-            for (uint8_t i = 0; i < MAX_MOVEMENT_SCRIPTS; i++)
-            {
-                gSceneScriptArray[i].Actor = gSceneScriptTable[PROFESSOR_SCRIPT][i].Actor;
-                gSceneScriptArray[i].Script = gSceneScriptTable[PROFESSOR_SCRIPT][i].Script;
-                if (gSceneScriptTable[PROFESSOR_SCRIPT][i].Script == END_OF_SCRIPT)
-                {
-                    break;
-                }
-            }
-            break;
-        }
-        case RIVAL_1_SCRIPT:
-        {
-            break;
-        }
-        default:
-        {
-            LogMessageA(LL_ERROR, "[%s] ERROR! Function in Overworld.c encountered an unknown value for triggertileindex! value = %d !", __FUNCTION__,triggertileindex);
             break;
         }
     }

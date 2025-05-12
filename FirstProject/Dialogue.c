@@ -31,7 +31,7 @@ static const uint8_t dJimmyBattle3[] = "Maybe I am the one who needs\nto train m
 static const uint8_t dJerryBattle1[] = "I see you! That means I am\nchallenging you to a battle!";
 static const uint8_t dJerryBattle2[] = "Wow! You are much stronger\nthan you look!";
 
-static const uint8_t dStorageSystem[] = "You booted up the monster DSS,\naccessing your party and caught monsters.";
+static const uint8_t dStorageSystem[] = "You booted up the monster DSS,\naccessing your party \nand all caught monsters.";
 
 static const uint8_t dSmallItem01[] = "You found some HP items!";
 static const uint8_t dSmallItem02[] = "You put them into the USABLE\npocket of your bag.";

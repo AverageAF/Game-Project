@@ -152,7 +152,7 @@ void DrawBattleScreen(void)
     //static BOOL IsPlayerMovingFirst = FALSE;         ////needed this for PPI BATTLESTATE_OPPONENTSWITCH_WAIT so I made it a global
     static BOOL MonsterHasKOed = FALSE;
 
-    static uint8_t Opponent = NULL;
+    /*static*/ uint8_t Opponent = NULL;
 
     BOOL TextHasFinished = FALSE;
 
@@ -1208,23 +1208,26 @@ void DrawBattleScreen(void)
 
             if (CalculatedExpReward != 0)
             {
-
                 GiveMonsterToPlayer(&gOpponentParty[gCurrentOpponentPartyMember]);
-
-                BOOL DidMonsterLevelUp = 0;
-
-                //TODO: use gPlayerBattleParty.EarnedExp to reward monsters for participating in battle
 
                 gPlayerParty[gCurrentPartyMember].DriveMonster.Experience = gPlayerParty[gCurrentPartyMember].DriveMonster.Experience + CalculatedExpReward;
                 CalculatedExpReward = 0;
 
-                DidMonsterLevelUp = TryIncrementMonsterLevel(&gPlayerParty[gCurrentPartyMember]);
+            TryLevelUpWait:
 
-                if (DidMonsterLevelUp == TRUE)
+                if (TryIncrementMonsterLevel(&gPlayerParty[gCurrentPartyMember]) == TRUE)
                 {
                     CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
 
                     MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);
+
+                    if (TryUpgradeMonster(&gPlayerParty[gCurrentPartyMember]) == TRUE)
+                    {
+                        CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
+
+                        MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);
+                    }
+                    goto TryLevelUpWait;  //incase multiple levelups from one monster
                 }
             }
 
@@ -1728,20 +1731,26 @@ void DrawBattleScreen(void)
                 
             if (CalculatedExpReward != 0)
             {
-                BOOL DidMonsterLevelUp = 0;
-
                 //TODO: set up interaction with gPlayerBattleParty.EarnedExp
 
                 gPlayerParty[gCurrentPartyMember].DriveMonster.Experience = gPlayerParty[gCurrentPartyMember].DriveMonster.Experience + CalculatedExpReward;
                 CalculatedExpReward = 0;
 
-                DidMonsterLevelUp = TryIncrementMonsterLevel(&gPlayerParty[gCurrentPartyMember]);
+            TryLevelUpKO:
 
-                if (DidMonsterLevelUp == TRUE)
+                if (TryIncrementMonsterLevel(&gPlayerParty[gCurrentPartyMember]) == TRUE)
                 {
                     CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
 
                     MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);
+
+                    if (TryUpgradeMonster(&gPlayerParty[gCurrentPartyMember]) == TRUE)
+                    {
+                        CalculateMonsterStats(&gPlayerParty[gCurrentPartyMember]);
+
+                        MonsterTryLearningNewMove(&gPlayerParty[gCurrentPartyMember], TRUE);
+                    }
+                    goto TryLevelUpKO;  //incase multiple levelups from one monster
                 }
             }
 

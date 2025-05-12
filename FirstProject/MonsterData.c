@@ -258,7 +258,7 @@ void CreateDriveMonster(struct DriveMonster* driveMonster, uint8_t Index, uint8_
 
 void CreateMonsterWithGeneticsMonsterSeed(struct Monster *monster, uint8_t monsterIndex, uint8_t level, uint32_t genes, uint32_t monsterSeed)
 {
-    CreateMonster(monster, monsterIndex, level, 0, TRUE, monsterSeed, 0, 0);
+    CreateMonster(monster, monsterIndex, level, 0, TRUE, monsterSeed, 0);
     SetMonsterData(monster, MONSTER_DATA_GENETICS, &genes);
     CalculateMonsterStats(monster);
 }
@@ -1153,7 +1153,7 @@ struct Monster GenerateScriptedMonsterForWildEncounter(uint8_t index, uint8_t ma
     randLevel = (uint8_t*)Random;
     randLevel = ((randLevel % (maxLevel - minLevel + 1)) + minLevel);
 
-    CreateMonster(&monster, index, randLevel, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    CreateMonster(&monster, index, randLevel, USE_RANDOM_GENETICS, FALSE, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
@@ -1178,7 +1178,7 @@ struct Monster GenerateRandMonsterForWildEncounter(uint8_t maxLevel, uint8_t min
     randLevel = (uint8_t*)Random;
     randLevel = ((randLevel % (maxLevel - minLevel + 1)) + minLevel);
 
-    CreateMonster(&monster, randIndex + 1, randLevel, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    CreateMonster(&monster, randIndex + 1, randLevel, USE_RANDOM_GENETICS, FALSE, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
@@ -1194,7 +1194,7 @@ struct Monster GenerateMonsterForCharacterSpriteBattle(uint8_t index, uint8_t le
     struct Monster monster;
     //uint16_t targetIndex;         //TODO: monsters with multiple forms/states
 
-    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0, 0);
+    CreateMonster(&monster, index, level, USE_RANDOM_GENETICS, FALSE, 0, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonsterData(&monster, MONSTER_DATA_HELDITEM, heldItem);
@@ -1414,6 +1414,235 @@ BOOL TryIncrementMonsterLevel(struct Monster* monster)
         SetMonsterData(monster, MONSTER_DATA_LEVEL, &NextLevel);
         return(TRUE);
     }
+}
+
+BOOL TryUpgradeMonster(struct Monster* monster)
+{
+    BOOL ReturnValue = FALSE;
+    uint8_t UpType = gBaseStats[monster->DriveMonster.Index].upgradeType;
+
+    uint8_t monstername[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
+    uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
+    GetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+    GetMonsterNameFromIndex(monstername, monster->DriveMonster.Index);
+
+    switch (UpType)
+    {
+        case UPGRADE_TYPE_MAX:
+        {
+            break;
+        }
+        case UPGRADE_TYPE_LVLUP:
+        {
+            if (monster->Level >= gBaseStats[monster->DriveMonster.Index].upgradeLvl)
+            {
+                switch (monster->DriveMonster.Index)    //This is going to be a big switch case for all of the monsters that can upgrade this way...
+                {
+                    case MONSTER_NEWUT:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_NEWUND);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_NEWUND);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_CLAYNEE:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_MUDDEN);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_MUDDEN);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_STRATLIA:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_SEDIMEAN);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_SEDIMEAN);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_HAWKLIN:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_SQUAKEEN);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_SQUAKEEN);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_SQUAKEEN:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_HOWLDREGE);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_HOWLDREGE);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_LILYTAD:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_LILYBUD);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_LILYBUD);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_LILYBUD:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_LILYBLOOM);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_LILYBLOOM);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_BRAMBLING:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_TOXITHORN);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_TOXITHORN);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_INFANTREE:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_GERMAKNIGHT);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_GERMAKNIGHT);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                    case MONSTER_GERMAKNIGHT:
+                    {
+                        SetMonsterData(monster, MONSTER_DATA_INDEX, MONSTER_STALKKING);
+
+                        if (strcmp(nickname, monstername) == 0)
+                        {
+                            GetMonsterNameFromIndex(nickname, MONSTER_STALKKING);
+                            SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                        }
+                        break;
+                    }
+                }
+                CalculateMonsterStats(monster);
+                ReturnValue = TRUE;
+            }
+            break;
+        }
+        case UPGRADE_TYPE_USEITEM:
+        {
+            if (gCurrentGameState == GAMESTATE_INVENTORYSCREEN && gSelectedUseItem != 0)     //should only come into play when using an item from the inv screen and when an item is selected
+            {
+                uint8_t newindex = 0;
+                switch (gSelectedUseItem)
+                {
+                    case INV_USABLE_ITEM_15:
+                    {
+                        //TODO:
+                        ////Might need another switch inside each case for all the possible monsters than can be upgraded by each item... for now just one monster has that ability
+                        newindex = MONSTER_EARTHWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_16:
+                    {
+                        newindex = MONSTER_AIRWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_17:
+                    {
+                        newindex = MONSTER_FIREWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_18:
+                    {
+                        newindex = MONSTER_WATERWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_19:
+                    {
+                        newindex = MONSTER_ELECTRICWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_20:
+                    {
+                        newindex = MONSTER_METALWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_21:
+                    {
+                        newindex = MONSTER_SOULWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_22:
+                    {
+                        newindex = MONSTER_LIFEWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    case INV_USABLE_ITEM_23:
+                    {
+                        newindex = MONSTER_DEATHWOLF;
+                        ReturnValue = TRUE;
+                        break;
+                    }
+                    default:
+                    {
+                        LogMessageA(LL_ERROR, "[%s] Error! Unrecognized upgrade item used SelectedUseItem index = %d !", __FUNCTION__, gSelectedUseItem);
+                        break;
+                    }
+                }
+                SetMonsterData(monster, MONSTER_DATA_INDEX, &newindex);
+                if (strcmp(nickname, monstername) == 0)
+                {
+                    GetMonsterNameFromIndex(nickname, newindex);
+                    SetMonsterData(monster, MONSTER_DATA_NICKNAME, nickname);
+                }
+
+                gSelectedUseItem = 0;
+                //clear incase of back to back useage
+            }
+            break;
+        }
+        case UPGRADE_TYPE_NULL:
+        default:
+        {
+            LogMessageA(LL_ERROR, "[%s] Error! Unknown monster attempted to upgrade. Monster index = %d !",__FUNCTION__, monster->DriveMonster.Index);
+            break;
+        }
+    }
+    return(ReturnValue);
 }
 
 //returns -1 if no slots were compacted

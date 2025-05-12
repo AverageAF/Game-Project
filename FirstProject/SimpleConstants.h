@@ -3,12 +3,25 @@
 
 ///////////////////////////////MISC////////////////////////////////////
 
+//exp growth rates
+
 #define GROWTH_RATE_VERY_FAST 0
 #define GROWTH_RATE_FAST 1
 #define GROWTH_RATE_NORMAL 2
 #define GROWTH_RATE_SLOW 3
 #define GROWTH_RATE_VERY_SLOW 4
 #define GROWTH_RATE_LEGENDARY 5
+
+//upgrade types
+
+#define UPGRADE_TYPE_NULL 0
+#define UPGRADE_TYPE_MAX 1
+#define UPGRADE_TYPE_USEITEM 2
+#define UPGRADE_TYPE_EQUIPITEM 3
+#define UPGRADE_TYPE_LVLUP 4
+#define UPGRADE_TYPE_LVLUPLOCATION 5
+#define UPGRADE_TYPE_LVLUPPARTY 6
+#define UPGRADE_TYPE_LVLUPFRIEND 7
 
 ///////////////////////////////MISC////////////////////////////////////
 
@@ -205,7 +218,58 @@
 #define MONSTER_LIFEWOLF 9
 #define MONSTER_DEATHWOLF 10
 
-#define NUM_MONSTERS (11)
+//TOADD: new monsters
+
+#define MONSTER_NEWUT 11
+#define MONSTER_NEWUND 12
+
+#define MONSTER_CLAYNEE 13
+#define MONSTER_MUDDEN 14
+
+#define MONSTER_STRATLIA 15
+#define MONSTER_SEDIMEAN 16
+
+#define MONSTER_HAWKLIN 17
+#define MONSTER_SQUAKEEN 18
+#define MONSTER_HOWLDREGE 19
+
+#define MONSTER_LILYTAD 20
+#define MONSTER_LILYBUD 21
+#define MONSTER_LILYBLOOM 22
+
+#define MONSTER_PSIMATE 23
+
+//starters
+
+#define MONSTER_CRUSTLING 24
+#define MONSTER_CHISELAE 25
+#define MONSTER_TERRACHNID 26
+
+#define MONSTER_HOOTRIG 27
+#define MONSTER_HOWLHORN 28
+#define MONSTER_NOCSTORM 29
+
+#define MONSTER_KINDLEKIT 30
+#define MONSTER_IGNITSUNE 31
+#define MONSTER_INFERNOX 32
+
+#define MONSTER_CAUDITI 33
+#define MONSTER_MURKAMANDER 34
+#define MONSTER_SALAMENACE 35
+
+//starters
+
+#define MONSTER_BRAMBLING 36
+#define MONSTER_TOXITHORN 37
+
+#define MONSTER_INFANTREE 38
+#define MONSTER_GERMAKNIGHT 39
+#define MONSTER_STALKKING 40
+
+//
+
+//#define NUM_MONSTERS (MONSTER_SALAMENACE + 1)
+#define NUM_MONSTERS (MONSTER_DEATHWOLF + 1)
 
 /////////////////////////////MONSTERS//////////////////////////////////
 
@@ -218,6 +282,7 @@
 #define BATTLEMOVE_SCRATCH 4
 #define BATTLEMOVE_BITE 5
 
+//Unique wolf moves
 #define BATTLEMOVE_GROUND_POUND 6
 #define BATTLEMOVE_BREEZE_ATTACK 7
 #define BATTLEMOVE_FIRE_CHARGE 8
@@ -228,23 +293,50 @@
 #define BATTLEMOVE_FLORAL_ATTACK 13
 #define BATTLEMOVE_DEADLY_SWIPE 14
 
-#define NUM_BATTLEMOVES 15
+//TOADD:
+
+//#define BATTLEMOVE_BLOCK 15
+//#define BATTLEMOVE_SWITCH_OUT 16
+//#define BATTLEMOVE_STONE_THROW 17
+//#define BATTLEMOVE_WATER_SPRAY 18
+//#define BATTLEMOVE_ZAP 19
+//#define BATTLEMOVE_RAPID_HIT 20
+//#define BATTLEMOVE_SMOLDER 21
+//#define BATTLEMOVE_HIGH_WINDS 22
+//#define BATTLEMOVE_PETAL_SHOWER 23
+
+//
+
+#define NUM_BATTLEMOVES (BATTLEMOVE_DEADLY_SWIPE + 1)
 
 #define MONSTER_HAS_MAX_MOVES 0xFFFF
 #define MONSTER_ALREADY_KNOWS_MOVE 0xFFFE
 #define MONSTER_MOVE_NONE 0
 
-#define EFFECT_HIT 0
-#define EFFECT_MULTI_HIT 1
-#define EFFECT_HIT_FLINCH 2
-#define EFFECT_ATTACK_UP 3
-#define EFFECT_ATTACK_DOWN 4
-#define EFFECT_DEFENSE_UP 5
-#define EFFECT_DEFENSE_DOWN 6
+#define EFFECT_NULL 0
+#define EFFECT_HIT 1
+#define EFFECT_MULTI_HIT 2
+#define EFFECT_HIT_FLINCH 3
+#define EFFECT_ATTACK_UP 4
+#define EFFECT_ATTACK_DOWN 5
+#define EFFECT_DEFENSE_UP 6
+#define EFFECT_DEFENSE_DOWN 7
+#define EFFECT_PSI_UP 8
+#define EFFECT_PSI_DOWN 9
+#define EFFECT_RESOLVE_UP 10
+#define EFFECT_RESOLVE_DOWN 11
+#define EFFECT_BLOCK 12
+#define EFFECT_SWITCH 13
+#define EFFECT_HEAL 14
 
 #define FLAG_CONTACTMOVE 1
 #define FLAG_BLOCKABLEMOVE 2
 #define FLAG_STATUSMOVE 3
+#define FLAG_PRIORITY_1 4
+#define FLAG_PRIORITY_2 5
+#define FLAG_PRIORITY_3 6
+#define FLAG_PRIORITY_4 7
+#define FLAG_PRIORITY_LAST 8
 
 #define SPLIT_PHYS 0x0
 #define SPLIT_PSI 0x1
@@ -276,9 +368,21 @@
 ///////
 
 #define ABILITY_NONE 0
-#define ABILITY_RUFF_HOUSE 1
-#define ABILITY_KEEN_EYE 2
-#define ABILITY_WATCHFUL 3
+#define ABILITY_RUFF_HOUSE 1	//same gender +atk
+#define ABILITY_KEEN_EYE 2		//+crits
+#define ABILITY_WATCHFUL 3		//-crits on opponent???
+#define ABILITY_SLIMY_SKIN 4	//clears status 50% chance per turn
+#define ABILITY_SWIFT_SWIMMER 5	//faster speed in water
+#define ABILITY_DRY_BODY 6		//half damage from water moves
+#define ABILITY_HYDROPHILIC 7	//immune to water damage, heals 1/4 max hp
+#define ABILITY_ROCK_SOLID 8	//contact moves increase defense
+#define ABILITY_INTIMIDATE 9	//-atk on opponent
+#define ABILITY_PHOTOSYNTHESIS 10 //Heal 1/8 max hp while sun is out
+#define ABILITY_SOLAR_POWER 11	//+50% to life attacks while sun is out
+#define ABILITY_FORESIGHT 12	//Reveals an opponents move at random
+#define ABILITY_THORNS 13		//Recieving contact damage deals 1/12 max hp dmg back
+#define ABILITY_BRAVERY 14		//+defense and +resolve when at under 1/3 max hp
+
 
 #define NUM_ABILITIES (4 - 1)
 
@@ -290,9 +394,12 @@
 #define INTRO_SCRIPT 1
 #define HOME_SCRIPT 2
 #define PROFESSOR_SCRIPT 3
-#define RIVAL_1_SCRIPT 4
+#define PREVENT_PROFESSOR_SCRIPT 4
+#define RIVAL_1_SCRIPT 5
 
-#define TOTAL_SCENE_SCRIPTS (5)
+#define TOTAL_SCENE_SCRIPTS (6)
+
+#define MAX_NPCS_PER_SCRIPT 8
 
 ///////////////////////////SCRIPTS////////////////////////////////////
 

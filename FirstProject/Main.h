@@ -487,6 +487,13 @@ typedef struct SCENE_SCRIPT
 
 } SCENE_SCRIPT;
 
+typedef struct SCENE_XYPOS
+{
+	uint8_t Actor;
+	UPOINT Pos;
+
+} SCENE_XYPOS;
+
 typedef struct GAME_PERFORMANCE_DATA
 {
 	uint64_t TotalFramesRendered;
@@ -652,6 +659,8 @@ struct BaseStats
 	uint8_t element1;
 	uint8_t element2;
 	uint8_t catchrate;
+	uint8_t upgradeType;
+	uint8_t upgradeLvl;
 	uint16_t expYield;
 	uint16_t trainingYieldHp : 2;
 	uint16_t trainingYieldAttack : 2;
@@ -853,6 +862,8 @@ struct BattleMonster gOpponentBattleParty[MAX_PARTY_SIZE];
 GAMEBITMAP gBattleSpriteBack[NUM_MONSTERS];	//////temp while still working on MONSTERINFO struct
 GAMEBITMAP gBattleSpriteFront[NUM_MONSTERS];
 
+uint16_t gSelectedUseItem;
+
 BOOL gSellingItems;					//so inventory knows the difference between regular inventory and selling to a shop
 uint8_t gStoreSpriteIndex;			//so storescreen.c knows what npc you are buying from | USE uint16_t?????
 
@@ -917,6 +928,7 @@ const struct BaseStats gBaseStats[];
 const uint32_t gExperienceTables[][MAX_LEVEL + 1];
 const struct LevelUpMove* const gLevelUpMoves[NUM_MONSTERS];
 const SCENE_SCRIPT const gSceneScriptTable[TOTAL_SCENE_SCRIPTS][MAX_MOVEMENT_SCRIPTS];
+const SCENE_XYPOS const gSceneStartingPosition[TOTAL_SCENE_SCRIPTS][MAX_NPCS_PER_SCRIPT];
 
 
 LRESULT CALLBACK MainWindowProc(_In_ HWND WindowHandle, _In_ UINT Message, _In_ WPARAM WParam, _In_ LPARAM LParam);

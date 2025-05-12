@@ -422,19 +422,22 @@ void PPI_InventoryScreen(void)
                 {
                     if (gPlayerPartyCount > 0 && gSellingItems == FALSE)
                     {
-                        gCurrentPockets = POCKETSTATE_MONSTER;
+                        //gCurrentPockets = POCKETSTATE_MONSTER;
+                        GoToDestPocketState(POCKETSTATE_MONSTER);
                         PlayGameSound(&gSoundMenuNavigate);
                         gSwitchingMonster = 255;
                     }
                     else if (gSellingItems == TRUE)
                     {
-                        gCurrentPockets = POCKETSTATE_VALUABLE;
+                        //gCurrentPockets = POCKETSTATE_VALUABLE;
+                        GoToDestPocketState(POCKETSTATE_VALUABLE);
                         PlayGameSound(&gSoundMenuNavigate);
                     }
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_USABLE;
+                    //gCurrentPockets = POCKETSTATE_USABLE;
+                    GoToDestPocketState(POCKETSTATE_USABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
 
@@ -557,12 +560,14 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    //gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    GoToDestPocketState(POCKETSTATE_EQUIPABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_VALUABLE;
+                    //gCurrentPockets = POCKETSTATE_VALUABLE;
+                    GoToDestPocketState(POCKETSTATE_VALUABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
 
@@ -686,17 +691,20 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_USABLE;
+                    //gCurrentPockets = POCKETSTATE_USABLE;
+                    GoToDestPocketState(POCKETSTATE_USABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed && gSellingItems == FALSE)
                 {
-                    gCurrentPockets = POCKETSTATE_ADVENTURE;
+                    //gCurrentPockets = POCKETSTATE_ADVENTURE;
+                    GoToDestPocketState(POCKETSTATE_ADVENTURE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed && gSellingItems == TRUE)
                 {
-                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    //gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    GoToDestPocketState(POCKETSTATE_EQUIPABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
 
@@ -819,12 +827,14 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_VALUABLE;
+                    //gCurrentPockets = POCKETSTATE_VALUABLE;
+                    GoToDestPocketState(POCKETSTATE_VALUABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed && gPlayerPartyCount > 0)
                 {
-                    gCurrentPockets = POCKETSTATE_MONSTER;
+                    //gCurrentPockets = POCKETSTATE_MONSTER;
+                    GoToDestPocketState(POCKETSTATE_MONSTER);
                     PlayGameSound(&gSoundMenuNavigate);
                     gSwitchingMonster = 255;
                 }
@@ -893,13 +903,15 @@ void PPI_InventoryScreen(void)
 
                 if (gGameInput.ALeftKeyPressed && !gGameInput.ALeftKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_ADVENTURE;
+                    //gCurrentPockets = POCKETSTATE_ADVENTURE;
+                    GoToDestPocketState(POCKETSTATE_ADVENTURE);
                     PlayGameSound(&gSoundMenuNavigate);
                     gSwitchingMonster = 255;
                 }
                 else if (gGameInput.DRightKeyPressed && !gGameInput.DRightKeyAlreadyPressed)
                 {
-                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    //gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    GoToDestPocketState(POCKETSTATE_EQUIPABLE);
                     PlayGameSound(&gSoundMenuNavigate);
                     gSwitchingMonster = 255;
                 }
@@ -1758,8 +1770,9 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                 {
                     if (gPlayerParty[gSelectedMonster].Health == gPlayerParty[gSelectedMonster].MaxHealth || gPlayerParty[gSelectedMonster].Health == 0)      ////selected monster has full hp or is knocked out
                     {
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        //gCurrentPockets = POCKETSTATE_USABLE;
+                        //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        GoToDestPocketState(POCKETSTATE_USABLE);
                     }
                     else
                     {
@@ -1809,8 +1822,9 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
 
                         gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
 
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        //gCurrentPockets = POCKETSTATE_USABLE;
+                        //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        GoToDestPocketState(POCKETSTATE_USABLE);
                         gHasSelectedInvSlot = FALSE;
 
                         ReSortUsableitems();
@@ -1876,25 +1890,26 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                             }
                         }
 
-                        BOOL DidMonsterLevelUp = FALSE;
-
                     TryLevelUp:
 
-                        DidMonsterLevelUp = TryIncrementMonsterLevel(&gPlayerParty[gSelectedMonster]);
-
-                        if (DidMonsterLevelUp == TRUE)
+                        if (TryIncrementMonsterLevel(&gPlayerParty[gSelectedMonster]) == TRUE)
                         {
                             CalculateMonsterStats(&gPlayerParty[gSelectedMonster]);
 
-                            MonsterTryLearningNewMove(&gPlayerParty[gSelectedMonster], TRUE);
+                            MonsterTryLearningNewMove(&gPlayerParty[gSelectedMonster], TRUE);   //TODO: display a message when a new move is available but slots are full
 
-                            goto TryLevelUp;
+                            if (TryUpgradeMonster(&gPlayerParty[gSelectedMonster]) == TRUE)
+                            {
+                                MonsterTryLearningNewMove(&gPlayerParty[gSelectedMonster], TRUE);
+                            }
+                            goto TryLevelUp;  //incase multiple levelups from one EXP source
                         }
 
                         gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
 
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        //gCurrentPockets = POCKETSTATE_USABLE;
+                        //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        GoToDestPocketState(POCKETSTATE_USABLE);
                         gHasSelectedInvSlot = FALSE;
 
                         ReSortUsableitems();
@@ -1904,142 +1919,23 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                 }
                 case ITEM_USE_EFFECT_CAPTURE:
                 {
-                    gCurrentPockets = POCKETSTATE_USABLE;
-                    gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    //gCurrentPockets = POCKETSTATE_USABLE;
+                    //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    GoToDestPocketState(POCKETSTATE_USABLE);
                     break;
                 }
                 case ITEM_USE_EFFECT_UPGRADE:
                 {
-                    uint8_t monstername[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
-                    uint8_t nickname[MAX_MONSTER_NAME_LENGTH + 1] = { 0 };
-                    GetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                    GetMonsterNameFromIndex(monstername, MONSTER_WOLF);
-
-                    if (gPlayerParty[gSelectedMonster].DriveMonster.Index == MONSTER_WOLF)
+                    gSelectedUseItem = gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem];
+                    if (TryUpgradeMonster(&gPlayerParty[gSelectedMonster]) == TRUE)
                     {
-                        switch (gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem])
-                        {
-                            case INV_USABLE_ITEM_15:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_EARTHWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_EARTHWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_16:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_AIRWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_AIRWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_17:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_FIREWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_FIREWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_18:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_WATERWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_WATERWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_19:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_ELECTRICWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_ELECTRICWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_20:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_METALWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_METALWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_21:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_SOULWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_SOULWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_22:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_LIFEWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_LIFEWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            case INV_USABLE_ITEM_23:
-                            {
-                                gPlayerParty[gSelectedMonster].DriveMonster.Index = MONSTER_DEATHWOLF;
-
-                                if (strcmp(nickname, monstername) == 0)
-                                {
-                                    GetMonsterNameFromIndex(nickname, MONSTER_DEATHWOLF);
-                                    SetMonsterData(&gPlayerParty[gSelectedMonster], MONSTER_DATA_NICKNAME, nickname);
-                                }
-                                break;
-                            }
-                            default:
-                            {
-                                ASSERT(FALSE, "unknown Usable Item with effect ITEM_USE_EFFECT_UPGRADE");
-                            }
-                        }
-
-                        gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
-
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
-                        gHasSelectedInvSlot = FALSE;
-
-                        ReSortUsableitems();
-
                         CalculateMonsterStats(&gPlayerParty[gSelectedMonster]);
+                        gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
+                        ReSortUsableitems();
                     }
-                    else
-                    {
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
-                    }
-                    break;
+                    GoToDestPocketState(POCKETSTATE_USABLE);
+                    gHasSelectedInvSlot = FALSE;
+
                 }
                 case ITEM_USE_EFFECT_REVIVE_MONSTER:
                 {
@@ -2070,16 +1966,18 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
 
                         gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count--;
 
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        //gCurrentPockets = POCKETSTATE_USABLE;
+                        //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        GoToDestPocketState(POCKETSTATE_USABLE);
                         gHasSelectedInvSlot = FALSE;
 
                         ReSortUsableitems();
                     }
                     else
                     {
-                        gCurrentPockets = POCKETSTATE_USABLE;
-                        gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        //gCurrentPockets = POCKETSTATE_USABLE;
+                        //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                        GoToDestPocketState(POCKETSTATE_USABLE);
                     }
                     break;
                 }
@@ -2099,8 +1997,9 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                     gPlayerParty[gSelectedMonster].DriveMonster.HeldItem = gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem];
                     gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count--;
 
-                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
-                    gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    //gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    GoToDestPocketState(POCKETSTATE_EQUIPABLE);
 
                     ReSortEquipableitems();
 
@@ -2130,8 +2029,9 @@ void MenuItem_Inventory_MonsterSelected_Action(void)
                     gPlayerParty[gSelectedMonster].DriveMonster.HeldItem = gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem];
                     gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count--;
 
-                    gCurrentPockets = POCKETSTATE_EQUIPABLE;
-                    gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    //gCurrentPockets = POCKETSTATE_EQUIPABLE;
+                    //gPreviousPockets = POCKETSTATE_MONSTER_SELECT;
+                    GoToDestPocketState(POCKETSTATE_EQUIPABLE);
 
                     ReSortEquipableitems();
 
@@ -2215,8 +2115,9 @@ void MenuItem_Inventory_SelectedItem_Use(void)
             if (gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Effect == ITEM_EQUIP_EFFECT_ELEMENT_BOOST && gEquipableItems[gEquipSlotIndex[gMenu_InventoryEquipable.SelectedItem]].Count > 0)
             {
                 gEquipItemEffect = ITEM_EQUIP_EFFECT_ELEMENT_BOOST;
-                gPreviousPockets = POCKETSTATE_EQUIPABLE;
-                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                //gPreviousPockets = POCKETSTATE_EQUIPABLE;
+                //gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                GoToDestPocketState(POCKETSTATE_MONSTER_SELECT);
                 gSwitchingMonster = 255;
             }
             break;
@@ -2226,29 +2127,33 @@ void MenuItem_Inventory_SelectedItem_Use(void)
             if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_HEAL_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
             {
                 gUseableItemEffect = ITEM_USE_EFFECT_HEAL_MONSTER;
-                gPreviousPockets = POCKETSTATE_USABLE;
-                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                //gPreviousPockets = POCKETSTATE_USABLE;
+                //gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                GoToDestPocketState(POCKETSTATE_MONSTER_SELECT);
                 gSwitchingMonster = 255;
             }
             else if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_EXP_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
             {
                 gUseableItemEffect = ITEM_USE_EFFECT_EXP_MONSTER;
-                gPreviousPockets = POCKETSTATE_USABLE;
-                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                //gPreviousPockets = POCKETSTATE_USABLE;
+                //gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                GoToDestPocketState(POCKETSTATE_MONSTER_SELECT);
                 gSwitchingMonster = 255;
             }
             else if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_UPGRADE && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
             {
                 gUseableItemEffect = ITEM_USE_EFFECT_UPGRADE;
-                gPreviousPockets = POCKETSTATE_USABLE;
-                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                //gPreviousPockets = POCKETSTATE_USABLE;
+                //gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                GoToDestPocketState(POCKETSTATE_MONSTER_SELECT);
                 gSwitchingMonster = 255;
             }
             else if (gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Effect == ITEM_USE_EFFECT_REVIVE_MONSTER && gUseableItems[gUseableSlotIndex[gMenu_InventoryUseable.SelectedItem]].Count > 0)
             {
                 gUseableItemEffect = ITEM_USE_EFFECT_REVIVE_MONSTER;
-                gPreviousPockets = POCKETSTATE_USABLE;
-                gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                //gPreviousPockets = POCKETSTATE_USABLE;
+                //gCurrentPockets = POCKETSTATE_MONSTER_SELECT;
+                GoToDestPocketState(POCKETSTATE_MONSTER_SELECT);
                 gSwitchingMonster = 255;
             }
             break;
@@ -2326,4 +2231,22 @@ void MenuItem_Inventory_SelectedItem_Sell(void)
             ASSERT(FALSE, "Unknown pocketstate while selling an item!");
         }
     }
+}
+
+void GoToDestPocketState(INV_POCKETS pocketstate)
+{
+    gDesiredPockets = pocketstate;
+
+    gPreviousPockets = gCurrentPockets;
+
+    gCurrentPockets = gDesiredPockets;
+}
+
+void GoToPrevPocketState(void)
+{
+    gDesiredPockets = gPreviousPockets;
+
+    gPreviousPockets = gCurrentPockets;
+
+    gCurrentPockets = gDesiredPockets;
 }

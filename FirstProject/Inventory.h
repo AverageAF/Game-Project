@@ -13,6 +13,7 @@ typedef enum INV_POCKETS
 
 INV_POCKETS gCurrentPockets;
 INV_POCKETS gPreviousPockets;
+INV_POCKETS gDesiredPockets;
 
 
 //// USABLESLOT MENU GLOBALS ////
@@ -67,3 +68,8 @@ void MenuItem_Inventory_SelectedItem_Equip(void);
 void MenuItem_Inventory_SelectedItem_Unequip(void);
 
 void MenuItem_Inventory_SelectedItem_Sell(void);
+
+
+void GoToDestPocketState(INV_POCKETS pocketstate);
+
+void GoToPrevPocketState(void);

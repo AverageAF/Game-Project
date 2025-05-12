@@ -624,6 +624,17 @@ DWORD InitializeTriggers(void)
 
     /////////////////////////////////////////////////
 
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].WorldPos.x = 528;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].WorldPos.y = 4656;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].Type = TRIGGER_TYPE_INFINITE;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].Exists = TRUE;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].Loaded = FALSE;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].Interactive = FALSE;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].GameAreaIndex = 2;
+    gTriggerTiles[PREVENT_PROFESSOR_SCRIPT].GameFlag = FLAG_AQUIRED_MONSTER;
+
+    /////////////////////////////////////////////////
+
     return(0);
 }
 
