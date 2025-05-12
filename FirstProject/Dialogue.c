@@ -39,7 +39,7 @@ static const uint8_t dSmallItem02[] = "You put them into the USABLE\npocket of y
 static const uint8_t dHiddenItem01[] = "You found some hidden HP items!";
 static const uint8_t dHiddenItem02[] = "You put them into the USABLE\npocket of your bag.";
 
-static const uint8_t dBlock01[] = "I heard from the professor he\nwanted to see you, you should go\nto his lab and see him!";
+static const uint8_t dBlock01[] = "I heard from the professor he\nwanted to see you, you should\ngo to his lab and see him!";
 
 const uint8_t* const gDialoguePointers[NUM_OF_DIALOGUES] = {
 

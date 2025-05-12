@@ -1195,367 +1195,1068 @@ void DisplayDebugTiles(void)
 BOOL ApplyMovementScriptSprite(_In_ SCENE_SCRIPT scriptarray[], _In_ uint16_t xstart, _In_ uint16_t ystart, _In_ BOOL removeSpriteAfterScript)
 {
     ///this function will be called every frame, yet I want it to queue up actions to be done at 30 frame intervals but updated & displayed every frame.
-    
+    BOOL returnval = TRUE;
     static uint16_t localframecounter;
     static uint8_t actorsthisscene[MAX_NPCS_PER_SCRIPT];
 
     uint8_t CurrentActorID = 0;
+    MOVEMENT_SCRIPT WorkingScript = MOVE_NULL;
 
-newactor:
-
-    CurrentActorID = scriptarray[gCurrentScript].Actor;
-
-    //test for if CurrentActorID is the player
-    if (CurrentActorID == 0xFF)
+    if (scriptarray[gCurrentScript].Actor == 0xFF && scriptarray[gCurrentScript].Script == START_OF_SCRIPT && gCurrentScript == 0)
     {
-        
-    }
+        uint8_t ActorID = 0;
 
-
-    //if current actor is applying movement first time this scene then store it
-    for (uint8_t actororder = 0; actororder < MAX_NPCS_PER_SCRIPT; actororder++)
-    {
-        if (actorsthisscene[actororder] == 0)
+        //Initialize cutscene
+        for (uint8_t npcinit = 0; npcinit < MAX_NPCS_PER_SCRIPT; npcinit++)
         {
-            if (scriptarray[gCurrentScript].Script == START_OF_SCRIPT)   //catches the exception where start_of_script uses the player's identifier
+            ActorID = gSceneStartingPosition[gCurrentScene][npcinit].Actor;
+            gCharacterSprite[ActorID].Exists = TRUE;
+            gCharacterSprite[ActorID].Loaded = TRUE;
+            //option to leave npc invisible instead of immediately loading it as visible in scene
+
+            if (gSceneStartingPosition[gCurrentScene][npcinit].Pos.x != 0 && gSceneStartingPosition[gCurrentScene][npcinit].Pos.y != 0)     //ignore all this if their coords are 0,0 and instead just use the coords the charsprite already has
             {
-                break;
+                gCharacterSprite[ActorID].WorldPos.x = gSceneStartingPosition[gCurrentScene][npcinit].Pos.x;
+                gCharacterSprite[ActorID].WorldPos.y = gSceneStartingPosition[gCurrentScene][npcinit].Pos.y;
             }
 
-            //store
-            actorsthisscene[actororder] = CurrentActorID;
-
-            if (gSceneStartingPosition[gCurrentScene][actororder].Actor != CurrentActorID)
-            {
-                //we somehow are out of sync between gSceneStartingPosition and gSceneScriptArray(which reads from gSceneScriptTable)
-                LogMessageA(LL_ERROR, "[%s] ERROR! gSceneStartingPostition and gSceneScriptArray are out of sync! %d vs %d !", __FUNCTION__, gSceneStartingPosition[gCurrentScene][actororder].Actor, CurrentActorID);
-            }
-            else
-            {
-                if (gSceneStartingPosition[gCurrentScene][actororder].Pos.x == 0)
-                {
-                    //leave gCharacterSprite with its normal x coordinates
-                }
-                else
-                {
-                    gCharacterSprite[CurrentActorID].WorldPos.x = gSceneStartingPosition[gCurrentScene][actororder].Pos.x;
-                }
-
-                if (gSceneStartingPosition[gCurrentScene][actororder].Pos.y == 0)
-                {
-                    //leave gCharacterSprite with its normal y coordinates
-                }
-                else
-                {
-                    gCharacterSprite[CurrentActorID].WorldPos.y = gSceneStartingPosition[gCurrentScene][actororder].Pos.y;
-                }
-
-                gCharacterSprite[CurrentActorID].Exists = TRUE;
-                gCharacterSprite[CurrentActorID].Loaded = TRUE;
-                gCharacterSprite[CurrentActorID].Visible = TRUE;
-            }
-
-            break;
         }
-        else if (actorsthisscene[actororder] == CurrentActorID)
-        {
-            break;
-        }
-    }
-
-    if (scriptarray[gCurrentScript].Script == START_OF_SCRIPT)
-    {
-        gCurrentScript++;
         localframecounter = 1;
-
-        //restarts function after being initialized
-        goto newactor;
+        gCurrentScript++;
     }
-
-    MOVEMENT_SCRIPT WorkingScript = scriptarray[gCurrentScript].Script;
-
-    switch (WorkingScript)
+    else if (scriptarray[gCurrentScript].Actor == 0xFF && scriptarray[gCurrentScript].Script == END_OF_SCRIPT)
     {
-        case MOVE_NULL:
-        {
-            if (localframecounter % 64 == 0)
-            {
-                gCurrentScript++;
-                //exactly identical to delay_64 except we log as a warning
-                LogMessageA(LL_WARNING, "[%s] Warning, WorkingScript in function ApplyMovementSprite() was MOVE_NULL!", __FUNCTION__);
-            }
-            break;
-        }
-        case FACE_DOWN:
-        {
-            if (localframecounter % 32 == 0)
-            {
-                gCurrentScript++;
-            }
-            else if (localframecounter % 16 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = DOWN;
-            }
-            break;
-        }
-        case FACE_LEFT:
-        {
-            if (localframecounter % 32 == 0)
-            {
-                gCurrentScript++;
-            }
-            else if (localframecounter % 16 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = LEFT;
-            }
-            break;
-        }
-        case FACE_UP:
-        {
-            if (localframecounter % 32 == 0)
-            {
-                gCurrentScript++;
-            }
-            else if (localframecounter % 16 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = UP;
-            }
-            break;
-        }
-        case FACE_RIGHT:
-        {
-            if (localframecounter % 32 == 0)
-            {
-                gCurrentScript++;
-            }
-            else if (localframecounter % 16 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = RIGHT;
-            }
-            break;
-        }
-        case WALK_DOWN:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = DOWN;
-                gCharacterSprite[CurrentActorID].WorldPos.y++;
-                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_LEFT:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = LEFT;
-                gCharacterSprite[CurrentActorID].WorldPos.x--;
-                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_UP:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = UP;
-                gCharacterSprite[CurrentActorID].WorldPos.y--;
-                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_RIGHT:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = RIGHT;
-                gCharacterSprite[CurrentActorID].WorldPos.x++;
-                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_BW_DOWN:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = UP;
-                gCharacterSprite[CurrentActorID].WorldPos.y++;
-                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_BW_LEFT:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = RIGHT;
-                gCharacterSprite[CurrentActorID].WorldPos.x--;
-                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_BW_UP:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = DOWN;
-                gCharacterSprite[CurrentActorID].WorldPos.y--;
-                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case WALK_BW_RIGHT:
-        {
-            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-            {
-                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
-            }
-            else if (localframecounter % 2 == 0)
-            {
-                gCharacterSprite[CurrentActorID].Direction = LEFT;
-                gCharacterSprite[CurrentActorID].WorldPos.x++;
-                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
-                gCharacterSprite[CurrentActorID].MovementRemaining--;
-                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
-                {
-                    gCurrentScript++;
-                }
-            }
-            break;
-        }
-        case DELAY_16:
-        {
-            if (localframecounter % 16 == 0)
-            {
-                gCurrentScript++;
-            }
-            break;
-        }
-        case DELAY_32:
-        {
-            if (localframecounter % 32 == 0)
-            {
-                gCurrentScript++;
-            }
-            break;
-        }
-        case DELAY_48:
-        {
-            if (localframecounter % 48 == 0)
-            {
-                gCurrentScript++;
-            }
-            break;
-        }
-        case DELAY_64:
-        {
-            if (localframecounter % 64 == 0)
-            {
-                gCurrentScript++;
-            }
-            break;
-        }
-        case DIALOGUE_TRIGGER:
-        {
-            //delay increasing gCurrentScript until player input
-            break;
-        }
-        case START_OF_SCRIPT:
-        case END_OF_SCRIPT:
-        {
-            break;
-        }
-        default: 
-        {
-            LogMessageA(LL_ERROR, "[%s] Error, Working script was unknown value in ApplyMovementScript! Value of %d!", __FUNCTION__, WorkingScript);
-            break;
-        }
-    }
-
-    if (scriptarray[gCurrentScript].Script == END_OF_SCRIPT)
-    {
-        if (removeSpriteAfterScript)
-        {
-            //TODO: this only removes the last sprite, not all of them
-            gCharacterSprite[CurrentActorID].Exists = FALSE;
-            gCharacterSprite[CurrentActorID].Loaded = FALSE;
-            gCharacterSprite[CurrentActorID].Visible = FALSE;
-        }
+        //end cutscene
         gCurrentScript = 0;
         localframecounter = 0;
-        //reset how i keep track of the actors this scene
-        for (uint8_t i = 0; i < MAX_NPCS_PER_SCRIPT; i++)
+        returnval = FALSE;
+    }
+    else
+    {
+        CurrentActorID = scriptarray[gCurrentScript].Actor;
+        WorkingScript = scriptarray[gCurrentScript].Script;
+
+        switch (CurrentActorID)
         {
-            actorsthisscene[i] = 0;
+            case 0xFF:  //player
+            {
+                
+                switch (WorkingScript)
+                {
+                    case MOVE_NULL:
+                    {
+                        if (localframecounter % 64 == 0)
+                        {
+                            gCurrentScript++;
+                            //exactly identical to delay_64 except we log as a warning
+                            LogMessageA(LL_WARNING, "[%s] Warning, WorkingScript in function ApplyMovementScriptSprite() was MOVE_NULL!", __FUNCTION__);
+                        }
+                        break;
+                    }
+                    case FACE_DOWN:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gPlayer.Direction = DOWN;
+                        }
+                        break;
+                    }
+                    case FACE_LEFT:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gPlayer.Direction = LEFT;
+                        }
+                        break;
+                    }
+                    case FACE_UP:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gPlayer.Direction = UP;
+                        }
+                        break;
+                    }
+                    case FACE_RIGHT:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gPlayer.Direction = RIGHT;
+                        }
+                        break;
+                    }
+                    case WALK_DOWN:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = DOWN;
+
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.y++;
+                            gPlayer.ScreenPos.y = gPlayer.WorldPos.y - gCamera.y;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_LEFT:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = LEFT;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.x--;
+                            gPlayer.ScreenPos.x = gPlayer.WorldPos.x - gCamera.x;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_UP:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = UP;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.y--;
+                            gPlayer.ScreenPos.y = gPlayer.WorldPos.y - gCamera.y;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_RIGHT:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = RIGHT;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.x++;
+                            gPlayer.ScreenPos.x = gPlayer.WorldPos.x - gCamera.x;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_DOWN:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = UP;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.y++;
+                            gPlayer.ScreenPos.y = gPlayer.WorldPos.y - gCamera.y;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_LEFT:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = RIGHT;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.x--;
+                            gPlayer.ScreenPos.x = gPlayer.WorldPos.x - gCamera.x;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_UP:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = DOWN;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.y--;
+                            gPlayer.ScreenPos.y = gPlayer.WorldPos.y - gCamera.y;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_RIGHT:
+                    {
+                        if (!gPlayer.MovementRemaining)
+                        {
+                            gPlayer.MovementRemaining = 16;
+                            gPlayer.Direction = LEFT;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            switch (gPlayer.MovementRemaining)
+                            {
+                                case 15:
+                                {
+                                    gPlayer.SpriteIndex = 2;
+                                    break;
+                                }
+                                case 7:
+                                {
+                                    gPlayer.SpriteIndex = 1;
+                                    break;
+                                }
+                            }
+                            gPlayer.WorldPos.x++;
+                            gPlayer.ScreenPos.x = gPlayer.WorldPos.x - gCamera.x;
+                            gPlayer.MovementRemaining--;
+                            if (!gPlayer.MovementRemaining)
+                            {
+                                gPlayer.SpriteIndex = 0;
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case DELAY_16:
+                    {
+                        if (localframecounter % 16 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DELAY_32:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DELAY_48:
+                    {
+                        if (localframecounter % 48 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DELAY_64:
+                    {
+                        if (localframecounter % 64 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DIALOGUE_TRIGGER:
+                    {
+                        //delay increasing gCurrentScript until player input
+                        break;
+                    }
+                    case START_OF_SCRIPT:
+                    case END_OF_SCRIPT:
+                    {
+                        break;
+                    }
+                    default:
+                    {
+                        LogMessageA(LL_ERROR, "[%s] Error, Working script was unknown value in ApplyMovementScript! Value of %d!", __FUNCTION__, WorkingScript);
+                        break;
+                    }
+                }
+
+                break;
+            }
+            default:    //NPC
+            {
+                switch (WorkingScript)
+                {
+                    case MOVE_NULL:
+                    {
+                        if (localframecounter % 64 == 0)
+                        {
+                            gCurrentScript++;
+                            //exactly identical to delay_64 except we log as a warning
+                            LogMessageA(LL_WARNING, "[%s] Warning, WorkingScript in function ApplyMovementSprite() was MOVE_NULL!", __FUNCTION__);
+                        }
+                        break;
+                    }
+                    case FACE_DOWN:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = DOWN;
+                        }
+                        break;
+                    }
+                    case FACE_LEFT:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = LEFT;
+                        }
+                        break;
+                    }
+                    case FACE_UP:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = UP;
+                        }
+                        break;
+                    }
+                    case FACE_RIGHT:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        else if (localframecounter % 16 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = RIGHT;
+                        }
+                        break;
+                    }
+                    case WALK_DOWN:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = DOWN;
+                            gCharacterSprite[CurrentActorID].WorldPos.y++;
+                            gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_LEFT:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = LEFT;
+                            gCharacterSprite[CurrentActorID].WorldPos.x--;
+                            gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_UP:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = UP;
+                            gCharacterSprite[CurrentActorID].WorldPos.y--;
+                            gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_RIGHT:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = RIGHT;
+                            gCharacterSprite[CurrentActorID].WorldPos.x++;
+                            gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_DOWN:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = UP;
+                            gCharacterSprite[CurrentActorID].WorldPos.y++;
+                            gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_LEFT:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = RIGHT;
+                            gCharacterSprite[CurrentActorID].WorldPos.x--;
+                            gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_UP:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = DOWN;
+                            gCharacterSprite[CurrentActorID].WorldPos.y--;
+                            gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case WALK_BW_RIGHT:
+                    {
+                        if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                        {
+                            gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+                        }
+                        else if (localframecounter % 2 == 0)
+                        {
+                            gCharacterSprite[CurrentActorID].Direction = LEFT;
+                            gCharacterSprite[CurrentActorID].WorldPos.x++;
+                            gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+                            gCharacterSprite[CurrentActorID].MovementRemaining--;
+                            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+                            {
+                                gCurrentScript++;
+                            }
+                        }
+                        break;
+                    }
+                    case DELAY_16:
+                    {
+                        if (localframecounter % 16 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DELAY_32:
+                    {
+                        if (localframecounter % 32 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DELAY_48:
+                    {
+                        if (localframecounter % 48 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DELAY_64:
+                    {
+                        if (localframecounter % 64 == 0)
+                        {
+                            gCurrentScript++;
+                        }
+                        break;
+                    }
+                    case DIALOGUE_TRIGGER:
+                    {
+                        //delay increasing gCurrentScript until player input
+                        break;
+                    }
+                    case START_OF_SCRIPT:
+                    case END_OF_SCRIPT:
+                    {
+                        break;
+                    }
+                    default:
+                    {
+                        LogMessageA(LL_ERROR, "[%s] Error, Working script was unknown value in ApplyMovementScript! Value of %d!", __FUNCTION__, WorkingScript);
+                        break;
+                    }
+                }
+
+                break;
+            }
         }
-        return(FALSE);
     }
 
     localframecounter++;
-    return(TRUE);
+    return(returnval);
+
+
+
+
+
+
+
+    /////THIS SUCKS!!! TOREMOVE
+//
+//
+//
+//newactor:
+//
+//    CurrentActorID = scriptarray[gCurrentScript].Actor;
+//
+//    //test for if CurrentActorID is the player
+//    if (CurrentActorID == 0xFF)
+//    {
+//        
+//    }
+//    else
+//    {
+//
+//    }
+//
+//
+//    //if current actor is applying movement first time this scene then store it
+//    for (uint8_t actororder = 0; actororder < MAX_NPCS_PER_SCRIPT; actororder++)
+//    {
+//        if (actorsthisscene[actororder] == 0)
+//        {
+//            if (scriptarray[gCurrentScript].Script == START_OF_SCRIPT)   //catches the exception where start_of_script uses the player's identifier
+//            {
+//                break;
+//            }
+//
+//            //store
+//            actorsthisscene[actororder] = CurrentActorID;
+//
+//            if (gSceneStartingPosition[gCurrentScene][actororder].Actor != CurrentActorID)
+//            {
+//                //we somehow are out of sync between gSceneStartingPosition and gSceneScriptArray(which reads from gSceneScriptTable)
+//                LogMessageA(LL_ERROR, "[%s] ERROR! gSceneStartingPostition and gSceneScriptArray are out of sync! %d vs %d !", __FUNCTION__, gSceneStartingPosition[gCurrentScene][actororder].Actor, CurrentActorID);
+//            }
+//            else
+//            {
+//                if (gSceneStartingPosition[gCurrentScene][actororder].Pos.x == 0)
+//                {
+//                    //leave gCharacterSprite with its normal x coordinates
+//                }
+//                else
+//                {
+//                    gCharacterSprite[CurrentActorID].WorldPos.x = gSceneStartingPosition[gCurrentScene][actororder].Pos.x;
+//                }
+//
+//                if (gSceneStartingPosition[gCurrentScene][actororder].Pos.y == 0)
+//                {
+//                    //leave gCharacterSprite with its normal y coordinates
+//                }
+//                else
+//                {
+//                    gCharacterSprite[CurrentActorID].WorldPos.y = gSceneStartingPosition[gCurrentScene][actororder].Pos.y;
+//                }
+//
+//                gCharacterSprite[CurrentActorID].Exists = TRUE;
+//                gCharacterSprite[CurrentActorID].Loaded = TRUE;
+//                gCharacterSprite[CurrentActorID].Visible = TRUE;
+//            }
+//
+//            break;
+//        }
+//        else if (actorsthisscene[actororder] == CurrentActorID)
+//        {
+//            break;
+//        }
+//    }
+//
+//    if (scriptarray[gCurrentScript].Script == START_OF_SCRIPT)
+//    {
+//        gCurrentScript++;
+//        localframecounter = 1;
+//
+//        //restarts function after being initialized
+//        goto newactor;
+//    }
+//
+//    MOVEMENT_SCRIPT WorkingScript = scriptarray[gCurrentScript].Script;
+//
+//    switch (WorkingScript)
+//    {
+//        case MOVE_NULL:
+//        {
+//            if (localframecounter % 64 == 0)
+//            {
+//                gCurrentScript++;
+//                //exactly identical to delay_64 except we log as a warning
+//                LogMessageA(LL_WARNING, "[%s] Warning, WorkingScript in function ApplyMovementSprite() was MOVE_NULL!", __FUNCTION__);
+//            }
+//            break;
+//        }
+//        case FACE_DOWN:
+//        {
+//            if (localframecounter % 32 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            else if (localframecounter % 16 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = DOWN;
+//            }
+//            break;
+//        }
+//        case FACE_LEFT:
+//        {
+//            if (localframecounter % 32 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            else if (localframecounter % 16 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = LEFT;
+//            }
+//            break;
+//        }
+//        case FACE_UP:
+//        {
+//            if (localframecounter % 32 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            else if (localframecounter % 16 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = UP;
+//            }
+//            break;
+//        }
+//        case FACE_RIGHT:
+//        {
+//            if (localframecounter % 32 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            else if (localframecounter % 16 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = RIGHT;
+//            }
+//            break;
+//        }
+//        case WALK_DOWN:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = DOWN;
+//                gCharacterSprite[CurrentActorID].WorldPos.y++;
+//                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_LEFT:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = LEFT;
+//                gCharacterSprite[CurrentActorID].WorldPos.x--;
+//                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_UP:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = UP;
+//                gCharacterSprite[CurrentActorID].WorldPos.y--;
+//                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_RIGHT:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = RIGHT;
+//                gCharacterSprite[CurrentActorID].WorldPos.x++;
+//                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_BW_DOWN:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = UP;
+//                gCharacterSprite[CurrentActorID].WorldPos.y++;
+//                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_BW_LEFT:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = RIGHT;
+//                gCharacterSprite[CurrentActorID].WorldPos.x--;
+//                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_BW_UP:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = DOWN;
+//                gCharacterSprite[CurrentActorID].WorldPos.y--;
+//                gCharacterSprite[CurrentActorID].ScreenPos.y = gCharacterSprite[CurrentActorID].WorldPos.y - gCamera.y;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case WALK_BW_RIGHT:
+//        {
+//            if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//            {
+//                gCharacterSprite[CurrentActorID].MovementRemaining = 16;
+//            }
+//            else if (localframecounter % 2 == 0)
+//            {
+//                gCharacterSprite[CurrentActorID].Direction = LEFT;
+//                gCharacterSprite[CurrentActorID].WorldPos.x++;
+//                gCharacterSprite[CurrentActorID].ScreenPos.x = gCharacterSprite[CurrentActorID].WorldPos.x - gCamera.x;
+//                gCharacterSprite[CurrentActorID].MovementRemaining--;
+//                if (!gCharacterSprite[CurrentActorID].MovementRemaining)
+//                {
+//                    gCurrentScript++;
+//                }
+//            }
+//            break;
+//        }
+//        case DELAY_16:
+//        {
+//            if (localframecounter % 16 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            break;
+//        }
+//        case DELAY_32:
+//        {
+//            if (localframecounter % 32 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            break;
+//        }
+//        case DELAY_48:
+//        {
+//            if (localframecounter % 48 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            break;
+//        }
+//        case DELAY_64:
+//        {
+//            if (localframecounter % 64 == 0)
+//            {
+//                gCurrentScript++;
+//            }
+//            break;
+//        }
+//        case DIALOGUE_TRIGGER:
+//        {
+//            //delay increasing gCurrentScript until player input
+//            break;
+//        }
+//        case START_OF_SCRIPT:
+//        case END_OF_SCRIPT:
+//        {
+//            break;
+//        }
+//        default: 
+//        {
+//            LogMessageA(LL_ERROR, "[%s] Error, Working script was unknown value in ApplyMovementScript! Value of %d!", __FUNCTION__, WorkingScript);
+//            break;
+//        }
+//    }
+//
+//    if (scriptarray[gCurrentScript].Script == END_OF_SCRIPT)
+//    {
+//        if (removeSpriteAfterScript)
+//        {
+//            //TODO: this only removes the last sprite, not all of them
+//            gCharacterSprite[CurrentActorID].Exists = FALSE;
+//            gCharacterSprite[CurrentActorID].Loaded = FALSE;
+//            gCharacterSprite[CurrentActorID].Visible = FALSE;
+//        }
+//        gCurrentScript = 0;
+//        localframecounter = 0;
+//        //reset how i keep track of the actors this scene
+//        for (uint8_t i = 0; i < MAX_NPCS_PER_SCRIPT; i++)
+//        {
+//            actorsthisscene[i] = 0;
+//        }
+//        return(FALSE);
+//    }
+//
+//    localframecounter++;
+//    return(TRUE);
 }
 
 BOOL CheckNPCHasLOSWithPlayer(uint8_t spriteId)
